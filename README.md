@@ -1,90 +1,83 @@
 # Rivinity Landing Page
 
-A modern marketing landing page built with Next.js, React, Tailwind CSS, and Framer Motion. The project includes a responsive homepage layout with navigation, hero section, logo carousel, agency showcase, testimonials, pricing cards, and a polished footer.
+A modern marketing landing page built with Next.js, React, Tailwind CSS, and Framer Motion. The site is composed from small, reusable React/TypeScript components and is configured for local development and production builds.
 
-## Features
+## Quick Overview
 
-- Next.js 15 app with `pages/index.tsx`
-- Tailwind CSS 4 for utility-first styling
-- Responsive header with dropdown navigation
-- Animated sections using `framer-motion`
-- Custom hero, logo slide, meet agent, testimonials, and pricing components
-- Accessible and mobile-friendly layout
-- Production-ready build scripts
+- Framework: Next.js 15 + React 19
+- Styling: Tailwind CSS 4 (configured in `tailwind.config.js`)
+- Animations: Framer Motion
+- Language: TypeScript
 
-## Tech Stack
+## Prerequisites
 
-- Next.js 15
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- Framer Motion
-- Lucide React icons
-- clsx
-- tailwind-merge
+- Node.js 18+ and npm
 
-## Project Structure
-
-- `pages/` - Application routes and page entry points
-  - `pages/index.tsx` - Main landing page
-- `components/` - Reusable UI sections and page components
-  - `header.tsx` - Site navigation and mobile menu
-  - `footer.tsx` - Footer layout with links and branding
-  - `herosection.tsx` - Hero content block
-  - `logoslide.tsx` - Logo carousel section
-  - `meetagent.tsx` - Agent/product highlight section
-  - `poweredby.tsx` - Partner or brand section
-  - `testimonials-component.tsx` - Testimonials showcase
-  - `pricing.tsx` - Pricing cards section
-- `public/` - Static assets and image files
-- `styles/` or `global.css` - Global styling and Tailwind imports
-
-## Getting Started
-
-### Install dependencies
+## Install
 
 ```bash
 npm install
 ```
 
-### Run in development
+## Available scripts
 
-```bash
-npm run dev
-```
+- `npm run dev` — Starts the Next.js development server (localhost:3000)
+- `npm run build` — Builds the production bundle
+- `npm run start` — Runs the production server after build
+- `npm run lint` — Runs Next.js/ESLint checks
 
-Open `http://localhost:3000` in your browser to preview the site.
+## Project Structure
 
-### Build for production
+- `pages/`
+  - `_app.tsx` — App wrapper
+  - `index.tsx` — Main landing page composition
+  - `global.css` — Tailwind imports and global styles
+- `components/` — Page sections and reusable UI pieces
+  - `benchmark.tsx`
+  - `column4.tsx`
+  - `cta-section.tsx`
+  - `faq-section.tsx`
+  - `footer.tsx`
+  - `header.tsx`
+  - `herosection.tsx`
+  - `logoslide.tsx`
+  - `poweredby.tsx`
+  - `pricing.tsx`
+  - `research-section.tsx`
+  - `testimonials-section.tsx`
+  - `ui/` — small UI helpers
+    - `DotMatrixIcon.tsx`
+    - `infinite-slider.tsx`
+- `public/` — Static assets (images, favicons, etc.)
+- `next.config.js`, `tsconfig.json`, `postcss.config.js`, `tailwind.config.js`
 
-```bash
-npm run build
-```
+## Notable dependencies
 
-### Start production server
+- `framer-motion` — animations
+- `lucide-react` — icons
+- `clsx` — conditional classNames
+- `tailwind-merge` — merge Tailwind class lists
+- `react-router-dom` — included in `package.json` but Next.js routing is used for the landing page
 
-```bash
-npm run start
-```
+## Development notes
 
-### Lint the project
+- Modify the page composition in `pages/index.tsx` to change which components appear and in what order.
+- Edit component files in `components/` to update copy, layout, or images.
+- Tailwind utility configuration lives in `tailwind.config.js` and can be adjusted for colors, breakpoints, and plugins.
 
-```bash
-npm run lint
-```
+## Building & Deploying
 
-## Notes
+1. Install dependencies: `npm install`
+2. Build: `npm run build`
+3. Start production server: `npm run start`
 
-- The site is configured as a private package with the `name` set to `untitled` in `package.json`.
-- The homepage is assembled from modular React components under `components/`.
-- Some dependencies such as `react-router-dom` are included in `package.json` even though the current landing page uses Next.js routing.
+Deploy the `.next` build output using any Node-compatible hosting (Vercel, Netlify with adapters, or a custom Node server).
 
-## Customize
+## Suggested next steps
 
-- Modify `pages/index.tsx` to change page composition and section order.
-- Update component content in `components/` to change copy, images, or layout.
-- Tailwind configuration is managed by `tailwind.config.js` and `postcss.config.js`.
+- Run `npm run dev` and open http://localhost:3000 to preview locally.
+- Review `components/` to adapt sections and content for your brand.
 
 ## License
 
-This project is provided as-is for development and demonstration purposes.
+Provided as-is for development and demonstration purposes.

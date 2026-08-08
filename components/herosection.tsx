@@ -1,6 +1,6 @@
 "use client";
 
-import { useState} from "react";
+import { useState, useCallback, useEffect } from "react";
 import { InfiniteSlider } from './ui/infinite-slider';
 import {
   Plus,
@@ -31,13 +31,64 @@ const CATEGORIES = [
 ];
 
 const EXAMPLE_PROMPTS = [
+  "Make a promo video for…",
   "Beginner running tracker",
   "Quarterly review presentation",
   "Freelance client portal",
 ];
 
+// Classic typewriter effect: types a word, pauses, deletes it, moves to the next
+function useTypewriter(
+  words: string[],
+  { typingSpeed = 45, deletingSpeed = 25, pauseTime = 1400 } = {},
+) {
+  const [wordIndex, setWordIndex] = useState(0);
+  const [text, setText] = useState("");
+  const [phase, setPhase] = useState<"typing" | "pausing" | "deleting">(
+    "typing",
+  );
+
+  useEffect(() => {
+    const current = words[wordIndex];
+
+    if (phase === "typing") {
+      if (text.length < current.length) {
+        const t = setTimeout(
+          () => setText(current.slice(0, text.length + 1)),
+          typingSpeed,
+        );
+        return () => clearTimeout(t);
+      }
+      const t = setTimeout(() => setPhase("pausing"), pauseTime);
+      return () => clearTimeout(t);
+    }
+
+    if (phase === "pausing") {
+      const t = setTimeout(() => setPhase("deleting"), pauseTime);
+      return () => clearTimeout(t);
+    }
+
+    if (phase === "deleting") {
+      if (text.length > 0) {
+        const t = setTimeout(
+          () => setText(current.slice(0, text.length - 1)),
+          deletingSpeed,
+        );
+        return () => clearTimeout(t);
+      }
+      setWordIndex((i) => (i + 1) % words.length);
+      setPhase("typing");
+    }
+  }, [text, phase, wordIndex, words, typingSpeed, deletingSpeed, pauseTime]);
+
+  return text;
+}
+
 export default function WhatWillYouBuild() {
   const [prompt, setPrompt] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+
+  const typedPlaceholder = useTypewriter(EXAMPLE_PROMPTS);
 
   return (
     <div className="w-full flex flex-col items-center justify-center bg-[#FAFAFA] px-4 sm:px-6">
@@ -52,16 +103,29 @@ export default function WhatWillYouBuild() {
         </p>
       </div>
 
-      <div className="w-full max-w-[600px] flex flex-col items-center mt-[clamp(28px,6vw,52px)]">
+      <div className="w-full max-w-150 flex flex-col items-center mt-[clamp(28px,6vw,52px)]">
         {/* Input box */}
         <div className="w-full bg-[#F5F4F1] border border-[#FF8A29] rounded-[28px] p-4 flex flex-col gap-5">
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Make a promo video for…"
-            rows={1}
-            className="w-full bg-transparent border-none outline-none ring-0 focus:outline-none focus:ring-0 focus:border-none resize-none font-sans text-[15px] text-[#3C3C43] placeholder:text-[#6B6D74]"
-          />
+          <div className="relative min-h-6 flex items-center">
+            {!prompt && (
+              <div className="pointer-events-none absolute inset-0 flex items-center">
+                <span className="text-[15px] text-[#6B6D74]">
+                  {typedPlaceholder}
+                  <span className="inline-block w-px h-[1.1em] align-middle bg-[#F0693D] ml-0.5 animate-pulse" />
+                </span>
+              </div>
+            )}
+            <textarea
+              value={prompt}
+              onChange={(e) => {
+                setPrompt(e.target.value);
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              rows={1}
+              className="w-full bg-transparent border-none outline-none ring-0 focus:outline-none focus:ring-0 focus:border-none resize-none font-sans text-[15px] text-[#3C3C43] placeholder-transparent"
+            />
+          </div>
           <div className="flex items-center justify-between">
             <button
               type="button"
@@ -83,11 +147,7 @@ export default function WhatWillYouBuild() {
 
         {/* Section with horizontal divider line, pill straddling it */}
         <div className="w-full max-w-xl mt-[clamp(36px,7vw,60px)] relative">
-          {/* The horizontal line */}
-          {/* Pill straddling the line, centered */}
-          <div className="absolute left-1/2 -translate-x-1/2 -top-5 bg-[#FAFAFA] rounded-4xl px-4 sm:px-6 py-3 w-[92vw] sm:w-auto max-w-[520px] flex justify-center">
-
-            {/* Slider — width sized for exactly 5 icons visible, mask fades edges */}
+          <div className="absolute left-1/2 -translate-x-1/2 -top-5 bg-[#FAFAFA] rounded-4xl px-4 sm:px-6 py-3 w-[92vw] sm:w-auto max-w-130 flex justify-center">
             <InfiniteSlider
               gap={24}
               duration={30}
@@ -110,36 +170,8 @@ export default function WhatWillYouBuild() {
             </InfiniteSlider>
           </div>
 
-          {/* Spacer so content below the divider isn't overlapped by the pill */}
           <div className="h-8" />
         </div>
-        {/* NEW SECTION ENDS HERE */}
-
-        {/* Try an example prompt */}
-        {/* <div className="flex items-center gap-2 mt-6 text-sm text-[#8E8E93]">
-          <span>Try an example prompt</span>
-          <button
-            type="button"
-            aria-label="Reshuffle"
-            className="hover:text-[#3C3C43] transition bg-transparent"
-          >
-            <RotateCw size={14} />
-          </button>
-        </div> */}
-
-        {/* Example prompt pills */}
-        {/* <div className="flex items-center justify-center gap-3 mt-4 mb-12">
-          {EXAMPLE_PROMPTS.map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => setPrompt(p)}
-              className="rounded-xl bg-[#EFEDE7] px-3 py-2 text-sm text-[#3C3C43] hover:bg-[#e6e3db] transition"
-            >
-              {p}
-            </button>
-          ))}
-        </div> */}
       </div>
     </div>
   );

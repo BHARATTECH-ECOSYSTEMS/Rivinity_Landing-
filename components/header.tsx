@@ -229,7 +229,7 @@ export default function Header() {
           </Link>
           <Link
             href="/signup"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-[#FF5A1F] bg-white px-3 py-2 text-base font-semibold text-[#FF5A1F] active:scale-95"
+            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-[#FF5A1F] px-3 py-2 text-base font-semibold text-[#FF5A1F] active:scale-95"
           >
             <span className="absolute inset-0 origin-left scale-x-0 bg-[#FF5A1F] transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
 

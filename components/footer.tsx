@@ -1,147 +1,156 @@
-import type { NextPage } from "next";
-import Component1 from "./component1";
+"use client";
 
-export type FooterBigFooterModuleJuPJhType = {
-  className?: string;
+import { useEffect, useState } from "react";
+
+interface FooterLink {
+  label: string;
+  href: string;
+}
+
+interface FooterColumn {
+  title: string;
+  links: FooterLink[];
+}
+
+const TOP_LEFT: FooterColumn = {
+  title: "Company",
+  links: [
+    { label: "Our Story", href: "#" },
+    { label: "Team", href: "#" },
+    { label: "Careers", href: "#" },
+    { label: "Governance", href: "#" },
+  ],
 };
 
-const FooterBigFooterModuleJuPJh: NextPage<FooterBigFooterModuleJuPJhType> = ({
-  className = "",
-}) => {
+const TOP_RIGHT: FooterColumn = {
+  title: "Legal",
+  links: [
+    { label: "Terms & Conditions", href: "#" },
+    { label: "Privacy Policy", href: "#" },
+    { label: "Security", href: "#" },
+    { label: "Compliance", href: "#" },
+  ],
+};
+
+const BOTTOM_LEFT: FooterColumn = {
+  title: "Resources",
+  links: [
+    { label: "Research", href: "#" },
+    { label: "Blog", href: "#" },
+    { label: "Documentation", href: "#" },
+    { label: "API Status", href: "#" },
+  ],
+};
+
+const BOTTOM_RIGHT: FooterColumn = {
+  title: "Product",
+  links: [
+    { label: "CLOS-AI", href: "#" },
+    { label: "Deepfake Detection", href: "#" },
+    { label: "Post Your Ad", href: "#" },
+    { label: "Agent as a Platform", href: "#" },
+  ],
+};
+
+function FooterColumnBlock({ column }: { column: FooterColumn }) {
   return (
-    <footer className={`w-full bg-[#fbf8f5] flex flex-col items-center z-[7] text-left text-[#4e4e4e] antialiased ${className}`}>
-      {/* Divider */}
-      <div className="w-full h-[1px] bg-[#e6e2dd]" />
+    <div className="flex flex-col gap-3">
+      <span className="text-xs font-medium uppercase tracking-wide text-[#8b8f8f]">
+        {column.title}
+      </span>
+      <div className="flex flex-col gap-2.5">
+        {column.links.map((link) => (
+          <a
+            key={link.label}
+            href={link.href}
+            className="text-base sm:text-lg text-[#6b6f72] transition-colors hover:text-[#16181A]"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-      {/* Main Container */}
-      <div className="w-full max-w-[1380px] px-10 py-16 flex flex-col items-start box-border">
-        <div className="w-full flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-16">
-          
-          {/* Left Block: Logo & Globe Weather Widget */}
-          <div className="flex flex-col items-start gap-12 min-w-[360px]">
-            <Component1
-              variant={44}
-              component1Width="226px"
-              component1Height="64px"
-              component1Flex="unset"
-              vector1="/Vector68.svg"
-              vector2="/Vector69.svg"
-              vector3="/Vector3.svg"
-              vector4="/Vector70.svg"
-              vector5="/Vector71.svg"
-              vector6="/Vector72.svg"
-            />
+function LiveClock() {
+  const [time, setTime] = useState<string | null>(null);
 
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                
-                {/* Globe Icon Box */}
-                <div className="w-16 h-16 min-w-[64px] min-h-[64px] border border-[#d6d2cb] rounded-[18px] flex items-center justify-center bg-[#fbf8f5] shrink-0 box-border">
-                  <svg
-                    width="42"
-                    height="42"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#4e4e4e"
-                    strokeWidth="1.1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
-                </div>
+  useEffect(() => {
+    function update() {
+      setTime(
+        new Date().toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      );
+    }
+    update();
+    const id = setInterval(update, 1000 * 30);
+    return () => clearInterval(id);
+  }, []);
 
-                {/* CA Weather Widget */}
-                <div className="w-16 h-16 min-w-[64px] min-h-[64px] rounded-[18px] border border-[#d6d2cb] flex flex-col items-center justify-center p-1 text-[9.5px] text-[#737373] leading-tight text-center bg-[#fbf8f5] shrink-0 box-border">
-                  <span className="text-[9px] text-[#808080]">CA</span>
-                  <span className="font-semibold text-[11px] my-0.5 text-[#2b2b2b]">5:01 AM</span>
-                  <span className="text-[9px] text-[#808080]">73°F</span>
-                </div>
-              </div>
+  return <>{time ?? "--:--"}</>;
+}
 
-              {/* Subtitle Info */}
-              <div className="flex flex-col text-[13px] text-[#737373] gap-2 leading-relaxed tracking-[-0.01em]">
-                <div>Made in sunny California.</div>
-                <div className="w-full h-px bg-[#e6e2dd]" />
-                <div className="text-[12px]">
-                  All rights reserved. Copyright © 2026 Replit, Inc.
-                </div>
-              </div>
+export default function Footer() {
+  return (
+
+    <footer className="w-full px-4 py-16 sm:px-6 sm:py-20 lg:px-10 mb-20 overflow-x-hidden">
+      <div className="mx-auto grid w-full max-w-330 grid-cols-2 gap-x-6 gap-y-10 sm:gap-x-8 sm:gap-y-16 lg:grid-cols-3 lg:gap-8">
+        {/* Left: brand + globe + copyright — spans both mobile columns, becomes its own column at lg */}
+        <div className="col-span-2 lg:col-span-1 flex flex-col gap-10 sm:gap-16">
+          <div className="flex items-center gap-3">
+            <div className="grid h-16 w-12 grid-cols-2 gap-1">
+              <img
+                src="/logo.png"
+                alt="Profile"
+                width={60}
+                height={60}
+              />
             </div>
+            <span className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#16181A]">RIVINITY</span>
           </div>
 
-          {/* Right Block: 2x2 Columns */}
-          <div className="flex-1 w-full grid grid-cols-2 gap-x-12 gap-y-12 max-w-[680px]">
-            
-            {/* Column 1 */}
-            <div className="flex flex-col items-start gap-3.5">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#8c8c8c]">
-                HANDY LINKS
-              </span>
-              <div className="flex flex-col items-start gap-2 text-[22px] text-[#4e4e4e] font-normal leading-[1.28] tracking-[-0.03em]">
-                <a href="https://replit.com/additional-resources" target="_blank" rel="noreferrer" className="hover:text-black">Resources</a>
-                <a href="https://replit.com/help" target="_blank" rel="noreferrer" className="hover:text-black">Help</a>
-                <a href="https://replit.com/build" target="_blank" rel="noreferrer" className="hover:text-black">How to guides</a>
-                <a href="https://status.replit.com/" target="_blank" rel="noreferrer" className="hover:text-black">Status</a>
-                <a href="https://replit.com/partners/certifications" target="_blank" rel="noreferrer" className="hover:text-black">Certifications</a>
-                <a href="https://replit.com/partners" target="_blank" rel="noreferrer" className="hover:text-black">Partnerships</a>
-              </div>
-            </div>
-
-            {/* Column 2 */}
-            <div className="flex flex-col items-start gap-3.5">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#8c8c8c]">
-                LEGAL
-              </span>
-              <div className="flex flex-col items-start gap-2 text-[22px] text-[#4e4e4e] font-normal leading-[1.28] tracking-[-0.03em]">
-                <a href="https://replit.com/terms-of-service" target="_blank" rel="noreferrer" className="hover:text-black">Terms of Service</a>
-                <a href="https://replit.com/commercial-agreement" target="_blank" rel="noreferrer" className="hover:text-black">Commercial Agreement</a>
-                <a href="https://replit.com/privacy-policy" target="_blank" rel="noreferrer" className="hover:text-black">Privacy</a>
-                <a href="https://replit.com/subprocessors" target="_blank" rel="noreferrer" className="hover:text-black">Subprocessors</a>
-                <a href="#" className="hover:text-black">DPA</a>
-                <a href="https://docs.replit.com/legal-and-security-info/abuse-report" target="_blank" rel="noreferrer" className="hover:text-black">Report Abuse</a>
-                <span className="cursor-pointer hover:text-black leading-tight">
-                  Do Not Sell or Share My Personal<br />Information
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            {/* <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[#c8c4b6]">
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="absolute inset-0">
+                <path d="M0 32H64" stroke="#c8c4b6" strokeWidth="1" />
+                <path d="M32 0V64" stroke="#c8c4b6" strokeWidth="1" />
+                <path d="M0 17H64" stroke="#c8c4b6" strokeWidth="1" />
+                <path d="M0 47H64" stroke="#c8c4b6" strokeWidth="1" />
+                <ellipse cx="32" cy="32" rx="15" ry="32" stroke="#c8c4b6" strokeWidth="1" />
+              </svg>
+              <div className="absolute -right-2 top-1/2 flex -translate-y-1/2 flex-col items-center gap-0.5 rounded-lg border border-[#c8c4b6] bg-[#F4F0E6] px-3 py-2 text-center">
+                <span className="text-[10px] font-medium text-[#8b8f8f]">IN</span>
+                <span className="text-xs font-medium text-[#16181A]">
+                  <LiveClock />
                 </span>
+                <span className="text-[10px] text-[#8b8f8f]">31°C</span>
               </div>
-            </div>
+            </div> */}
 
-            {/* Column 3 */}
-            <div className="flex flex-col items-start gap-3.5">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#8c8c8c]">
-                COMPANY
+            <div className="flex flex-col gap-3 pl-2 sm:pl-10">
+              <span className="text-sm text-[#6b6f72]">Made in India.</span>
+              <div className="h-px w-full max-w-60 bg-[#c8c4b6]" />
+              <span className="text-sm text-[#6b6f72]">
+                All rights reserved. Copyright © 2026 BharatTech, Inc.
               </span>
-              <div className="flex flex-col items-start gap-2 text-[22px] text-[#4e4e4e] font-normal leading-[1.28] tracking-[-0.03em]">
-                <a href="https://replit.com/about" target="_blank" rel="noreferrer" className="hover:text-black">About Us</a>
-                <a href="https://replit.com/news" target="_blank" rel="noreferrer" className="hover:text-black">News</a>
-                <a href="https://replit.com/careers" target="_blank" rel="noreferrer" className="hover:text-black">Careers</a>
-                <a href="https://replit.com/brand" target="_blank" rel="noreferrer" className="hover:text-black">Brand Center</a>
-                <a href="https://replit.com/enterprise" target="_blank" rel="noreferrer" className="hover:text-black">Contact Us</a>
-              </div>
             </div>
-
-            {/* Column 4 */}
-            <div className="flex flex-col items-start gap-3.5">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[#8c8c8c]">
-                SOCIAL
-              </span>
-              <div className="flex flex-col items-start gap-2 text-[22px] text-[#4e4e4e] font-normal leading-[1.28] tracking-[-0.03em]">
-                <a href="https://x.com/replit" target="_blank" rel="noreferrer" className="hover:text-black">Twitter/X</a>
-                <a href="https://www.linkedin.com/company/repl-it/" target="_blank" rel="noreferrer" className="hover:text-black">Linkedin</a>
-                <a href="https://www.instagram.com/repl.it" target="_blank" rel="noreferrer" className="hover:text-black">Instagram</a>
-                <a href="https://www.facebook.com/replit/" target="_blank" rel="noreferrer" className="hover:text-black">Facebook</a>
-                <a href="https://www.tiktok.com/@replit" target="_blank" rel="noreferrer" className="hover:text-black">Tiktok</a>
-              </div>
-            </div>
-
           </div>
+        </div>
 
+        {/* Middle column: Company / Resources — sits side by side with the next column on mobile */}
+        <div className="flex flex-col gap-10 sm:gap-16 lg:ml-34">
+          <FooterColumnBlock column={TOP_LEFT} />
+          <FooterColumnBlock column={BOTTOM_LEFT} />
+        </div>
+        {/* Right column: Legal / Product */}
+        <div className="flex flex-col gap-10 sm:gap-16 lg:ml-20">
+          <FooterColumnBlock column={TOP_RIGHT} />
+          <FooterColumnBlock column={BOTTOM_RIGHT} />
         </div>
       </div>
     </footer>
   );
-};
-
-export default FooterBigFooterModuleJuPJh;
+}

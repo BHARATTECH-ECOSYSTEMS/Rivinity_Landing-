@@ -1,556 +1,353 @@
-import type { NextPage } from "next";
-import { useState } from "react";
-import Image from "next/image";
-import DivuseViewModuleVOhHaVi1 from "./divuse-view-module-v-oh-ha-vi1";
+"use client";
 
-export type DivuseViewModuleVOhHaVi6Type = {
-  className?: string;
-};
+import { useEffect, useRef, useState } from "react";
 
-const DivuseViewModuleVOhHaVi6: NextPage<DivuseViewModuleVOhHaVi6Type> = ({
-  className = "",
-}) => {
-  const [divuseViewModuleVOhHaViItems] = useState([
-    {
-      divuseViewModuleVOhHaViBorderBottom: undefined,
-      divuseViewModuleVOhHaViFlexWrap: undefined,
-      divuseViewModuleVOhHaViAlignContent: undefined,
-      builtInDatabaseForFullStack: "Work in parallel with up to 10\nagents",
-      builtInDatabaseForFontSize: "14.8px" as const,
-    },
-    {
-      divuseViewModuleVOhHaViBorderBottom: undefined,
-      divuseViewModuleVOhHaViFlexWrap: undefined,
-      divuseViewModuleVOhHaViAlignContent: undefined,
-      builtInDatabaseForFullStack: "Access to the most powerful\nmodels",
-      builtInDatabaseForFontSize: "14.8px" as const,
-    },
-    {
-      divuseViewModuleVOhHaViBorderBottom: "unset" as const,
-      divuseViewModuleVOhHaViFlexWrap: "wrap" as const,
-      divuseViewModuleVOhHaViAlignContent: "flex-start" as const,
-      builtInDatabaseForFullStack: "Database rollbacks for up to 28\ndays",
-      builtInDatabaseForFontSize: "14.8px" as const,
-    },
-  ]);
+type Period = "monthly" | "yearly";
 
-  const [enterpriseItems] = useState([
-    "Everything in Pro",
-    "Custom seat limits",
-    "SSO / SAML",
-    "Advanced privacy controls",
-    "Design system support",
-    "Single-tenant environments",
-    "Static outbound IPs",
-    "VPC peering",
-  ]);
+interface CreditTier {
+  value: string;
+  credits: string;
+  monthly: number;
+  yearly: number;
+}
+
+const PRO_TIERS: CreditTier[] = [
+  { value: "100", credits: "$100 of credits", monthly: 100, yearly: 90 },
+  { value: "250", credits: "$250 of credits", monthly: 250, yearly: 215 },
+  { value: "500", credits: "$500 of credits", monthly: 500, yearly: 425 },
+  { value: "1000", credits: "$1,000 of credits", monthly: 1000, yearly: 825 },
+  { value: "2500", credits: "$2,500 of credits", monthly: 2500, yearly: 2000 },
+];
+
+const CORE_PRICE = { monthly: 20, yearly: 18 };
+
+const STARTER_BENEFITS = [
+  { text: "Free daily Agent credits" },
+  { text: "Built-in database for full-stack apps" },
+  { text: "Create slides, videos, animations" },
+  { text: "Publish up to 1 project" },
+  { text: "Publish private or password-protected deployments" },
+];
+
+const CORE_BENEFITS = [
+  { text: "Everything in Starter", bold: true },
+  { text: "$20 of monthly credits" },
+  { text: "Invite up to 5 collaborators" },
+  { text: "Work in parallel with up to 2 agents" },
+  { text: "Publish projects in any region" },
+  { text: "Unlimited workspaces" },
+  { text: 'Remove "Made with Replit" badge' },
+  { text: "Replit AI Integrations" },
+];
+
+const PRO_BENEFITS = [
+  { text: "Everything in Core", bold: true },
+  { text: "$100 monthly credits" },
+  { text: "Invite up to 15 collaborators" },
+  { text: "Invite up to 50 viewers" },
+  { text: "Work in parallel with up to 10 agents" },
+  { text: "Access to the most powerful models" },
+  { text: "Database rollbacks for up to 28 days" },
+];
+
+const ENTERPRISE_BENEFITS = [
+  { text: "Everything in Pro", bold: true },
+  { text: "Custom seat limits" },
+  { text: "SSO / SAML" },
+  { text: "Advanced privacy controls" },
+  { text: "Design system support" },
+  { text: "Single-tenant environments" },
+  { text: "Static outbound IPs" },
+  { text: "VPC peering" },
+];
+
+function formatPrice(n: number) {
+  return `$${n.toLocaleString("en-US")}`;
+}
+
+export default function PricingPage() {
+  const [period, setPeriod] = useState<Period>("yearly");
+  const [proTier, setProTier] = useState<string>("100");
+
+  const tier = PRO_TIERS.find((t) => t.value === proTier) ?? PRO_TIERS[0];
+  const corePrice = period === "yearly" ? CORE_PRICE.yearly : CORE_PRICE.monthly;
+  const proPrice = period === "yearly" ? tier.yearly : tier.monthly;
+  const showProStrike = period === "yearly";
 
   return (
-    <section
-      className={`self-stretch flex flex-col items-center !pt-12 !pb-12 !pl-4 !pr-4 z-[5] text-left text-3xl md:text-[39.2px] text-replitcom-woodsmoke font-[Inter] mq925:!pt-5 mq925:!pb-5 mq925:box-border mq1400:!pt-[31px] mq1400:!pb-[31px] mq1400:box-border ${className}`}
-    >
-      <div className="
-  w-full
-  max-w-[1390px]
-  rounded-[46px]
-  bg-replitcom-white
-  flex
-  flex-col
-  p-4
-  sm:p-6
-  lg:p-8
-  xl:px-16 box-border max-w-[1390px] mq925:!pt-5 mq925:!pb-5 mq925:box-border mq1850:w-[calc(100%_-_40px)] mq1400:!pt-[21px] mq1400:!pb-[21px] mq1400:!pl-8 mq1400:!pr-8 mq1400:box-border mq1400:max-w-full">
-        <div className="self-stretch flex flex-col items-center gap-12 mq925:gap-6">
-          <div className="self-stretch flex items-center justify-between flex-wrap content-center gap-x-5 gap-y-0">
-            <div className="flex flex-col items-start gap-[7px]">
-              <div className="self-stretch flex flex-col items-start">
-                <div className="relative tracking-[-1.68px] leading-tight md:leading-[42px] mq925:text-[31px] mq925:leading-[34px] mq450:text-2xl mq450:leading-[25px]">
-                  Start Small. Scale Fast.
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start text-[13.9px] text-replitcom-gray">
-                <div className="relative tracking-[-0.15px] leading-[12.5px]">
-                  Designed for Every Stage
-                </div>
-              </div>
-            </div>
-            <div className="flex items-start text-[13.7px] text-replitcom-shark1">
-              <div className="self-stretch rounded-lg bg-replitcom-cararra2 flex items-start !p-1 relative isolate gap-1">
-                <div className="h-full w-full absolute !!m-[0 important] top-[0px] right-[0px] bottom-[0px] left-[0px] rounded-lg bg-replitcom-cararra2 z-[0] shrink-0" />
-                <div className="h-8 rounded-md bg-replitcom-cararra2 flex items-center justify-center !pt-1.5 !pb-1.5 !pl-2 !pr-2 box-border z-[1] shrink-0">
-                  <div className="h-[22.4px] w-[51px] overflow-hidden shrink-0 flex items-end !pt-0 !pb-[0.4px] !pl-0 !pr-0 box-border">
-                    <div className="h-[23px] w-[53px] relative leading-[22.4px] inline-block shrink-0">
-                      Monthly
-                    </div>
-                  </div>
-                </div>
-                <div className="h-8 shadow-[0px_1px_2px_rgba(0,_0,_0,_0.02)] rounded-md bg-replitcom-desert-storm3 border-replitcom-timberwolf border-solid border-[1px] box-border flex items-center justify-center !pt-1.5 !pb-1.5 !pl-2 !pr-2 z-[2] shrink-0 text-[13px] text-replitcom-tuna1">
-                  <div className="flex items-center gap-2 shrink-0">
-                    <div className="h-[22.4px] w-[36.6px] flex items-end !pt-0 !pb-[0.4px] !pl-0 !pr-0 box-border">
-                      <div className="h-[23px] w-[39px] relative leading-[22.4px] inline-block shrink-0">
-                        Yearly
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1 text-[13.3px]">
-                      <div className="flex flex-col items-start">
-                        <div className="w-4 h-4 relative overflow-hidden shrink-0">
-                          <Image
-                            className="absolute h-[89.38%] w-full top-[5%] right-[5.62%] bottom-[5.62%] left-[5%] max-w-full overflow-hidden max-h-full"
-                            width={14.3}
-                            height={14.3}
-                            sizes="100vw"
-                            alt=""
-                            src="/Vector65.svg"
-                          />
-                        </div>
-                      </div>
-                      <div className="h-[22.4px] w-[58px] flex items-end !pt-0 !pb-[0.4px] !pl-0 !pr-0 box-border">
-                        <div className="h-[23px] w-[60px] relative leading-[22.4px] inline-block shrink-0">
-                          Save $24
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div className="min-h-screen px-6 py-16 sm:px-10">
+      <div className="mx-auto w-full max-w-350 rounded-4xl bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:p-10">
+        {/* Header */}
+        <div className="flex flex-wrap items-center justify-between pb-4 sm:pb-6">
+          <div className="flex flex-col">
+            <h1 className="text-5xl font-semibold tracking-tight text-[#16181A] sm:text-[42px]">
+              Start Small. Scale Fast.
+            </h1>
+            <p className="text-md text-[#8b8f8f]">Designed for Every Stage</p>
           </div>
-          <div className="self-stretch grid box-border grid-cols-[repeat(auto-fit,_minmax(244px,_1fr))] gap-4 mq450:h-auto">
 
-            {/* Starter Column */}
-            <section className="rounded-[40px] bg-replitcom-fantasy flex flex-col items-start !p-8 shrink-0 text-left text-[25.6px] text-replitcom-vermilion font-[Inter]">
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-[34px] !pl-0 !pr-0 gap-2">
-                <div className="self-stretch flex flex-col items-start">
-                  <div className="self-stretch relative tracking-[-1.12px] leading-[23.2px] mq450:text-xl mq450:leading-[19px]">
-                    Starter
-                  </div>
-                </div>
-                <div className="self-stretch flex flex-col items-start text-[16.7px] text-replitcom-mine-shaft2">
-                  <div className="self-stretch relative tracking-[-0.54px] leading-[18px]">
-                    For exploring what’s possible
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch h-px relative bg-replitcom-sisal" />
-              <div className="self-stretch flex items-baseline !pt-[39px] !pb-[46px] !pl-0 !pr-0 text-[30.5px] text-replitcom-tuna">
-                <div className="flex-1 relative leading-10 mq925:text-2xl mq925:leading-8 mq450:text-lg mq450:leading-6">
-                  Free
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-8 !pl-0 !pr-0 text-center text-[17.7px] text-replitcom-white">
-                <div className=" w-full h-14 md:h-20 rounded-full bg-replitcom-cod-gray2 flex items-center justify-center !pt-2.5 !pb-2.5 !pl-10 !pr-10 box-border">
-                  <a
-                    className="relative tracking-[-0.36px] text-[inherit] [text-decoration:none]"
-                    href="https://replit.com/signup"
-                    target="_blank"
-                  >
-                    Sign up
-                  </a>
-                </div>
-              </div>
-              <div className="flex-1" />
-              <div className="self-stretch h-px relative bg-replitcom-sisal" />
-              <div className="self-stretch flex flex-col items-start !pt-[15px] !pb-6 !pl-0 !pr-0 text-[14.8px] text-replitcom-mine-shaft2">
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 min-w-0 ">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Free daily Agent credits
-                    </div>
-                  </div>
-                </div>
-                <DivuseViewModuleVOhHaVi1
-                  builtInDatabaseForFullStack={`Built-in database for full-stack\napps`}
-                />
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 text-[14.6px] mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Create slides, videos, animations
-                    </div>
-                  </div>
-                </div>
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Publish up to 1 project
-                    </div>
-                  </div>
-                </div>
-                <DivuseViewModuleVOhHaVi1
-                  divuseViewModuleVOhHaViBorderBottom="unset"
-                  divuseViewModuleVOhHaViFlexWrap="unset"
-                  divuseViewModuleVOhHaViAlignContent="unset"
-                  builtInDatabaseForFullStack={`Publish private or password-\nprotected deployments`}
-                  builtInDatabaseForFontSize="14.8px"
-                />
-              </div>
-            </section>
-
-            {/* Replit Core Column */}
-            <section className="rounded-[40px] bg-replitcom-fantasy flex flex-col items-start !p-8 shrink-0 text-left text-[26.5px] text-replitcom-vermilion font-[Inter]">
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-4 !pl-0 !pr-0 gap-2">
-                <div className="self-stretch flex flex-col items-start">
-                  <div className="self-stretch relative tracking-[-1.12px] leading-[23.2px] mq450:text-[21px] mq450:leading-[19px]">
-                    Replit Core
-                  </div>
-                </div>
-                <div className="self-stretch flex flex-col items-start text-[16.7px] text-replitcom-mine-shaft2">
-                  <div className="self-stretch relative tracking-[-0.54px] leading-[18px]">For personal projects & simple<br />apps</div>
-                </div>
-              </div>
-              <div className="self-stretch h-px relative bg-replitcom-sisal" />
-              <div className="self-stretch flex items-start justify-center !pt-[39px] !pb-6 !pl-0 !pr-0 text-[31.8px] text-replitcom-tuna">
-                <div className="flex-1 flex items-center !pt-[11px] !pb-[11px] !pl-0 !pr-0 box-border gap-2 max-w-full min-h-[62px] mq450:flex-wrap">
-                  <div className="flex flex-col items-start">
-                    <div className="relative leading-10 mq925:text-[25px] mq925:leading-8 mq450:text-[19px] mq450:leading-6">
-                      $18
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start gap-1 text-[15.5px]">
-                    <div className="self-stretch h-4 flex items-center">
-                      <div className="overflow-hidden flex flex-col items-start !pt-1 !pb-0 !pl-0 !pr-0 shrink-0">
-                        <div className="relative leading-[22px]">per month</div>
-                      </div>
-                    </div>
-                    <div className="self-stretch h-4 flex items-center text-[15.1px]">
-                      <div className="overflow-hidden flex flex-col items-start !pt-1 !pb-0 !pl-0 !pr-0 shrink-0">
-                        <div className="relative leading-[22px]">
-                          billed annually
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-8 !pl-0 !pr-0 text-center text-[17.4px] text-replitcom-white">
-                <div className="self-stretch h-20 rounded-[90px] bg-replitcom-cod-gray2 flex items-center justify-center !pt-2.5 !pb-2.5 !pl-10 !pr-10 box-border">
-                  <a
-                    className="relative tracking-[-0.36px] text-[inherit] [text-decoration:none]"
-                    href="https://replit.com/signup"
-                    target="_blank"
-                  >
-                    Join Replit Core
-                  </a>
-                </div>
-              </div>
-              <div className="self-stretch h-[104px] relative" />
-              <div className="self-stretch h-px relative bg-replitcom-sisal" />
-              <div className="self-stretch flex flex-col items-start !pt-[15px] !pb-0 !pl-0 !pr-0 text-[14.6px] text-replitcom-mine-shaft2">
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 text-[15.1px] mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Everything in Starter
-                    </div>
-                  </div>
-                </div>
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      $20 of monthly credits
-                    </div>
-                  </div>
-                </div>
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Invite up to 5 collaborators
-                    </div>
-                  </div>
-                </div>
-                <DivuseViewModuleVOhHaVi1
-                  divuseViewModuleVOhHaViBorderBottom="1px solid #e8e0d6"
-                  divuseViewModuleVOhHaViFlexWrap="unset"
-                  divuseViewModuleVOhHaViAlignContent="unset"
-                  builtInDatabaseForFullStack={`Work in parallel with up to 2\nagents`}
-                  builtInDatabaseForFontSize="14.8px"
-                />
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 text-[14.9px] mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Publish projects in any region
-                    </div>
-                  </div>
-                </div>
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 text-[14.9px] mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Unlimited workspaces
-                    </div>
-                  </div>
-                </div>
-                <DivuseViewModuleVOhHaVi1
-                  divuseViewModuleVOhHaViBorderBottom="1px solid #e8e0d6"
-                  divuseViewModuleVOhHaViFlexWrap="unset"
-                  divuseViewModuleVOhHaViAlignContent="unset"
-                  builtInDatabaseForFullStack={`Remove "Made with Replit"\nbadge`}
-                  builtInDatabaseForFontSize="14.9px"
-                />
-                <div className="self-stretch flex items-start flex-wrap content-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 text-[15px]">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Replit AI Integrations
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Replit Pro Column */}
-            <section className="rounded-[40px] bg-replitcom-fantasy flex flex-col items-start !p-8 shrink-0 text-left text-[13.1px] text-replitcom-vermilion font-[Inter]">
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-4 !pl-0 !pr-0 gap-2 text-[26.5px]">
-                <div className="self-stretch flex flex-col items-start">
-                  <div className="self-stretch relative tracking-[-1.12px] leading-[23.2px] mq450:text-[21px] mq450:leading-[19px]">
-                    Replit Pro
-                  </div>
-                </div>
-                <div className="self-stretch flex flex-col items-start text-[16.9px] text-replitcom-mine-shaft2">
-                  <div className="self-stretch relative tracking-[-0.54px] leading-[18px]">
-                    For commercial and
-                    <br />
-                    professional builds
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch h-px relative bg-replitcom-sisal" />
-              <div className="self-stretch flex items-start !pt-[39px] !pb-[46px] !pl-0 !pr-0 text-replitcom-tuna">
-                <div className="flex items-center gap-2">
-                  <div className="h-[22.4px] w-[30.8px] relative">
-                    <div className="absolute top-[-1px] left-[0px] [text-decoration:line-through] leading-[22.4px] inline-block whitespace-nowrap w-full h-full">
-                      $100
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start text-[32px]">
-                    <div className="relative leading-10 mq925:text-[26px] mq925:leading-8 mq450:text-[19px] mq450:leading-6">
-                      $90
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start !pt-1 !pb-0 !pl-0 !pr-0 gap-1 text-[15.5px] text-replitcom-shuttle-gray1">
-                    <div className="self-stretch h-4 flex items-center">
-                      <div className="overflow-hidden flex flex-col items-start shrink-0">
-                        <div className="relative leading-[22px]">per month</div>
-                      </div>
-                    </div>
-                    <div className="self-stretch h-4 flex items-center text-[15.1px]">
-                      <div className="overflow-hidden flex flex-col items-start shrink-0">
-                        <div className="relative leading-[22px]">
-                          billed annually
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-8 !pl-0 !pr-0 text-center text-[17.3px] text-replitcom-white">
-                <div className="self-stretch h-20 rounded-[90px] bg-replitcom-cod-gray2 flex items-center justify-center !pt-2.5 !pb-2.5 !pl-10 !pr-10 box-border">
-                  <a
-                    className="relative tracking-[-0.36px] text-[inherit] [text-decoration:none]"
-                    href="https://replit.com/signup"
-                    target="_blank"
-                  >
-                    Join Replit Pro
-                  </a>
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-6 !pl-0 !pr-0 text-center text-replitcom-tuna1">
-                <div className="self-stretch flex flex-col items-start justify-center !pt-6 !pb-6 !pl-0 !pr-0 box-border min-h-[80px]">
-                  <div className="self-stretch flex flex-col items-start">
-                    <div className="self-stretch flex flex-col items-start">
-                      <div className="shadow-[0px_1px_2px_rgba(0,_0,_0,_0.02)] rounded-md bg-replitcom-desert-storm3 border-replitcom-timberwolf border-solid border-[1px] box-border flex items-center !pt-0.5 !pb-0.5 !pl-2 !pr-2 gap-2 min-h-[32px]">
-                        <div className="w-[197.5px] flex items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="h-[22.4px] w-[30.8px] relative">
-                              <div className="absolute top-[-1px] left-[calc(50%_-_15.4px)] [text-decoration:line-through] leading-[22.4px] inline-block whitespace-nowrap w-full h-full">
-                                $100
-                              </div>
-                            </div>
-                            <div className="h-[22.4px] w-[76.5px] relative text-[13.5px]">
-                              <div className="absolute top-[-1px] left-[calc(50%_-_38.25px)] leading-[22.4px] inline-block w-full h-full shrink-0">
-                                $90 / month
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="h-4 w-4 relative overflow-hidden shrink-0">
-                          <Image
-                            className="absolute h-[31.25%] w-full top-[34.38%] right-[21.88%] bottom-[34.38%] left-[21.88%] max-w-full overflow-hidden max-h-full"
-                            width={9}
-                            height={5}
-                            sizes="100vw"
-                            alt=""
-                            src="/Vector66.svg"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch h-px relative bg-replitcom-sisal" />
-              <div className="self-stretch flex flex-col items-start !pt-[15px] !pb-[25px] !pl-0 !pr-0 text-[14.6px] text-replitcom-mine-shaft2">
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 text-[15.1px] mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Everything in Core
-                    </div>
-                  </div>
-                </div>
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 text-[14.8px] mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      $100 monthly credits
-                    </div>
-                  </div>
-                </div>
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Invite up to 15 collaborators
-                    </div>
-                  </div>
-                </div>
-                <div className="self-stretch border-replitcom-pearl-bush border-solid border-b-[1px] flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 mq450:flex-wrap">
-                  <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                    <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                  </div>
-                  <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                    <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                      Invite up to 50 viewers
-                    </div>
-                  </div>
-                </div>
-                {divuseViewModuleVOhHaViItems.map((item, index) => (
-                  <DivuseViewModuleVOhHaVi1
-                    key={index}
-                    divuseViewModuleVOhHaViBorderBottom={
-                      item.divuseViewModuleVOhHaViBorderBottom
-                    }
-                    divuseViewModuleVOhHaViFlexWrap={
-                      item.divuseViewModuleVOhHaViFlexWrap
-                    }
-                    divuseViewModuleVOhHaViAlignContent={
-                      item.divuseViewModuleVOhHaViAlignContent
-                    }
-                    builtInDatabaseForFullStack={
-                      item.builtInDatabaseForFullStack
-                    }
-                    builtInDatabaseForFontSize={item.builtInDatabaseForFontSize}
+          {/* Period toggle */}
+          <div className="flex items-center gap-1 rounded-full bg-[#F0ECE1] p-1">
+            <button
+              type="button"
+              onClick={() => setPeriod("monthly")}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                period === "monthly"
+                  ? "bg-white text-[#16181A] shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
+                  : "text-[#6b6f72] hover:text-[#16181A]"
+              }`}
+              aria-pressed={period === "monthly"}
+            >
+              Monthly
+            </button>
+            <button
+              type="button"
+              onClick={() => setPeriod("yearly")}
+              className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                period === "yearly"
+                  ? "bg-white text-[#16181A] shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
+                  : "text-[#6b6f72] hover:text-[#16181A]"
+              }`}
+              aria-pressed={period === "yearly"}
+            >
+              Yearly
+              <span className="flex items-center gap-1 text-[#E9602F]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M11.444 1.264c.63.062 1.221.34 1.672.792l8.706 8.706c.591.595.923 1.4.923 2.238l-.004.157a3.176 3.176 0 0 1-.919 2.081l-6.584 6.584c-.557.554-1.3.88-2.08.92l-.158.003a3.176 3.176 0 0 1-2.238-.923l-8.706-8.706a2.75 2.75 0 0 1-.792-1.672l-.014-.272V4A2.75 2.75 0 0 1 4 1.25h7.172l.272.014ZM7.5 6.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"
                   />
-                ))}
-              </div>
-            </section>
-
-            {/* Enterprise Column (Updated to match the screenshot precisely) */}
-            <section className="rounded-[40px] bg-replitcom-fantasy flex flex-col items-start !p-8 shrink-0 text-left text-[17px] text-replitcom-vermilion font-[Inter]">
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-4 !pl-0 !pr-0 gap-2 text-[26.1px]">
-                <div className="self-stretch flex flex-col items-start">
-                  <div className="self-stretch relative tracking-[-1.12px] leading-[23.2px] mq450:text-[21px] mq450:leading-[19px]">
-                    Enterprise
-                  </div>
-                </div>
-                <div className="self-stretch flex flex-col items-start text-[16.6px] text-replitcom-mine-shaft2">
-                  <div className="self-stretch relative tracking-[-0.54px] leading-[18px]">For enterprise-grade security &<br />controls</div>
-                </div>
-              </div>
-              <div className="self-stretch h-px relative bg-replitcom-sisal" />
-              <div className="self-stretch flex items-start justify-center !pt-[39px] !pb-6 !pl-0 !pr-0 text-[15.6px] text-replitcom-tuna">
-                <div className="flex-1 flex items-center !pt-[11px] !pb-[11px] !pl-0 !pr-0 box-border max-w-full min-h-[62px]">
-                  <div className="flex flex-col items-start">
-                    <div className="self-stretch h-4 flex items-center">
-                      <div className="overflow-hidden flex flex-col items-start !pt-1 !pb-0 !pl-0 !pr-0 shrink-0">
-                        <div className="relative leading-[22px]">
-                          Custom pricing
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-4 !pl-0 !pr-0 text-center text-replitcom-white">
-                <div className="self-stretch h-20 rounded-[90px] bg-replitcom-cod-gray2 flex items-center justify-center !pt-2.5 !pb-2.5 !pl-10 !pr-10 box-border">
-                  <a
-                    className="relative tracking-[-0.36px] text-[inherit] [text-decoration:none]"
-                    href="https://replit.com/enterprise"
-                    target="_blank"
-                  >
-                    Contact sales
-                  </a>
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col items-start !pt-0 !pb-6 !pl-0 !pr-0 text-center text-replitcom-woodsmoke">
-                <div className="self-stretch h-20 rounded-[90px] bg-replitcom-white border-replitcom-timberwolf border-solid border-[1px] box-border flex items-center justify-center !pt-2.5 !pb-2.5 !pl-10 !pr-10 shadow-[0px_1px_2px_rgba(0,_0,_0,_0.02)]">
-                  <a
-                    className="relative tracking-[-0.36px] text-[inherit] [text-decoration:none]"
-                    href="https://replit.com/enterprise"
-                    target="_blank"
-                  >
-                    Get started
-                  </a>
-                </div>
-              </div>
-              <div className="self-stretch h-px relative bg-replitcom-sisal" />
-              <div className="self-stretch flex flex-col items-start !pt-[15px] !pb-6 !pl-0 !pr-0 text-[14.6px] text-replitcom-mine-shaft2">
-                {enterpriseItems.map((text, index) => {
-                  const isLast = index === enterpriseItems.length - 1;
-                  return (
-                    <div
-                      key={index}
-                      className={`self-stretch border-replitcom-pearl-bush border-solid ${!isLast ? "border-b-[1px]" : ""
-                        } flex items-start !pt-3 !pb-3 !pl-0 !pr-0 gap-3 mq450:flex-wrap`}
-                    >
-                      <div className="h-3.5 w-1.5 flex flex-col items-start !pt-2 !pb-0 !pl-0 !pr-0 box-border min-w-[6px]">
-                        <div className="w-1.5 h-1.5 relative rounded-[3px] bg-replitcom-vermilion min-w-[6px]" />
-                      </div>
-                      <div className="flex-1 overflow-hidden flex flex-col items-start min-w-[144px]">
-                        <div className="self-stretch relative tracking-[-0.48px] leading-[22.4px]">
-                          {text}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
+                </svg>
+                Save $24
+              </span>
+            </button>
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
 
-export default DivuseViewModuleVOhHaVi6;
+        {/* Cards */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <PlanCard
+            name="Starter"
+            description="For exploring what's possible"
+            price={<span className="text-4xl font-medium text-[#16181A]">Free</span>}
+            cta={{ label: "Sign up", href: "/signup" }}
+            benefits={STARTER_BENEFITS}
+          />
+
+          <PlanCard
+            name="Replit Core"
+            description="For personal projects & simple apps"
+            price={<PriceLine amount={formatPrice(corePrice)} sub={["per month", "billed annually"]} />}
+            cta={{
+              label: "Join Replit Core",
+              href: "/signup?upgrade=pricing_page_signup&plan=hacker_pro&period=yearly",
+            }}
+            benefits={CORE_BENEFITS}
+          />
+
+          <PlanCard
+            name="Replit Pro"
+            description="For commercial and professional builds"
+            price={
+              <PriceLine
+                amount={formatPrice(proPrice)}
+                strike={showProStrike ? formatPrice(tier.monthly) : undefined}
+                sub={["per month", "billed annually"]}
+              />
+            }
+            cta={{
+              label: "Join Replit Pro",
+              href: `/signup?upgrade=pricing_page_signup&plan=pro&period=yearly&tier=${proTier}`,
+            }}
+            benefits={PRO_BENEFITS}
+            extra={
+              <CreditTierSelect
+                tiers={PRO_TIERS}
+                value={proTier}
+                onChange={setProTier}
+                period={period}
+              />
+            }
+          />
+
+          <PlanCard
+            name="Enterprise"
+            description="For enterprise-grade security & controls"
+            price={<span className="text-base font-medium text-[#16181A]">Custom pricing</span>}
+            cta={{ label: "Contact sales", href: "https://replit.com/enterprise" }}
+            secondaryCta={{ label: "Get started", href: "/enterprise-wizard" }}
+            benefits={ENTERPRISE_BENEFITS}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PriceLine({ amount, strike, sub }: { amount: string; strike?: string; sub: string[] }) {
+  return (
+    <div className="flex items-center gap-2">
+      {strike && <span className="text-base text-[#B9B4A6] line-through">{strike}</span>}
+      <span className="text-4xl font-medium text-[#16181A]">{amount}</span>
+      <div className="flex flex-col gap-0.5 pt-1">
+        {sub.map((s) => (
+          <span key={s} className="text-xs font-medium leading-tight text-[#8b8f8f]">
+            {s}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CreditTierSelect({
+  tiers,
+  value,
+  onChange,
+  period,
+}: {
+  tiers: CreditTier[];
+  value: string;
+  onChange: (value: string) => void;
+  period: Period;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const selected = tiers.find((t) => t.value === value) ?? tiers[0];
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative mb-2" ref={rootRef}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex w-full items-center justify-between rounded-lg border border-[#DEDACD] bg-white px-3.5 py-2.5 text-sm text-[#16181A] outline-none focus:border-[#E9602F]"
+      >
+        <span className="flex items-center gap-1.5">
+          <span className="text-[#B9B4A6] line-through">{formatPrice(selected.monthly)}</span>
+          <span>{formatPrice(period === "yearly" ? selected.yearly : selected.monthly)} / month</span>
+        </span>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className={`shrink-0 text-[#16181A] transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M12.5303 15.5303C12.2374 15.8232 11.7626 15.8232 11.4697 15.5303L5.46967 9.53033C5.17678 9.23744 5.17678 8.76256 5.46967 8.46967C5.76256 8.17678 6.23744 8.17678 6.53033 8.46967L12 13.9393L17.4697 8.46967C17.7626 8.17678 18.2374 8.17678 18.5303 8.46967C18.8232 8.76256 18.8232 9.23744 18.5303 9.53033L12.5303 15.5303Z"
+          />
+        </svg>
+      </button>
+
+      {open && (
+        <ul
+          role="listbox"
+          className="absolute z-10 mt-2 w-full overflow-hidden rounded-2xl border border-[#EAE6DA] bg-white p-1.5 shadow-[0_12px_32px_rgba(0,0,0,0.10)]"
+        >
+          {tiers.map((t, i) => {
+            const isSelected = t.value === value;
+            return (
+              <li key={t.value} role="option" aria-selected={isSelected}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(t.value);
+                    setOpen(false);
+                  }}
+                  className={`flex w-full items-center gap-1.5 rounded-lg px-3 py-3 text-left text-sm transition-colors ${
+                    i !== 0 ? "border-t border-[#EEEAE0]" : ""
+                  } ${isSelected ? "bg-[#FBEFE9] text-[#16181A]" : "text-[#16181A] hover:bg-[#F7F5EF]"}`}
+                >
+                  <span className="text-[#B9B4A6] line-through">{formatPrice(t.monthly)}</span>
+                  <span>{formatPrice(period === "yearly" ? t.yearly : t.monthly)} / month</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function PlanCard({
+  name,
+  description,
+  price,
+  cta,
+  secondaryCta,
+  benefits,
+  extra,
+}: {
+  name: string;
+  description: string;
+  price: React.ReactNode;
+  cta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+  benefits: { text: string; bold?: boolean }[];
+  extra?: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col rounded-2xl border border-[#EAE6DA] bg-[#FAF8F2] p-6">
+      <div className="flex flex-col gap-1.5 pb-4">
+        <span className="text-2xl font-semibold text-[#E9602F]">{name}</span>
+        <span className="text-sm leading-snug text-[#4a4d4f]">{description}</span>
+      </div>
+
+      <div className="h-px w-full bg-[#E7E2D5]" />
+
+      <div className="flex min-h-20 items-center py-5">{price}</div>
+
+      <a
+        href={cta.href}
+        style={{ color: "#ffffff", opacity: 1 }}
+        className="mb-6 flex w-full items-center justify-center rounded-full bg-[#16181A] px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
+      >
+        {cta.label}
+      </a>
+
+      {extra}
+
+      {secondaryCta && (
+        <a
+          href={secondaryCta.href}
+          className="mb-2 mt-6 flex w-full items-center justify-center rounded-full border border-[#16181A] bg-transparent px-4 py-3 text-sm font-semibold text-[#16181A] transition-colors hover:bg-[#16181A] hover:text-white"
+        >
+          {secondaryCta.label}
+        </a>
+      )}
+
+      <div className="my-6 h-px w-full bg-[#E7E2D5]" />
+
+      <div className="flex flex-col">
+        {benefits.map((b, i) => (
+          <div
+            key={b.text}
+            className={`flex items-start gap-3 py-3 ${i !== 0 ? "border-t border-[#EEEAE0]" : "pt-0"}`}
+          >
+            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#E9602F]" />
+            <span className={`text-sm leading-snug text-[#33363A] ${b.bold ? "font-semibold text-[#16181A]" : ""}`}>
+              {b.text}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
