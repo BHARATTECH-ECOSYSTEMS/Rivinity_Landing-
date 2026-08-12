@@ -31,6 +31,12 @@ npm install
 - `pages/`
   - `_app.tsx` — App wrapper
   - `index.tsx` — Main landing page composition
+  - `carrers.tsx` — Careers route
+  - `contact.tsx` — Contact route
+  - `login.tsx` — Login route
+  - `pricing.tsx` — Pricing route
+  - `security.tsx` — Security route
+  - `signup.tsx` — Signup route
   - `global.css` — Tailwind imports and global styles
 - `components/` — Page sections and reusable UI pieces
   - `benchmark.tsx`
@@ -57,7 +63,6 @@ npm install
 - `lucide-react` — icons
 - `clsx` — conditional classNames
 - `tailwind-merge` — merge Tailwind class lists
-- `react-router-dom` — included in `package.json` but Next.js routing is used for the landing page
 
 ## Development notes
 

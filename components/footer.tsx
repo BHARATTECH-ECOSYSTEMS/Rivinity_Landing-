@@ -27,7 +27,7 @@ const TOP_RIGHT: FooterColumn = {
   links: [
     { label: "Terms & Conditions", href: "#" },
     { label: "Privacy Policy", href: "#" },
-    { label: "Security", href: "#" },
+    { label: "Security", href: "/security" },
     { label: "Compliance", href: "#" },
   ],
 };
