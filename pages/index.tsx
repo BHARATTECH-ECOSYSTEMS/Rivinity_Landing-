@@ -27,7 +27,7 @@ const WLight: NextPage = () => {
       <DivuseViewModuleVOhHaVi3 />
       <ResearchSection/>
       <TestimonialsSection />
-      <DivuseViewModuleVOhHaVi6 />
+      {/* <DivuseViewModuleVOhHaVi6 /> */}
       <FaqSection/>
       <CtaSection/>
       <FooterBigFooterModuleJuPJh />

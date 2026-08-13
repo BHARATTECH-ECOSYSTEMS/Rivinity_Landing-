@@ -17,7 +17,7 @@ const TOP_LEFT: FooterColumn = {
   links: [
     { label: "Our Story", href: "#" },
     { label: "Team", href: "#" },
-    { label: "Careers", href: "#" },
+    { label: "Careers", href: "/carrers" },
     { label: "Governance", href: "#" },
   ],
 };
@@ -25,8 +25,8 @@ const TOP_LEFT: FooterColumn = {
 const TOP_RIGHT: FooterColumn = {
   title: "Legal",
   links: [
-    { label: "Terms & Conditions", href: "#" },
-    { label: "Privacy Policy", href: "#" },
+    { label: "Terms & Conditions", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacy" },
     { label: "Security", href: "/security" },
     { label: "Compliance", href: "#" },
   ],

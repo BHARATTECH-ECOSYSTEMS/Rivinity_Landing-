@@ -194,7 +194,7 @@ const navItems: NavItem[] = [
           { label: "About", href: "/about" },
           // { label: "Team", href: "/team" },
           { label: "Careers", href: "/carrers" },
-          // { label: "Press", href: "/press" },
+          { label: "Certificate", href: "/certificate" },
           { label: "Contact", href: "/contact" },
         ],
       },
