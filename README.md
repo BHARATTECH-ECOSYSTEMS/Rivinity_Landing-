@@ -44,13 +44,18 @@ npm install
 - `_app.tsx` — Application wrapper and global configuration
 - `index.tsx` — Main landing page with hero, features, and CTA sections
 - `about.tsx` — About page with company information
-- `careers.tsx` — Careers and job opportunities page
+- `apitest.tsx` — API testing and integration page
+- `blog.tsx` — Blog and articles page
+- `carrers.tsx` — Careers and job opportunities page
 - `certificate.tsx` — Certificate or credentials display page
+- `Compliance.tsx` — Compliance standards and regulations page
 - `contact.tsx` — Contact form and communication page
+- `documentation.tsx` — Product documentation and guides page
 - `login.tsx` — User login page
 - `pricing.tsx` — Pricing plans and tiers page
 - `privacy.tsx` — Privacy policy page
-- `security.tsx` — Security information and compliance page
+- `research.tsx` — Research findings and case studies page
+- `security.tsx` — Security information and compliance details page
 - `signup.tsx` — User registration page
 - `terms.tsx` — Terms of service page
 - `global.css` — Tailwind imports and global styles
@@ -72,7 +77,15 @@ npm install
 
 **UI Components (`ui/`):**
 - `DotMatrixIcon.tsx` — Dot matrix visual effect component
-- `infinite-slider.tsx` — Infinite scrolling carousel
+- `HeroWorkflow.tsx` — Hero workflow visualization component
+- `ScrollReveal.tsx` — Scroll reveal animation component
+- `infinite-slider.tsx` — Infinite scrolling carousel component
+
+**Research Components (`ui/research/`):**
+- `animated-service-card.tsx` — Animated service card component with interactive effects
+- `bento.tsx` — Bento grid layout component for feature showcase
+- `marquee.tsx` — Marquee scrolling text and content component
+- `ProcessSection.tsx` — Process section display component for workflow visualization
 
 ### Configuration Files
 - `next.config.js` — Next.js configuration
@@ -96,6 +109,11 @@ npm install
 | `/security` | Security standards and compliance details |
 | `/privacy` | Privacy policy and data handling |
 | `/terms` | Terms of service and legal agreements |
+| `/blog` | Blog posts and articles |
+| `/research` | Research findings and case studies |
+| `/documentation` | Product documentation and guides |
+| `/compliance` | Compliance standards and regulations |
+| `/apitest` | API testing and integration documentation |
 
 ## Notable Dependencies
 
