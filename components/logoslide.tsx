@@ -1,610 +1,179 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
-import type { NextPage } from "next";
-import type { CSSProperties } from "react";
-import Image from "next/image";
+import { useMotionValue, animate, motion } from "motion/react";
+import { useState, useEffect } from "react";
+import useMeasure from "react-use-measure";
 
 /* ------------------------------------------------------------------ */
-/*  Component1 (inlined — was previously imported from ./component1)  */
+/*  cn helper (inlined — no @/lib/utils needed)                       */
 /* ------------------------------------------------------------------ */
-
-type Component1Type = {
-  className?: string;
-  variant?: string | number;
-  vector1: string;
-  vector2: string;
-  vector3: string;
-  vector4: string;
-  vector5: string;
-  vector6: string;
-
-  /** Style props */
-  component1Width?: CSSProperties["width"];
-  component1Height?: CSSProperties["height"];
-  component1Flex?: CSSProperties["flex"];
-
-  /** Action props */
-  onComponent1ContainerClick?: () => void;
-};
-
-const getComponent1ContainerStyle = (styleKey: string) => {
-  switch (styleKey) {
-    case "18":
-      return "[&]:[flex-shrink:unset]";
-    case "27":
-      return "[&]:[flex-shrink:unset] [&]:flex [&]:items-start [&]:isolate";
-  }
-};
-const getVectorIconStyle = (styleKey: string) => {
-  switch (styleKey) {
-    case "18":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[51.67%] [&]:w-[27.36%] [&]:top-[24.17%] [&]:right-[71.91%] [&]:bottom-[24.17%] [&]:left-[0.73%]";
-    case "27":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[54.58%] [&]:w-[20.64%] [&]:top-[23.96%] [&]:right-[0%] [&]:bottom-[21.46%] [&]:left-[79.36%] [&]:!!m-[0 important] [&]:z-[0]";
-    case "44":
-      return "[&]:h-[85%] [&]:w-[17.57%] [&]:right-[82.43%] [&]:bottom-[15%]";
-    case "48":
-      return "[&]:h-[97.14%] [&]:right-[0%] [&]:bottom-[2.86%]";
-  }
-};
-const getVectorIcon1Style = (styleKey: string) => {
-  switch (styleKey) {
-    case "18":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[18.75%] [&]:w-[15.09%] [&]:top-[35.21%] [&]:right-[33.64%] [&]:bottom-[46.04%] [&]:left-[51.27%]";
-    case "27":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[71.04%] [&]:w-[21.36%] [&]:top-[23.96%] [&]:right-[21.91%] [&]:bottom-[5%] [&]:left-[56.73%] [&]:!!m-[0 important] [&]:z-[1]";
-    case "44":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(0%)_sepia(90%)_saturate(7461%)_hue-rotate(146deg)_brightness(107%)_contrast(109%)] [&]:h-[69.38%] [&]:w-[9.82%] [&]:top-[10.31%] [&]:right-[0.22%] [&]:bottom-[20.31%] [&]:left-[89.96%]";
-    case "48":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(96%)_sepia(2%)_saturate(542%)_hue-rotate(339deg)_brightness(103%)_contrast(96%)] [&]:h-[36.43%] [&]:w-[9.65%] [&]:top-[32.14%] [&]:right-[11.53%] [&]:bottom-[31.43%] [&]:left-[78.82%] [&]:z-[1]";
-  }
-};
-const getVectorIcon2Style = (styleKey: string) => {
-  switch (styleKey) {
-    case "18":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[18.75%] [&]:w-[10.55%] [&]:top-[35.21%] [&]:right-[26.73%] [&]:bottom-[46.04%] [&]:left-[62.73%] [&]:z-[1]";
-    case "27":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[15.42%] [&]:w-[7%] [&]:top-[5%] [&]:right-[45.82%] [&]:bottom-[79.58%] [&]:left-[47.18%] [&]:!!m-[0 important] [&]:z-[2]";
-    case "44":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(0%)_sepia(90%)_saturate(7461%)_hue-rotate(146deg)_brightness(107%)_contrast(109%)] [&]:h-[68.44%] [&]:w-[3.54%] [&]:top-[10.31%] [&]:right-[11.55%] [&]:bottom-[21.25%] [&]:left-[84.91%]";
-    case "48":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(96%)_sepia(2%)_saturate(542%)_hue-rotate(339deg)_brightness(103%)_contrast(96%)] [&]:h-[34.29%] [&]:w-[5.41%] [&]:top-[31.07%] [&]:right-[45.65%] [&]:bottom-[34.64%] [&]:left-[48.94%] [&]:z-[1]";
-  }
-};
-const getVectorIcon3Style = (styleKey: string) => {
-  switch (styleKey) {
-    case "18":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[18.75%] [&]:w-[16.64%] [&]:top-[35.21%] [&]:right-[13.36%] [&]:bottom-[46.04%] [&]:left-[70%] [&]:z-[2]";
-    case "27":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[52.71%] [&]:w-[7%] [&]:top-[25%] [&]:right-[45.82%] [&]:left-[47.18%] [&]:!!m-[0 important] [&]:z-[3]";
-    case "44":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(0%)_sepia(90%)_saturate(7461%)_hue-rotate(146deg)_brightness(107%)_contrast(109%)] [&]:h-[72.81%] [&]:w-[3.32%] [&]:top-[5.94%] [&]:right-[17.96%] [&]:bottom-[21.25%] [&]:left-[78.72%]";
-    case "48":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(96%)_sepia(2%)_saturate(542%)_hue-rotate(339deg)_brightness(103%)_contrast(96%)] [&]:h-[26.07%] [&]:w-[7.29%] [&]:top-[38.93%] [&]:right-[51.76%] [&]:bottom-[35%] [&]:left-[40.94%] [&]:z-[1]";
-  }
-};
-const getVectorIcon4Style = (styleKey: string) => {
-  switch (styleKey) {
-    case "18":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[18.75%] [&]:w-[15.09%] [&]:top-[35%] [&]:right-[0.73%] [&]:bottom-[46.25%] [&]:left-[84.18%] [&]:z-[3]";
-    case "27":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[53.33%] [&]:w-[12.18%] [&]:top-[24.38%] [&]:right-[54.55%] [&]:bottom-[22.29%] [&]:left-[33.27%] [&]:!!m-[0 important] [&]:z-[4]";
-    case "44":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(0%)_sepia(90%)_saturate(7461%)_hue-rotate(146deg)_brightness(107%)_contrast(109%)] [&]:h-[73.59%] [&]:w-[14.29%] [&]:top-[26.41%] [&]:right-[23.63%] [&]:bottom-[0%] [&]:left-[62.08%]";
-    case "48":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(96%)_sepia(2%)_saturate(542%)_hue-rotate(339deg)_brightness(103%)_contrast(96%)] [&]:h-[26.79%] [&]:w-[8%] [&]:top-[38.93%] [&]:right-[60.12%] [&]:bottom-[34.29%] [&]:left-[31.88%] [&]:z-[1]";
-  }
-};
-const getVectorIcon5Style = (styleKey: string) => {
-  switch (styleKey) {
-    case "18":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[18.75%] [&]:w-[15.18%] [&]:top-[35.21%] [&]:right-[46.18%] [&]:bottom-[46.04%] [&]:left-[38.64%] [&]:z-[1]";
-    case "27":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[66.67%] [&]:w-[12.09%] [&]:top-[11.88%] [&]:right-[68.91%] [&]:bottom-[21.46%] [&]:left-[19%] [&]:!!m-[0 important] [&]:z-[5]";
-    case "44":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(0%)_sepia(90%)_saturate(7461%)_hue-rotate(146deg)_brightness(107%)_contrast(109%)] [&]:h-[53.91%] [&]:w-[13.94%] [&]:top-[26.41%] [&]:right-[40.18%] [&]:bottom-[19.69%] [&]:left-[45.88%]";
-    case "48":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(96%)_sepia(2%)_saturate(542%)_hue-rotate(339deg)_brightness(103%)_contrast(96%)] [&]:h-[37.5%] [&]:w-[8.12%] [&]:top-[38.93%] [&]:right-[69.29%] [&]:bottom-[23.57%] [&]:left-[22.59%] [&]:z-[1]";
-  }
-};
-const getVectorIcon6Style = (styleKey: string) => {
-  switch (styleKey) {
-    case "18":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[18.75%] [&]:w-[16.27%] [&]:top-[35.21%] [&]:right-[59.82%] [&]:bottom-[46.04%] [&]:left-[23.91%] [&]:z-[2]";
-    case "27":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(46%)_sepia(10%)_saturate(298%)_hue-rotate(187deg)_brightness(98%)_contrast(89%)] [&]:h-[54.79%] [&]:w-[17.64%] [&]:top-[23.96%] [&]:right-[82.36%] [&]:bottom-[21.25%] [&]:left-[0%] [&]:!!m-[0 important] [&]:z-[6]";
-    case "44":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(0%)_sepia(90%)_saturate(7461%)_hue-rotate(146deg)_brightness(107%)_contrast(109%)] [&]:h-[72.81%] [&]:w-[15.62%] [&]:top-[5.94%] [&]:right-[55.71%] [&]:bottom-[21.25%] [&]:left-[28.67%]";
-    case "48":
-      return "[&]:[filter:brightness(0)_saturate(100%)_invert(96%)_sepia(2%)_saturate(542%)_hue-rotate(339deg)_brightness(103%)_contrast(96%)] [&]:h-[36.43%] [&]:w-[11.88%] [&]:top-[28.57%] [&]:right-[77.53%] [&]:bottom-[35%] [&]:left-[10.59%] [&]:z-[1]";
-  }
-};
-
-const Component1: NextPage<Component1Type> = ({
-  className = "",
-  variant = 1,
-  onComponent1ContainerClick,
-  component1Width,
-  component1Height,
-  component1Flex,
-  vector1,
-  vector2,
-  vector3,
-  vector4,
-  vector5,
-  vector6,
-}) => {
-  const variantKey = `${variant}`;
-
-  const component1Style: CSSProperties = useMemo(() => {
-    return {
-      width: component1Width,
-      height: component1Height,
-      flex: component1Flex,
-    };
-  }, [component1Width, component1Height, component1Flex]);
-
-  // Kept for parity with the original component (currently unused directly,
-  // available if you want a default click handler on the container).
-  const onComponent1ContainerClick1 = useCallback(() => {
-    window.open("https://replit.com/");
-  }, []);
-
-  return (
-    <div
-      className={`w-30.5 h-8.7 relative overflow-hidden shrink-0 cursor-pointer ${getComponent1ContainerStyle(variantKey)} ${className}`}
-      onClick={onComponent1ContainerClick}
-      style={component1Style}
-    >
-      <Image
-        className={`absolute h-[84%] w-[17.62%] top-[0%] right-[82.38%] bottom-[16%] left-[0%] max-w-full overflow-hidden max-h-full ${getVectorIconStyle(variantKey)}`}
-        width={21.5}
-        height={29.4}
-        sizes="100vw"
-        alt=""
-        src="/Vector.svg"
-      />
-      <Image
-        className={`absolute h-[68.57%] w-[9.84%] top-[10.29%] right-[0%] bottom-[21.14%] left-[90.16%] max-w-full overflow-hidden max-h-full ${getVectorIcon1Style(variantKey)}`}
-        width={12}
-        height={24}
-        sizes="100vw"
-        alt=""
-        src={vector1}
-      />
-      <Image
-        className={`absolute h-[67.71%] w-[3.52%] top-[10.29%] right-[11.39%] bottom-[22%] left-[85.08%] max-w-full overflow-hidden max-h-full ${getVectorIcon2Style(variantKey)}`}
-        width={4.3}
-        height={23.7}
-        sizes="100vw"
-        alt=""
-        src={vector2}
-      />
-      <Image
-        className={`absolute h-[72%] w-[3.36%] top-[5.71%] right-[17.7%] bottom-[22.29%] left-[78.93%] max-w-full overflow-hidden max-h-full ${getVectorIcon3Style(variantKey)}`}
-        width={4.1}
-        height={25.2}
-        sizes="100vw"
-        alt=""
-        src={vector3}
-      />
-      <Image
-        className={`absolute h-[72.86%] w-[14.34%] top-[26.29%] right-[23.44%] bottom-[0.86%] left-[62.21%] max-w-full overflow-hidden max-h-full ${getVectorIcon4Style(variantKey)}`}
-        width={17.5}
-        height={25.5}
-        sizes="100vw"
-        alt=""
-        src={vector4}
-      />
-      <Image
-        className={`absolute h-[53.43%] w-[13.93%] top-[26.29%] right-[40.08%] bottom-[20.29%] left-[45.98%] max-w-full overflow-hidden max-h-full ${getVectorIcon5Style(variantKey)}`}
-        width={17}
-        height={18.7}
-        sizes="100vw"
-        alt=""
-        src={vector5}
-      />
-      <Image
-        className={`absolute h-[72%] w-[15.66%] top-[5.71%] right-[55.57%] bottom-[22.29%] left-[28.77%] max-w-full overflow-hidden max-h-full ${getVectorIcon6Style(variantKey)}`}
-        width={19.1}
-        height={25.2}
-        sizes="100vw"
-        alt=""
-        src={vector6}
-      />
-    </div>
-  );
-};
-
-/* ------------------------------------------------------------------ */
-/*  Marquee (originally DivuseViewModuleVOhHaVi4)                     */
-/* ------------------------------------------------------------------ */
-
-export type LogoMarqueeType = {
-  className?: string;
-  /** Scroll speed in pixels per second — matches Webflow's data-marquee-speed */
-  speed?: number;
-};
-
-// Calculates animation duration from actual track width so the marquee
-// moves at a constant px/sec speed, regardless of how many logos are
-// rendered or how wide the viewport is.
-function useMarqueeDuration(speed: number) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [duration, setDuration] = useState(30);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const calculate = () => {
-      // The track holds two copies of the logo set side by side, so half
-      // its scrollWidth is the width of a single set — the exact distance
-      // translateX(-50%) needs to travel for a seamless loop.
-      const singleSetWidth = track.scrollWidth / 2;
-      if (singleSetWidth > 0) {
-        setDuration(singleSetWidth / speed);
-      }
-    };
-
-    calculate();
-
-    const resizeObserver = new ResizeObserver(calculate);
-    resizeObserver.observe(track);
-
-    return () => resizeObserver.disconnect();
-  }, [speed]);
-
-  return { trackRef, duration };
+function cn(...classes: (string | undefined | false | null)[]) {
+  return classes.filter(Boolean).join(" ");
 }
 
-const LogoSet = () => {
-  return (
-    <>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[32.29%] w-[35.73%] top-[33.96%] right-[20.64%] bottom-[33.75%] left-[43.64%] max-w-full overflow-hidden max-h-full"
-            width={39.3}
-            height={15.5}
-            sizes="100vw"
-            alt=""
-            src="/Visual-Item-A.svg"
-          />
-          <Image
-            className="absolute h-[86.25%] w-[99.82%] top-[6.88%] right-[0.18%] bottom-[6.88%] left-[0%] max-w-full overflow-hidden max-h-full z-1"
-            width={109.8}
-            height={41.4}
-            sizes="100vw"
-            alt=""
-            src="/Visual-Item-B.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[57.29%] w-full top-[21.46%] right-[0.09%] bottom-[21.25%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={109.9}
-            height={27.5}
-            sizes="100vw"
-            alt=""
-            src="/Vector31.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[28.33%] w-full top-[35.83%] right-[0%] bottom-[35.83%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={110}
-            height={13.6}
-            sizes="100vw"
-            alt=""
-            src="/Clip-path-group7.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <Component1
-          variant={18}
-          component1Width="110px"
-          component1Height="unset"
-          component1Flex="1"
-          vector1="/Visual-Item-C.svg"
-          vector2="/Visual-Item-C1.svg"
-          vector3="/Visual-Item-D.svg"
-          vector4="/Visual-Item-E.svg"
-          vector5="/Visual-Item-F.svg"
-          vector6="/Visual-Item-G.svg"
-        />
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[57.29%] w-full top-[21.25%] right-[0%] bottom-[21.46%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={110}
-            height={27.5}
-            sizes="100vw"
-            alt=""
-            src="/Clip-path-group9.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[40.83%] w-full top-[29.38%] right-[0%] bottom-[29.79%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={110}
-            height={19.6}
-            sizes="100vw"
-            alt=""
-            src="/Clip-path-group.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 overflow-hidden flex items-start relative isolate">
-          <Image
-            className="h-[41.04%] w-[13.82%] absolute top-[20.63%] right-[86.18%] bottom-[38.33%] left-[0%] max-w-full overflow-hidden max-h-full z-0"
-            width={15.2}
-            height={19.7}
-            sizes="100vw"
-            alt=""
-            src="/Visual-Item-I.svg"
-          />
-          <Image
-            className="h-[30.83%] w-[11.64%] absolute top-[30.63%] right-[73%] bottom-[38.54%] left-[15.36%] max-w-full overflow-hidden max-h-full z-1"
-            width={12.8}
-            height={14.8}
-            sizes="100vw"
-            alt=""
-            src="/Vector33.svg"
-          />
-          <Image
-            className="h-[31.67%] w-[13.82%] absolute top-[29.79%] right-[58.09%] bottom-[38.54%] left-[28.09%] max-w-full overflow-hidden max-h-full z-2"
-            width={15.2}
-            height={15.2}
-            sizes="100vw"
-            alt=""
-            src="/Visual-Item-I1.svg"
-          />
-          <Image
-            className="h-[40.63%] w-[8.18%] absolute top-[20.63%] right-[48.36%] bottom-[38.75%] left-[43.45%] max-w-full overflow-hidden max-h-full z-3"
-            width={9}
-            height={19.5}
-            sizes="100vw"
-            alt=""
-            src="/Vector34.svg"
-          />
-          <Image
-            className="h-[29.17%] w-[3.27%] absolute top-[32.29%] right-[43.45%] bottom-[38.54%] left-[53.27%] max-w-full overflow-hidden max-h-full z-4"
-            width={3.6}
-            height={14}
-            sizes="100vw"
-            alt=""
-            src="/Vector3.svg"
-          />
-          <Image
-            className="h-[7.5%] w-[3.27%] absolute top-[21.88%] right-[43.45%] bottom-[70.63%] left-[53.27%] max-w-full overflow-hidden max-h-full z-5"
-            width={3.6}
-            height={3.6}
-            sizes="100vw"
-            alt=""
-            src="/Visual-Item-I2.svg"
-          />
-          <Image
-            className="h-[31.25%] w-[11.27%] absolute top-[30.21%] right-[30%] bottom-[38.54%] left-[58.73%] max-w-full overflow-hidden max-h-full z-6"
-            width={12.4}
-            height={15}
-            sizes="100vw"
-            alt=""
-            src="/Vector35.svg"
-          />
-          <Image
-            className="h-[49.38%] w-[13.91%] absolute top-[29.79%] right-[14.91%] bottom-[20.83%] left-[71.18%] max-w-full overflow-hidden max-h-full z-7"
-            width={15.3}
-            height={23.7}
-            sizes="100vw"
-            alt=""
-            src="/Visual-Item-H.svg"
-          />
-          <Image
-            className="h-[31.67%] w-[13.82%] absolute top-[29.79%] right-[0.09%] bottom-[38.54%] left-[86.09%] max-w-full overflow-hidden max-h-full z-8"
-            width={15.2}
-            height={15.2}
-            sizes="100vw"
-            alt=""
-            src="/Visual-Item-I1.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 overflow-hidden flex items-start relative isolate">
-          <Image
-            className="h-[37.29%] w-[16.36%] absolute top-[32.29%] right-[57.45%] bottom-[30.42%] left-[26.18%] max-w-full overflow-hidden max-h-full z-0"
-            width={18}
-            height={17.9}
-            sizes="100vw"
-            alt=""
-            src="/Vector36.svg"
-          />
-          <Image
-            className="h-[37.29%] w-[16.36%] absolute top-[32.29%] right-[39.82%] bottom-[30.42%] left-[43.82%] max-w-full overflow-hidden max-h-full z-1"
-            width={18}
-            height={17.9}
-            sizes="100vw"
-            alt=""
-            src="/Vector37.svg"
-          />
-          <Image
-            className="h-[54.17%] w-[15.64%] absolute top-[32.29%] right-[22.91%] bottom-[13.54%] left-[61.45%] max-w-full overflow-hidden max-h-full z-2"
-            width={17.2}
-            height={26}
-            sizes="100vw"
-            alt=""
-            src="/Vector38.svg"
-          />
-          <Image
-            className="h-[54.79%] w-[3.45%] absolute top-[13.75%] right-[17.27%] bottom-[31.46%] left-[79.27%] max-w-full overflow-hidden max-h-full z-3"
-            width={3.8}
-            height={26.3}
-            sizes="100vw"
-            alt=""
-            src="/Vector3.svg"
-          />
-          <Image
-            className="h-[37.29%] w-[15%] absolute top-[32.29%] right-[0.82%] bottom-[30.42%] left-[84.18%] max-w-full overflow-hidden max-h-full z-4"
-            width={16.5}
-            height={17.9}
-            sizes="100vw"
-            alt=""
-            src="/Vector39.svg"
-          />
-          <Image
-            className="h-[58.13%] w-[24.64%] absolute top-[11.67%] right-[75.27%] bottom-[30.21%] left-[0.09%] max-w-full overflow-hidden max-h-full z-5"
-            width={27.1}
-            height={27.9}
-            sizes="100vw"
-            alt=""
-            src="/Vector40.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[87.29%] w-full top-[6.04%] right-[0%] bottom-[6.67%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={110}
-            height={41.9}
-            sizes="100vw"
-            alt=""
-            src="/Clip-path-group3.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[48.75%] w-full top-[25.42%] right-[0.09%] bottom-[25.83%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={109.9}
-            height={23.4}
-            sizes="100vw"
-            alt=""
-            src="/Clip-path-group1.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[77.08%] w-full top-[11.46%] right-[0%] bottom-[11.46%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={110}
-            height={37}
-            sizes="100vw"
-            alt=""
-            src="/Clip-path-group5.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-[60.63%] w-full top-[19.58%] right-[0%] bottom-[19.79%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={110}
-            height={29.1}
-            sizes="100vw"
-            alt=""
-            src="/Clip-path-group8.svg"
-          />
-        </div>
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <Component1
-          variant={27}
-          component1Width="110px"
-          component1Height="unset"
-          component1Flex="1"
-          vector1="/Vector42.svg"
-          vector2="/Vector43.svg"
-          vector3="/Vector44.svg"
-          vector4="/Vector45.svg"
-          vector5="/Vector46.svg"
-          vector6="/Vector47.svg"
-        />
-      </div>
-      <div className="h-12 flex flex-col items-center justify-center">
-        <div className="w-27.5 flex-1 relative overflow-hidden">
-          <Image
-            className="absolute h-3/6 w-full top-[25%] right-[0%] bottom-[25%] left-[0%] max-w-full overflow-hidden max-h-full"
-            width={110}
-            height={24}
-            sizes="100vw"
-            alt=""
-            src="/Clip-path-group6.svg"
-          />
-        </div>
-      </div>
-    </>
-  );
+/* ------------------------------------------------------------------ */
+/*  InfiniteSlider (inlined)                                          */
+/* ------------------------------------------------------------------ */
+type InfiniteSliderProps = {
+  children: React.ReactNode;
+  gap?: number;
+  speed?: number;
+  speedOnHover?: number;
+  direction?: "horizontal" | "vertical";
+  reverse?: boolean;
+  className?: string;
 };
 
-const LogoMarquee: NextPage<LogoMarqueeType> = ({
-  className = "",
-  speed = 50,
-}) => {
-  const { trackRef, duration } = useMarqueeDuration(speed);
+function InfiniteSlider({
+  children,
+  gap = 16,
+  speed = 100,
+  speedOnHover,
+  direction = "horizontal",
+  reverse = false,
+  className,
+}: InfiniteSliderProps) {
+  const [currentSpeed, setCurrentSpeed] = useState(speed);
+  const [ref, { width, height }] = useMeasure();
+  const translation = useMotionValue(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    let controls: ReturnType<typeof animate>;
+    const size = direction === "horizontal" ? width : height;
+    if (!size) return;
+
+    const contentSize = size + gap;
+    const from = reverse ? -contentSize / 2 : 0;
+    const to = reverse ? 0 : -contentSize / 2;
+    const duration = Math.abs(to - from) / currentSpeed;
+
+    if (isTransitioning) {
+      const remainingDistance = Math.abs(translation.get() - to);
+      controls = animate(translation, [translation.get(), to], {
+        ease: "linear",
+        duration: remainingDistance / currentSpeed,
+        onComplete: () => {
+          setIsTransitioning(false);
+          setKey((k) => k + 1);
+        },
+      });
+    } else {
+      controls = animate(translation, [from, to], {
+        ease: "linear",
+        duration,
+        repeat: Infinity,
+        repeatType: "loop",
+        repeatDelay: 0,
+        onRepeat: () => translation.set(from),
+      });
+    }
+
+    return () => controls?.stop();
+  }, [key, translation, currentSpeed, width, height, gap, isTransitioning, direction, reverse]);
+
+  const hoverProps = speedOnHover
+    ? {
+      onHoverStart: () => {
+        setIsTransitioning(true);
+        setCurrentSpeed(speedOnHover);
+      },
+      onHoverEnd: () => {
+        setIsTransitioning(true);
+        setCurrentSpeed(speed);
+      },
+    }
+    : {};
 
   return (
-    <section
-      className={`self-stretch flex flex-col items-center justify-center max-w-full ${className} pt-10`}
+    <div className={cn("overflow-hidden", className)}>
+      <motion.div
+        className="flex w-max"
+        style={{
+          ...(direction === "horizontal" ? { x: translation } : { y: translation }),
+          gap: `${gap}px`,
+          flexDirection: direction === "horizontal" ? "row" : "column",
+        }}
+        ref={ref}
+        {...hoverProps}
+      >
+        {children}
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  LogoCloud (inlined)                                                */
+/* ------------------------------------------------------------------ */
+type Logo = {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+};
+
+type LogoCloudProps = React.ComponentProps<"div"> & {
+  logos: Logo[];
+};
+
+function LogoCloud({ className, logos, ...props }: LogoCloudProps) {
+  return (
+    <div
+      {...props}
+      className={cn(
+        "overflow-hidden py-4 mask-[linear-gradient(to_right,transparent,black,transparent)]",
+        className
+      )}
     >
-      <div className="flex flex-col items-center justify-center max-w-[1920px] w-full">
-        <div className="w-full flex flex-col items-start pt-16 pb-16 pl-0 pr-0 box-border max-w-full">
-          {/* Marquee viewport: clips the track, keeps a soft inset shadow */}
-          <div className="marquee-viewport relative w-full overflow-hidden">
-            <div
-              ref={trackRef}
-              className="marquee-track flex items-center pt-0 pb-0 pl-0 pr-12 gap-20 w-max mq925:gap-5 mq1400:gap-10 mq1400:!pr-6 mq1400:box-border"
-              style={{ animationDuration: `${duration}s` }}
-            >
-              <LogoSet />
-              <LogoSet />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        .marquee-track {
-          animation-name: marquee-scroll;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-        }
-        /* Pause on hover — no JS state needed */
-        .marquee-viewport:hover .marquee-track {
-          animation-play-state: paused;
-        }
-        @keyframes marquee-scroll {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            /* Track is two copies placed side by side, so -50% moves
-               exactly one full set width, giving a seamless loop */
-            transform: translateX(-50%);
-          }
-        }
-        /* Respect users who've asked for less motion */
-        @media (prefers-reduced-motion: reduce) {
-          .marquee-track {
-            animation: none;
-          }
-        }
-      `}</style>
-    </section>
+      <InfiniteSlider gap={42} reverse speed={80} speedOnHover={25}>
+        {logos.map((logo) => (
+          <img
+            alt={logo.alt}
+            className="pointer-events-none h-4 w-auto select-none md:h-5"
+            height={20}
+            key={`logo-${logo.alt}`}
+            loading="lazy"
+            src={logo.src}
+          />
+        ))}
+      </InfiniteSlider>
+    </div>
   );
-};
+}
 
-export default LogoMarquee;
+/* ------------------------------------------------------------------ */
+/*  Demo page                                                          */
+/* ------------------------------------------------------------------ */
+const logos: Logo[] = [
+  { src: "https://svgl.app/library/nvidia-wordmark-light.svg", alt: "Nvidia Logo" },
+  { src: "https://svgl.app/library/supabase_wordmark_light.svg", alt: "Supabase Logo" },
+  { src: "https://svgl.app/library/openai_wordmark_light.svg", alt: "OpenAI Logo" },
+  { src: "https://svgl.app/library/turso-wordmark-light.svg", alt: "Turso Logo" },
+  { src: "https://svgl.app/library/vercel_wordmark.svg", alt: "Vercel Logo" },
+  { src: "https://svgl.app/library/github_wordmark_light.svg", alt: "GitHub Logo" },
+  { src: "https://svgl.app/library/claude-ai-wordmark-icon_light.svg", alt: "Claude AI Logo" },
+  { src: "https://svgl.app/library/clerk-wordmark-light.svg", alt: "Clerk Logo" },
+];
+
+export default function DemoOne() {
+  return (
+    <div className="w-full place-content-center mt-10">
+      <div
+        aria-hidden="true"
+        className={cn(
+          "-z-10 -top-1/2 -translate-x-1/2 pointer-events-none absolute left-1/2 h-[120vmin] w-[120vmin] rounded-b-full",
+          "bg-[radial-gradient(ellipse_at_center,--theme(--color-foreground/.1),transparent_50%)]",
+          "blur-[30px]"
+        )}
+      />
+      <section className="relative mx-auto max-w-7xl">
+        <div className="mx-auto my-5 h-px max-w-sm bg-border mask-[linear-gradient(to_right,transparent,black,transparent)]" />
+        <LogoCloud logos={logos} />
+        <div className="mt-5 h-px bg-border mask-[linear-gradient(to_right,transparent,black,transparent)]" />
+      </section>
+    </div>
+  );
+}

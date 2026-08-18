@@ -14,7 +14,7 @@ import CtaSection from "../components/cta-section";
 
 const WLight: NextPage = () => {
   return (
-    <div className="w-full relative bg-[#faf6f1] overflow-y-auto flex flex-col items-start gap-[0.3px] leading-normal tracking-normal">
+    <div className="w-full relative overflow-y-auto flex flex-col items-start gap-[0.3px] leading-normal tracking-normal">
       <HeaderuseViewModuleVOhHa />
       
       <section className="self-stretch flex flex-col items-start box-border max-w-full z-1">

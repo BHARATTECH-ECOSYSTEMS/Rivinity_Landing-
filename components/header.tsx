@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import {
   ChevronDown,
   Menu,
@@ -47,12 +47,12 @@ type NavItem =
   | { label: string; href: string; type: "link" }
   | { label: string; type: "dropdown"; variant?: "sections"; sections: DropdownSection[] }
   | {
-      label: string;
-      type: "dropdown";
-      variant: "platform";
-      featured: FeaturedItem[];
-      categories: CategoryGroup[];
-    };
+    label: string;
+    type: "dropdown";
+    variant: "platform";
+    featured: FeaturedItem[];
+    categories: CategoryGroup[];
+  };
 
 // ---------- Nav data ----------
 
@@ -202,6 +202,18 @@ const navItems: NavItem[] = [
   },
 ];
 
+// ---------- Header entrance animation (same pattern as Hero16's nav) ----------
+
+const headerBarVariants: Variants = {
+  hidden: { opacity: 0, y: -14, filter: "blur(8px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { type: "spring", bounce: 0.4, duration: 1.5 },
+  },
+};
+
 // ---------- Platform flagship panel ----------
 
 function PlatformDropdownPanel({
@@ -285,16 +297,21 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-[#fafafa]">
-      <div className="mx-auto flex h-19 max-w-360 items-center justify-start px-4 sm:px-6 lg:px-10 gap-3 sm:gap-6 lg:gap-15">
+    <header className="fixed top-1 left-0 right-0 z-50 w-full">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={headerBarVariants}
+        className="mx-auto mt-2 flex h-15 max-w-340 justify-start items-center px-4 gap-3 bg-white/60 backdrop-blur-lg backdrop-saturate-150 border rounded-4xl border-white/40 shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
+      >
         {/* Logo */}
-        <Link href="/" className="group flex items-center gap-1 shrink-0">
-          <div className="relative h-[clamp(36px,8vw,60px)] w-[clamp(36px,8vw,60px)] transition-transform duration-300 group-hover:scale-110">
-            <Image src="/logo.png" alt="Logo" fill className="object-contain" priority />
+        <Link href="/" className="group flex items-center shrink-0">
+          <div className="relative h-35 w-35 transition-transform duration-300 group-hover:scale-110">
+            <Image src="/rivinity_logo.png" alt="Logo" fill className="object-contain" priority />
           </div>
-          <span className="text-foreground text-[clamp(17px,4.2vw,28px)] font-semibold tracking-[-1px] text-[#313337] transition-colors whitespace-nowrap">
+          {/* <span className="text-foreground text-[clamp(17px,4.2vw,28px)] font-semibold tracking-[-1px] text-[#313337] transition-colors whitespace-nowrap">
             RIVINITY
-          </span>
+          </span> */}
         </Link>
 
         {/* Desktop Nav */}
@@ -304,7 +321,7 @@ export default function Header() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="px-4 py-2.5 text-[14px] text-gray-500 transition hover:bg-[#E9E7E0] rounded-lg"
+                className="px-4 py-2.5 text-[14px] text-gray-500 transition hover:bg-[#ffffff] rounded-lg"
               >
                 {item.label}
               </Link>
@@ -316,7 +333,7 @@ export default function Header() {
               >
                 <button
                   className={`flex items-center gap-2 rounded-lg px-2 py-2.5 text-[15px] font-medium text-[#3C3C43] transition-all duration-200
-                      ${openDropdown === item.label ? "bg-[#F1EFEA]" : "bg-transparent hover:bg-[#F1EFEA]"}`}
+                      ${openDropdown === item.label ? "bg-[#f]" : "bg-transparent hover:bg-[#F1EFEA]"}`}
                 >
                   {item.label}
                   <ChevronDown
@@ -332,17 +349,17 @@ export default function Header() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.15, ease: "easeOut" }}
-                      className="absolute left-0 top-full z-50 mt-2 rounded-xl border border-black/10 bg-[#F1F0EE] shadow-xl overflow-hidden"
+                      className="absolute left-0 top-full z-50 mt-2 rounded-xl border border-black/10 bg-[#fafafa] shadow-xl overflow-hidden"
                       style={
                         item.variant === "platform"
                           ? { minWidth: "720px" }
                           : {
-                              minWidth: hasDescriptions(item.sections)
-                                ? "280px"
-                                : item.sections.length > 1
+                            minWidth: hasDescriptions(item.sections)
+                              ? "280px"
+                              : item.sections.length > 1
                                 ? "140px"
                                 : "80px",
-                            }
+                          }
                       }
                     >
                       {item.variant === "platform" ? (
@@ -388,7 +405,7 @@ export default function Header() {
         </nav>
 
         {/* Right utility: Docs / Sign in / Get Started */}
-        <div className="hidden items-center gap-1 lg:flex ml-auto">
+        <div className="hidden gap-1 lg:flex ml-auto items-center">
           <Link
             href="/docs"
             className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-black/5"
@@ -399,11 +416,11 @@ export default function Header() {
             href="/login"
             className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-black/5"
           >
-            Sign in
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-in-icon lucide-log-in"><path d="m10 17 5-5-5-5" /><path d="M15 12H3" /><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /></svg>
           </Link>
           <Link
             href="/signup"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-[#FF5A1F] px-4 py-2 text-sm font-semibold text-[#FF5A1F] active:scale-95"
+            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-[#FF5A1F] px-4 py-3 text-sm font-semibold text-[#FF5A1F] active:scale-95"
           >
             <span className="absolute inset-0 origin-left scale-x-0 bg-[#FF5A1F] transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
             <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
@@ -422,7 +439,7 @@ export default function Header() {
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -463,7 +480,7 @@ export default function Header() {
                   className="rounded-md px-3 py-3 text-center text-sm font-medium text-gray-700 hover:bg-black/5"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Sign in
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-in-icon lucide-log-in"><path d="m10 17 5-5-5-5" /><path d="M15 12H3" /><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /></svg>
                 </Link>
                 <Link
                   href="/signup"
