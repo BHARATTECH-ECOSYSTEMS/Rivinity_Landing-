@@ -1,16 +1,14 @@
-# Rivinity Landing Page
+# Rivinity Website
 
-A modern, high-performance marketing landing page built with Next.js 15 and React 19. Features a fully responsive design with smooth animations, multiple conversion funnels (pricing, signup, contact), and a comprehensive information architecture including about, careers, security, and policy pages.
+A Next.js 15 website for Rivinity, built with React 19 and TypeScript. The project includes a marketing landing page, product and research pages, authentication screens, contact and pricing flows, and legal and compliance content.
 
 ## Key Features
 
-- 🚀 **High Performance** — Next.js with built-in optimization, fast page loads
-- ✨ **Smooth Animations** — Framer Motion animations for engaging interactions
-- 📱 **Fully Responsive** — Mobile-first design with Tailwind CSS
-- 🎨 **Modern UI** — Component-based architecture with reusable sections
-- 🔒 **Professional Pages** — Security, privacy, terms, and career sections
-- 💰 **Pricing & Conversion** — Pricing table, signup, and contact pages
-- 🎯 **SEO Ready** — Next.js SEO optimization support
+- Next.js pages for the landing page, product information, research, documentation, and company content
+- Reusable landing-page and research-section components
+- Framer Motion animations and carousel components
+- Responsive styling with Tailwind CSS and global CSS
+- Authentication, pricing, contact, and compliance-related pages
 
 ## Tech Stack
 
@@ -46,7 +44,7 @@ npm install
 - `about.tsx` — About page with company information
 - `apitest.tsx` — API testing and integration page
 - `blog.tsx` — Blog and articles page
-- `carrers.tsx` — Careers and job opportunities page
+- `carrers.tsx` — Careers and job opportunities page (the filename is intentionally spelled `carrers`)
 - `certificate.tsx` — Certificate or credentials display page
 - `Compliance.tsx` — Compliance standards and regulations page
 - `contact.tsx` — Contact form and communication page
@@ -58,7 +56,7 @@ npm install
 - `security.tsx` — Security information and compliance details page
 - `signup.tsx` — User registration page
 - `terms.tsx` — Terms of service page
-- `global.css` — Tailwind imports and global styles
+- `global.css` — Global styles and Tailwind/PostCSS styles; this is not a route
 
 ### Components (`components/`)
 **Landing Page Sections:**
@@ -85,7 +83,11 @@ npm install
 - `animated-service-card.tsx` — Animated service card component with interactive effects
 - `bento.tsx` — Bento grid layout component for feature showcase
 - `marquee.tsx` — Marquee scrolling text and content component
+- `open.tsx` — Supporting research UI component
 - `ProcessSection.tsx` — Process section display component for workflow visualization
+
+### Utilities (`lib/`)
+- `utils.ts` — Shared utility functions used by components
 
 ### Configuration Files
 - `next.config.js` — Next.js configuration
@@ -100,7 +102,7 @@ npm install
 |-------|---------|
 | `/` | Landing page with hero, features, testimonials, and CTA |
 | `/about` | Company information and mission |
-| `/careers` | Job openings and career opportunities |
+| `/carrers` | Job openings and career opportunities |
 | `/pricing` | Pricing plans and feature comparison |
 | `/contact` | Contact form and inquiry page |
 | `/signup` | User registration and onboarding |
@@ -112,7 +114,7 @@ npm install
 | `/blog` | Blog posts and articles |
 | `/research` | Research findings and case studies |
 | `/documentation` | Product documentation and guides |
-| `/compliance` | Compliance standards and regulations |
+| `/Compliance` | Compliance standards and regulations |
 | `/apitest` | API testing and integration documentation |
 
 ## Notable Dependencies

@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 
 export default function ResearchBentoGrid() {
   return (
-    <section className="w-full bg-transparent px-4 py-16 sm:px-6 lg:px-10 lg:py-20">
+    <section className="w-full bg-[#f8fafc] px-4 py-16 sm:px-6 lg:px-10 lg:py-20">
       <div className="mx-auto w-full max-w-[1680px]">
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-6 lg:grid-rows-2">
+       <div className="grid h-[78vh] grid-cols-1 gap-4 lg:grid-cols-6 lg:grid-rows-2">
           
           {/* Card 1 */}
           <BentoCard
@@ -122,7 +122,7 @@ export function BentoCard({
       }}
       className={clsx(
         className,
-        "group relative flex min-h-[31rem] flex-col overflow-hidden rounded-[22px]",
+        "group relative flex min-h-0 flex-col overflow-hidden rounded-[22px]",
         "border border-black/[0.08]",
         "bg-[#F1EFEB]",
         "shadow-[0_2px_12px_rgba(0,0,0,0.035)]",
@@ -133,7 +133,7 @@ export function BentoCard({
       )}
     >
       {/* Graphic */}
-      <div className="relative min-h-[22rem] flex-1 overflow-hidden">
+     <div className="relative h-[60%] overflow-hidden">
         <motion.div
           variants={{
             idle: {
@@ -179,7 +179,7 @@ export function BentoCard({
       </div>
 
       {/* Content */}
-      <div className="relative z-20 -mt-16 px-7 pb-8 sm:px-8">
+    <div className="relative z-20 px-5 pb-5">
         <span
           className="
             block
@@ -197,12 +197,12 @@ export function BentoCard({
           className="
             mt-3
             max-w-[560px]
-            text-[1.65rem]
+         text-[1.15rem]
             font-semibold
             leading-[1.12]
             tracking-[-0.025em]
             text-[#161616]
-            sm:text-[1.75rem]
+           sm:text-[1.25rem]
           "
         >
           {title}
@@ -210,10 +210,10 @@ export function BentoCard({
 
         <p
           className="
-            mt-3
+            mt-2
             max-w-[600px]
-            text-[0.94rem]
-            leading-6
+          text-[0.85rem]
+           leading-5
             text-black/55
           "
         >

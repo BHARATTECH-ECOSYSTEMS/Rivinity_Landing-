@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
-
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import FUIBentoGridDark from "../components/ui/research/bento";
 import ResearchTeam from "../components/ui/research/marquee";
 import {
   ServiceCarousel,
   defaultResearchServices,
 } from "../components/ui/research/animated-service-card";
+
+
 import Header from "../components/header";
 import Footer from "../components/footer";
+import Cta from "../components/cta-section";
 
+import Integraations3 from "../components/ui/research/open";
 export const metadata: Metadata = {
   title: "Research — Rivinity",
   description:
@@ -26,30 +30,30 @@ const recognizedBy = [
   "Open Innovation",
 ];
 
-const researchAreas = [
+const researchProcess = [
   {
-    title: "Agents",
+    number: "01",
+    title: "Explore",
     description:
-      "Multi-agent orchestration, tool-use reliability, and long-horizon planning for production systems that act, not just answer.",
-    gradient: "from-[#2A2E7A] via-[#4B4FA8] to-[#7A6FD6]",
+      "We investigate emerging technologies, scientific papers, and real-world problems to identify promising research directions.",
   },
   {
-    title: "Security",
+    number: "02",
+    title: "Experiment",
     description:
-      "Adversarial robustness, model provenance, and threat detection for AI systems operating inside regulated infrastructure.",
-    gradient: "from-[#7A2E4B] via-[#A83F5A] to-[#D6746F]",
+      "We build prototypes, train models, and test different approaches through rapid experimentation.",
   },
   {
-    title: "Media Forensics",
+    number: "03",
+    title: "Validate",
     description:
-      "Generative-artifact fingerprinting and deepfake detection built to survive real-world compression and re-encoding.",
-    gradient: "from-[#1F4D4D] via-[#2E7A72] to-[#6FD6B8]",
+      "We evaluate our systems against benchmarks and real-world scenarios to understand their performance and limitations.",
   },
   {
-    title: "Cloud Intelligence",
+    number: "04",
+    title: "Build",
     description:
-      "Sovereign-grade inference scheduling and compliance-aware workload placement across CLOS-AI.",
-    gradient: "from-[#3A2E7A] via-[#5F4FA8] to-[#9F6FD6]",
+      "Promising research is transformed into reliable systems, tools, and infrastructure.",
   },
 ];
 
@@ -71,38 +75,7 @@ const recognizedResearch = [
     authors: "P. NAIR, S. IYER, R. CHATTERJEE ET AL.",
   },
 ];
-const processSteps = [
-  {
-    number: "01",
-    title: "Research and Analysis",
-    description:
-      "We start by understanding your vision in depth — studying your competitors, your industry, and your users. This groundwork shapes every decision that follows and ensures the end product actually fits the people using it.",
-  },
-  {
-    number: "02",
-    title: "Wireframing and Prototyping",
-    description:
-      "Next we lay out skeletal versions of every screen. These low-fidelity blueprints let us test flow and structure early, so problems get caught before a single pixel of visual design is touched.",
-  },
-  {
-    number: "03",
-    title: "Design Creation",
-    description:
-      "With the structure validated, our design phase brings the vision to life. We focus on visual polish while staying tightly aligned with brand identity — nothing ships that doesn't feel intentional.",
-  },
-  {
-    number: "04",
-    title: "Development and Testing",
-    description:
-      "Designs become a fully working product. Every feature goes through rigorous testing so the final build is reliable, performant, and behaves exactly as designed across devices.",
-  },
-  {
-    number: "05",
-    title: "Launch and Support",
-    description:
-      "Shipping isn't the finish line. We stay on to handle post-launch issues, monitor performance, and keep iterating — because a good product keeps evolving after release.",
-  },
-];
+
 
 const openSourceProjects = [
   {
@@ -223,7 +196,7 @@ const footerColumns = [
 
 export default function ResearchPage() {
   return (
-    <main className="bg-[#F7F4F1] text-[#2F3137] antialiased min-h-screen">
+    <main className="bg-[#f8fafc] text-[#2F3137] antialiased min-h-screen">
       <style>{`
         @keyframes rv-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes rv-drift { 0%,100% { transform: translate(0,0); } 50% { transform: translate(20px,-16px); } }
@@ -242,7 +215,7 @@ export default function ResearchPage() {
       {/* ---------------------------------------------------------------- */}
       {/* HERO */}
       {/* ---------------------------------------------------------------- */}
-      <section className="relative isolate overflow-hidden bg-[#F7F4F1] px-6 pb-24 pt-24 sm:pb-28 sm:pt-28 lg:pb-32 lg:pt-32">
+      <section className="relative isolate overflow-hidden bg-[#f8fafc]px-6 pb-24 pt-24 sm:pb-28 sm:pt-28 lg:pb-32 lg:pt-32">
         {/* Soft background glow */}
         <div
           aria-hidden="true"
@@ -265,17 +238,6 @@ export default function ResearchPage() {
         />
 
         <div className="relative mx-auto flex max-w-5xl flex-col items-center text-center">
-          {/* Eyebrow */}
-          <div
-            className="rv-rise mb-7 inline-flex items-center gap-2 rounded-full border border-[#D8D2C9] bg-white/70 px-4 py-2 shadow-sm backdrop-blur-sm"
-            style={{ animationDelay: "0s" }}
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-[#F97316]" />
-
-            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#6B7280] sm:text-[11px]">
-              Rivinity Research
-            </span>
-          </div>
 
           {/* Main heading */}
           <h1
@@ -363,7 +325,7 @@ export default function ResearchPage() {
       {/* RESEARCH CAPABILITIES */}
       {/* ---------------------------------------------------------------- */}
 
-      <section className="border-t border-[#E5E0DA] bg-[#F7F4F1] px-6 py-24">
+      <section className="border-t border-[#E5E0DA] bg-[#f8fafc] px-6 py-24">
         <div className="mx-auto max-w-7xl">
 
           {/* Section Heading */}
@@ -393,229 +355,144 @@ export default function ResearchPage() {
 
         </div>
       </section>
+    
+
       {/* ---------------------------------------------------------------- */}
-      {/* RESEARCH PROCESS */}
+      {/* RESEARCH INFRASTRUCTURE */}
       {/* ---------------------------------------------------------------- */}
-      <section className="bg-[#FCFBF9] px-6 py-24 md:px-12">
-        <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-2 md:gap-24 items-start">
 
-          {/* Left column */}
-          <div className="h-fit md:sticky md:top-28">
-            <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-[#C4622D]">
-              Our Process
-            </p>
+      <Integraations3 />
+     
 
-            <h2 className="mb-6 text-4xl font-semibold leading-tight text-neutral-900 md:text-5xl">
-              Planning your{" "}
-              <span className="text-[#C4622D]">
-                research journey
-              </span>
-            </h2>
+    
+    
+     {/* ---------------------------------------------------------------- */}
+     {/* RESEARCH BLOGS */}
+      {/* ---------------------------------------------------------------- */}
 
-            <p className="max-w-md leading-relaxed text-neutral-600">
-              Every research project follows the same five phases below — from
-              initial discovery and analysis to development, testing, and
-              continuous improvement.
-            </p>
+<section className="border-b border-neutral-200/80 bg-[#f8fafc]">
+  <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+
+    {/* Header */}
+    <div className="flex items-end justify-between gap-6">
+      <div>
+        <span className="text-[11px] font-semibold uppercase tracking-widest text-blue-600">
+          Rivinity Labs
+        </span>
+
+        <h2 className="mt-1 text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl">
+          Research blog
+        </h2>
+
+        <p className="mt-2 max-w-md text-sm text-neutral-500">
+          Foundational ideas and systems research for production AI.
+        </p>
+      </div>
+
+      {/* Arrow Controls */}
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => {
+            const container = document.getElementById("research-blog-carousel");
+
+            container?.scrollBy({
+              left: -400,
+              behavior: "smooth",
+            });
+          }}
+          aria-label="Previous research article"
+          className="flex size-9 items-center justify-center rounded-full border border-neutral-300/90 bg-white text-neutral-700 shadow-sm transition hover:border-neutral-400 hover:text-black active:scale-95"
+        >
+          <ArrowLeft className="size-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            const container = document.getElementById("research-blog-carousel");
+
+            container?.scrollBy({
+              left: 400,
+              behavior: "smooth",
+            });
+          }}
+          aria-label="Next research article"
+          className="flex size-9 items-center justify-center rounded-full border border-neutral-300/90 bg-white text-neutral-700 shadow-sm transition hover:border-neutral-400 hover:text-black active:scale-95"
+        >
+          <ArrowRight className="size-4" />
+        </button>
+      </div>
+    </div>
+
+    {/* Research Cards */}
+    <div
+      id="research-blog-carousel"
+      className="mt-10 flex gap-5 overflow-x-auto overflow-y-hidden pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {blogPosts.map((post, index) => (
+        <article
+          key={`${post.title}-${index}`}
+          className="group min-w-[300px] flex-1 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-neutral-300 hover:shadow-md sm:min-w-[340px]"
+        >
+          {/* Tag */}
+          <div className="mb-8 flex items-center justify-between">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-600">
+              {post.tag}
+            </span>
+
+            <span className="text-xs text-neutral-400">
+              0{index + 1}
+            </span>
           </div>
 
-          {/* Right column */}
-          <div className="relative flex flex-col gap-6">
-            {processSteps.map((step, i) => (
-              <div
-                key={step.number}
-                className="sticky"
-                style={{ top: `${7 + i * 1.5}rem` }}
-              >
-                <div
-                  className="rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm"
-                  style={{ minHeight: "260px" }}
-                >
-                  <div className="mb-4 flex items-start justify-between gap-4">
-                    <h3 className="text-2xl font-semibold text-neutral-900">
-                      {step.title}
-                    </h3>
+          {/* Gradient */}
+          <div
+            className={`mb-6 h-32 rounded-xl bg-gradient-to-br ${post.gradient}`}
+          />
 
-                    <span className="shrink-0 text-2xl font-semibold text-[#C4622D]">
-                      {step.number}
-                    </span>
-                  </div>
+          {/* Content */}
+          <h3 className="text-lg font-semibold leading-7 tracking-tight text-neutral-950">
+            {post.title}
+          </h3>
 
-                  <p className="leading-relaxed text-neutral-600">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-
-      {/* ---------------------------------------------------------------- */}
-      {/* OPEN SOURCE PROJECTS */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="border-t border-[#E5E0DA] px-6 py-24 bg-[#EFECE6]">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="mb-10 text-center text-3xl font-semibold tracking-tight sm:text-4xl text-[#1F2937]">
-            Key open-source projects
-          </h2>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {openSourceProjects.map((project) => (
-              <div
-                key={project.name}
-                className={`rv-card flex min-h-[180px] flex-col justify-end rounded-2xl bg-gradient-to-br p-6 ${project.gradient}`}
-              >
-                <h3 className="mb-2 text-lg font-semibold leading-snug text-white">
-                  {project.name}
-                </h3>
-                <p className="text-xs leading-relaxed text-white/90">
-                  {project.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* RESEARCH BLOGS */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="border-t border-[#E5E0DA] px-6 py-24 bg-[#EFECE6]">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 flex items-center justify-between">
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl text-[#1F2937]">
-              Research blogs
-            </h2>
-            <button className="rounded-md border border-[#D5D0C8] bg-white px-4 py-2 text-xs font-semibold text-[#1F2937] hover:bg-[#F7F4F1] transition-colors">
-              VIEW ALL
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            {blogPosts
-              .filter((p) => p.featured)
-              .map((post) => (
-                <div
-                  key={post.title}
-                  className="rv-card overflow-hidden rounded-2xl border border-[#D5D0C8] bg-white"
-                >
-                  <div
-                    className={`relative flex h-64 items-start p-6 bg-gradient-to-br ${post.gradient}`}
-                  >
-                    <span className="w-fit rounded bg-white/25 px-2.5 py-1 text-[10px] font-semibold tracking-widest text-white backdrop-blur-sm">
-                      {post.tag}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="mb-2 text-lg font-semibold leading-snug text-[#1F2937]">
-                      {post.title}
-                    </h3>
-                    <p className="text-sm text-[#4B5563]">{post.excerpt}</p>
-                  </div>
-                </div>
-              ))}
-
-            <div className="grid grid-cols-1 gap-5">
-              {blogPosts
-                .filter((p) => !p.featured)
-                .map((post) => (
-                  <div
-                    key={post.title}
-                    className="rv-card flex items-center gap-4 rounded-2xl border border-[#D5D0C8] bg-white p-4"
-                  >
-                    <div
-                      className={`h-20 w-24 shrink-0 rounded-lg bg-gradient-to-br ${post.gradient}`}
-                    />
-                    <div>
-                      <span className="mb-1 inline-block rounded bg-[#F4F1FA] px-2 py-0.5 text-[9px] font-semibold tracking-widest text-[#6D5EF5]">
-                        {post.tag}
-                      </span>
-                      <h3 className="text-sm font-semibold leading-snug text-[#1F2937]">
-                        {post.title}
-                      </h3>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* IN THE SPOTLIGHT */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="relative overflow-hidden border-t border-[#E5E0DA] bg-[#EAE4DC] px-6 py-24 text-center">
-        <div className="relative mx-auto max-w-5xl">
-          {/* Label */}
-          <span className="mb-3 inline-block text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6B7280]">
-            FEATURED TALKS
-          </span>
-
-          {/* Heading */}
-          <h2 className="text-3xl font-semibold tracking-tight text-[#1F2937] sm:text-4xl">
-            In the spotlight
-          </h2>
-
-          <p className="mt-2 text-sm text-[#4B5563]">
-            Featured talks and conference presentations by our researchers
+          <p className="mt-3 text-sm leading-6 text-neutral-500">
+            {post.excerpt}
           </p>
 
-          {/* Spotlight Card */}
-          <div className="group relative mt-10 h-[420px] overflow-hidden rounded-2xl border border-[#D5D0C8] bg-transparent transition-all duration-500 hover:border-[#6D5EF5]">
-            {/* Conference Image */}
-            <img
-              src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=85"
-              alt="Conference presentation"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-            />
+          {/* Read More */}
+          <button
+            type="button"
+            className="mt-6 inline-flex items-center text-sm font-semibold text-neutral-900 transition group-hover:text-blue-600"
+          >
+            Read research
+            <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+          </button>
+        </article>
+      ))}
+    </div>
 
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent" />
+    {/* Categories */}
+    <div className="mt-14 flex flex-wrap items-center justify-center gap-8 border-t border-neutral-200 pt-8 text-xs font-semibold tracking-widest text-neutral-400">
+      <span className="cursor-pointer transition hover:text-neutral-900">
+        RIVINITY LABS
+      </span>
 
-            {/* Card Content */}
-            <div className="relative z-10 flex h-full flex-col justify-between p-7 sm:p-8">
-              {/* Badge */}
-              <div className="self-start">
-                <span className="inline-flex rounded-md border border-white/60 bg-white/40 px-3 py-1 text-[11px] font-medium tracking-wider text-[#1F2937] backdrop-blur-md">
-                  CONFERENCE
-                </span>
-              </div>
+      <span className="cursor-pointer transition hover:text-neutral-900">
+        AI RESEARCH
+      </span>
 
-              {/* Bottom Content */}
-              <div className="flex items-end justify-between gap-6 text-left">
-                <div className="max-w-xl">
-                  <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[#374151]">
-                    Research & Innovation
-                  </p>
+      <span className="cursor-pointer transition hover:text-neutral-900">
+        ENGINEERING
+      </span>
 
-                  <h3 className="text-2xl font-semibold tracking-tight text-[#1F2937] sm:text-3xl">
-                    Building the future of intelligent systems
-                  </h3>
+      <span className="cursor-pointer transition hover:text-neutral-900">
+        OPEN RESEARCH
+      </span>
+    </div>
 
-                  <p className="mt-2 max-w-lg text-sm leading-6 text-[#374151]">
-                    Explore featured presentations and conversations from our
-                    researchers and collaborators.
-                  </p>
-                </div>
-
-                {/* Button */}
-                <a
-                  href="/watch-talk"
-                  className="group/btn inline-flex shrink-0 items-center gap-2 rounded-xl border border-white/60 bg-white/40 px-5 py-2.5 text-xs font-semibold text-[#1F2937] backdrop-blur-md transition-all duration-300 hover:bg-[#1F2937] hover:text-white"
-                >
-                  <span>Watch Presentation</span>
-                  <span className="transition-transform duration-300 group-hover/btn:translate-x-1">
-                    →
-                  </span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+  </div>
+</section>
       {/* ---------------------------------------------------------------- */}
       {/* RESEARCH TEAM */}
       {/* ---------------------------------------------------------------- */}
@@ -624,39 +501,7 @@ export default function ResearchPage() {
       {/* ---------------------------------------------------------------- */}
       {/* FINAL CTA */}
       {/* ---------------------------------------------------------------- */}
-      <section className="border-t border-[#E5E0DA] bg-[#EAE4DC] px-6 py-28 text-center">
-        <div className="mx-auto max-w-4xl">
-          <span className="mb-4 inline-block rounded-full border border-[#6D5EF5]/20 bg-[#6D5EF5]/5 px-4 py-1 text-xs font-semibold tracking-widest text-[#6D5EF5]">
-            RIVINITY RESEARCH
-          </span>
-
-          <h2 className="text-4xl font-semibold tracking-tight text-[#1F2937] sm:text-5xl">
-            Building the future through
-            <span className="text-[#F97316]"> research</span>
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-[#4B5563]">
-            From AI agents and cloud intelligence to security and media
-            forensics, we're advancing the next generation of intelligent
-            infrastructure.
-          </p>
-
-          <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-            <a
-              href="/research"
-              className="rounded-xl bg-[#F97316] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#EA580C]"
-            >
-              Explore Research
-            </a>
-            <a
-              href="/contact"
-              className="rounded-xl border border-[#D5D0C8] bg-white px-7 py-3.5 text-sm font-semibold text-[#1F2937] transition hover:bg-[#F7F4F1]"
-            >
-              Contact Us
-            </a>
-          </div>
-        </div>
-      </section>
+      <Cta />
 
       {/* ==================== RIVINITY FOOTER ==================== */}
       <Footer />

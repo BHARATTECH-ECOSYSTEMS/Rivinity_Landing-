@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,6 +8,7 @@ import {
   Clock3,
 } from "lucide-react";
 
+import Header from "../components/header";
 import Footer from "../components/footer";
 
 type Post = {
@@ -23,7 +24,7 @@ type Post = {
 };
 
 /* ============================================================
-   FEATURED POSTS
+   DATA ARRAYS
 ============================================================ */
 
 const featuredPosts: Post[] = [
@@ -101,10 +102,6 @@ const featuredPosts: Post[] = [
   },
 ];
 
-/* ============================================================
-   PRODUCT UPDATES
-============================================================ */
-
 const productUpdates: Post[] = [
   {
     id: 11,
@@ -143,10 +140,6 @@ const productUpdates: Post[] = [
     href: "#",
   },
 ];
-
-/* ============================================================
-   RESEARCH POSTS
-============================================================ */
 
 const researchPosts: Post[] = [
   {
@@ -229,10 +222,6 @@ const researchPosts: Post[] = [
   },
 ];
 
-/* ============================================================
-   COMPANY UPDATES
-============================================================ */
-
 const companyUpdates: Post[] = [
   {
     id: 31,
@@ -271,10 +260,6 @@ const companyUpdates: Post[] = [
     href: "#",
   },
 ];
-
-/* ============================================================
-   LATEST POSTS
-============================================================ */
 
 const latestPosts: Post[] = [
   {
@@ -387,503 +372,269 @@ const categories = [
 ];
 
 /* ============================================================
-   PAGE
+   MAIN COMPONENT
 ============================================================ */
 
 export default function BlogPage() {
   const featuredRef = useRef<HTMLDivElement>(null);
   const researchRef = useRef<HTMLDivElement>(null);
 
-  const [featuredAtStart, setFeaturedAtStart] = useState(true);
-  const [featuredAtEnd, setFeaturedAtEnd] = useState(false);
-
-  const [researchAtStart, setResearchAtStart] = useState(true);
-  const [researchAtEnd, setResearchAtEnd] = useState(false);
-
   const [activeCategory, setActiveCategory] = useState("All");
   const [visiblePosts, setVisiblePosts] = useState(6);
 
   const filteredLatestPosts = useMemo(() => {
-    if (activeCategory === "All") {
-      return latestPosts;
-    }
-
-    return latestPosts.filter(
-      (post) => post.category === activeCategory
-    );
+    if (activeCategory === "All") return latestPosts;
+    return latestPosts.filter((post) => post.category === activeCategory);
   }, [activeCategory]);
 
-  const visibleLatestPosts = filteredLatestPosts.slice(
-    0,
-    visiblePosts
-  );
-
-  /* ==========================================================
-     CAROUSEL POSITION
-  ========================================================== */
-
-  const updateFeaturedButtons = () => {
-    const el = featuredRef.current;
-
-    if (!el) return;
-
-    const atStart = el.scrollLeft <= 1;
-
-    const atEnd =
-      el.scrollLeft + el.clientWidth >=
-      el.scrollWidth - 1;
-
-    setFeaturedAtStart(atStart);
-    setFeaturedAtEnd(atEnd);
-  };
-
-  const updateResearchButtons = () => {
-    const el = researchRef.current;
-
-    if (!el) return;
-
-    const atStart = el.scrollLeft <= 1;
-
-    const atEnd =
-      el.scrollLeft + el.clientWidth >=
-      el.scrollWidth - 1;
-
-    setResearchAtStart(atStart);
-    setResearchAtEnd(atEnd);
-  };
-
-  useEffect(() => {
-    updateFeaturedButtons();
-    updateResearchButtons();
-
-    const featured = featuredRef.current;
-    const research = researchRef.current;
-
-    featured?.addEventListener(
-      "scroll",
-      updateFeaturedButtons,
-      { passive: true }
-    );
-
-    research?.addEventListener(
-      "scroll",
-      updateResearchButtons,
-      { passive: true }
-    );
-
-    window.addEventListener(
-      "resize",
-      updateFeaturedButtons
-    );
-
-    window.addEventListener(
-      "resize",
-      updateResearchButtons
-    );
-
-    return () => {
-      featured?.removeEventListener(
-        "scroll",
-        updateFeaturedButtons
-      );
-
-      research?.removeEventListener(
-        "scroll",
-        updateResearchButtons
-      );
-
-      window.removeEventListener(
-        "resize",
-        updateFeaturedButtons
-      );
-
-      window.removeEventListener(
-        "resize",
-        updateResearchButtons
-      );
-    };
-  }, []);
-
-  /* ==========================================================
-     CAROUSEL ACTIONS
-  ========================================================== */
+  const visibleLatestPosts = filteredLatestPosts.slice(0, visiblePosts);
 
   const slideFeatured = (direction: "next" | "previous") => {
     const el = featuredRef.current;
-
     if (!el) return;
-
-    const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
-    const amount = Math.max(280, el.clientWidth * 0.82);
-
-    const target =
-      direction === "next"
-        ? Math.min(el.scrollLeft + amount, maxScroll)
-        : Math.max(el.scrollLeft - amount, 0);
-
-    el.scrollTo({
-      left: target,
+    el.scrollBy({
+      left: direction === "next" ? 380 : -380,
       behavior: "smooth",
     });
   };
 
   const slideResearch = (direction: "next" | "previous") => {
     const el = researchRef.current;
-
     if (!el) return;
-
-    const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
-    const amount = Math.max(260, el.clientWidth * 0.82);
-
-    const target =
-      direction === "next"
-        ? Math.min(el.scrollLeft + amount, maxScroll)
-        : Math.max(el.scrollLeft - amount, 0);
-
-    el.scrollTo({
-      left: target,
+    el.scrollBy({
+      left: direction === "next" ? 340 : -340,
       behavior: "smooth",
     });
-  };
-
-  const handleCategory = (category: string) => {
-    setActiveCategory(category);
-    setVisiblePosts(6);
   };
 
   return (
     <>
       <Head>
         <title>Blog — Rivinity</title>
-
         <meta
           name="description"
           content="Explore Rivinity's latest research, engineering ideas, product updates and perspectives on AI."
         />
       </Head>
 
-      <main className="min-h-screen bg-[#fafafa] text-[#111111]">
+      <Header/>
+      
 
-        {/* ======================================================
-            BLOG + FEATURED
-        ====================================================== */}
-
-        <section className="overflow-hidden border-b border-black/[0.06]">
-
-          <div className="mx-auto max-w-[1100px] px-5 pb-16 pt-12 sm:px-8 sm:pb-20 sm:pt-16 lg:px-10">
-
-            {/* Header */}
-
-            <div className="flex items-end justify-between gap-6">
-
-              <h1 className="text-5xl font-medium tracking-[-0.065em] sm:text-6xl lg:text-[5rem]">
-                Blog
-              </h1>
-
-              <div className="flex items-center gap-2 pb-1">
-
-                <CarouselButton
-                  direction="previous"
-                  disabled={featuredAtStart}
-                  onClick={() =>
-                    slideFeatured("previous")
-                  }
-                />
-
-                <CarouselButton
-                  direction="next"
-                  disabled={featuredAtEnd}
-                  onClick={() =>
-                    slideFeatured("next")
-                  }
-                />
-
-              </div>
-
-            </div>
-
-            {/* Featured carousel */}
-
-            <div
-              ref={featuredRef}
-              className="blog-carousel mt-10 flex gap-5 overflow-x-auto overflow-y-hidden pb-1"
-            >
-
-              {featuredPosts.map((post) => (
-                <FeaturedCard
-                  key={post.id}
-                  post={post}
-                />
-              ))}
-
-            </div>
-
-          </div>
-
-        </section>
-
-        {/* ======================================================
-            PRODUCT UPDATES
-        ====================================================== */}
-
-        <section className="bg-white">
-
-          <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-8 sm:py-16 lg:px-10">
-
-            <SectionTitle
-              title="Product updates"
-              description="The latest products, capabilities and improvements from Rivinity."
-            />
-
-            <div className="mt-7 grid gap-5 md:grid-cols-3">
-
-              {productUpdates.map((post) => (
-                <SmallPostCard
-                  key={post.id}
-                  post={post}
-                />
-              ))}
-
-            </div>
-
-          </div>
-
-        </section>
-
-        {/* ======================================================
-            RESEARCH BLOG
-        ====================================================== */}
-
-        <section className="overflow-hidden bg-[#05051f] text-white">
-
-          <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-8 sm:py-16 lg:px-10">
-
-            <div className="flex items-end justify-between gap-6">
-
+      <main className="min-h-screen bg-[#fafafa] text-neutral-900 selection:bg-neutral-900 selection:text-white">
+        
+        {/* HERO / FEATURED SECTION */}
+        <section className="border-b border-neutral-200 bg-white">
+          <div className="mx-auto max-w-7xl px-6 pb-20 pt-16 sm:px-8 lg:px-12">
+            <div className="flex items-end justify-between gap-6 pb-4">
               <div>
-
-                <h2 className="text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
-                  Research blog
-                </h2>
-
-                <p className="mt-2 max-w-md text-sm leading-6 text-white/40">
-                  Foundational ideas and systems research for
-                  production AI.
+                <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl text-neutral-950">
+                  Blog
+                </h1>
+                <p className="mt-2 text-sm text-neutral-500 max-w-md">
+                  Perspectives on artificial intelligence, systems research, and modern engineering.
                 </p>
-
               </div>
 
               <div className="flex items-center gap-2">
-
-                <DarkCarouselButton
-                  direction="previous"
-                  disabled={researchAtStart}
-                  onClick={() =>
-                    slideResearch("previous")
-                  }
-                />
-
-                <DarkCarouselButton
-                  direction="next"
-                  disabled={researchAtEnd}
-                  onClick={() =>
-                    slideResearch("next")
-                  }
-                />
-
+                <button
+                  type="button"
+                  onClick={() => slideFeatured("previous")}
+                  aria-label="Previous"
+                  className="flex size-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400 hover:text-black shadow-xs transition active:scale-95"
+                >
+                  <ArrowLeft className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => slideFeatured("next")}
+                  aria-label="Next"
+                  className="flex size-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400 hover:text-black shadow-xs transition active:scale-95"
+                >
+                  <ArrowRight className="size-4" />
+                </button>
               </div>
-
             </div>
 
             <div
-              ref={researchRef}
-              className="blog-carousel mt-8 flex gap-4 overflow-x-auto overflow-y-hidden pb-1"
+              ref={featuredRef}
+              className="blog-carousel mt-8 flex gap-6 overflow-x-auto overflow-y-hidden pb-4"
             >
-
-              {researchPosts.map((post) => (
-                <ResearchCard
-                  key={post.id}
-                  post={post}
-                />
+              {featuredPosts.map((post) => (
+                <FeaturedCard key={post.id} post={post} />
               ))}
-
             </div>
-
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 border-t border-white/10 pt-7 text-[10px] font-medium tracking-wider text-white/25">
-
-              <span>RIVINITY LABS</span>
-              <span>AI RESEARCH</span>
-              <span>ENGINEERING</span>
-              <span>OPEN RESEARCH</span>
-
-            </div>
-
           </div>
-
         </section>
 
-        {/* ======================================================
-            COMPANY UPDATES
-        ====================================================== */}
+        {/* RESEARCH BLOG (LIGHT SOPHISTICATED THEME) */}
+        <section className="bg-[#f8fafc] border-b border-neutral-200/80">
+          <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+            <div className="flex items-end justify-between gap-6">
+              <div>
+                <span className="text-[11px] font-semibold tracking-widest text-blue-600 uppercase">
+                   Rivinity Labs
+                </span>
+                <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl text-neutral-950">
+                  Research blog
+                </h2>
+                <p className="mt-2 max-w-md text-sm text-neutral-500">
+                  Foundational ideas and systems research for production AI.
+                </p>
+              </div>
 
-        <section className="bg-white">
+              {/* Light Arrow Controls */}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => slideResearch("previous")}
+                  aria-label="Previous"
+                  className="flex size-9 items-center justify-center rounded-full border border-neutral-300/90 bg-white text-neutral-700 hover:border-neutral-400 hover:text-black shadow-xs transition active:scale-95 cursor-pointer"
+                >
+                  <ArrowLeft className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => slideResearch("next")}
+                  aria-label="Next"
+                  className="flex size-9 items-center justify-center rounded-full border border-neutral-300/90 bg-white text-neutral-700 hover:border-neutral-400 hover:text-black shadow-xs transition active:scale-95 cursor-pointer"
+                >
+                  <ArrowRight className="size-4" />
+                </button>
+              </div>
+            </div>
 
-          <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-8 sm:py-16 lg:px-10">
+            {/* Research Cards Carousel */}
+            <div
+              ref={researchRef}
+              className="blog-carousel mt-10 flex gap-5 overflow-x-auto overflow-y-hidden pb-4"
+            >
+              {researchPosts.map((post) => (
+                <ResearchCard key={post.id} post={post} />
+              ))}
+            </div>
 
+            <div className="mt-14 flex flex-wrap items-center justify-center gap-8 border-t border-neutral-200 pt-8 text-xs font-semibold tracking-widest text-neutral-400">
+              <span className="cursor-pointer hover:text-neutral-900 transition">RIVINITY LABS</span>
+              <span className="cursor-pointer hover:text-neutral-900 transition">AI RESEARCH</span>
+              <span className="cursor-pointer hover:text-neutral-900 transition">ENGINEERING</span>
+              <span className="cursor-pointer hover:text-neutral-900 transition">OPEN RESEARCH</span>
+            </div>
+          </div>
+        </section>
+
+        {/* COMPANY UPDATES */}
+        <section className="bg-white border-b border-neutral-200">
+          <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
             <SectionTitle
               title="Company updates"
               description="Stories and updates from the Rivinity team."
             />
 
-            <div className="mt-7 grid gap-5 md:grid-cols-3">
-
+            <div className="mt-10 grid gap-8 md:grid-cols-3">
               {companyUpdates.map((post) => (
-                <SmallPostCard
-                  key={post.id}
-                  post={post}
-                />
+                <SmallPostCard key={post.id} post={post} />
               ))}
-
             </div>
-
           </div>
-
         </section>
 
-        {/* ======================================================
-            LATEST BLOG POSTS
-        ====================================================== */}
-
-        <section className="bg-[#fafafa]">
-
-          <div className="mx-auto max-w-[1100px] px-5 py-14 sm:px-8 sm:py-16 lg:px-10">
-
-            <h2 className="text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
+        {/* LATEST BLOG POSTS */}
+        <section className="bg-[#fafafa] border-b border-neutral-200">
+          <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+            <h2 className="text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl">
               Latest blog posts
             </h2>
 
-            {/* Filters */}
-
-            <div className="blog-carousel mt-6 flex gap-2 overflow-x-auto overflow-y-hidden pb-1">
-
+            {/* Category Filter Pills */}
+            <div className="blog-carousel mt-6 flex gap-2 overflow-x-auto pb-2">
               {categories.map((category) => (
                 <button
                   key={category}
                   type="button"
-                  onClick={() =>
-                    handleCategory(category)
-                  }
-                  className={`whitespace-nowrap rounded-sm border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider transition ${
+                  onClick={() => {
+                    setActiveCategory(category);
+                    setVisiblePosts(6);
+                  }}
+                  className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium transition ${
                     activeCategory === category
-                      ? "border-black bg-black !text-white"
-                      : "border-black/10 bg-white text-black/45 hover:border-black/25 hover:text-black"
+                      ? "bg-neutral-900 text-white shadow-sm"
+                      : "bg-white border border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900"
                   }`}
                 >
                   {category}
                 </button>
               ))}
-
             </div>
 
-            {/* Articles */}
-
-            <div className="mt-5">
-
+            {/* Articles List */}
+            <div className="mt-8 divide-y divide-neutral-200 border-y border-neutral-200 bg-white rounded-2xl px-6 sm:px-8 shadow-xs">
               {visibleLatestPosts.length > 0 ? (
                 visibleLatestPosts.map((post) => (
-                  <LatestPostRow
-                    key={post.id}
-                    post={post}
-                  />
+                  <LatestPostRow key={post.id} post={post} />
                 ))
               ) : (
-                <div className="border-y border-black/[0.08] py-14 text-center text-sm text-black/35">
+                <div className="py-16 text-center text-sm text-neutral-500">
                   No posts found in this category.
                 </div>
               )}
-
             </div>
 
             {visiblePosts < filteredLatestPosts.length && (
-              <div className="flex justify-center pt-7">
-
+              <div className="flex justify-center pt-10">
                 <button
                   type="button"
-                  onClick={() =>
-                    setVisiblePosts(
-                      (current) => current + 3
-                    )
-                  }
-                  className="rounded-md bg-black px-7 py-3 text-xs font-semibold !text-white transition hover:bg-black/80"
+                  onClick={() => setVisiblePosts((current) => current + 3)}
+                  className="rounded-full bg-neutral-900 px-8 py-3 text-xs font-medium text-white shadow-sm transition hover:bg-neutral-800"
                 >
                   Load more
                 </button>
-
               </div>
             )}
-
           </div>
-
         </section>
 
-        {/* ======================================================
-            CTA
-        ====================================================== */}
+        {/* CTA SECTION (LIGHT THEME MATCHING REST OF UI) */}
+        <section className="bg-white py-16 sm:py-24">
+          <div className="mx-auto max-w-5xl px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-3xl border border-neutral-200/90 bg-gradient-to-b from-slate-50 to-slate-100/70 px-8 py-16 text-center shadow-xs sm:px-16 sm:py-20">
+              
+              {/* Subtle background glow */}
+              <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 size-96 rounded-full bg-blue-500/5 blur-3xl" />
+              
+              <div className="relative z-10">
+                <span className="inline-block text-[11px] font-semibold tracking-widest text-neutral-500 uppercase">
+                  BUILD WITH RIVINITY
+                </span>
 
-        <section className="bg-white">
-
-          <div className="mx-auto max-w-[1100px] px-5 pb-16 pt-8 sm:px-8 sm:pb-20 sm:pt-10 lg:px-10">
-
-            <div className="relative overflow-hidden rounded-[1.75rem] bg-[#eef5fb] px-7 py-12 text-center sm:px-12 sm:py-16">
-
-              <div className="pointer-events-none absolute -left-24 -top-24 size-72 rounded-full bg-white/70 blur-3xl" />
-
-              <div className="pointer-events-none absolute -bottom-24 -right-24 size-72 rounded-full bg-white/70 blur-3xl" />
-
-              <div className="relative">
-
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-black/35">
-                  Build with Rivinity
-                </p>
-
-                <h2 className="mx-auto mt-3 max-w-2xl text-3xl font-medium tracking-[-0.05em] sm:text-4xl">
+                <h2 className="mx-auto mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl">
                   Turn ideas into intelligent products.
                 </h2>
 
-                <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-black/45">
-                  Explore Rivinity&apos;s platform and start
-                  building the next generation of AI-powered
-                  software.
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-neutral-600">
+                  Explore Rivinity&apos;s platform and start building the next generation of AI-powered software.
                 </p>
 
-                <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link 
+  href="#" 
+  className="flex items-center gap-2 rounded-xl bg-white border border-neutral-200 px-6 py-3 text-xs font-semibold text-neutral-950 transition hover:bg-neutral-50 shadow-sm"
+> 
+  <span>Start building</span> 
+  <ArrowUpRight className="size-4" /> 
+</Link>
+
 
                   <Link
                     href="#"
-                    className="group flex items-center gap-2 rounded-md bg-black px-6 py-3 text-xs font-semibold !text-white transition hover:bg-black/85"
-                  >
-                    Start building
-
-                    <ArrowUpRight className="size-3.5 !text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
-
-                  <Link
-                    href="#"
-                    className="rounded-md border border-black/10 bg-white px-6 py-3 text-xs font-semibold text-black transition hover:bg-black/[0.03]"
+                    className="rounded-xl border border-neutral-300 bg-white px-6 py-3 text-xs font-semibold text-neutral-800 transition hover:bg-neutral-50 shadow-xs"
                   >
                     Explore documentation
                   </Link>
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
-
         </section>
-
       </main>
 
       <Footer />
@@ -893,13 +644,11 @@ export default function BlogPage() {
           scrollbar-width: none;
           -ms-overflow-style: none;
         }
-
         .blog-carousel::-webkit-scrollbar {
           display: none;
           width: 0;
           height: 0;
         }
-
         .blog-carousel {
           scroll-behavior: smooth;
           overscroll-behavior-x: contain;
@@ -910,319 +659,159 @@ export default function BlogPage() {
 }
 
 /* ============================================================
-   CAROUSEL BUTTON
+   SUB-COMPONENTS (LIGHT THEMED)
 ============================================================ */
 
-function CarouselButton({
-  direction,
-  disabled,
-  onClick,
-}: {
-  direction: "previous" | "next";
-  disabled: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      aria-label={
-        direction === "previous"
-          ? "Previous"
-          : "Next"
-      }
-      className={`flex size-10 items-center justify-center rounded-md border transition ${
-        disabled
-          ? "cursor-not-allowed border-black/[0.05] bg-[#f5f5f5] text-black/15"
-          : "border-black/[0.07] bg-[#f1f1f1] text-black/55 hover:bg-black hover:text-white"
-      }`}
-    >
-      {direction === "previous" ? (
-        <ArrowLeft className="size-4" />
-      ) : (
-        <ArrowRight className="size-4" />
-      )}
-    </button>
-  );
-}
-
-/* ============================================================
-   DARK CAROUSEL BUTTON
-============================================================ */
-
-function DarkCarouselButton({
-  direction,
-  disabled,
-  onClick,
-}: {
-  direction: "previous" | "next";
-  disabled: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      aria-label={
-        direction === "previous"
-          ? "Previous"
-          : "Next"
-      }
-      className={`flex size-9 items-center justify-center rounded-md border transition ${
-        disabled
-          ? "cursor-not-allowed border-white/[0.05] bg-white/[0.03] text-white/10"
-          : "border-white/10 bg-white/[0.05] text-white/45 hover:bg-white hover:text-black"
-      }`}
-    >
-      {direction === "previous" ? (
-        <ArrowLeft className="size-3.5" />
-      ) : (
-        <ArrowRight className="size-3.5" />
-      )}
-    </button>
-  );
-}
-
-/* ============================================================
-   FEATURED CARD
-============================================================ */
-
-function FeaturedCard({
-  post,
-}: {
-  post: Post;
-}) {
+function FeaturedCard({ post }: { post: Post }) {
   return (
     <Link
       href={post.href || "#"}
-      className="group block w-[78vw] shrink-0 sm:w-[54vw] md:w-[40vw] lg:w-[31.5%]"
+      className="group block w-[85vw] shrink-0 sm:w-[50vw] md:w-[380px]"
     >
-
       <article>
-
-        <div className="relative aspect-[1.55/1] overflow-hidden rounded-[0.35rem] bg-[#eeeeee]">
-
+        <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-100 border border-neutral-200/80">
           <img
             src={post.image}
             alt={post.title}
-            className="size-full object-cover transition duration-700 group-hover:scale-[1.035]"
+            className="size-full object-cover transition duration-500 group-hover:scale-[1.03]"
           />
-
         </div>
 
-        <div className="mt-3">
-
-          <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-wider text-black/35">
-
-            <span className="rounded-sm border border-black/10 px-2 py-1">
-              {post.category}
-            </span>
-
+        <div className="mt-4">
+          <div className="flex items-center gap-2 text-xs text-neutral-500 font-medium">
+            <span className="text-neutral-900 font-semibold">{post.category}</span>
+            <span>•</span>
             <span>{post.date}</span>
-
           </div>
 
-          <h3 className="mt-2 text-lg font-medium leading-[1.18] tracking-[-0.025em] transition-colors group-hover:text-black/55 sm:text-xl">
+          <h3 className="mt-2.5 text-lg font-semibold tracking-tight text-neutral-900 transition-colors group-hover:text-neutral-600 line-clamp-2">
             {post.title}
           </h3>
 
-          <p className="mt-2 line-clamp-2 text-xs leading-5 text-black/40">
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-500">
             {post.description}
           </p>
-
         </div>
-
       </article>
-
     </Link>
   );
 }
 
-/* ============================================================
-   SMALL POST CARD
-============================================================ */
-
-function SmallPostCard({
-  post,
-}: {
-  post: Post;
-}) {
+function SmallPostCard({ post }: { post: Post }) {
   return (
-    <Link
-      href={post.href || "#"}
-      className="group block"
-    >
-
+    <Link href={post.href || "#"} className="group block">
       <article>
-
-        <div className="relative aspect-[1.45/1] overflow-hidden rounded-[0.35rem] bg-[#eeeeee]">
-
+        <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-100 border border-neutral-200/80">
           <img
             src={post.image}
             alt={post.title}
-            className="size-full object-cover transition duration-700 group-hover:scale-[1.04]"
+            className="size-full object-cover transition duration-500 group-hover:scale-[1.03]"
             loading="lazy"
           />
-
         </div>
 
-        <div className="mt-3 flex items-center gap-2">
-
-          <span className="rounded-sm border border-black/10 px-2 py-1 text-[8px] font-semibold uppercase tracking-wider text-black/45">
-            {post.category}
-          </span>
-
-          <span className="text-[9px] text-black/30">
-            {post.date}
-          </span>
-
+        <div className="mt-4 flex items-center gap-2 text-xs text-neutral-500 font-medium">
+          <span className="text-neutral-900 font-semibold">{post.category}</span>
+          <span>•</span>
+          <span>{post.date}</span>
         </div>
 
-        <h3 className="mt-2 text-base font-medium leading-[1.2] tracking-[-0.02em]">
+        <h3 className="mt-2 text-base font-semibold tracking-tight text-neutral-900 group-hover:text-neutral-600 transition line-clamp-2">
           {post.title}
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-xs leading-5 text-black/40">
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-500">
           {post.description}
         </p>
-
       </article>
-
     </Link>
   );
 }
 
-/* ============================================================
-   RESEARCH CARD
-============================================================ */
-
-function ResearchCard({
-  post,
-}: {
-  post: Post;
-}) {
+function ResearchCard({ post }: { post: Post }) {
   return (
     <Link
       href={post.href || "#"}
-      className="group block w-[78vw] shrink-0 sm:w-[47%] md:w-[31%] lg:w-[23%]"
+      className="group block w-[85vw] shrink-0 sm:w-[320px]"
     >
-
-      <article className="relative flex aspect-[0.88/1] flex-col justify-between overflow-hidden rounded-sm border border-white/[0.08] bg-white/[0.055] p-5 transition duration-300 group-hover:bg-white/[0.09]">
-
+      <article className="flex h-[350px] flex-col justify-between rounded-2xl border border-neutral-200/90 bg-white p-6 transition duration-300 hover:border-neutral-300 hover:shadow-md">
         <div>
-
-          <span className="rounded-sm border border-white/10 px-2 py-1 text-[8px] font-semibold uppercase tracking-wider text-white/50">
+          <span className="inline-block rounded-md bg-blue-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-blue-700">
             {post.category}
           </span>
 
-          <h3 className="mt-5 text-base font-medium leading-[1.18] tracking-[-0.02em] text-white sm:text-lg">
+          <h3 className="mt-4 text-base sm:text-lg font-semibold leading-snug tracking-tight text-neutral-950 group-hover:text-neutral-600 transition line-clamp-3">
             {post.title}
           </h3>
 
-          <p className="mt-3 line-clamp-4 text-xs leading-5 text-white/40">
+          <p className="mt-2.5 text-xs leading-relaxed text-neutral-500 line-clamp-3">
             {post.description}
           </p>
-
         </div>
 
         <div>
-
           {post.authors && (
-            <p className="text-[9px] uppercase tracking-wider text-white/25">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400">
               {post.authors}
             </p>
           )}
 
-          <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-3">
-
-            <span className="text-[9px] text-white/30">
+          <div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
+            <span className="text-xs text-neutral-400 font-medium">
               {post.date}
             </span>
-
-            <ArrowUpRight className="size-3.5 text-white/35 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-
+            <div className="flex size-7 items-center justify-center rounded-full bg-neutral-100 text-neutral-700 transition group-hover:bg-neutral-950 group-hover:text-white">
+              <ArrowUpRight className="size-3.5" />
+            </div>
           </div>
-
         </div>
-
       </article>
-
     </Link>
   );
 }
 
-/* ============================================================
-   LATEST POST ROW
-============================================================ */
-
-function LatestPostRow({
-  post,
-}: {
-  post: Post;
-}) {
+function LatestPostRow({ post }: { post: Post }) {
   return (
     <Link
       href={post.href || "#"}
-      className="group block border-b border-black/[0.08] py-5 first:border-t"
+      className="group block py-6 transition first:pt-8 last:pb-8"
     >
-
-      <article className="grid grid-cols-[1fr_105px] items-center gap-5 sm:grid-cols-[105px_1fr_145px] sm:gap-8">
-
-        <div className="hidden sm:block">
-
-          <span className="inline-flex rounded-sm border border-black/10 px-2 py-1 text-[8px] font-semibold uppercase tracking-wider text-black/45">
-            {post.category}
-          </span>
-
-        </div>
-
-        <div>
-
-          <div className="flex items-center gap-2 text-[9px] uppercase tracking-wider text-black/30">
-
+      <article className="flex items-center justify-between gap-6 sm:gap-10">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3 text-xs text-neutral-500 font-medium">
+            <span className="font-semibold text-neutral-900 uppercase tracking-wide text-[11px]">
+              {post.category}
+            </span>
+            <span>•</span>
             <span>{post.date}</span>
-
-            <span className="size-1 rounded-full bg-black/15" />
-
+            <span>•</span>
             <span className="flex items-center gap-1">
-              <Clock3 className="size-2.5" />
+              <Clock3 className="size-3" />
               {post.readingTime}
             </span>
-
           </div>
 
-          <h3 className="mt-2 text-base font-medium leading-[1.2] tracking-[-0.02em] sm:text-lg">
+          <h3 className="mt-2 text-base sm:text-lg font-semibold tracking-tight text-neutral-900 group-hover:text-neutral-600 transition">
             {post.title}
           </h3>
 
-          <p className="mt-2 line-clamp-2 max-w-2xl text-xs leading-5 text-black/40">
+          <p className="mt-2 line-clamp-2 text-xs sm:text-sm leading-relaxed text-neutral-500">
             {post.description}
           </p>
-
         </div>
 
-        <div className="relative aspect-[1.45/1] overflow-hidden rounded-sm bg-[#eeeeee]">
-
+        <div className="relative aspect-[16/10] w-28 sm:w-44 shrink-0 overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80">
           <img
             src={post.image}
             alt={post.title}
             className="size-full object-cover transition duration-500 group-hover:scale-105"
             loading="lazy"
           />
-
         </div>
-
       </article>
-
     </Link>
   );
 }
-
-/* ============================================================
-   SECTION TITLE
-============================================================ */
 
 function SectionTitle({
   title,
@@ -1233,15 +822,12 @@ function SectionTitle({
 }) {
   return (
     <div>
-
-      <h2 className="text-2xl font-medium tracking-[-0.04em] sm:text-3xl">
+      <h2 className="text-2xl font-semibold tracking-tight text-neutral-950 sm:text-3xl">
         {title}
       </h2>
-
-      <p className="mt-2 max-w-xl text-xs leading-5 text-black/40 sm:text-sm">
+      <p className="mt-2 max-w-xl text-sm leading-relaxed text-neutral-500">
         {description}
       </p>
-
     </div>
   );
 }

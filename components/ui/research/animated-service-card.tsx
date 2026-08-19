@@ -436,9 +436,9 @@ export const ServiceCarousel = ({
 
   return (
     <div
-      ref={ref}
-      className="w-full"
-    >
+  ref={ref}
+  className="w-full bg-[#f8fafc]"
+>
       <Carousel
         opts={{
           align: "start",

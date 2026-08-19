@@ -19,7 +19,6 @@ const WLight: NextPage = () => {
       
       <section className="self-stretch flex flex-col items-start box-border max-w-full z-1">
         <DivuseViewModuleVOhHaVi2 />
-        <DivuseViewModuleVOhHaVi4 />
       </section>
 
       <DivuseViewModuleVOhHaVi5 />
@@ -29,6 +28,7 @@ const WLight: NextPage = () => {
       <TestimonialsSection />
       {/* <DivuseViewModuleVOhHaVi6 /> */}
       <FaqSection/>
+      <DivuseViewModuleVOhHaVi4 />
       <CtaSection/>
       <FooterBigFooterModuleJuPJh />
     </div>

@@ -176,8 +176,8 @@ const navItems: NavItem[] = [
     sections: [
       {
         items: [
+          { label: "Research", href: "/research" },
           { label: "Blog", href: "/blog" },
-          // Only keep "Papers" once there's real published research to link to
           { label: "Papers", href: "/research/papers" },
           { label: "Rivinity Academy", href: "/academy" },
         ],
@@ -405,10 +405,10 @@ export default function Header() {
         </nav>
 
         {/* Right utility: Docs / Sign in / Get Started */}
-        <div className="hidden gap-1 lg:flex ml-auto items-center">
+        <div className="hidden gap-2 lg:flex ml-auto items-center">
           <Link
             href="/docs"
-            className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-black/5"
+            className="rounded-md px-1 py-2 text-sm font-medium text-gray-700 transition hover:bg-black/5"
           >
             Docs
           </Link>
@@ -416,11 +416,11 @@ export default function Header() {
             href="/login"
             className="rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-black/5"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-in-icon lucide-log-in"><path d="m10 17 5-5-5-5" /><path d="M15 12H3" /><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /></svg>
+            <span>Sign in</span>
           </Link>
           <Link
             href="/signup"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-[#FF5A1F] px-4 py-3 text-sm font-semibold text-[#FF5A1F] active:scale-95"
+            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-[#FF5A1F] px-4 py-2 text-sm font-semibold text-[#FF5A1F] active:scale-95"
           >
             <span className="absolute inset-0 origin-left scale-x-0 bg-[#FF5A1F] transition-transform duration-300 ease-out group-hover:scale-x-100"></span>
             <span className="relative z-10 transition-colors duration-300 group-hover:text-white">

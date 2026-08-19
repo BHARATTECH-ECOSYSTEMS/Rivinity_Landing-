@@ -1,328 +1,400 @@
 "use client";
 
-import type { NextPage } from "next";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  Code2,
+  GraduationCap,
+  Microscope,
+  Megaphone,
+  Rocket,
+  Building2,
+  Sparkles,
+  ArrowRight,
+  Check,
+  Terminal,
+  Database,
+  Globe,
+  ShieldCheck,
+  Zap,
+} from "lucide-react";
 
 export type PoweredByRivinityType = {
   className?: string;
 };
 
-/* -------------------------------------------------------------------- */
-/*  Original illustrations — all hand-built for Rivinity, no borrowed    */
-/*  artwork or icon paths. Motion is scoped locally via styled-jsx so    */
-/*  this file works as a drop-in without touching the Tailwind config.   */
-/* -------------------------------------------------------------------- */
+type UseCase = {
+  id: string;
+  tabLabel: string;
+  badge: string;
+  icon: React.ElementType;
+  accentColor: string;
+  title: string;
+  flowSteps: string[];
+  description: string;
+  preview: React.ReactNode;
+};
 
-const AgentIllustration = () => (
-  <div className="relative w-full max-w-[240px] h-[190px] flex flex-col items-center justify-center gap-5">
-    <span className="orbit-ring absolute top-1 w-36 h-36 rounded-full border-2 border-dashed border-[#FF7A1A]/45" />
-    <div className="relative flex items-center gap-1.5 rounded-full bg-white/95 border border-black/10 shadow-sm px-3.5 py-2">
-      <span className="text-[11px] font-medium tracking-tight text-[#191818]">
-        Build me a waitlist page
-        <span className="inline-block w-[3px] h-3.5 bg-current ml-1 align-middle animate-pulse" />
-      </span>
-    </div>
-    <div className="relative flex items-center gap-2">
-      <div
-        className="w-9 h-9 rounded-full flex items-center justify-center shadow-md"
-        style={{ background: "linear-gradient(135deg,#FF7A1A,#FF3C00)" }}
-      >
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-          <path d="M2 8h12M8 2v12" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-      </div>
-      <div className="h-9 rounded-full bg-[#141414] text-white flex items-center px-3.5 text-[10.5px] font-medium tracking-tight">
-        Ship it
-      </div>
-    </div>
-  </div>
-);
-
-const INFRA_ROWS = ["Auth", "Database", "Hosting", "Monitor"];
-
-const InfraIllustration = () => (
-  <div className="relative w-full max-w-[220px] h-[190px] flex items-center justify-center">
-    <div className="relative flex flex-col gap-2.5 w-full">
-      <span className="flow-line absolute left-[18px] top-1 bottom-1 w-[2px] rounded-full bg-gradient-to-b from-[#FF7A1A] via-[#F5A9D0] to-[#BFA7F8] opacity-40" />
-      <span className="flow-dot absolute left-[14px] w-2.5 h-2.5 rounded-full shadow-md" style={{ background: "linear-gradient(135deg,#FF7A1A,#BFA7F8)" }} />
-      {INFRA_ROWS.map((row) => (
-        <div key={row} className="relative pl-10 pr-3 h-9 rounded-xl bg-white/90 border border-black/10 shadow-sm flex items-center">
-          <span className="w-2 h-2 rounded-full bg-[#FF7A1A]/70 absolute left-[13px]" />
-          <span className="text-[11px] font-medium tracking-tight text-[#191818]">{row}</span>
+const USE_CASES: UseCase[] = [
+  {
+    id: "developers",
+    tabLabel: "Developers",
+    badge: "Code & APIs",
+    icon: Code2,
+    accentColor: "#7C3AED",
+    title: "Ship production features 10x faster with AI-native workflows",
+    flowSteps: ["Prompt", "Generate JSX", "Test Logic", "Instant Deploy"],
+    description:
+      "Generate fully typed React components, orchestrate API pipelines, and debug complex infrastructure without leaving your canvas.",
+    preview: (
+      <div className="w-full h-full bg-[#141414] rounded-2xl p-3 sm:p-4 font-mono text-xs text-slate-300 border border-white/10 flex flex-col justify-between shadow-lg min-h-[200px]">
+        <div className="flex items-center justify-between border-b border-white/10 pb-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Terminal className="w-3.5 h-3.5 text-[#7C3AED] shrink-0" />
+            <span className="text-[10px] sm:text-[11px] text-slate-400 truncate max-w-[120px] sm:max-w-none">
+              dev-session.tsx
+            </span>
+          </div>
+          <span className="text-[9px] sm:text-[10px] bg-[#7C3AED]/20 text-[#BFA7F8] px-1.5 sm:px-2 py-0.5 rounded border border-[#7C3AED]/40 shrink-0">
+            TypeScript + React
+          </span>
         </div>
-      ))}
-    </div>
-  </div>
-);
-
-const ORBIT_ICONS = [
-  { angle: 0, color: "#FF7A1A", d: "M3 8h10M8 3v10" },
-  { angle: 120, color: "#F5A9D0", d: "M4 4l8 8M12 4l-8 8" },
-  { angle: 240, color: "#BFA7F8", d: "M8 3l1.7 3.5L13 8l-3.3 1.5L8 13l-1.7-3.5L3 8l3.3-1.5L8 3z" },
-];
-
-const IntegrationsIllustration = () => (
-  <div className="relative w-full max-w-[220px] h-[190px] flex items-center justify-center">
-    <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg" style={{ background: "linear-gradient(135deg,#141422,#1c1c2e)" }}>
-      <svg viewBox="0 0 40 40" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <g key={i} transform={`rotate(${i * 45} 20 20)`}>
-            <path d="M20 6 C 24 12, 24 18, 20 22 C 16 18, 16 12, 20 6 Z" />
-          </g>
-        ))}
-      </svg>
-    </div>
-    <div className="orbit-cw absolute inset-0">
-      {ORBIT_ICONS.map((icon) => (
-        <div
-          key={icon.angle}
-          className="absolute top-1/2 left-1/2 w-9 h-9 -mt-4.5 -ml-4.5"
-          style={{ transform: `rotate(${icon.angle}deg) translate(72px) rotate(-${icon.angle}deg)` }}
-        >
-          <div className="orbit-ccw w-9 h-9 rounded-xl bg-white shadow-md border border-black/10 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d={icon.d} stroke={icon.color} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+        <div className="space-y-1.5 sm:space-y-2 text-[10px] sm:text-[11px] py-2 sm:py-3 overflow-x-auto">
+          <p className="text-slate-500">// Generated by Rivinity Engine</p>
+          <p>
+            <span className="text-[#EC4899]">export function</span>{" "}
+            <span className="text-[#FF7A1A]">UserAuthGrid</span>() &#123;
+          </p>
+          <p className="pl-3 sm:pl-4 text-slate-400">
+            <span className="text-[#7C3AED]">const</span> &#123; user, login &#125; = useRivinityAuth();
+          </p>
+          <p className="pl-3 sm:pl-4 text-slate-400">
+            return &lt;<span className="text-[#EC4899]">AuthCanvas</span> theme="dark" /&gt;;
+          </p>
+          <p>&#125;</p>
+        </div>
+        <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[9px] sm:text-[10px] text-emerald-400">
+          <span className="flex items-center gap-1">
+            <Check className="w-3 h-3 stroke-[3] shrink-0" /> Zero errors detected
+          </span>
+          <span className="text-slate-500">142ms build time</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "students",
+    tabLabel: "Students",
+    badge: "Learning & Projects",
+    icon: GraduationCap,
+    accentColor: "#EC4899",
+    title: "Deconstruct complex theory & build portfolio MVPs",
+    flowSteps: ["Deconstruct", "Solve Logic", "Verify Proof", "Master"],
+    description:
+      "Break down intricate computer science concepts, solve algorithmic proofs step-by-step, and convert course projects into live web apps.",
+    preview: (
+      <div className="w-full h-full bg-white rounded-2xl p-3 sm:p-4 border border-black/10 flex flex-col justify-between shadow-xs min-h-[200px]">
+        <div className="flex items-center justify-between border-b border-black/10 pb-2">
+          <span className="text-xs font-semibold text-[#191818] flex items-center gap-1.5 truncate">
+            <GraduationCap className="w-4 h-4 text-[#EC4899] shrink-0" /> UTM Proof Breakdown
+          </span>
+          <span className="text-[9px] sm:text-[10px] bg-[#EC4899]/10 text-[#EC4899] px-1.5 sm:px-2 py-0.5 rounded-full font-bold shrink-0">
+            Verified
+          </span>
+        </div>
+        <div className="p-2.5 sm:p-3 bg-[#F3EDE3]/60 rounded-xl text-xs space-y-1 sm:space-y-1.5 text-slate-700 my-2">
+          <p className="font-semibold text-[#191818] text-xs">Universal Turing Machine (UTM)</p>
+          <p className="text-[10px] sm:text-[11px] leading-relaxed opacity-80 line-clamp-3 sm:line-clamp-none">
+            Encodes transition functions onto tape 1 and input data onto tape 2 to simulate any arbitrary Turing machine M...
+          </p>
+        </div>
+        <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-medium text-[#EC4899]">
+          <span>Step 3 of 4 completed</span>
+          <span className="underline cursor-pointer">View full derivation →</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "researchers",
+    tabLabel: "Researchers",
+    badge: "Deep Context & Data",
+    icon: Microscope,
+    accentColor: "#7C3AED",
+    title: "Synthesize literature with zero hallucinations",
+    flowSteps: ["Ingest Papers", "Query Vector Memory", "Cross-Reference", "Generate Report"],
+    description:
+      "Query hundreds of research PDFs simultaneously using infinite vector memory. Extract datasets, cross-check citations, and correlate papers instantly.",
+    preview: (
+      <div className="w-full h-full bg-slate-900 rounded-2xl p-3 sm:p-4 border border-slate-800 font-mono text-xs text-slate-300 flex flex-col justify-between shadow-lg min-h-[200px]">
+        <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-slate-400">
+          <span className="flex items-center gap-1.5 truncate">
+            <Database className="w-3.5 h-3.5 text-[#BFA7F8] shrink-0" /> Vector Graph Memory
+          </span>
+          <span className="text-[#BFA7F8] font-bold text-[10px] sm:text-xs shrink-0">100k+ Tokens</span>
+        </div>
+        <div className="space-y-1.5 sm:space-y-2 py-2">
+          <div className="p-1.5 sm:p-2 bg-slate-800/80 rounded-lg flex justify-between items-center text-[10px] sm:text-[11px]">
+            <span className="truncate max-w-[110px] xs:max-w-[150px] sm:max-w-[170px] text-slate-200">
+              Steganography_Analysis_v2.pdf
+            </span>
+            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1 sm:px-1.5 py-0.5 rounded shrink-0">
+              99.2% Match
+            </span>
+          </div>
+          <div className="p-1.5 sm:p-2 bg-slate-800/80 rounded-lg flex justify-between items-center text-[10px] sm:text-[11px]">
+            <span className="truncate max-w-[110px] xs:max-w-[150px] sm:max-w-[170px] text-slate-200">
+              ResNet18_Residuals.pdf
+            </span>
+            <span className="text-[9px] sm:text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1 sm:px-1.5 py-0.5 rounded shrink-0">
+              95.8% Match
+            </span>
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-);
-
-const EnterpriseIllustration = () => (
-  <div className="relative w-full max-w-[220px] h-[190px] flex items-center justify-center">
-    <span className="absolute w-32 h-32 rounded-full blur-2xl opacity-40" style={{ background: "radial-gradient(circle,#FF7A1A,transparent 70%)" }} />
-    <svg width="88" height="104" viewBox="0 0 88 104" fill="none" className="relative">
-      <path
-        d="M44 2 84 16v34c0 30-18 44-40 50C22 94 4 80 4 50V16L44 2Z"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path
-        className="draw-in"
-        d="M27 51l12 12 22-24"
-        stroke="white"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </div>
-);
-
-type CardData = {
-  key: string;
-  bgClass: string;
-  textClass: string;
-  label: string;
-  title: React.ReactNode;
-  illustration: React.ReactNode;
-  description: string;
-};
-
-const CARDS: CardData[] = [
-  {
-    key: "agent",
-    bgClass: "bg-white",
-    textClass: "text-[#191818]",
-    label: "Prompt-native building",
-    title: <>Describe it.<br />Ship it.</>,
-    illustration: <AgentIllustration />,
-    description: "Tell Rivinity what you want and it writes, tests, and deploys production-ready code — then keeps iterating alongside you.",
+        <div className="text-[9px] sm:text-[10px] text-slate-400 pt-2 border-t border-slate-800">
+          Source cited across 14 research papers
+        </div>
+      </div>
+    ),
   },
   {
-    key: "infra",
-    bgClass: "bg-[#F3EDE3]",
-    textClass: "text-[#191818]",
-    label: "Managed infrastructure",
-    title: "Scale without touching config.",
-    illustration: <InfraIllustration />,
-    description: "Auth, database, hosting, and monitoring come wired in from the first prompt — nothing to provision, nothing to babysit.",
+    id: "marketers",
+    tabLabel: "Marketers",
+    badge: "Prompt-to-UI & Copy",
+    icon: Megaphone,
+    accentColor: "#FF7A1A",
+    title: "Turn natural language into high-converting landing pages",
+    flowSteps: ["Brief", "Generate Layout", "Refine Copy", "Publish Live"],
+    description:
+      "Describe a launch concept and let Rivinity build responsive React layouts, interactive CTA elements, and conversion copy in seconds.",
+    preview: (
+      <div className="w-full h-full bg-white rounded-2xl p-3 sm:p-4 border border-black/10 flex flex-col justify-between shadow-xs min-h-[200px]">
+        <div className="flex items-center justify-between pb-2 border-b border-black/10">
+          <span className="text-xs font-semibold text-[#191818] flex items-center gap-1.5 truncate">
+            <Sparkles className="w-3.5 h-3.5 text-[#FF7A1A] shrink-0" /> Prompt-to-UI Output
+          </span>
+          <span className="text-[9px] sm:text-[10px] bg-[#FF7A1A]/10 text-[#FF7A1A] px-1.5 sm:px-2 py-0.5 rounded font-bold shrink-0">
+            Live Interactive
+          </span>
+        </div>
+        <div className="p-3 sm:p-4 my-2 bg-gradient-to-br from-[#FF7A1A]/10 via-[#F5A9D0]/10 to-[#BFA7F8]/10 rounded-xl border border-black/5 flex flex-col gap-1.5 sm:gap-2">
+          <h4 className="text-xs font-bold text-[#191818] leading-tight">Automate Your Next Product Launch</h4>
+          <p className="text-[10px] text-slate-600 leading-snug">Convert visitors into waitlist signups with AI canvas.</p>
+          <button className="mt-1 self-start px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-[#141414] text-white font-medium text-[9px] sm:text-[10px] shadow-xs">
+            Start Free Trial →
+          </button>
+        </div>
+        <div className="text-[9px] sm:text-[10px] text-slate-400 text-right">Optimized for Desktop & Mobile</div>
+      </div>
+    ),
   },
   {
-    key: "integrations",
-    bgClass: "bg-[#FBEAF0]",
-    textClass: "text-[#191818]",
-    label: "Connected by default",
-    title: "Plug into what you already use.",
-    illustration: <IntegrationsIllustration />,
-    description: "Wire up models, payments, and workspace tools in minutes — Rivinity keeps every integration in sync across studios.",
+    id: "startups",
+    tabLabel: "Startups",
+    badge: "MVP & Zero-DevOps",
+    icon: Rocket,
+    accentColor: "#FF7A1A",
+    title: "Go from initial prompt to globally deployed startup in days",
+    flowSteps: ["Prompt", "Auto-Wire Auth/DB", "Deploy Edge", "Scale Globally"],
+    description:
+      "Skip provisioning servers. Auth, database, hosting, and edge network routing come pre-configured out of the box.",
+    preview: (
+      <div className="w-full h-full bg-[#141414] rounded-2xl p-3 sm:p-4 border border-white/10 font-mono text-xs text-slate-300 flex flex-col justify-between shadow-lg min-h-[200px]">
+        <div className="flex items-center justify-between pb-2 border-b border-white/10">
+          <span className="flex items-center gap-1.5 text-slate-400 truncate">
+            <Globe className="w-3.5 h-3.5 text-[#FF7A1A] shrink-0" /> Edge Deployment Engine
+          </span>
+          <span className="text-[8px] sm:text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 sm:px-2 py-0.5 rounded-full font-bold shrink-0">
+            ONLINE
+          </span>
+        </div>
+        <div className="space-y-1 sm:space-y-1.5 text-[10px] sm:text-[10.5px] py-2">
+          <p className="text-slate-400">✔ Managed Auth & DB Wired</p>
+          <p className="text-slate-400">✔ Global POPs: SFO, LHR, TYO, FRA</p>
+          <p className="text-[#FF7A1A] font-bold pt-1 truncate">🚀 https://app.rivinity.site</p>
+        </div>
+        <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-slate-500 pt-2 border-t border-white/10">
+          <span>Latency: 24ms</span>
+          <span>SSL: Active</span>
+        </div>
+      </div>
+    ),
   },
   {
-    key: "enterprise",
-    bgClass: "bg-[#141414]",
-    textClass: "text-white",
-    label: "Enterprise-grade trust",
-    title: "Secure by default, audited by design.",
-    illustration: <EnterpriseIllustration />,
-    description: "SSO/SAML, SOC 2 controls, and workspace-level permissions keep every studio safe as your team grows.",
+    id: "businesses",
+    tabLabel: "Businesses",
+    badge: "Enterprise & Scale",
+    icon: Building2,
+    accentColor: "#7C3AED",
+    title: "Scale AI execution safely with strict enterprise governance",
+    flowSteps: ["Enforce SAML", "Dynamic Route Models", "Audit Logs", "Optimize Token Costs"],
+    description:
+      "Empower multi-member teams with collaborative studio access while maintaining SOC 2 compliance and dynamic model cost routing.",
+    preview: (
+      <div className="w-full h-full bg-white rounded-2xl p-3 sm:p-4 border border-black/10 flex flex-col justify-between shadow-xs min-h-[200px]">
+        <div className="flex items-center justify-between pb-2 border-b border-black/10">
+          <span className="text-xs font-semibold text-[#191818] flex items-center gap-1.5 truncate">
+            <ShieldCheck className="w-4 h-4 text-[#7C3AED] shrink-0" /> Enterprise Control Panel
+          </span>
+          <span className="text-[9px] sm:text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded font-bold shrink-0">
+            SOC 2 Type II
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-2 my-2">
+          <div className="p-2 sm:p-2.5 bg-[#F3EDE3]/70 rounded-xl border border-black/5">
+            <span className="text-[9px] sm:text-[10px] text-slate-500 block truncate">Token Cost Optimization</span>
+            <span className="text-sm sm:text-base font-extrabold text-[#191818]">35.4% Saved</span>
+          </div>
+          <div className="p-2 sm:p-2.5 bg-[#F3EDE3]/70 rounded-xl border border-black/5">
+            <span className="text-[9px] sm:text-[10px] text-slate-500 block truncate">Active Team Seats</span>
+            <span className="text-sm sm:text-base font-extrabold text-[#7C3AED]">240 / 250</span>
+          </div>
+        </div>
+        <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-slate-400">
+          <span>SAML/SSO: ON</span>
+          <span>Audit Logs Enabled</span>
+        </div>
+      </div>
+    ),
   },
 ];
 
-function Card({ card, index }: { card: CardData; index: number }) {
+export default function PoweredByRivinity({ className = "" }: PoweredByRivinityType) {
+  const [activeTab, setActiveTab] = useState<UseCase>(USE_CASES[0]);
+
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className={`rounded-3xl ${card.bgClass} ${card.textClass} overflow-hidden flex flex-col items-start justify-between p-6 gap-5 shadow-sm`}
-    >
-      <div className="flex flex-col items-start gap-3">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.12em] opacity-60">
-          {card.label}
-        </span>
-        <h3 className="text-2xl lg:text-[27px] font-semibold tracking-tight leading-[1.15]">
-          {card.title}
-        </h3>
+    <section className={`w-full max-w-5xl mx-auto px-3 sm:px-6 py-10 sm:py-16 font-sans text-[#191818] overflow-hidden ${className}`}>
+      
+      {/* Section Header */}
+      <div className="flex flex-col items-center text-center gap-2 mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#191818] leading-tight">
+          One platform. Built for every persona.
+        </h2>
       </div>
-      <div className="w-full flex items-center justify-center py-2">{card.illustration}</div>
-      <p className="text-[13.5px] leading-relaxed opacity-70">{card.description}</p>
-    </motion.article>
-  );
-}
 
-function MobileCarousel() {
-  const [active, setActive] = useState(0);
-  const total = CARDS.length;
-  const goTo = (index: number) => setActive((index + total) % total);
+      {/* Horizontal Tabs Row (Scrollable on mobile) */}
+      <div className="w-full flex items-center justify-start sm:justify-center overflow-x-auto pb-3 mb-4 sm:mb-6 scrollbar-none -mx-3 px-3 sm:mx-0 sm:px-0">
+        <div className="flex items-center gap-1 sm:gap-1.5 bg-[#F3EDE3] p-1 sm:p-1.5 rounded-2xl border border-black/5 shrink-0">
+          {USE_CASES.map((uc) => {
+            const Icon = uc.icon;
+            const isActive = activeTab.id === uc.id;
 
-  return (
-    <div className="lg:hidden flex flex-col gap-3">
-      <div className="overflow-hidden">
-        <motion.div
-          className="flex"
-          animate={{ x: `-${active * 100}%` }}
-          transition={{ type: "spring", stiffness: 300, damping: 32 }}
-        >
-          {CARDS.map((card, i) => (
-            <div key={card.key} className="w-full shrink-0 px-1">
-              <Card card={card} index={i} />
+            return (
+              <button
+                key={uc.id}
+                onClick={() => setActiveTab(uc)}
+                className={`relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition-all duration-200 shrink-0 ${
+                  isActive
+                    ? "bg-white text-[#191818] shadow-xs scale-[1.01]"
+                    : "text-[#191818]/60 hover:text-[#191818] hover:bg-white/50"
+                }`}
+              >
+                <Icon
+                  className="w-3.5 h-3.5 transition-colors shrink-0"
+                  style={{ color: isActive ? uc.accentColor : "currentColor" }}
+                />
+                <span className="whitespace-nowrap">{uc.tabLabel}</span>
+
+                {/* Subtle active highlight dot */}
+                {isActive && (
+                  <motion.span
+                    layoutId="activeTabIndicator"
+                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: uc.accentColor }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Single Dynamic Use-Case Container */}
+      <div className="w-full bg-[#F3EDE3]/70 border border-black/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-10 shadow-xs relative overflow-hidden flex flex-col justify-between">
+        
+        {/* Subtle background glow */}
+        <div
+          className="absolute -top-20 -right-20 w-60 sm:w-80 h-60 sm:h-80 rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-500"
+          style={{ backgroundColor: activeTab.accentColor }}
+        />
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch lg:items-center relative z-10"
+          >
+            {/* Left Content Column */}
+            <div className="lg:col-span-7 flex flex-col justify-between gap-5 sm:gap-6">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-center gap-2">
+                  <span
+                    className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider border"
+                    style={{
+                      color: activeTab.accentColor,
+                      borderColor: `${activeTab.accentColor}40`,
+                      backgroundColor: `${activeTab.accentColor}12`,
+                    }}
+                  >
+                    {activeTab.badge}
+                  </span>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#191818] tracking-tight leading-snug">
+                  {activeTab.title}
+                </h3>
+
+                <p className="text-xs sm:text-sm text-[#191818]/70 leading-relaxed max-w-xl">
+                  {activeTab.description}
+                </p>
+              </div>
+
+              {/* Step-by-Step Workflow Flow */}
+              <div className="space-y-1.5 sm:space-y-2 pt-1 sm:pt-2">
+                <span className="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider text-[#191818]/50">
+                  WORKFLOW PIPELINE
+                </span>
+                <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-[#191818]">
+                  {activeTab.flowSteps.map((step, idx) => (
+                    <div key={step} className="flex items-center gap-1.5">
+                      <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg bg-white border border-black/10 shadow-2xs text-[10px] sm:text-[11px] whitespace-nowrap">
+                        {step}
+                      </span>
+                      {idx < activeTab.flowSteps.length - 1 && (
+                        <span className="text-slate-400 font-normal text-xs">→</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          ))}
-        </motion.div>
-      </div>
 
-      <div className="flex items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          {CARDS.map((card, i) => (
-            <button
-              key={card.key}
-              type="button"
-              aria-label={`Go to slide ${i + 1}`}
-              onClick={() => goTo(i)}
-              className={`h-2 rounded-full transition-all ${
-                i === active ? "w-5 bg-[#141414]" : "w-2 bg-[#141414]/25"
-              }`}
-            />
-          ))}
-        </div>
+            {/* Right Product UI Mockup Column */}
+            <div className="lg:col-span-5 min-h-[220px] sm:min-h-[240px] h-full w-full flex flex-col">
+              <div className="w-full h-full bg-white/40 p-1.5 sm:p-2 rounded-2xl border border-black/5 shadow-inner flex-1 flex flex-col">
+                {activeTab.preview}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            aria-label="Previous slide"
-            onClick={() => goTo(active - 1)}
-            className="w-10 h-10 rounded-xl bg-[#F3EDE3] flex items-center justify-center hover:bg-[#ece3d5] transition-colors"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path fillRule="evenodd" clipRule="evenodd" d="M4.47 11.47a.75.75 0 0 0 0 1.06l7 7a.75.75 0 1 0 1.06-1.06l-5.72-5.72H19a.75.75 0 0 0 0-1.5H6.81l5.72-5.72a.75.75 0 0 0-1.06-1.06l-7 7Z" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            aria-label="Next slide"
-            onClick={() => goTo(active + 1)}
-            className="w-10 h-10 rounded-xl bg-[#F3EDE3] flex items-center justify-center hover:bg-[#ece3d5] transition-colors"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path fillRule="evenodd" clipRule="evenodd" d="M19.53 11.47a.75.75 0 0 1 0 1.06l-7 7a.75.75 0 1 1-1.06-1.06l5.72-5.72H5a.75.75 0 0 1 0-1.5h12.19l-5.72-5.72a.75.75 0 0 1 1.06-1.06l7 7Z" />
-            </svg>
+        {/* Footer Banner Inside Container */}
+        <div className="mt-6 sm:mt-8 pt-4 border-t border-black/10 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 text-xs text-[#191818]/60 relative z-10 text-center sm:text-left">
+          <span className="flex items-center justify-center sm:justify-start gap-1.5 font-medium text-[11px] sm:text-xs">
+            <Zap className="w-3.5 h-3.5 text-[#FF7A1A] shrink-0" />
+            Switch personas anytime — all tools share the same studio memory.
+          </span>
+          <button className="flex items-center gap-1 font-bold text-[#191818] hover:text-[#7C3AED] transition-colors text-[11px] sm:text-xs shrink-0">
+            <span>Explore all features</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
+
       </div>
-    </div>
-  );
-}
-
-const PoweredByRivinity: NextPage<PoweredByRivinityType> = ({ className = "" }) => {
-  return (
-    <section className={`relative w-full flex flex-col items-center px-6 md:px-12 lg:px-16 font-[Inter] ${className}`}>
-      <div className="w-full max-w-345 mx-auto flex flex-col items-center pt-12 md:pt-20 lg:pt-24 gap-10">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center text-center gap-3 max-w-2xl"
-        >
-          {/* <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/50">
-            The engine underneath
-          </span> */}
-          <h2 className="text-[28px] md:text-[38px] lg:text-[46px] font-semibold tracking-tight leading-[1.1]">
-            Everything Rivinity runs on.
-          </h2>
-        </motion.div>
-
-        <div className="hidden lg:grid w-full grid-cols-4 gap-4">
-          {CARDS.map((card, i) => (
-            <Card key={card.key} card={card} index={i} />
-          ))}
-        </div>
-
-        <div className="w-full">
-          <MobileCarousel />
-        </div>
-      </div>
-
-      <style jsx>{`
-        .orbit-ring {
-          animation: spin-slow 16s linear infinite;
-        }
-        .orbit-cw {
-          animation: spin-cw 14s linear infinite;
-        }
-        .orbit-ccw {
-          animation: spin-ccw 14s linear infinite;
-        }
-        .flow-dot {
-          animation: flow-down 3.2s ease-in-out infinite;
-        }
-        .draw-in {
-          stroke-dasharray: 46;
-          stroke-dashoffset: 46;
-          animation: dash 2.4s ease-in-out infinite;
-        }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes spin-cw {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes spin-ccw {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(-360deg); }
-        }
-        @keyframes flow-down {
-          0% { top: 4px; opacity: 0; }
-          15% { opacity: 1; }
-          85% { opacity: 1; }
-          100% { top: calc(100% - 14px); opacity: 0; }
-        }
-        @keyframes dash {
-          0% { stroke-dashoffset: 46; }
-          40% { stroke-dashoffset: 0; }
-          75% { stroke-dashoffset: 0; }
-          100% { stroke-dashoffset: -46; }
-        }
-      `}</style>
     </section>
   );
-};
-
-export default PoweredByRivinity;
+}

@@ -217,7 +217,7 @@ export default function Team5({
 }: Team5Props) {
   return (
     <section
-  className={`w-full py-32 bg-[#F8F5F1] relative overflow-hidden ${
+  className={`w-full py-32 bg-[#f8fafc] relative overflow-hidden ${
     className ?? ''
   }`}
 >

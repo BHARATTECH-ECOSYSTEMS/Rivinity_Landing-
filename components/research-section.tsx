@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type ResearchCard = {
@@ -61,23 +61,23 @@ const RESEARCH_CARDS: ResearchCard[] = [
   },
 ];
 
-const RECOGNIZED_BY = ["ICLR", "ICML", "NeurIPS", "MLSys"];
-
 function useTypeOnce(word: string, speed = 55) {
   const [text, setText] = useState("");
   const ref = useRef(false);
 
-  if (!ref.current) {
-    ref.current = true;
-    setTimeout(() => {
+  useEffect(() => {
+    if (!ref.current) {
+      ref.current = true;
       let i = 0;
       const interval = setInterval(() => {
         i += 1;
         setText(word.slice(0, i));
         if (i >= word.length) clearInterval(interval);
       }, speed);
-    }, 0);
-  }
+
+      return () => clearInterval(interval);
+    }
+  }, [word, speed]);
 
   return text;
 }
@@ -90,11 +90,11 @@ function ResearchCardItem({ card }: { card: ResearchCard }) {
       href={card.href}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group relative shrink-0 w-66 h-85 snap-start rounded-2xl border border-[#EDEAE4] bg-white p-6 flex flex-col justify-between overflow-hidden shadow-[0_2px_10px_rgba(17,26,74,0.04)] transition-shadow hover:shadow-[0_10px_30px_rgba(255,60,0,0.10)]"
+      className="group relative shrink-0 w-[240px] sm:w-[264px] h-[320px] sm:h-[340px] snap-start rounded-2xl border border-[#EDEAE4] bg-white p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-[0_2px_10px_rgba(17,26,74,0.04)] transition-all duration-300 hover:shadow-[0_10px_30px_rgba(255,60,0,0.10)]"
     >
-      {/* Background image, fades in on hover */}
+      {/* Background gradient, fades in on hover */}
       <div
-        className="absolute inset-0 transition-opacity duration-500"
+        className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(160deg, #FFF3EC 0%, #FFE4D3 100%)",
@@ -102,11 +102,11 @@ function ResearchCardItem({ card }: { card: ResearchCard }) {
         }}
       />
 
-      <div className="relative z-10 flex flex-col gap-4">
-        <span className="inline-flex w-fit items-center rounded-full border border-[#FF7A1A]/30 bg-[#FFF3EC] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-[#FF7A1A]">
+      <div className="relative z-10 flex flex-col gap-3 sm:gap-4">
+        <span className="inline-flex w-fit items-center rounded-full border border-[#FF7A1A]/30 bg-[#FFF3EC] px-2.5 py-1 text-[10px] sm:text-[11px] font-medium uppercase tracking-wide text-[#FF7A1A]">
           {card.tag}
         </span>
-        <p className="text-[17px] leading-[1.35] font-medium text-[#1F2024]">
+        <p className="text-base sm:text-[17px] leading-[1.35] font-medium text-[#1F2024] line-clamp-4">
           {card.title}
         </p>
       </div>
@@ -114,7 +114,7 @@ function ResearchCardItem({ card }: { card: ResearchCard }) {
       <div className="relative z-10 h-6">
         {/* Authors: visible by default, fade out on hover */}
         <p
-          className="absolute inset-0 text-[13px] text-[#8E8E93] transition-opacity duration-300"
+          className="absolute inset-0 text-xs sm:text-[13px] text-[#8E8E93] transition-opacity duration-300 truncate"
           style={{ opacity: hovered ? 0 : 1 }}
         >
           {card.authors}
@@ -122,7 +122,7 @@ function ResearchCardItem({ card }: { card: ResearchCard }) {
 
         {/* Read More button: slides up + fades in on hover */}
         <div
-          className="absolute inset-0 flex items-center gap-1.5 text-[13px] font-medium text-[#FF7A1A] transition-all duration-300"
+          className="absolute inset-0 flex items-center gap-1.5 text-xs sm:text-[13px] font-medium text-[#FF7A1A] transition-all duration-300"
           style={{
             opacity: hovered ? 1 : 0,
             transform: hovered ? "translateY(0)" : "translateY(100%)",
@@ -143,83 +143,60 @@ export default function ResearchSection() {
   const scrollByCards = useCallback((direction: 1 | -1) => {
     const el = scrollRef.current;
     if (!el) return;
-    const cardWidth = 264 + 16; // card width + gap
-    el.scrollBy({ left: direction * cardWidth * 2, behavior: "smooth" });
+    const card = el.querySelector("a");
+    const cardWidth = card ? card.offsetWidth + 24 : 288;
+    el.scrollBy({ left: direction * cardWidth, behavior: "smooth" });
   }, []);
 
   return (
-    <section className="w-full py-16 md:py-24">
-      <div className="mx-auto w-full max-w-290 px-5">
+    <section className="w-full py-12 sm:py-16 md:py-24 overflow-hidden">
+      <div className="mx-auto w-full max-w-[1160px] px-4 sm:px-6">
         {/* Header row */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
-          <div>
-            <p className="mb-3 text-[33px] font-medium uppercase tracking-wide ">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 md:mb-10">
+          <div className="max-w-3xl">
+            <p className="mb-2 sm:mb-3 text-xl sm:text-2xl md:text-[33px] font-medium uppercase tracking-wide leading-tight text-[#1F2024]">
               {eyebrow}
-              <span className="inline-block w-px h-3 bg-[#FF7A1A] ml-0.5 align-middle animate-pulse" />
             </p>
-            <p className="text-[18px] text-[#6B6D74]">
+            <p className="text-sm sm:text-base md:text-[18px] text-[#6B6D74]">
               Foundational systems research for production AI.
             </p>
           </div>
 
-          <div className="hidden md:flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              aria-label="Previous"
-              onClick={() => scrollByCards(-1)}
-              className="w-10 h-10 rounded-full border border-[#EDEAE4] bg-white flex items-center justify-center text-[#1F2024] hover:bg-[#FFF3EC] hover:border-[#FF7A1A]/30 hover:text-[#FF7A1A] transition-colors"
-            >
-              <ArrowLeft size={16} />
-            </button>
-            <button
-              type="button"
-              aria-label="Next"
-              onClick={() => scrollByCards(1)}
-              className="w-10 h-10 rounded-full border border-[#EDEAE4] bg-white flex items-center justify-center text-[#1F2024] hover:bg-[#FFF3EC] hover:border-[#FF7A1A]/30 hover:text-[#FF7A1A] transition-colors"
-            >
-              <ArrowRight size={16} />
-            </button>
+          {/* Navigation Controls (Visible on all screens) */}
+          <div className="flex items-center justify-between md:justify-end gap-2 shrink-0 pt-2 md:pt-0 border-t border-[#EDEAE4] md:border-none">
+            <span className="text-xs text-[#8E8E93] md:hidden">Scroll to explore</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                aria-label="Previous"
+                onClick={() => scrollByCards(-1)}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#EDEAE4] bg-white flex items-center justify-center text-[#1F2024] hover:bg-[#FFF3EC] hover:border-[#FF7A1A]/30 hover:text-[#FF7A1A] active:scale-95 transition-all"
+              >
+                <ArrowLeft size={16} />
+              </button>
+              <button
+                type="button"
+                aria-label="Next"
+                onClick={() => scrollByCards(1)}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#EDEAE4] bg-white flex items-center justify-center text-[#1F2024] hover:bg-[#FFF3EC] hover:border-[#FF7A1A]/30 hover:text-[#FF7A1A] active:scale-95 transition-all"
+              >
+                <ArrowRight size={16} />
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Card rail */}
         <div
           ref={scrollRef}
-          className="flex gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 -mx-5 px-5"
-          style={{ scrollbarWidth: "none" }}
+          className="flex gap-4 sm:gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {RESEARCH_CARDS.map((card) => (
             <ResearchCardItem key={card.href} card={card} />
           ))}
         </div>
-
-        {/* Recognized-by logos row */}
-        <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 ">
-          <p className="text-[14px] uppercase tracking-wide shrink-0">
-            recognized by
-          </p>
-          <ul className="flex items-center gap-8 flex-wrap justify-center sm:justify-start list-none p-0 m-0">
-            {RECOGNIZED_BY.map((name, i) => (
-              <li
-                key={name}
-                className={`relative pr-8 text-[15px] font-medium text-[#1F2024]/50 ${
-                  i !== RECOGNIZED_BY.length - 1
-                    ? "after:content-[''] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:h-4 after:w-px after:bg-[#1F2024]/10"
-                    : ""
-                }`}
-              >
-                {name}
-              </li>
-            ))}
-          </ul>
-        </div>
       </div>
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 }

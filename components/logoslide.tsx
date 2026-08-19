@@ -132,7 +132,7 @@ function LogoCloud({ className, logos, ...props }: LogoCloudProps) {
         {logos.map((logo) => (
           <img
             alt={logo.alt}
-            className="pointer-events-none h-4 w-auto select-none md:h-5"
+            className="pointer-events-none h-5 w-auto select-none md:h-5"
             height={20}
             key={`logo-${logo.alt}`}
             loading="lazy"
@@ -160,7 +160,7 @@ const logos: Logo[] = [
 
 export default function DemoOne() {
   return (
-    <div className="w-full place-content-center mt-10">
+    <div className="w-full place-content-center">
       <div
         aria-hidden="true"
         className={cn(
@@ -170,7 +170,7 @@ export default function DemoOne() {
         )}
       />
       <section className="relative mx-auto max-w-7xl">
-        <div className="mx-auto my-5 h-px max-w-sm bg-border mask-[linear-gradient(to_right,transparent,black,transparent)]" />
+        <div className="mx-auto my-5 h-2px max-w-sm bg-border mask-[linear-gradient(to_right,transparent,black,transparent)]" />
         <LogoCloud logos={logos} />
         <div className="mt-5 h-px bg-border mask-[linear-gradient(to_right,transparent,black,transparent)]" />
       </section>

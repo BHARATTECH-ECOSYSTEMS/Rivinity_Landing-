@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import ScrollReveal from "../components/ui/ScrollReveal";
 import { MessageSquare, Wand2, GraduationCap, Bot, Sparkles, CheckCircle2 } from "lucide-react";
 
-const leftPartners  = [
+const leftPartners = [
   { name: "AI Chat",     icon: MessageSquare },
   { name: "RivinityLM",  icon: GraduationCap },
 ];
@@ -20,7 +20,7 @@ const features = [
       <div className="rounded-xl border border-glass glass-strong p-3 shadow-float">
         <div className="text-[10px] font-semibold text-foreground/60 mb-2">Active canvas</div>
         <div className="flex items-baseline gap-1.5">
-          <div className="text-[26px] font-semibold tracking-tight gradient-accent-text">12</div>
+          <div className="text-[22px] sm:text-[26px] font-semibold tracking-tight gradient-accent-text">12</div>
           <div className="text-[10px] text-foreground/55">studios</div>
         </div>
         <div className="text-[9.5px] text-foreground/50 mt-1">one connected surface</div>
@@ -37,7 +37,7 @@ const features = [
         <div className="space-y-1.5">
           {["Research", "Threads", "Assets"].map((k, i) => (
             <div key={k} className="flex items-center gap-2">
-              <div className="text-[9.5px] w-14 text-foreground/60">{k}</div>
+              <div className="text-[9.5px] w-12 sm:w-14 text-foreground/60 truncate">{k}</div>
               <div className="flex-1 h-1 rounded-full bg-foreground/10 overflow-hidden">
                 <div
                   className="h-full rounded-full"
@@ -60,7 +60,7 @@ const features = [
     preview: (
       <div className="rounded-xl border border-glass glass-strong p-3 shadow-float">
         <div className="text-[10px] font-semibold text-foreground/60 mb-2">Router uptime</div>
-        <div className="grid grid-cols-4 gap-2 text-center">
+        <div className="grid grid-cols-4 gap-1 sm:gap-2 text-center">
           {[
             { v: "8",  l: "Models" },
             { v: "15", l: "Tools"  },
@@ -68,8 +68,8 @@ const features = [
             { v: "12", l: "Flows"  },
           ].map((s) => (
             <div key={s.l}>
-              <div className="text-[15px] font-semibold tracking-tight">{s.v}</div>
-              <div className="text-[8.5px] text-foreground/55">{s.l}</div>
+              <div className="text-[13px] sm:text-[15px] font-semibold tracking-tight">{s.v}</div>
+              <div className="text-[8px] sm:text-[8.5px] text-foreground/55 truncate">{s.l}</div>
             </div>
           ))}
         </div>
@@ -86,17 +86,6 @@ type TrunkGeometry = {
   cardXs: number[];
 };
 
-/**
- * WhyRivinity — ecosystem map matching the reference screenshot:
- * dark central pill with the Rivinity mark, orthogonal connectors branching
- * to two side pills on each edge, and a vertical trunk that fans into three
- * feature cards beneath.
- *
- * The trunk connector below the pill is measured from real DOM positions
- * (pill center + each card's center) rather than hardcoded viewBox
- * fractions, so the lines always land exactly on each card regardless of
- * gap width, padding, or screen size.
- */
 const WhyRivinity = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLDivElement>(null);
@@ -133,7 +122,7 @@ const WhyRivinity = () => {
 
     measure();
     window.addEventListener("resize", measure);
-    const t = window.setTimeout(measure, 200); // catch late-settling fonts/layout
+    const t = window.setTimeout(measure, 200);
     return () => {
       window.removeEventListener("resize", measure);
       window.clearTimeout(t);
@@ -144,28 +133,28 @@ const WhyRivinity = () => {
     <section
       id="why"
       data-testid="why-rivinity"
-      className="mx-auto max-w-6xl px-5 lg:px-8 pt-16 pb-24"
+      className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-16 sm:pb-24 overflow-hidden"
     >
-      <ScrollReveal className="max-w-4xl mx-auto text-center mb-14">
-        <div className="text-[34px] lg:text-[52px] font-semibold tracking-tight leading-[1.15]">
+      <ScrollReveal className="max-w-4xl mx-auto text-center mb-10 sm:mb-14">
+        <h2 className="text-2xl sm:text-4xl lg:text-[52px] font-semibold tracking-tight leading-[1.15]">
           One canvas connects every studio you already love.
-        </div>
-        <div className="mt-9 text-[15px] text-foreground/65 leading-relaxed max-w-3xl mx-auto">
+        </h2>
+        <p className="mt-4 sm:mt-6 lg:mt-9 text-sm sm:text-base text-foreground/65 leading-relaxed max-w-3xl mx-auto">
           Integrate with the AI surfaces you use every day — Rivinity handles the intelligence
           behind the scenes.
-        </div>
+        </p>
       </ScrollReveal>
 
-      {/* Ecosystem map — center pill, side pills, orthogonal connectors,
-          then a vertical trunk fanning into the three feature cards. */}
+      {/* Ecosystem map */}
       <div ref={mapRef} className="relative mx-auto w-full max-w-[960px]" data-testid="ecosystem-map">
-        {/* --- Pills row with side connectors overlay --- */}
+        {/* Pills row */}
         <div className="relative">
+          {/* Side connector lines: only visible on desktop/tablet (md+) where SVG layout is exact */}
           <svg
             aria-hidden
             viewBox="0 0 1000 200"
             preserveAspectRatio="none"
-            className="absolute inset-0 w-full h-full pointer-events-none"
+            className="absolute inset-0 w-full h-full pointer-events-none hidden md:block"
           >
             <defs>
               <linearGradient id="rvLineH" x1="0" y1="0" x2="1" y2="0">
@@ -208,27 +197,30 @@ const WhyRivinity = () => {
             })()}
           </svg>
 
-          <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-6 min-h-50">
+          <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-6 min-h-40 sm:min-h-50">
             {/* Left pills */}
-            <div className="flex flex-col gap-8 items-start pl-2">
+            <div className="flex flex-col gap-3 sm:gap-8 items-start min-w-0">
               {leftPartners.map(({ name, icon: Icon }) => (
-                <div key={name} className="glass-strong border border-glass rounded-2xl shadow-float px-4 h-12 flex items-center gap-2.5 min-w-36">
-                  <Icon className="w-4 h-4 text-foreground/75" strokeWidth={1.75} />
-                  <span className="text-[13.5px] font-medium tracking-tight">{name}</span>
+                <div
+                  key={name}
+                  className="glass-strong border border-glass rounded-xl sm:rounded-2xl shadow-float px-2.5 sm:px-4 h-10 sm:h-12 flex items-center gap-1.5 sm:gap-2.5 w-full sm:w-auto sm:min-w-36 justify-start min-w-0"
+                >
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-foreground/75 shrink-0" strokeWidth={1.75} />
+                  <span className="text-xs sm:text-[13.5px] font-medium tracking-tight truncate">{name}</span>
                 </div>
               ))}
             </div>
 
             {/* Center dark pill with Rivinity mark */}
-            <div className="flex items-center justify-center" data-testid="rivinity-center-pill">
+            <div className="flex items-center justify-center shrink-0 px-1" data-testid="rivinity-center-pill">
               <div
                 ref={pillRef}
-                className="relative rounded-full pl-4 pr-5 h-14 flex items-center gap-2.5 shadow-float border border-white/10"
+                className="relative rounded-full px-3.5 sm:pl-4 sm:pr-5 h-11 sm:h-14 flex items-center gap-2 sm:gap-2.5 shadow-float border border-white/10"
                 style={{ background: "linear-gradient(135deg,#141422 0%,#1c1c2e 55%,#0f0f1a 100%)" }}
               >
                 <span
                   aria-hidden
-                  className="absolute -inset-4 rounded-full -z-10 opacity-70 blur-2xl"
+                  className="absolute -inset-2 sm:-inset-4 rounded-full -z-10 opacity-70 blur-xl sm:blur-2xl"
                   style={{
                     background:
                       "radial-gradient(60% 60% at 50% 50%, rgba(253,136,31,0.35), rgba(245,169,208,0.25) 55%, rgba(191,167,248,0.18) 80%, transparent 100%)",
@@ -236,7 +228,7 @@ const WhyRivinity = () => {
                 />
                 <svg
                   viewBox="0 0 40 40"
-                  className="w-6 h-6 text-white"
+                  className="w-5 h-5 sm:w-6 sm:h-6 text-white shrink-0"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.6"
@@ -251,27 +243,29 @@ const WhyRivinity = () => {
                   ))}
                   <path d="M20 14 l4 3 -1.5 5 h-5 L16 17 z" />
                 </svg>
-                <span className="text-white font-semibold tracking-tight text-[16px]">Rivinity</span>
+                <span className="text-white font-semibold tracking-tight text-xs sm:text-[16px]">Rivinity</span>
               </div>
             </div>
 
             {/* Right pills */}
-            <div className="flex flex-col gap-8 items-end pr-2">
+            <div className="flex flex-col gap-3 sm:gap-8 items-end min-w-0">
               {rightPartners.map(({ name, icon: Icon }) => (
-                <div key={name} className="glass-strong border border-glass rounded-2xl shadow-float px-4 h-12 flex items-center gap-2.5 min-w-36">
-                  <Icon className="w-4 h-4 text-foreground/75" strokeWidth={1.75} />
-                  <span className="text-[13.5px] font-medium tracking-tight">{name}</span>
+                <div
+                  key={name}
+                  className="glass-strong border border-glass rounded-xl sm:rounded-2xl shadow-float px-2.5 sm:px-4 h-10 sm:h-12 flex items-center gap-1.5 sm:gap-2.5 w-full sm:w-auto sm:min-w-36 justify-start min-w-0"
+                >
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-foreground/75 shrink-0" strokeWidth={1.75} />
+                  <span className="text-xs sm:text-[13.5px] font-medium tracking-tight truncate">{name}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* --- Trunk spacer: reserves the vertical gap the overlay draws into --- */}
-        <div className="relative h-10" aria-hidden />
+        {/* Vertical spacer for trunk overlay */}
+        <div className="relative h-6 sm:h-10" aria-hidden />
 
-        {/* --- Measured trunk overlay: drawn only once real card/pill
-            positions are known, so it always lands exactly on target. --- */}
+        {/* Measured trunk overlay (desktop only) */}
         {trunk && (
           <svg
             aria-hidden
@@ -321,20 +315,20 @@ const WhyRivinity = () => {
         )}
 
         {/* Feature cards row */}
-        <div data-reveal-group className="relative grid md:grid-cols-3 gap-4">
+        <div data-reveal-group className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
           {features.map((f, i) => (
             <div
               key={f.title}
               ref={(el) => {
                 if (el) cardRefs.current[i] = el;
               }}
-              className="glass border border-glass rounded-2xl shadow-float p-5 flex flex-col"
+              className="glass border border-glass rounded-2xl shadow-float p-4 sm:p-5 flex flex-col"
             >
               <div className="flex items-center gap-2 mb-2">
-                <f.icon className="w-4 h-4 text-foreground/75" strokeWidth={1.75} />
-                <h3 className="text-[14.5px] font-semibold tracking-tight">{f.title}</h3>
+                <f.icon className="w-4 h-4 text-foreground/75 shrink-0" strokeWidth={1.75} />
+                <h3 className="text-sm sm:text-[14.5px] font-semibold tracking-tight">{f.title}</h3>
               </div>
-              <p className="text-[12.5px] text-foreground/60 leading-relaxed">{f.body}</p>
+              <p className="text-xs sm:text-[12.5px] text-foreground/60 leading-relaxed">{f.body}</p>
               <div className="mt-4">{f.preview}</div>
             </div>
           ))}

@@ -14,18 +14,22 @@ interface CardStickyProps extends HTMLMotionProps<"div"> {
 const ContainerScroll = React.forwardRef<
   HTMLDivElement,
   React.HTMLProps<HTMLDivElement>
->(({ children, className, ...props }, ref) => {
+>(({ children, className, style, ...props }, ref) => {
   return (
     <div
       ref={ref}
-      className={cn("relative w-full", className)}
-      style={{ perspective: "1000px", ...props.style }}
       {...props}
+     className={cn("relative w-full bg-[#f8fafc]", className)}
+      style={{
+        perspective: "1000px",
+        ...style,
+      }}
     >
       {children}
     </div>
   )
 })
+
 ContainerScroll.displayName = "ContainerScroll"
 
 const CardSticky = React.forwardRef<HTMLDivElement, CardStickyProps>(
@@ -48,14 +52,14 @@ const CardSticky = React.forwardRef<HTMLDivElement, CardStickyProps>(
       <motion.div
         ref={ref}
         layout="position"
+        {...props}
         style={{
           top: y,
-          z,
+          zIndex: z,
           backfaceVisibility: "hidden",
           ...style,
         }}
         className={cn("sticky", className)}
-        {...props}
       >
         {children}
       </motion.div>
