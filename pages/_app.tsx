@@ -12,6 +12,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <meta
+          name="description"
+          content="Rivinity - Build and deploy AI-powered applications with autonomous agents, collaborative workspaces, and instant edge deployment."
+        />
       </Head>
       <Component {...pageProps} />
     </Fragment>

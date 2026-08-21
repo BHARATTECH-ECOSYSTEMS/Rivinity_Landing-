@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import Cta from "@/components/cta-section";
 
 // If this lives at app/careers/page.tsx, export metadata from a server file
 // instead (a "use client" file can't export metadata):
@@ -52,140 +53,136 @@ export default function CareersPage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="careers-page">
-      <Header/>
-
-      <main>
-        {/* Hero */}
-        <section className="cr-hero">
-          <div className="cr-wrap">
-            <h1 className="cr-kicker">Careers at Rivinity</h1>
-            <p className="cr-tagline">Help builders ship ideas, not tickets.</p>
-            <div>
-              <a className="cr-btn" href="#">See open positions</a>
-            </div>
-          </div>
-        </section>
-
-        {/* Intro / mission */}
-        <section className="cr-intro">
-          <div className="cr-wrap">
-            <div className="cr-intro-card">
-              <p>
-                Rivinity is a platform that helps teams turn raw ideas into working software
-                faster — without losing the craft that makes software good.
-              </p>
-              <p>
-                We started as a small team scratching our own itch. Today we&apos;re building
-                the tools we wished we&apos;d had: faster feedback loops, fewer handoffs, and an
-                AI layer that does the tedious parts so people can focus on the interesting ones.
-              </p>
-              <p>
-                <strong>Come help us build it.</strong>
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA banner 1 */}
-        <section className="cr-cta-module">
-          <div className="cr-wrap cr-wrap-narrow">
-            <div className="cr-cta-card">
-              <div className="cr-cta-copy">
-                <h2>Help shape Rivinity&apos;s next chapter</h2>
-                <p>
-                  Bring your judgment and curiosity to a small team moving fast on a product
-                  people rely on daily. We&apos;re still early — what you build will matter.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How we work */}
-        <section className="cr-section">
-          <div className="cr-wrap">
-            <h2>How we work</h2>
-            <p>
-              <strong>Ship it, then sharpen it.</strong> We&apos;d rather see a rough version in
-              front of real users than a perfect one in a design file. This is a place for people
-              who care about craft, move quickly, and want their work to hold up once it&apos;s
-              out in the world.
-            </p>
-          </div>
-        </section>
-
-        {/* Where we work */}
-        <section className="cr-section">
-          <div className="cr-wrap">
-            <h2>Where we work</h2>
-            <p>
-              <strong>Hybrid, on purpose.</strong> Most of the team works together from our
-              Indore office a few days a week, with the rest remote. In-person time keeps
-              decisions fast and feedback direct; the rest of the week is yours to build with
-              focus.
-            </p>
-          </div>
-        </section>
-
-        {/* Join our team */}
-        <section className="cr-section">
-          <div className="cr-wrap">
-            <h2>Join our team</h2>
-            <p>We&apos;re looking for people who are:</p>
-            <ul className="cr-list">
-              {JOIN_TRAITS.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Benefits */}
-        <section className="cr-section">
-          <div className="cr-wrap">
-            <h2>Benefits</h2>
-            <p>
-              Our benefits are built to support you day-to-day and over the long run, not just
-              on paper.
-            </p>
-            <div className="cr-benefits-grid">
-              {BENEFITS.map((group) => (
-                <div className="cr-benefit-card" key={group.title}>
-                  <div className="cr-benefits-group">
-                    <h3>{group.title}</h3>
-                    <ul className="cr-list">
-                      {group.items.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="cr-more-link">
-              Learn more about our <a className="cr-link" href="#">interview process →</a>
-            </p>
-          </div>
-        </section>
-
-        {/* CTA banner 2 */}
-        <section className="cr-cta-module">
-          <div className="cr-wrap cr-wrap-narrow">
-            <div className="cr-cta-card cr-cta-card-team">
-              <div className="cr-cta-copy">
-                <h2>Ready to join us?</h2>
+    <>
+      <Header />
+      <div className="container">
+        <main>
+          {/* Hero */}
+          <section className="cr-hero mt-12">
+            <div className="cr-wrap">
+              <h1 className="cr-kicker">Careers at Rivinity</h1>
+              <p className="cr-tagline">Help builders ship ideas, not tickets.</p>
+              <div>
                 <a className="cr-btn" href="#">See open positions</a>
               </div>
             </div>
-          </div>
-        </section>
-        <div className="border-b border-gray-200 mt-10"></div>
-      </main>
+          </section>
 
-      <Footer/>
+          {/* Intro / mission */}
+          <section className="cr-intro">
+            <div className="cr-wrap">
+              <div className="cr-intro-card">
+                <p>
+                  Rivinity is a platform that helps teams turn raw ideas into working software
+                  faster without losing the craft that makes software good.
+                </p>
+                <p>
+                  We started as a small team scratching our own itch. Today we&apos;re building
+                  the tools we wished we&apos;d had: faster feedback loops, fewer handoffs, and an
+                  AI layer that does the tedious parts so people can focus on the interesting ones.
+                </p>
+                <p>
+                  <strong>Come help us build it.</strong>
+                </p>
+              </div>
+            </div>
+          </section>
 
-      <style jsx global>{`
+          {/* CTA banner 1 */}
+          <section className="cr-cta-module">
+            <div className="cr-wrap cr-wrap-narrow">
+              <div className="cr-cta-card">
+                <div className="cr-cta-overlay"></div>
+
+                <div className="cr-cta-copy">
+                  <h2>Help shape Rivinity&apos;s next chapter</h2>
+                  <p>
+                    Bring your judgment and curiosity to a small team moving fast on a product
+                    people rely on daily. We&apos;re still early — what you build will matter.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* How we work */}
+          {/* How we work */}
+          <section className="cr-section">
+            <div className="cr-wrap">
+              <div className="cr-text-content">
+                <h2>How we work</h2>
+                <p>
+                  <strong>Ship it, then sharpen it.</strong> We&apos;d rather see a rough version in
+                  front of real users than a perfect one in a design file. This is a place for people
+                  who care about craft, move quickly, and want their work to hold up once it&apos;s
+                  out in the world.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Where we work */}
+          <section className="cr-section">
+            <div className="cr-wrap">
+              <div className="cr-text-content">
+                <h2>Where we work</h2>
+                <p>
+                  <strong>Hybrid, on purpose.</strong> Most of the team works together from our
+                  Indore office a few days a week, with the rest remote. In-person time keeps
+                  decisions fast and feedback direct; the rest of the week is yours to build with
+                  focus.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Join our team */}
+          <section className="cr-section">
+            <div className="cr-wrap">
+              <h2>Join our team</h2>
+              <p>We&apos;re looking for people who are:</p>
+              <ul className="cr-list">
+                {JOIN_TRAITS.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+          {/* Benefits */}
+          <section className="cr-section">
+            <div className="cr-wrap">
+              <h2>Benefits</h2>
+              <p>
+                Our benefits are built to support you day-to-day and over the long run, not just
+                on paper.
+              </p>
+              <div className="cr-benefits-grid">
+                {BENEFITS.map((group) => (
+                  <div className="cr-benefit-card" key={group.title}>
+                    <div className="cr-benefits-group">
+                      <h3>{group.title}</h3>
+                      <ul className="cr-list">
+                        {group.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="cr-more-link">
+                Learn more about our <a className="cr-link" href="#">interview process →</a>
+              </p>
+            </div>
+          </section>
+
+
+
+          <Cta />
+        </main>
+
+        <style jsx global>{`
         :root {
           --rv-bg: #fafafa;
           --rv-paper: #f3f0ec;
@@ -396,14 +393,23 @@ export default function CareersPage() {
           display: flex;
           align-items: center;
           padding: var(--sp-6);
-          background: linear-gradient(120deg, #fff3e8 0%, #ffd9b8 40%, #ff8a4c 78%, #ff3c00 100%);
+         background: linear-gradient(120deg, #ff9a4d 0%, #ff7a1a 45%, #ff3c00 100%);
           box-shadow: 0 16px 32px rgba(255, 122, 26, 0.15);
         }
         .cr-cta-card-team {
           background: linear-gradient(115deg, #2a2a2a 0%, #1a1a1a 55%, #ff3c00 140%);
         }
-        .cr-cta-copy {
+       .cr-cta-copy {
+          position: relative;
+          z-index: 1;
           max-width: 620px;
+        }
+
+        .cr-cta-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.2);
+          z-index: 0;
         }
         .cr-cta-card h2 {
           margin: 0 0 var(--sp-3);
@@ -428,6 +434,9 @@ export default function CareersPage() {
         /* Standard section */
         .cr-section {
           padding: var(--sp-4) 24px var(--sp-7);
+        }
+        .cr-text-content {
+          max-width: 672px;
         }
         .cr-section h2 {
           margin: 0 0 var(--sp-3);
@@ -457,27 +466,28 @@ export default function CareersPage() {
           text-decoration: underline;
         }
         .cr-more-link {
-          margin-top: var(--sp-5);
+          padding: 20px;
         }
 
         .cr-list {
           list-style: none;
           max-width: 760px;
           margin: var(--sp-3) 0 0;
+          padding: 0;
         }
         .cr-list li {
           position: relative;
-          padding-left: 26px;
+          padding-left: 18px;
           color: var(--rv-muted);
-          font-size: 17px;
-          line-height: 1.6;
+          font-size: 16px;
+          line-height: 1.5;
           margin: 0 0 var(--sp-2);
         }
         .cr-list li:before {
           content: "";
           position: absolute;
-          left: 4px;
-          top: 10px;
+          left: 0;
+          top: 8px;
           width: 6px;
           height: 6px;
           border-radius: 50%;
@@ -639,27 +649,38 @@ export default function CareersPage() {
           }
         }
         @media (max-width: 600px) {
+          .cr-wrap,
+          .cr-wrap-narrow {
+            width: 100%;
+          }
           .rv-header {
             height: 56px;
             padding: 0 16px;
           }
           .cr-hero {
-            padding: 64px 20px 48px;
+            padding: 64px 16px 48px;
           }
           .cr-intro,
           .cr-section {
-            padding-left: 20px;
-            padding-right: 20px;
+            padding-left: 16px;
+            padding-right: 16px;
           }
           .cr-intro-card {
-            padding: 20px;
+            padding: 20px 16px;
           }
           .cr-cta-module {
-            padding: 8px 20px 48px;
+            padding: 8px 16px 48px;
           }
           .cr-cta-card {
             min-height: 200px;
-            padding: 24px;
+            padding: 20px 16px;
+          }
+          .cr-benefits-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+          .cr-benefit-card {
+            padding: 20px 16px;
           }
           .rv-footer-inner {
             width: calc(100% - 32px);
@@ -678,6 +699,8 @@ export default function CareersPage() {
           }
         }
       `}</style>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }

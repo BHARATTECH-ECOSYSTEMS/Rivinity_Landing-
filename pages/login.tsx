@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Mail } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function SignInPage() {
     const [showPassword, setShowPassword] = useState(false);
@@ -15,10 +16,13 @@ export default function SignInPage() {
                     {/* Logo */}
                     <div className="pt-8 lg:pt-9">
                         <Link href="/" className="inline-flex items-center gap-1 text-xl font-medium">
-                            <img
-                                src="/logo.png"
-                                alt="Your Logo"
-                                className="h-10 w-10"
+                            <Image
+                              src="/logo.png"
+                              alt="Rivinity Logo"
+                              width={40}
+                              height={40}
+                              className="h-10 w-10"
+                              sizes="40px"
                             />
                             Rivinity
                         </Link>

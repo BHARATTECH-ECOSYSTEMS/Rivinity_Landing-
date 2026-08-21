@@ -307,7 +307,15 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="group flex items-center shrink-0">
           <div className="relative h-35 w-35 transition-transform duration-300 group-hover:scale-110">
-            <Image src="/rivinity_logo.png" alt="Logo" fill className="object-contain" priority />
+            <Image
+              src="/rivinity_logo.png"
+              alt="Rivinity Logo"
+              width={140}
+              height={140}
+              className="object-contain"
+              priority
+              sizes="140px"
+            />
           </div>
           {/* <span className="text-foreground text-[clamp(17px,4.2vw,28px)] font-semibold tracking-[-1px] text-[#313337] transition-colors whitespace-nowrap">
             RIVINITY
@@ -480,7 +488,7 @@ export default function Header() {
                   className="rounded-md px-3 py-3 text-center text-sm font-medium text-gray-700 hover:bg-black/5"
                   onClick={() => setMobileOpen(false)}
                 >
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-in-icon lucide-log-in"><path d="m10 17 5-5-5-5" /><path d="M15 12H3" /><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /></svg>
+                 <span>Sign in</span>
                 </Link>
                 <Link
                   href="/signup"

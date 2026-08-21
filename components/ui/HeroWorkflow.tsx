@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
   Send, Paperclip, Mic, Sparkles, Loader2, ChevronDown, Plus,
   Search, FileText, Lightbulb, Wand2, Layers, Zap, Image as ImageIcon,
@@ -279,7 +280,14 @@ const ChatScene = ({
               <div className="flex justify-start">
                 <div className="w-full max-w-[100%] sm:max-w-[90%] rounded-2xl sm:rounded-3xl rounded-bl-md sm:rounded-bl-lg bg-white border border-gray-100 shadow-sm px-4 sm:px-8 py-4 sm:py-6">
                   <div className="flex items-center gap-1 mb-3 sm:mb-5">
-                    <img src="/logo.png" alt="" className="w-6 h-6 sm:w-8 sm:h-8 rounded object-contain" />
+                    <Image
+                    src="/logo.png"
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="w-6 h-6 sm:w-8 sm:h-8 rounded object-contain"
+                    sizes="32px"
+                  />
                     <span className="text-[13px] sm:text-[14px] font-semibold text-gray-700">Rivinity</span>
                   </div>
                   {phase === "thinking" ? (
@@ -398,7 +406,14 @@ const LMScene = ({
               <div className="flex justify-start">
                 <div className="w-full max-w-[100%] sm:max-w-[90%] rounded-2xl sm:rounded-3xl rounded-bl-md sm:rounded-bl-lg bg-white border border-gray-100 shadow-sm px-4 sm:px-8 py-4 sm:py-6">
                   <div className="flex items-center gap-1 mb-3 sm:mb-5">
-                    <img src="/logo.png" alt="" className="w-6 h-6 sm:w-8 sm:h-8 rounded object-contain" />
+                    <Image
+                    src="/logo.png"
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="w-6 h-6 sm:w-8 sm:h-8 rounded object-contain"
+                    sizes="32px"
+                  />
                     <span className="text-[13px] sm:text-[14px] font-semibold text-gray-700">RivinityLM</span>
                     <span className="text-gray-300 text-[13px] sm:text-[15px]">·</span>
                     <span className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-[#F472B6]">
@@ -527,7 +542,14 @@ const BuilderScene = ({
               <div className="flex justify-start">
                 <div className="w-full max-w-[100%] sm:max-w-[90%] rounded-2xl sm:rounded-3xl rounded-bl-md sm:rounded-bl-lg bg-white border border-gray-100 shadow-sm px-4 sm:px-8 py-4 sm:py-6">
                   <div className="flex items-center gap-1 mb-3 sm:mb-5">
-                    <img src="/logo.png" alt="" className="w-6 h-6 sm:w-8 sm:h-8 rounded object-contain" />
+                    <Image
+                    src="/logo.png"
+                    alt=""
+                    width={32}
+                    height={32}
+                    className="w-6 h-6 sm:w-8 sm:h-8 rounded object-contain"
+                    sizes="32px"
+                  />
                     <span className="text-[13px] sm:text-[14px] font-semibold text-gray-700">App Builder</span>
                     <span className="text-gray-300 text-[13px] sm:text-[15px]">·</span>
                     <span className="text-[10px] sm:text-[12px] font-bold uppercase tracking-widest text-[#BFA7F8]">
@@ -691,7 +713,14 @@ const MemoryGraphOverlay = () => {
 
         <div className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-white border border-gray-100 p-1 sm:p-2 shadow-[0_0_50px_rgba(244,114,182,0.3)] z-10"
           style={{ left: `${CENTER.x}%`, top: `${CENTER.y}%` }}>
-          <img src="/logo.png" alt="Rivinity" className="w-8 h-8 sm:w-12 sm:h-12" />
+          <Image
+            src="/logo.png"
+            alt="Rivinity"
+            width={48}
+            height={48}
+            className="w-8 h-8 sm:w-12 sm:h-12"
+            sizes="48px"
+          />
         </div>
 
         {MEMORY_NODES.map((n, i) => {

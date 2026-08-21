@@ -1,18 +1,18 @@
 "use client";
 
-import { useMotionValue, animate, motion } from "motion/react";
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, useMotionValue, animate } from "framer-motion";
 import useMeasure from "react-use-measure";
 
 /* ------------------------------------------------------------------ */
-/*  cn helper (inlined — no @/lib/utils needed)                       */
+/* Utility Helper                                                     */
 /* ------------------------------------------------------------------ */
 function cn(...classes: (string | undefined | false | null)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 /* ------------------------------------------------------------------ */
-/*  InfiniteSlider (inlined)                                          */
+/* InfiniteSlider Component                                           */
 /* ------------------------------------------------------------------ */
 type InfiniteSliderProps = {
   children: React.ReactNode;
@@ -75,15 +75,15 @@ function InfiniteSlider({
 
   const hoverProps = speedOnHover
     ? {
-      onHoverStart: () => {
-        setIsTransitioning(true);
-        setCurrentSpeed(speedOnHover);
-      },
-      onHoverEnd: () => {
-        setIsTransitioning(true);
-        setCurrentSpeed(speed);
-      },
-    }
+        onHoverStart: () => {
+          setIsTransitioning(true);
+          setCurrentSpeed(speedOnHover);
+        },
+        onHoverEnd: () => {
+          setIsTransitioning(true);
+          setCurrentSpeed(speed);
+        },
+      }
     : {};
 
   return (
@@ -106,7 +106,7 @@ function InfiniteSlider({
 }
 
 /* ------------------------------------------------------------------ */
-/*  LogoCloud (inlined)                                                */
+/* LogoCloud Component                                                */
 /* ------------------------------------------------------------------ */
 type Logo = {
   src: string;
@@ -124,15 +124,15 @@ function LogoCloud({ className, logos, ...props }: LogoCloudProps) {
     <div
       {...props}
       className={cn(
-        "overflow-hidden py-4 mask-[linear-gradient(to_right,transparent,black,transparent)]",
+        "overflow-hidden py-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]",
         className
       )}
     >
-      <InfiniteSlider gap={42} reverse speed={80} speedOnHover={25}>
+      <InfiniteSlider gap={48} reverse speed={80} speedOnHover={25}>
         {logos.map((logo) => (
           <img
             alt={logo.alt}
-            className="pointer-events-none h-5 w-auto select-none md:h-5"
+            className="pointer-events-none h-5 w-auto select-none brightness-0 opacity-60 hover:opacity-100 transition-opacity"
             height={20}
             key={`logo-${logo.alt}`}
             loading="lazy"
@@ -145,35 +145,33 @@ function LogoCloud({ className, logos, ...props }: LogoCloudProps) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Demo page                                                          */
+/* Main LogoMarquee Component Export                                  */
 /* ------------------------------------------------------------------ */
-const logos: Logo[] = [
-  { src: "https://svgl.app/library/nvidia-wordmark-light.svg", alt: "Nvidia Logo" },
-  { src: "https://svgl.app/library/supabase_wordmark_light.svg", alt: "Supabase Logo" },
-  { src: "https://svgl.app/library/openai_wordmark_light.svg", alt: "OpenAI Logo" },
-  { src: "https://svgl.app/library/turso-wordmark-light.svg", alt: "Turso Logo" },
-  { src: "https://svgl.app/library/vercel_wordmark.svg", alt: "Vercel Logo" },
-  { src: "https://svgl.app/library/github_wordmark_light.svg", alt: "GitHub Logo" },
-  { src: "https://svgl.app/library/claude-ai-wordmark-icon_light.svg", alt: "Claude AI Logo" },
-  { src: "https://svgl.app/library/clerk-wordmark-light.svg", alt: "Clerk Logo" },
+const DEFAULT_LOGOS: Logo[] = [
+  { src: "https://svgl.app/library/nvidia-wordmark-light.svg", alt: "Nvidia" },
+  { src: "https://svgl.app/library/supabase_wordmark_light.svg", alt: "Supabase" },
+  { src: "https://svgl.app/library/openai_wordmark_light.svg", alt: "OpenAI" },
+  { src: "https://svgl.app/library/turso-wordmark-light.svg", alt: "Turso" },
+  { src: "https://svgl.app/library/vercel_wordmark.svg", alt: "Vercel" },
+  { src: "https://svgl.app/library/github_wordmark_light.svg", alt: "GitHub" },
+  { src: "https://svgl.app/library/clerk-wordmark-light.svg", alt: "Clerk" },
 ];
 
-export default function DemoOne() {
+export default function LogoMarquee({
+  logos = DEFAULT_LOGOS,
+  title = "Trusted by teams at",
+}: {
+  logos?: Logo[];
+  title?: string;
+}) {
   return (
-    <div className="w-full place-content-center">
-      <div
-        aria-hidden="true"
-        className={cn(
-          "-z-10 -top-1/2 -translate-x-1/2 pointer-events-none absolute left-1/2 h-[120vmin] w-[120vmin] rounded-b-full",
-          "bg-[radial-gradient(ellipse_at_center,--theme(--color-foreground/.1),transparent_50%)]",
-          "blur-[30px]"
-        )}
-      />
-      <section className="relative mx-auto max-w-7xl">
-        <div className="mx-auto my-5 h-2px max-w-sm bg-border mask-[linear-gradient(to_right,transparent,black,transparent)]" />
-        <LogoCloud logos={logos} />
-        <div className="mt-5 h-px bg-border mask-[linear-gradient(to_right,transparent,black,transparent)]" />
-      </section>
-    </div>
+    <section className="section-sm border-y border-gray-100">
+      <div className="container text-center">
+        <p className="text-muted text-sm mb-6">{title}</p>
+        <div className="flex justify-center items-center w-full">
+          <LogoCloud logos={logos} />
+        </div>
+      </div>
+    </section>
   );
 }

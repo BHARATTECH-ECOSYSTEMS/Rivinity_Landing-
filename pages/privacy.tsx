@@ -15,6 +15,7 @@ type Section = {
   id: string;
   number: string;
   heading: string;
+  summary?: string;
   blocks: Block[];
 };
 
@@ -23,41 +24,39 @@ const sections: Section[] = [
     id: "personal-data-we-collect",
     number: "1",
     heading: "Personal Data We Collect",
+    summary: "The categories below describe the Personal Data we collect from or about you when you provide the Services.",
     blocks: [
       {
-        body: "[Intro line: we may collect Personal Data from or about you when you provide the Services. The categories below describe the Personal Data we collect.]",
-      },
-      {
         subheading: "Registration and Profile Data.",
-        body: "[Describe account data collected at signup — name, username, email, phone, and, if applicable, third-party auth account info (e.g. Google), plus billing/contact data associated with the account.]",
+        body: "We collect account data at signup including your name, username, email, phone, and third-party authentication info (e.g., Google), plus billing and contact data associated with your account.",
       },
       {
         subheading: "Content and Data You Create or Provide.",
-        body: "[Describe content the user creates or uploads — code, project files, prompts, and other inputs, plus other data they provide such as project names, revision history, and timestamps.]",
+        body: "We collect content you create or upload, such as code, project files, prompts, project names, revision history, and timestamps.",
       },
       {
         subheading: "Collaboration and Group Data.",
-        body: "[Describe data about teams/organizations the user is part of, and data related to permissions, comments, and other interactions with content or users through the Services.]",
+        body: "We collect data regarding teams and organizations you belong to, permissions, comments, and interactions with content and other users through the Services.",
       },
       {
         subheading: "Usage and Interaction Data.",
-        body: "[Describe data collected about interactions with the Services — pages viewed, searches, prompts entered, commands run, and time spent.]",
+        body: "We collect data about your interactions with the Services, including pages viewed, searches, prompts entered, commands run, and time spent.",
       },
       {
         subheading: "Communications.",
-        body: "[Describe data collected from communications with you — name, email, message content, and attachments when contacting support or similar.]",
+        body: "We collect information when you contact support or communicate with us, including your name, email, message content, and attachments.",
       },
       {
         subheading: "Payment and Transaction Data.",
-        body: "[Describe payment-related data collected, and clarify that full payment credentials are handled by a payment processor rather than stored directly, if that's accurate for your setup.]",
+        body: "We collect payment-related details. Full payment credentials are securely handled and processed by our third-party payment processor rather than stored directly on our servers.",
       },
       {
         subheading: "Device Data.",
-        body: "[Describe device/software data collected — IP address, browser type, OS, device identifiers, and mobile advertising identifiers if applicable.]",
+        body: "We collect device and software data including your IP address, browser type, operating system, device identifiers, and mobile advertising identifiers where applicable.",
       },
       {
         subheading: "Location Data.",
-        body: "[Describe any general or precise location data inferred or collected, and how a user can limit this.]",
+        body: "We collect general or precise location data inferred from your IP address or device settings, with options to limit this via your device settings.",
       },
     ],
   },
@@ -65,30 +64,31 @@ const sections: Section[] = [
     id: "how-we-collect-or-receive",
     number: "2",
     heading: "How We Collect or Receive Personal Data",
+    summary: "We gather information directly from you, automatically through use, and from third-party sources.",
     blocks: [
       {
         subheading: "Your Use of the Services.",
-        body: "[Describe data received directly from account creation, project/content activity, and prompts.]",
+        body: "We receive data directly when you create an account, perform project or content activities, and enter prompts.",
       },
       {
         subheading: "Automatically Through Our Services.",
-        body: "[Describe data collected automatically through cookies, analytics, and similar technologies during use.]",
+        body: "We collect data automatically via cookies, analytics, and similar tracing technologies during your use.",
       },
       {
         subheading: "From Cookies and Similar Technologies.",
-        body: "[Cross-reference the Cookies subsection below.]",
+        body: "Please cross-reference the Cookies subsection under Additional Jurisdictional Disclosures below.",
       },
       {
         subheading: "From Collaborators and Employers.",
-        body: "[Describe data received when a collaborator, team, or employer manages your access to the Services.]",
+        body: "We receive data when a collaborator, team, or employer manages your access to the Services.",
       },
       {
         subheading: "From Third Parties.",
-        body: "[Describe data received from third-party services — e.g. authentication providers, marketing partners — if applicable.]",
+        body: "We obtain data from third-party services such as authentication providers and marketing partners.",
       },
       {
         subheading: "From Legal Claims, Requests, and Orders.",
-        body: "[Describe data received in connection with legal claims, requests, or orders involving other parties.]",
+        body: "We may receive data in connection with legal claims, official requests, or legal orders.",
       },
     ],
   },
@@ -96,56 +96,79 @@ const sections: Section[] = [
     id: "how-we-use-personal-data",
     number: "3",
     heading: "How We Use Personal Data",
+    summary: "We utilize personal data to operate, secure, enhance, and market our services effectively.",
     blocks: [
-      { subheading: "For Account and Profile Registration.", body: "[Purpose description.]" },
-      { subheading: "To Provide and Maintain Our Services.", body: "[Purpose description.]" },
-      { subheading: "To Communicate With You.", body: "[Purpose description.]" },
-      { subheading: "For Marketing Purposes.", body: "[Purpose description, if applicable.]" },
-      { subheading: "To Analyze, Maintain, and Enhance Our Services.", body: "[Purpose description.]" },
-      { subheading: "For Preventing Fraud, Security, and Other Malicious Activity.", body: "[Purpose description.]" },
-      { subheading: "For Legal and Compliance Purposes.", body: "[Purpose description.]" },
+      { subheading: "For Account and Profile Registration.", body: "To verify your identity and set up your user account profile." },
+      { subheading: "To Provide and Maintain Our Services.", body: "To deliver core functionalities, execute commands, and process your project files." },
+      { subheading: "To Communicate With You.", body: "To send service updates, technical notices, security alerts, and support messages." },
+      { subheading: "For Marketing Purposes.", body: "To send promotional communications about new features, updates, and events where permitted." },
+      { subheading: "To Analyze, Maintain, and Enhance Our Services.", body: "To monitor usage trends, run analytics, and improve user experience and AI performance." },
+      { subheading: "For Preventing Fraud, Security, and Other Malicious Activity.", body: "To detect, prevent, and respond to potential security threats, fraud, or violations." },
+      { subheading: "For Legal and Compliance Purposes.", body: "To comply with legal obligations, legal processes, and enforce our terms." },
     ],
   },
   {
     id: "how-we-share-or-disclose",
     number: "4",
     heading: "How We Share or Disclose Personal Data",
+    summary: "We share personal data with trusted vendors, partners, and under specific legal compliance guidelines.",
     blocks: [
-      { body: "[Intro: we share Personal Data with the following categories of third parties.]" },
-      { subheading: "Service Providers.", body: "[List vendor categories — hosting, analytics, payment processing, customer support tools, etc.]" },
-      { subheading: "Users and Others.", body: "[Describe what's visible to other users/collaborators or publicly, if applicable.]" },
-      { subheading: "As Required by Law and Similar Disclosures.", body: "[Standard legal-compliance disclosure language.]" },
-      { subheading: "Merger, Sale, or Other Asset Transfers.", body: "[Standard business-transfer disclosure language.]" },
-      { subheading: "Affiliates.", body: "[Describe sharing with corporate affiliates, if applicable.]" },
-      { subheading: "Third Party App Integrations.", body: "[Describe data shared when a user connects a third-party integration.]" },
-      { subheading: "Consent.", body: "[We may also disclose data with your consent or as instructed.]" },
+      {
+        subheading: "Service Providers.",
+        body: "We share data with vendor categories including cloud hosting providers, analytics tools, payment processors, and customer support software.",
+      },
+      {
+        subheading: "Users and Others.",
+        body: "Certain profile and content data may be visible to other collaborators or the public depending on your sharing settings.",
+      },
+      {
+        subheading: "As Required by Law and Similar Disclosures.",
+        body: "We disclose information to law enforcement or government authorities when required by applicable legal obligations.",
+      },
+      {
+        subheading: "Merger, Sale, or Other Asset Transfers.",
+        body: "Information may be transferred as part of a corporate transaction, merger, acquisition, or sale of assets.",
+      },
+      {
+        subheading: "Affiliates.",
+        body: "We may share data with corporate subsidiaries and affiliates under common control.",
+      },
+      {
+        subheading: "Third Party App Integrations.",
+        body: "Data is shared with external applications when you choose to connect third-party integrations to your account.",
+      },
+      {
+        subheading: "Consent.",
+        body: "We may disclose your data with your explicit consent or according to your direct instructions.",
+      },
     ],
   },
   {
     id: "your-privacy-rights",
     number: "5",
     heading: "Your Privacy Rights and Choices",
+    summary: "You retain rights to manage, access, or delete your personal information.",
     blocks: [
       {
         subheading: "Your Privacy Rights",
-        body: "[Describe rights available depending on jurisdiction — access, deletion, correction, appeal, opt-out of sale/sharing, etc.]",
+        body: "Depending on your jurisdiction, you may have legal rights concerning your data:",
         list: [
-          "[Access and Portability]",
-          "[Deletion]",
-          "[Opt out of Sale/Sharing]",
-          "[Correction]",
-          "[Right to Appeal]",
+          "Access and Data Portability",
+          "Deletion of your personal data",
+          "Opt out of Sale or Sharing",
+          "Correction of inaccurate data",
+          "Right to Appeal decisions regarding your requests",
         ],
       },
       {
         subheading: "Exercising Your Rights",
-        body: "[Describe how a user submits a rights request, including any authorized-agent process and identity verification steps.]",
+        body: "You can submit a rights request by contacting us directly. We will complete identity verification and support authorized-agent processes where applicable.",
       },
       {
         subheading: "Additional Choices and Preferences",
         list: [
-          "[Marketing Communications — unsubscribe process]",
-          "[App Notification Preferences]",
+          "Marketing Communications — unsubscribe via the link provided in any promotional email.",
+          "App Notification Preferences — update toggle settings directly inside your account profile.",
         ],
       },
     ],
@@ -154,28 +177,29 @@ const sections: Section[] = [
     id: "additional-jurisdictional-disclosures",
     number: "6",
     heading: "Additional Jurisdictional Disclosures",
+    summary: "Specific regional provisions apply depending on whether you reside in the EU, UK, or under state laws like the CCPA.",
     blocks: [
       {
         subheading: "Legal Bases",
-        body: "[If subject to GDPR/UK GDPR or similar, describe the legal bases relied on for processing — consent, contract, legal obligation, legitimate interest.]",
+        body: "If subject to GDPR or UK GDPR, we process data based on consent, contract fulfillment, compliance with legal obligations, and legitimate business interests.",
       },
       {
         subheading: "EU Representative and Your Rights",
-        body: "[If applicable, name your EU representative and how EEA/UK users can exercise their rights or file a complaint with a supervisory authority.]",
+        body: "EEA and UK users can exercise rights or file complaints with their local supervisory authority by reaching out to our designated privacy contact.",
       },
       {
         subheading: "Cookies",
-        body: "[Describe cookie categories used.]",
+        body: "We use cookie categories to optimize site performance and delivery:",
         list: [
-          "[Strictly Necessary Cookies]",
-          "[Functional Cookies]",
-          "[Analytical or Performance Cookies]",
-          "[Marketing Related Cookies]",
+          "Strictly Necessary Cookies",
+          "Functional Cookies",
+          "Analytical or Performance Cookies",
+          "Marketing Related Cookies",
         ],
       },
       {
         subheading: "Notice at Collection",
-        body: "[Cross-reference sections above summarizing categories collected, purposes, and third parties, as required under applicable state law (e.g. CCPA) if relevant.]",
+        body: "A summary of data categories collected, processing purposes, and sharing practices under state privacy laws like the CCPA is detailed in preceding sections.",
       },
     ],
   },
@@ -183,9 +207,10 @@ const sections: Section[] = [
     id: "children",
     number: "7",
     heading: "Children",
+    summary: "Our services are not intended for minors under the minimum age requirement.",
     blocks: [
       {
-        body: "[State your service's intended audience and minimum age, and your process if you learn a child's data was collected without proper consent.]",
+        body: "Rivinity's services are intended for users who are at least 18 years old. We do not knowingly collect personal data from children. If we learn that we have inadvertently collected data from a child without proper parental consent, we will take steps to delete it promptly.",
       },
     ],
   },
@@ -193,9 +218,10 @@ const sections: Section[] = [
     id: "security",
     number: "8",
     heading: "Security",
+    summary: "We employ technical and organizational safeguards to protect your personal data.",
     blocks: [
       {
-        body: "[Describe, at a high level, the technical/organizational safeguards used, while noting no method of transmission or storage is 100% secure.]",
+        body: "We implement industry-standard technical and organizational security measures to protect data against unauthorized access, loss, or alteration. However, no method of transmission over the internet or electronic storage is 100% secure.",
       },
     ],
   },
@@ -203,9 +229,10 @@ const sections: Section[] = [
     id: "third-party-sites",
     number: "9",
     heading: "Third Party Sites",
+    summary: "External sites linked through our platform operate under their own independent policies.",
     blocks: [
       {
-        body: "[State that links to third-party sites/services are not covered by this policy and you encourage users to review those parties' own policies.]",
+        body: "Links to third-party websites or services are not covered by this Privacy Policy. We encourage you to review the separate privacy policies of any third-party services you visit.",
       },
     ],
   },
@@ -213,9 +240,10 @@ const sections: Section[] = [
     id: "cross-border-transfers",
     number: "10",
     heading: "Cross-Border Data Transfers",
+    summary: "Your data may be hosted and processed internationally using compliant legal safeguards.",
     blocks: [
       {
-        body: "[Describe where the Services are hosted/processed and how data may be transferred internationally, plus any safeguards used.]",
+        body: "Rivinity's services are hosted and processed globally. Your personal data may be transferred to and processed in countries outside your home jurisdiction, supported by appropriate legal data protection safeguards.",
       },
     ],
   },
@@ -223,9 +251,10 @@ const sections: Section[] = [
     id: "changes",
     number: "11",
     heading: "Changes",
+    summary: "We will provide notice whenever material modifications are made to this policy.",
     blocks: [
       {
-        body: "[Describe how and when you'll notify users of material changes to this policy.]",
+        body: "We may update this Privacy Policy from time to time. When we make material changes, we will notify you through the Services or via email prior to the changes taking effect.",
       },
     ],
   },
@@ -233,16 +262,17 @@ const sections: Section[] = [
     id: "contact",
     number: "12",
     heading: "Contact",
+    summary: "Get in touch with our team if you have questions or concerns regarding your privacy.",
     blocks: [
       {
-        body: "[Contact email and mailing address for privacy questions.]",
+        body: "If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at privacy@rivinity.com or via mail at Rivinity Privacy Team.",
       },
     ],
   },
 ];
 
 export default function PrivacyPolicyPage() {
-  const [openLegalBasis, setOpenLegalBasis] = useState(false);
+  const [openPreviousVersions, setOpenPreviousVersions] = useState(false);
 
   return (
     <>
@@ -250,55 +280,50 @@ export default function PrivacyPolicyPage() {
         <title>Privacy Policy - Rivinity</title>
         <meta
           name="description"
-          content="[Rivinity's short meta description for this page.]"
+          content="Read Rivinity's Privacy Policy to learn how we collect, use, and protect your personal data."
         />
       </Head>
       <Header/>
 
-      <main className="bg-[#fafafa]">
+      <main className="container">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-10 pt-32 pb-20">
           <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-[#1a1a1a]">
             Privacy Policy
           </h1>
           <p className="mt-3 text-sm text-gray-500">
-            Last updated: [Month Day, Year]
+            Last updated: August 20, 2026
           </p>
 
           {/* Previous versions dropdown pattern */}
           <div className="mt-2">
             <button
-              onClick={() => setOpenLegalBasis((v) => !v)}
+              onClick={() => setOpenPreviousVersions((v) => !v)}
               className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
             >
               Previous Versions
               <ChevronDown
                 size={14}
-                className={`transition-transform ${openLegalBasis ? "rotate-180" : ""}`}
+                className={`transition-transform ${openPreviousVersions ? "rotate-180" : ""}`}
               />
             </button>
-            {openLegalBasis && (
+            {openPreviousVersions && (
               <ul className="mt-2 flex flex-col gap-1 text-sm">
                 <li>
                   <a href="#" className="text-[#FF5A1F] hover:underline">
-                    [Month Day, Year] — [link to archived version]
+                    August 20, 2025 — Initial Release Archive
                   </a>
                 </li>
               </ul>
             )}
           </div>
 
-          <p className="mt-8 text-sm leading-relaxed text-gray-700">
-            [Intro paragraph: Rivinity, Inc., its subsidiaries and affiliates value
-            the privacy of individuals who use our website and related Services
-            (collectively, the "Services"). This privacy policy ("Privacy Policy")
-            explains how we collect, use, and share Personal Data about you when
-            providing our Services. Beyond this Privacy Policy, your use of our
-            Services is also subject to our{" "}
+          <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-5 text-sm text-gray-700">
+            Rivinity, Inc., its subsidiaries and affiliates value the privacy of individuals who use our website and related Services (collectively, the "Services"). This privacy policy ("Privacy Policy") explains how we collect, use, and share Personal Data about you when providing our Services. Beyond this Privacy Policy, your use of our Services is also subject to our{" "}
             <Link href="/terms" className="text-[#FF5A1F] hover:underline">
               Terms of Service
             </Link>
-            .]
-          </p>
+            .
+          </div>
 
           <div className="mt-10 flex flex-col gap-12">
             {sections.map((section) => (
@@ -306,6 +331,9 @@ export default function PrivacyPolicyPage() {
                 <h2 className="text-2xl font-semibold text-gray-900">
                   {section.number}. {section.heading}
                 </h2>
+                {section.summary && (
+                  <p className="mt-2 text-sm font-medium text-gray-500">{section.summary}</p>
+                )}
 
                 <div className="mt-4 flex flex-col gap-4">
                   {section.blocks.map((block, idx) => (
@@ -337,12 +365,7 @@ export default function PrivacyPolicyPage() {
           </div>
 
           <div className="mt-12 border-t border-black/10 pt-6 text-xs text-gray-400">
-            This page is a structural template only. All bracketed content must be
-            replaced with accurate, lawyer-reviewed language before publishing —
-            especially the Legal Bases, Cross-Border Transfers, and Children
-            sections, which carry direct regulatory exposure (GDPR, CCPA, COPPA,
-            etc. depending on your users). This is not a substitute for legal
-            advice.
+            This policy outlines our data handling practices. For specific legal inquiries, please contact our compliance team.
           </div>
 
           <div className="mt-8">

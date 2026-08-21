@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { FaArrowRight } from "react-icons/fa";
+import Image from "next/image";
 
 interface FooterLink {
   label: string;
@@ -13,12 +13,17 @@ interface FooterColumn {
   links: FooterLink[];
 }
 
+interface SocialLink {
+  label: string;
+  href: string;
+}
+
 const COLUMNS: FooterColumn[] = [
   {
     title: "Company",
     links: [
       { label: "Our Story", href: "#" },
-      { label: "Team", href: "#" },
+      { label: "Team", href: "/team" },
       { label: "Careers", href: "/carrers" },
       { label: "Governance", href: "#" },
     ],
@@ -50,6 +55,13 @@ const COLUMNS: FooterColumn[] = [
       { label: "Agent as a Platform", href: "#" },
     ],
   },
+];
+
+const SOCIAL_LINKS: SocialLink[] = [
+  { label: "Twitter/X", href: "https://twitter.com/rivinity" },
+  { label: "GitHub", href: "https://github.com/rivinity" },
+  { label: "LinkedIn", href: "https://linkedin.com/company/rivinity" },
+  { label: "Discord", href: "https://discord.gg/rivinity" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -139,24 +151,6 @@ const heroBrandVariant: Variants = {
   },
 };
 
-const ctaVariant: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 10,
-    filter: "blur(4px)",
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      type: "spring",
-      duration: 0.5,
-      bounce: 0,
-    },
-  },
-};
-
 /* ------------------------------------------------------------------ */
 /* Footer column                                                       */
 /* ------------------------------------------------------------------ */
@@ -193,20 +187,11 @@ function FooterColumnBlock({ column }: { column: FooterColumn }) {
 
 export default function Footer() {
   const brandName = "RIVINITY";
-
-  const description =
-    "Made in India.\nAll rights reserved. Copyright © 2026 BharatTech, Inc.";
-
-  const ctaLabel = "Explore now";
-  const ctaHref = "#";
+  const description = "Made in India.";
 
   return (
     <footer
-      className="w-full overflow-hidden rounded-t-3xl sm:rounded-t-4xl md:rounded-t-[3rem] font-sans antialiased"
-      style={{
-        background: "linear-gradient(180deg, #FFFFFF 0%, #E9BCD4 100%)",
-      }}
-    >
+      className="relative w-full overflow-hidden rounded-t-3xl sm:rounded-t-4xl md:rounded-t-[3rem] font-sans antialiased pb-24 sm:pb-36 lg:pb-44 border-t border-gray-100">
       <motion.div
         variants={staggerContainer}
         initial="hidden"
@@ -215,7 +200,7 @@ export default function Footer() {
           once: true,
           amount: 0.1,
         }}
-        className="px-4 sm:px-10 pt-8 sm:pt-14 pb-0 lg:px-14 lg:pt-16 xl:px-20"
+        className="relative z-10 px-4 sm:px-10 pt-8 sm:pt-14 pb-0 lg:px-14 lg:pt-16 xl:px-20"
       >
         <div className="mx-auto flex max-w-350 flex-col justify-between gap-10 sm:gap-12 lg:flex-row lg:gap-20 xl:gap-28">
           {/* Brand block */}
@@ -225,10 +210,13 @@ export default function Footer() {
           >
             <div className="flex items-center gap-3">
               <div className="flex h-10 sm:h-12 w-auto items-center">
-                <img
+                <Image
                   src="/logo.png"
                   alt="RIVINITY logo"
-                  className="h-full w-auto object-contain"
+                  width={48}
+                  height={48}
+                  className="h-auto w-auto object-contain"
+                  sizes="48px"
                 />
               </div>
 
@@ -240,21 +228,6 @@ export default function Footer() {
             <p className="text-xs sm:text-sm leading-[1.6] font-light text-pretty whitespace-pre-line text-[#6B6F72]">
               {description}
             </p>
-
-            <motion.a
-              href={ctaHref}
-              variants={ctaVariant}
-              whileTap={{ scale: 0.96 }}
-              className="group mt-1 inline-flex w-fit items-center gap-2 sm:gap-2.5 rounded-full bg-[#F97316] py-0.5 pr-1 pl-4 sm:pl-5 shadow-[0_1px_3px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.04)] transition-[background-color,box-shadow] duration-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.15),0_0_20px_rgba(22,24,26,0.12)]"
-            >
-              <span className="text-xs sm:text-sm font-medium text-[#16181A]">
-                {ctaLabel}
-              </span>
-
-              <span className="flex size-8 sm:size-10 items-center justify-center rounded-full bg-[#16181A]">
-                <FaArrowRight className="size-3 sm:size-4 text-[#F4F0E6] transition-transform duration-200 group-hover:translate-x-0.5" />
-              </span>
-            </motion.a>
           </motion.div>
 
           {/* Navigation columns */}
@@ -264,13 +237,32 @@ export default function Footer() {
             className="grid w-full max-w-200 grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4 sm:gap-x-10 lg:gap-x-16 xl:gap-x-24"
           >
             {COLUMNS.map((col) => (
-              <FooterColumnBlock
-                key={col.title}
-                column={col}
-              />
+              <FooterColumnBlock key={col.title} column={col} />
             ))}
           </motion.nav>
         </div>
+
+        {/* Footer Bottom Bar */}
+        <motion.div
+          variants={riseItem}
+          className="mx-auto mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-[#16181A]/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-[#6B6F72]"
+        >
+          <p className="m-0">&copy; 2026 Rivinity, Inc. All rights reserved.</p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#16181A] transition-colors duration-200 hover:text-[#6B6F72]"
+              >
+                {social.label}
+              </a>
+            ))}
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Hero brand name watermark */}
@@ -282,47 +274,14 @@ export default function Footer() {
           once: true,
           amount: 0.15,
         }}
-        className="relative flex items-end justify-center overflow-hidden px-2 sm:px-6 pt-6 sm:pt-14 md:pt-20"
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 z-0 select-none whitespace-nowrap font-bold text-black/5"
+        style={{
+          fontSize: "clamp(80px, 16vw, 240px)",
+          lineHeight: 0.75,
+        }}
       >
-        <svg
-          className="h-auto w-full max-h-[14vw] sm:max-h-none translate-y-1 sm:translate-y-2 md:translate-y-6 select-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.08)]"
-          viewBox={`0 0 ${Math.max(brandName.length * 90, 400)} 110`}
-          preserveAspectRatio="xMidYMid meet"
-          aria-label={brandName}
-        >
-          <defs>
-            <filter id="brand-depth" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow
-                dx="0"
-                dy="4"
-                stdDeviation="6"
-                floodColor="#000000"
-                floodOpacity="0.08"
-              />
-              <feDropShadow
-                dx="0"
-                dy="1"
-                stdDeviation="1.5"
-                floodColor="#000000"
-                floodOpacity="0.1"
-              />
-            </filter>
-          </defs>
-
-          <text
-            x="50%"
-            y="100%"
-            dominantBaseline="alphabetic"
-            textAnchor="middle"
-            textLength="100%"
-            lengthAdjust="spacing"
-            filter="url(#brand-depth)"
-            className="fill-gray-200 font-sans font-bold tracking-tight"
-            fontSize="160"
-          >
-            {brandName}
-          </text>
-        </svg>
+        {brandName}
       </motion.div>
     </footer>
   );

@@ -392,8 +392,9 @@ export default function BlogPage() {
   const slideFeatured = (direction: "next" | "previous") => {
     const el = featuredRef.current;
     if (!el) return;
+    const scrollAmount = el.clientWidth * 0.75;
     el.scrollBy({
-      left: direction === "next" ? 380 : -380,
+      left: direction === "next" ? scrollAmount : -scrollAmount,
       behavior: "smooth",
     });
   };
@@ -401,11 +402,13 @@ export default function BlogPage() {
   const slideResearch = (direction: "next" | "previous") => {
     const el = researchRef.current;
     if (!el) return;
+    const scrollAmount = el.clientWidth * 0.75;
     el.scrollBy({
-      left: direction === "next" ? 340 : -340,
+      left: direction === "next" ? scrollAmount : -scrollAmount,
       behavior: "smooth",
     });
   };
+
 
   return (
     <>
@@ -417,20 +420,18 @@ export default function BlogPage() {
         />
       </Head>
 
-      <Header/>
-      
+      <Header />
 
-      <main className="min-h-screen bg-[#fafafa] text-neutral-900 selection:bg-neutral-900 selection:text-white">
-        
+      <main className="container">
         {/* HERO / FEATURED SECTION */}
-        <section className="border-b border-neutral-200 bg-white">
-          <div className="mx-auto max-w-7xl px-6 pb-20 pt-16 sm:px-8 lg:px-12">
+        <section className="section">
+          <div className="container mx-auto max-w-7xl px-6 pb-20 pt-16 sm:px-8 lg:px-12">
             <div className="flex items-end justify-between gap-6 pb-4">
               <div>
                 <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl text-neutral-950">
                   Blog
                 </h1>
-                <p className="mt-2 text-sm text-neutral-500 max-w-md">
+                <p className="mt-2 text-sm text-neutral-500 max-w-[65ch]">
                   Perspectives on artificial intelligence, systems research, and modern engineering.
                 </p>
               </div>
@@ -455,9 +456,9 @@ export default function BlogPage() {
               </div>
             </div>
 
-            <div
+           <div
               ref={featuredRef}
-              className="blog-carousel mt-8 flex gap-6 overflow-x-auto overflow-y-hidden pb-4"
+              className="blog-carousel mt-8 flex gap-6 overflow-x-auto overflow-y-hidden pb-4 snap-x snap-proximity"
             >
               {featuredPosts.map((post) => (
                 <FeaturedCard key={post.id} post={post} />
@@ -466,18 +467,18 @@ export default function BlogPage() {
           </div>
         </section>
 
-        {/* RESEARCH BLOG (LIGHT SOPHISTICATED THEME) */}
-        <section className="bg-[#f8fafc] border-b border-neutral-200/80">
-          <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+        {/* RESEARCH BLOG SECTION */}
+        <section className="section-sm bg-gray-50">
+          <div className="container mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
             <div className="flex items-end justify-between gap-6">
               <div>
                 <span className="text-[11px] font-semibold tracking-widest text-blue-600 uppercase">
-                   Rivinity Labs
+                  Rivinity Labs
                 </span>
                 <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl text-neutral-950">
                   Research blog
                 </h2>
-                <p className="mt-2 max-w-md text-sm text-neutral-500">
+                <p className="mt-2 text-sm text-neutral-500 max-w-[65ch]">
                   Foundational ideas and systems research for production AI.
                 </p>
               </div>
@@ -504,9 +505,9 @@ export default function BlogPage() {
             </div>
 
             {/* Research Cards Carousel */}
-            <div
+           <div
               ref={researchRef}
-              className="blog-carousel mt-10 flex gap-5 overflow-x-auto overflow-y-hidden pb-4"
+              className="blog-carousel mt-10 flex gap-5 overflow-x-auto overflow-y-hidden pb-4 snap-x snap-proximity"
             >
               {researchPosts.map((post) => (
                 <ResearchCard key={post.id} post={post} />
@@ -523,8 +524,8 @@ export default function BlogPage() {
         </section>
 
         {/* COMPANY UPDATES */}
-        <section className="bg-white border-b border-neutral-200">
-          <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+        <section className="section bg-white border-b border-neutral-200">
+          <div className="container mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
             <SectionTitle
               title="Company updates"
               description="Stories and updates from the Rivinity team."
@@ -539,8 +540,8 @@ export default function BlogPage() {
         </section>
 
         {/* LATEST BLOG POSTS */}
-        <section className="bg-[#fafafa] border-b border-neutral-200">
-          <div className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+        <section className="section bg-gray-50">
+          <div className="container mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
             <h2 className="text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl">
               Latest blog posts
             </h2>
@@ -593,12 +594,10 @@ export default function BlogPage() {
           </div>
         </section>
 
-        {/* CTA SECTION (LIGHT THEME MATCHING REST OF UI) */}
-        <section className="bg-white py-16 sm:py-24">
-          <div className="mx-auto max-w-5xl px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-3xl border border-neutral-200/90 bg-gradient-to-b from-slate-50 to-slate-100/70 px-8 py-16 text-center shadow-xs sm:px-16 sm:py-20">
-              
-              {/* Subtle background glow */}
+        {/* CTA SECTION */}
+        <section className="section">
+          <div className="container mx-auto max-w-5xl px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-3xl border border-neutral-200/90 bg-gradient-to-b from-slate-50 to-slate-100/70 px-8 py-16 text-center shadow-xl sm:px-16 sm:py-20">
               <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 size-96 rounded-full bg-blue-500/5 blur-3xl" />
               
               <div className="relative z-10">
@@ -610,19 +609,18 @@ export default function BlogPage() {
                   Turn ideas into intelligent products.
                 </h2>
 
-                <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-neutral-600">
+                <p className="mx-auto mt-3 max-w-[65ch] text-sm leading-relaxed text-neutral-600">
                   Explore Rivinity&apos;s platform and start building the next generation of AI-powered software.
                 </p>
 
                 <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link 
-  href="#" 
-  className="flex items-center gap-2 rounded-xl bg-white border border-neutral-200 px-6 py-3 text-xs font-semibold text-neutral-950 transition hover:bg-neutral-50 shadow-sm"
-> 
-  <span>Start building</span> 
-  <ArrowUpRight className="size-4" /> 
-</Link>
-
+                  <Link 
+                    href="#" 
+                    className="flex items-center gap-2 rounded-xl bg-white border border-neutral-200 px-6 py-3 text-xs font-semibold text-neutral-950 transition hover:bg-neutral-50 shadow-sm"
+                  > 
+                    <span>Start building</span> 
+                    <ArrowUpRight className="size-4" /> 
+                  </Link>
 
                   <Link
                     href="#"
@@ -637,21 +635,22 @@ export default function BlogPage() {
         </section>
       </main>
 
-      <Footer />
+      {/* Footer Wrapper with overflow prevention */}
+      <footer className="w-full overflow-x-clip">
+        <Footer />
+      </footer>
 
       <style jsx global>{`
         .blog-carousel {
           scrollbar-width: none;
           -ms-overflow-style: none;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior-x: contain;
         }
         .blog-carousel::-webkit-scrollbar {
           display: none;
           width: 0;
           height: 0;
-        }
-        .blog-carousel {
-          scroll-behavior: smooth;
-          overscroll-behavior-x: contain;
         }
       `}</style>
     </>
@@ -659,14 +658,14 @@ export default function BlogPage() {
 }
 
 /* ============================================================
-   SUB-COMPONENTS (LIGHT THEMED)
+   SUB-COMPONENTS
 ============================================================ */
 
 function FeaturedCard({ post }: { post: Post }) {
   return (
     <Link
       href={post.href || "#"}
-      className="group block w-[85vw] shrink-0 sm:w-[50vw] md:w-[380px]"
+      className="group block w-[82vw] shrink-0 sm:w-[50vw] md:w-[380px] snap-start"
     >
       <article>
         <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-neutral-100 border border-neutral-200/80">
@@ -688,7 +687,7 @@ function FeaturedCard({ post }: { post: Post }) {
             {post.title}
           </h3>
 
-          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-500">
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-500 max-w-[65ch]">
             {post.description}
           </p>
         </div>
@@ -720,7 +719,7 @@ function SmallPostCard({ post }: { post: Post }) {
           {post.title}
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-500">
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-neutral-500 max-w-[65ch]">
           {post.description}
         </p>
       </article>
@@ -732,7 +731,7 @@ function ResearchCard({ post }: { post: Post }) {
   return (
     <Link
       href={post.href || "#"}
-      className="group block w-[85vw] shrink-0 sm:w-[320px]"
+      className="group block w-[82vw] shrink-0 sm:w-[320px] snap-start"
     >
       <article className="flex h-[350px] flex-col justify-between rounded-2xl border border-neutral-200/90 bg-white p-6 transition duration-300 hover:border-neutral-300 hover:shadow-md">
         <div>
@@ -744,7 +743,7 @@ function ResearchCard({ post }: { post: Post }) {
             {post.title}
           </h3>
 
-          <p className="mt-2.5 text-xs leading-relaxed text-neutral-500 line-clamp-3">
+          <p className="mt-2.5 text-xs leading-relaxed text-neutral-500 line-clamp-3 max-w-[65ch]">
             {post.description}
           </p>
         </div>
@@ -795,7 +794,7 @@ function LatestPostRow({ post }: { post: Post }) {
             {post.title}
           </h3>
 
-          <p className="mt-2 line-clamp-2 text-xs sm:text-sm leading-relaxed text-neutral-500">
+          <p className="mt-2 line-clamp-2 text-xs sm:text-sm leading-relaxed text-neutral-500 max-w-[65ch]">
             {post.description}
           </p>
         </div>
@@ -825,7 +824,7 @@ function SectionTitle({
       <h2 className="text-2xl font-semibold tracking-tight text-neutral-950 sm:text-3xl">
         {title}
       </h2>
-      <p className="mt-2 max-w-xl text-sm leading-relaxed text-neutral-500">
+      <p className="mt-2 text-sm leading-relaxed text-neutral-500 max-w-[65ch]">
         {description}
       </p>
     </div>

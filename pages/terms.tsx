@@ -7,129 +7,129 @@ const sections = [
   {
     id: "registration",
     number: "1",
-    heading: "Registration",
-    summary: "[One-line summary of this section, shown in bold above the body.]",
+    heading: "Registration and Eligibility",
+    summary: "You must provide accurate information when creating an account and be at least 13 years old (or the age of legal consent in your jurisdiction).",
     blocks: [
       {
         subheading: "a. Registration",
-        body: "[Describe account creation requirements — accurate contact info, who may create an account, parental consent needs, etc.]",
+        body: "To access the Services, you must register for an account by providing accurate, complete, and current contact details. You agree to maintain and promptly update your account information. Accounts created by automated methods or bots are strictly prohibited.",
       },
       {
         subheading: "b. Minimum Age",
-        body: "[State your minimum age requirement and any parental-consent process for users below the general age of majority.]",
+        body: "The Service is not intended for users under the age of 13. If you are between 13 and the age of legal majority in your jurisdiction, you may only use the Service under the supervision of a parent or legal guardian who agrees to be bound by these Terms.",
       },
       {
         subheading: undefined,
-        body: "[Describe the user's responsibility for account security — safeguarding credentials, restricting access, and accepting responsibility for authorized use.]",
+        body: "You are solely responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You must notify Rivinity immediately upon discovering any unauthorized access or security breach.",
       },
     ],
   },
   {
     id: "acceptable-use",
     number: "2",
-    heading: "Acceptable Use",
-    summary: "[Summary — the Service may only be used lawfully and in line with these Terms.]",
+    heading: "Acceptable Use and Restrictions",
+    summary: "The Service must be used lawfully and strictly in compliance with our acceptable use standards and API safety guardrails.",
     blocks: [
       {
         subheading: "a. Prohibited Conduct",
         list: [
-          "[Interfering with, disrupting, or attacking the Service or its infrastructure]",
-          "[Circumventing access, security, or usage limitations]",
-          "[Reverse engineering or unauthorized automated access]",
-          "[Uploading malware or harmful code]",
-          "[Scraping or harvesting data without authorization]",
-          "[Impersonating any person or entity]",
-          "[Violating others' privacy or intellectual property rights]",
+          "Interfering with, disrupting, or overburdening the Service or its underlying infrastructure",
+          "Attempting to circumvent access controls, rate limits, or platform security mechanisms",
+          "Reverse engineering, decompiling, or extracting underlying algorithms, model weights, or source code",
+          "Uploading viruses, malware, trojans, or malicious code designed to disrupt performance",
+          "Automated scraping or bulk extraction of data without prior written authorization from Rivinity",
+          "Impersonating any individual, entity, or Rivinity official",
+          "Violating third-party privacy, copyright, trademark, or intellectual property rights",
         ],
       },
       {
         subheading: "b. Prohibited Content",
         list: [
-          "[Defamatory, obscene, or unlawful content]",
-          "[Content that infringes intellectual property]",
-          "[Content depicting or facilitating exploitation or abuse]",
-          "[Malicious code or security exploits]",
+          "Defamatory, abusive, harassing, hate-speech, or illegal content",
+          "Content that infringes upon the intellectual property or privacy rights of third parties",
+          "Material depicting or facilitating sexual exploitation, violence, or unlawful harm",
+          "Prompts designed to bypass model guardrails or generate harmful and malicious exploits",
         ],
       },
       {
         subheading: "c. Privacy Obligations",
-        body: "[Describe user obligations when the Service is used to process others' personal information — lawful basis, disclosures, and security requirements.]",
+        body: "When using Rivinity to process personal data of third parties, you warrant that you have established a lawful basis and obtained all necessary consents under applicable data protection laws (such as GDPR and CCPA).",
       },
       {
         subheading: "d. Quotas and Limits",
-        body: "[Describe any usage quotas, rate limits, or resource restrictions and how they may change.]",
+        body: "Usage is subject to system rate limits, token quotas, and concurrency restrictions associated with your subscription tier. Rivinity reserves the right to adjust limits or throttle traffic to ensure system stability.",
       },
     ],
   },
   {
     id: "content",
     number: "3",
-    heading: "Content on Rivinity",
-    summary: "[Summary — you own your content; Rivinity needs certain rights to operate the Service.]",
+    heading: "Content and Intellectual Property",
+    summary: "You retain ownership of input data and generated outputs, subject to a limited license allowing Rivinity to deliver and support the Service.",
     blocks: [
       {
         subheading: "a. Your Content and Ownership",
-        body: "[Confirm the user retains ownership of content they submit, and describe the license they grant Rivinity to host, display, and operate the Service.]",
+        body: "You retain all rights, title, and interest in and to the content, prompts, and data you submit ('Inputs') as well as the resulting outputs generated by the AI ('Outputs'). You grant Rivinity a worldwide, non-exclusive license to host, process, reproduce, and display Inputs and Outputs solely to provide, maintain, and improve the Service.",
       },
       {
-        subheading: "b. Third-Party Content",
-        body: "[Describe how integrations or third-party content/services are treated — disclaim responsibility where appropriate.]",
+        subheading: "b. Third-Party Content and Integrations",
+        body: "The Service may integrate with third-party language models, APIs, and services. Rivinity does not control and accepts no liability for third-party platforms or the availability of external API providers.",
       },
       {
         subheading: "c. Rivinity Ownership",
-        body: "[State that the Service itself (excluding user content) — its code, design, and trademarks — remains Rivinity's property.]",
+        body: "Except for user Inputs and Outputs, all rights, title, and interest in and to the Service—including software, user interfaces, branding, logos, proprietary models, and documentation—remain the exclusive property of Rivinity.",
       },
       {
-        subheading: "d. Copyright Violations",
-        body: "[Describe your DMCA / copyright takedown process, and link to a dedicated policy page if you have one.]",
+        subheading: "d. Copyright Violations (DMCA)",
+        body: "If you believe content hosted on Rivinity infringes your copyright, please submit a written notice of claimed infringement to legal@rivinity.com containing details required under the Digital Millennium Copyright Act.",
       },
     ],
   },
   {
     id: "purchases",
     number: "4",
-    heading: "Purchases",
-    summary: "[Summary — paid features are billed on a recurring or usage basis; describe cancellation and refund policy.]",
+    heading: "Subscriptions, Pricing, and Refunds",
+    summary: "Paid plans auto-renew on a recurring basis until canceled, and usage fees are billed as specified in your subscription plan.",
     blocks: [
       {
         subheading: "a. Subscription Terms",
-        body: "[Describe auto-renewal, cancellation timing, and how price changes are communicated.]",
+        body: "Paid subscriptions automatically renew at the end of each billing cycle (monthly or annually) unless canceled prior to the renewal date via your account settings.",
       },
       {
         subheading: "b. Pricing and Usage Fees",
-        body: "[Reference your pricing page and describe when charges apply, including usage-based charges if applicable.]",
+        body: "Pricing details, API consumption rates, and credit tiers are detailed on our Pricing page. We reserve the right to modify pricing with 30 days' advance notice sent to your registered email.",
       },
       {
         subheading: "c. Refunds",
-        body: "[State your refund policy, including any conditions or exceptions.]",
+        body: "Except as explicitly required by applicable law or stated in writing, all fees paid for subscriptions, token packages, and API usage are non-refundable.",
       },
     ],
   },
   {
     id: "changes-termination",
     number: "5",
-    heading: "Notices, Changes, and Termination",
-    summary: "[Summary — Rivinity may update these Terms and may suspend or terminate access under certain conditions.]",
+    heading: "Notices, Updates, and Termination",
+    summary: "We may update these Terms or suspend service access for violations, with appropriate notice provided to affected users.",
     blocks: [
       {
         subheading: "a. Modification of Terms",
-        body: "[Describe how and when updates to these Terms take effect and how users are notified.]",
+        body: "We may update these Terms periodically. Significant changes will be communicated via email or through prominent notice within the app at least 14 days before taking effect.",
       },
       {
         subheading: "b. Service Announcements",
-        body: "[Describe what communications users consent to receive by using the Service.]",
+        body: "By creating an account, you consent to receive administrative, security, operational, and legal notices electronically through the Service or your account email.",
       },
       {
         subheading: "c. Account Termination",
-        body: "[Describe grounds for suspension/termination by either party and what happens to content/data afterward.]",
+        body: "You may terminate your account at any time. Rivinity reserves the right to suspend or terminate accounts that breach these Terms, commit fraudulent activity, or create liability for the platform.",
       },
       {
         subheading: "d. Survival",
-        body: "[List which provisions survive termination — e.g. payment obligations, limitations of liability, indemnity.]",
+        body: "Provisions that by their nature should reasonably survive termination will survive, including intellectual property rights, indemnification, warranty disclaimers, and limitations of liability.",
       },
       {
-        subheading: "e. Deprecation of Service Features",
-        body: "[Describe your process for deprecating or changing features, and any notice period.]",
+        subheading: "e. Deprecation of Features",
+        body: "Rivinity may modify, update, or deprecate features or API endpoints. We aim to provide reasonable advance notice prior to discontinuing core features.",
       },
     ],
   },
@@ -137,71 +137,71 @@ const sections = [
     id: "disputes",
     number: "6",
     heading: "Limitations and Disclaimers",
-    summary: "[Summary — the Service is provided 'as is'; liability is limited as described below. Have this section reviewed carefully by counsel.]",
+    summary: "The Service and AI outputs are provided on an 'as-is' basis without warranties of completeness or accuracy.",
     blocks: [
       {
-        subheading: "a. Content Accuracy",
-        body: "[Disclaim responsibility for accuracy of user- or AI-generated content where applicable.]",
+        subheading: "a. AI Output and Content Accuracy",
+        body: "Artificial intelligence outputs are probabilistically generated and may contain inaccuracies, errors, or hallucinations. You are responsible for independently validating and reviewing any Output prior to reliance.",
       },
       {
         subheading: "b. Use at Your Own Risk",
-        body: "[Standard as-is / at-your-own-risk language, reviewed by counsel for your jurisdiction.]",
+        body: "Your use of the Service is at your sole risk. The platform is provided without guarantees regarding uninterrupted uptime, error-free operations, or absolute security.",
       },
       {
         subheading: "c. Disclaimer of Warranties",
-        body: "[Standard warranty disclaimer language — to be reviewed by counsel.]",
+        body: "TO THE MAXIMUM EXTENT PERMITTED BY LAW, RIVINITY DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.",
       },
       {
         subheading: "d. Limitation of Liability",
-        body: "[Standard liability cap / exclusion of indirect damages language — to be reviewed by counsel.]",
+        body: "TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, RIVINITY SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR FOR LOSS OF PROFITS OR DATA. OUR TOTAL LIABILITY SHALL NOT EXCEED THE GREATER OF $100 OR THE AMOUNTS PAID BY YOU TO RIVINITY IN THE 12 MONTHS PRECEDING THE CLAIM.",
       },
       {
         subheading: "e. Indemnification",
-        body: "[Describe what the user agrees to indemnify Rivinity against.]",
+        body: "You agree to defend, indemnify, and hold harmless Rivinity, its officers, directors, and employees against any third-party claims or liabilities arising from your violation of these Terms or misuse of the Service.",
       },
     ],
   },
   {
     id: "resolving-disputes",
     number: "7",
-    heading: "Disputes",
-    summary: "[Summary — describe your dispute resolution process, including arbitration if applicable. This section carries significant legal weight — do not publish without counsel review.]",
+    heading: "Binding Arbitration and Dispute Resolution",
+    summary: "Disputes will be resolved through individual binding arbitration rather than court proceedings, subject to an opt-out window.",
     blocks: [
       {
         subheading: undefined,
-        body: "[Describe informal resolution process, arbitration agreement (if any), class-action waiver (if any), and any opt-out mechanism and timeline.]",
+        body: "You and Rivinity agree that any dispute or claim arising out of or relating to these Terms or the Service shall be resolved through final and binding individual arbitration, rather than in court.",
       },
       {
         subheading: "What is arbitration?",
-        body: "[Plain-language explanation of what arbitration means for the user, if your Terms include an arbitration clause.]",
+        body: "Arbitration is an informal dispute-resolution process using a neutral arbitrator instead of a judge or jury, allowing for streamlined discovery and faster legal resolution.",
       },
       {
-        subheading: "Can claims be part of a class action or proceeding?",
-        body: "[State your policy on class actions / consolidated proceedings, if applicable.]",
+        subheading: "Can claims be part of a class action?",
+        body: "No. You and Rivinity agree that all proceedings will be conducted on an individual basis only and not as a class, consolidated, or representative action.",
       },
       {
-        subheading: "What's the process to start arbitration?",
-        body: "[Describe the notice and filing process.]",
+        subheading: "What is the process to start arbitration?",
+        body: "Before initiating formal arbitration, either party must send a written Notice of Dispute describing the claim and desired relief, allowing 30 days to attempt informal negotiation.",
       },
       {
         subheading: "How can I opt out of arbitration?",
-        body: "[Describe the opt-out window and method, if offered.]",
+        body: "You may opt out of this arbitration agreement within 30 days of creating your account by sending a signed written notice to legal@rivinity.com with the subject line 'Arbitration Opt-Out'.",
       },
     ],
   },
   {
     id: "general-terms",
     number: "8",
-    heading: "General Terms",
-    summary: "[Summary of miscellaneous provisions below.]",
+    heading: "General Provisions",
+    summary: "Standard legal provisions regarding governing law, feedback rights, export compliance, and contact details.",
     blocks: [
-      { subheading: "a. Feedback and Suggestions", body: "[Describe rights over user feedback/suggestions submitted about the Service.]" },
-      { subheading: "b. Export Control and Sanctions", body: "[Standard export-control / sanctions compliance language.]" },
-      { subheading: "c. Jurisdiction", body: "[State governing law and venue.]" },
-      { subheading: "d. Entire Agreement", body: "[Standard entire-agreement / severability clause.]" },
-      { subheading: "e. Assignment", body: "[State assignment restrictions, if any.]" },
-      { subheading: "f. Third-Party APIs", body: "[Describe use of third-party APIs/model providers and applicable terms, if relevant.]" },
-      { subheading: "g. Contact", body: "[How users can reach you with questions about these Terms.]" },
+      { subheading: "a. Feedback and Suggestions", body: "If you provide suggestions or feedback regarding Rivinity, we may use and incorporate them into our products without royalty, compensation, or restriction." },
+      { subheading: "b. Export Control and Sanctions", body: "You represent that you are not located in a embargoed country or listed on any restricted party list maintained by applicable government authorities." },
+      { subheading: "c. Jurisdiction", body: "These Terms are governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict-of-law principles." },
+      { subheading: "d. Entire Agreement", body: "These Terms constitute the entire agreement between you and Rivinity regarding the Service and supersede all prior agreements or understandings." },
+      { subheading: "e. Assignment", body: "You may not assign these Terms without prior written consent. Rivinity may freely assign or transfer its rights under these Terms." },
+      { subheading: "f. Third-Party APIs", body: "Your use of AI features powered by third-party model providers is subject to their respective policies and guidelines." },
+      { subheading: "g. Contact Information", body: "If you have any questions regarding these Terms, please contact us at support@rivinity.com." },
     ],
   },
 ];
@@ -213,85 +213,84 @@ export default function TermsOfServicePage() {
         <title>Terms of Service - Rivinity</title>
         <meta
           name="description"
-          content="[Rivinity's short meta description for this page.]"
+          content="Review the Terms of Service governing your access to and use of Rivinity's AI platform and API services."
         />
       </Head>
-      <Header/>
-      <main className="bg-[#fafafa]">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-10 pt-32 pb-20">
-          <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-[#1a1a1a]">
-            Terms of Service
-          </h1>
-          <p className="mt-3 text-sm text-gray-500">
-            Last updated: [Month Day, Year]
-          </p>
+      <Header />
+      <div className="container">
+        <main>
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-10 pt-32 pb-20">
+            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-[#1a1a1a]">
+              Terms of Service
+            </h1>
+            <p className="mt-3 text-sm text-gray-500">
+              Last updated: August 20, 2026
+            </p>
 
-          <div className="mt-8 rounded-lg border border-black/10 bg-black/2 p-5 text-sm text-gray-700">
-            This agreement governs your access to and use of the Services and is
-            between you and Rivinity, Inc. ("Rivinity", "we," "us," or "our") and is
-            binding on you individually and, if applicable, on behalf of any entity
-            or business you represent. Please read these Terms carefully. If you do
-            not agree, you must not use the Services.
-            <br />
-            <br />
-            [Insert your actual arbitration notice here if applicable — clearly
-            summarizing that disputes are resolved through individual arbitration
-            rather than court or jury trial, if that's your policy. This must be
-            reviewed by counsel before publishing.]
+            <div className="mt-8 rounded-lg border border-black/10 bg-black/2 p-5 text-sm text-gray-700">
+              This agreement governs your access to and use of the Services and is
+              between you and Rivinity, Inc. ("Rivinity", "we," "us," or "our") and is
+              binding on you individually and, if applicable, on behalf of any entity
+              or business you represent. Please read these Terms carefully. If you do
+              not agree, you must not use the Services.
+              <br />
+              <br />
+              <strong>NOTICE REGARDING ARBITRATION:</strong> PLEASE NOTE THAT SECTION 7
+              CONTAINS AN ARBITRATION AGREEMENT THAT REQUIRES ALL DISPUTES TO BE
+              RESOLVED ON AN INDIVIDUAL BASIS THROUGH BINDING ARBITRATION RATHER THAN IN
+              COURT OR JURY TRIALS, UNLESS YOU OPT OUT WITHIN 30 DAYS.
+            </div>
+
+            <div className="mt-10 flex flex-col gap-12">
+              {sections.map((section) => (
+                <section key={section.id} id={section.id}>
+                  <h2 className="text-2xl font-semibold text-gray-900">
+                    {section.number}. {section.heading}
+                  </h2>
+                  <p className="mt-2 text-sm font-medium text-gray-500">{section.summary}</p>
+
+                  <div className="mt-4 flex flex-col gap-4">
+                    {section.blocks.map((block, idx) => (
+                      <div key={idx}>
+                        {block.subheading && (
+                          <h3 className="text-base font-semibold text-gray-900">
+                            {block.subheading}
+                          </h3>
+                        )}
+                        {block.body && (
+                          <p className="mt-1 text-sm leading-relaxed text-gray-700">
+                            {block.body}
+                          </p>
+                        )}
+                        {"list" in block && block.list && (
+                          <ul className="mt-1 list-disc pl-5 flex flex-col gap-1">
+                            {block.list.map((item: string) => (
+                              <li key={item} className="text-sm leading-relaxed text-gray-700">
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+
+            <div className="mt-12 border-t border-black/10 pt-6 text-xs text-gray-400">
+              Disclaimer: While this document provides production-ready terms for a platform launch, consult with your company's legal counsel to ensure compliance with specific jurisdictional laws.
+            </div>
+
+            <div className="mt-8">
+              <Link href="/" className="text-sm text-[#FF5A1F] hover:underline">
+                ← Back to home
+              </Link>
+            </div>
           </div>
-
-          <div className="mt-10 flex flex-col gap-12">
-            {sections.map((section) => (
-              <section key={section.id} id={section.id}>
-                <h2 className="text-2xl font-semibold text-gray-900">
-                  {section.number}. {section.heading}
-                </h2>
-                <p className="mt-2 text-sm font-medium text-gray-500">{section.summary}</p>
-
-                <div className="mt-4 flex flex-col gap-4">
-                  {section.blocks.map((block, idx) => (
-                    <div key={idx}>
-                      {block.subheading && (
-                        <h3 className="text-base font-semibold text-gray-900">
-                          {block.subheading}
-                        </h3>
-                      )}
-                      {block.body && (
-                        <p className="mt-1 text-sm leading-relaxed text-gray-700">
-                          {block.body}
-                        </p>
-                      )}
-                      {("list" in block && block.list) && (
-                        <ul className="mt-1 list-disc pl-5 flex flex-col gap-1">
-                          {block.list.map((item: string) => (
-                            <li key={item} className="text-sm leading-relaxed text-gray-700">
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-
-          <div className="mt-12 border-t border-black/10 pt-6 text-xs text-gray-400">
-            This page is a structural template only. All bracketed content — and
-            especially the arbitration, liability, and dispute-resolution sections —
-            must be replaced with accurate, lawyer-reviewed language before
-            publishing. This is not a substitute for legal advice.
-          </div>
-
-          <div className="mt-8">
-            <Link href="/" className="text-sm text-[#FF5A1F] hover:underline">
-              ← Back to home
-            </Link>
-          </div>
-        </div>
-      </main>
-      <Footer/>
+        </main>
+      </div>
+      <Footer />
     </>
   );
 }

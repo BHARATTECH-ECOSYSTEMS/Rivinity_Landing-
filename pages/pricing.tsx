@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import Head from "next/head";
@@ -36,11 +38,11 @@ const plans: Plan[] = [
   },
   {
     name: "Pro",
-    badge: "Save 20%",
+    badge: "Most Popular",
     monthlyPrice: 25,
     yearlyPrice: 20,
     yearlyStrike: 25,
-    priceSuffix: "per month",
+    priceSuffix: "/month",
     tagline: "For personal projects & simple apps",
     features: [
       { label: "Everything in Free", isInherited: true },
@@ -57,11 +59,10 @@ const plans: Plan[] = [
   },
   {
     name: "Team",
-    badge: "Save 5%",
     monthlyPrice: 100,
     yearlyPrice: 95,
     yearlyStrike: 100,
-    priceSuffix: "per month",
+    priceSuffix: "/month",
     tagline: "For commercial and professional builds",
     features: [
       { label: "Everything in Pro", isInherited: true },
@@ -101,204 +102,242 @@ const plans: Plan[] = [
 const faqs = [
   {
     q: "What's included in every plan?",
-    a: "Every plan, including Free, includes the core Rivinity Agent, built-in database, publishing, and access to the RivinityLM ecosystem. Paid tiers add more credits, collaborators, and parallel agent capacity.",
+    a: "Every plan includes access to our core AI chat, basic deployment, and community support. Higher tiers add more credits, collaborators, and advanced features.",
   },
   {
     q: "How do credits work?",
-    a: "Credits are consumed as you use Agent, Chat, and other AI-powered features. Paid plans include a monthly credit allotment; once used, you can top up on a pay-as-you-go basis.",
+    a: "Credits are consumed based on model usage, compute time, and deployment bandwidth. Free tier refreshes daily; paid tiers refresh monthly.",
   },
   {
     q: "What happens when I run out of credits?",
-    a: "You can keep working with reduced-capability tooling, or purchase additional credits at any time. We'll notify you before you run out so there are no surprises.",
+    a: "You can purchase additional credit packs or upgrade to a higher tier. Your existing projects remain accessible even if you temporarily run out of credits.",
   },
   {
     q: "What plan is best for me?",
-    a: "Free is great for exploring. Pro suits personal and side projects. Team fits professional or commercial builds with a small group. Enterprise is for organizations needing custom security, compliance, and scale.",
+    a: "Free is great for exploration. Pro is ideal for individual developers. Team works best for small companies. Enterprise is for organizations needing security and compliance.",
   },
   {
     q: "Do you offer annual discounts?",
-    a: "Yes — switch to yearly billing above to save up to 20% depending on your plan.",
+    a: "Yes! Annual billing saves you up to 20% compared to monthly billing. The discount is applied automatically when you select yearly.",
   },
   {
     q: "Do you offer invoicing instead of credit card payments?",
-    a: "Yes, this is available on Enterprise plans. Contact sales to set up invoicing.",
+    a: "Enterprise customers can pay via invoice with net-30 terms. Contact our sales team to set up invoicing for your organization.",
   },
 ];
 
 function formatPrice(plan: Plan, yearly: boolean) {
   if (plan.custom) return "Custom";
   const price = yearly ? plan.yearlyPrice : plan.monthlyPrice;
-  if (price === 0) return "Free";
+  if (price === 0) return "$0";
   return `$${price}`;
 }
 
 export default function PricingPage() {
   const [yearly, setYearly] = useState(true);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
     <>
-    <Header/>
+      <Header />
       <Head>
         <title>Pricing - Rivinity</title>
       </Head>
-      <main className="mx-auto max-w-360 px-4 sm:px-6 lg:px-10 pt-25">
-        {/* Header */}
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="text-5xl sm:text-6xl font-semibold tracking-tight text-[#1a1a1a]">
-            Pricing
-          </div>
-          <p className="text-lg text-gray-500">Choose the best plan for you.</p>
-        </div>
+      <main className="min-h-screen overflow-x-hidden pt-24 container">
+        <section className="section-sm mt-10">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl font-semibold tracking-tight text-[#1A1A1A] sm:text-5xl lg:text-6xl">
+                Pricing
+              </h1>
+              <p className="mt-4 text-lg text-[#6B7280]">
+                Choose the best plan for you.
+              </p>
+            </div>
 
-        {/* Toggle */}
-        <div className="mt-8 flex justify-center">
-          <div className="relative flex items-center rounded-full bg-[#EDEBE6] p-1">
-            <button
-              onClick={() => setYearly(false)}
-              className={`relative z-10 rounded-full px-5 py-2 text-sm font-medium transition-colors ${
-                !yearly ? "bg-white text-gray-900 shadow-sm" : "text-gray-600"
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setYearly(true)}
-              className={`relative z-10 flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition-colors ${
-                yearly ? "bg-white text-gray-900 shadow-sm" : "text-gray-600"
-              }`}
-            >
-              Yearly
-              <span className="rounded-full bg-orange-50 px-2 py-0.5 text-xs font-semibold text-[#FF5A1F]">
-                Up to 20% off
-              </span>
-            </button>
-          </div>
-        </div>
+            {/* Toggle */}
+            <div className="mb-16 flex justify-center">
+              <div className="inline-flex items-center rounded-xl bg-gray-100 p-1 border border-gray-200">
+                <button
+                  onClick={() => setYearly(false)}
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition cursor-pointer ${!yearly
+                      ? "bg-white text-[#1A1A1A] shadow-xs"
+                      : "text-[#6B7280] hover:text-[#1A1A1A]"
+                    }`}
+                >
+                  Monthly
+                </button>
+                <button
+                  onClick={() => setYearly(true)}
+                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition cursor-pointer ${yearly
+                      ? "bg-white text-[#1A1A1A] shadow-xs"
+                      : "text-[#6B7280] hover:text-[#1A1A1A]"
+                    }`}
+                >
+                  Yearly
+                  <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-semibold text-[#FF6B00]">
+                    Up to 20% off
+                  </span>
+                </button>
+              </div>
+            </div>
 
-        {/* Plan grid */}
-        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-4">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`flex flex-col justify-between rounded-2xl border p-6 ${
-                plan.highlighted
-                  ? "border-2 border-[#FF5A1F] bg-[#EDEBE6]"
-                  : "border-black/10 bg-[#EDEBE6]/60"
-              }`}
-            >
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-medium text-gray-900">{plan.name}</span>
+            {/* Pricing Grid */}
+            <div className="grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto">
+              {plans.map((plan) => (
+                <div
+                  key={plan.name}
+                  className={`pricing-card relative flex flex-col justify-between rounded-2xl bg-white border p-8 transition-all ${plan.highlighted
+                      ? "featured border-2 border-[#FF6B00] shadow-md"
+                      : "border-[#E5E7EB]"
+                    }`}
+                >
+                  {/* Badge */}
                   {plan.badge && (
-                    <span className="rounded-full bg-[#FBE4D6] px-3 py-1 text-xs font-semibold text-[#B84A1B]">
+                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF6B00] px-3 py-1 text-xs font-semibold text-white tracking-wide shadow-xs">
                       {plan.badge}
                     </span>
                   )}
-                </div>
 
-                <div className="flex items-end gap-2 mt-1">
-                  {yearly && plan.yearlyStrike && (
-                    <span className="text-base text-gray-400 line-through">
-                      ${plan.yearlyStrike}
-                    </span>
-                  )}
-                  <span className="text-4xl font-semibold text-gray-900">
-                    {formatPrice(plan, yearly)}
-                  </span>
-                  {plan.priceSuffix && (
-                    <span className="text-sm text-gray-500 pb-1 leading-tight">
-                      per month
-                      <br />
-                      {yearly && "billed annually"}
-                    </span>
-                  )}
-                </div>
+                  {/* Top content */}
+                  <div>
+                    <h3 className="text-xl font-semibold text-[#1A1A1A]">
+                      {plan.name}
+                    </h3>
 
-                <p className="mt-2 text-sm text-gray-600">{plan.tagline}</p>
-
-                <ul className="mt-4 flex flex-col gap-2.5">
-                  {plan.features.map((feature) => (
-                    <li key={feature.label} className="flex items-start gap-2.5 text-sm text-gray-800">
-                      {feature.isInherited ? (
-                        <Plus size={16} className="mt-0.5 shrink-0 text-gray-500" />
-                      ) : (
-                        <Check size={16} className="mt-0.5 shrink-0 text-gray-500" />
+                    {/* Price */}
+                    <div className="pricing-price mt-2 flex items-baseline gap-1.5 text-4xl font-semibold text-[#1A1A1A]">
+                      {yearly && plan.yearlyStrike && (
+                        <span className="text-base font-normal text-gray-400 line-through mr-1">
+                          ${plan.yearlyStrike}
+                        </span>
                       )}
-                      <span>{feature.label}</span>
-                    </li>
-                  ))}
-                </ul>
+                      <span>{formatPrice(plan, yearly)}</span>
+                      {plan.priceSuffix && (
+                        <span className="text-base font-normal text-[#6B7280]">
+                          {plan.priceSuffix}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Tagline */}
+                    <p className="pricing-description mt-1 text-sm text-[#6B7280]">
+                      {plan.tagline}
+                    </p>
+
+                    {/* Features */}
+                    {/* Features */}
+                    <ul className="pricing-features mt-6 flex flex-col gap-2 text-sm text-[#1A1A1A] pl-0">
+                      {plan.features.map((feature) => (
+                        <li
+                          key={feature.label}
+                          className="flex items-start gap-2 py-1 pl-0"
+                        >
+                          {feature.isInherited ? (
+                            <Plus
+                              size={16}
+                              className="shrink-0 text-gray-400 mt-0.5"
+                            />
+                          ) : (
+                            <Check
+                              size={16}
+                              className="shrink-0 text-[#FF6B00] stroke-[3] mt-0.5"
+                            />
+                          )}
+                          <span className="text-sm text-[#374151]">
+                            {feature.label}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="mt-8 pt-4">
+                    <Link
+                      href={plan.cta.href}
+                      className={`block w-full rounded-xl py-3 text-center text-sm font-semibold transition ${plan.highlighted
+                          ? "bg-[#FF6B00] text-white hover:bg-[#e66000] shadow-xs"
+                          : "bg-gray-100 text-[#1A1A1A] hover:bg-gray-200 border border-gray-200"
+                        }`}
+                    >
+                      {plan.cta.label}
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Disclaimer */}
+        <section className="">
+          <p className="mx-auto max-w-3xl text-center text-xs text-[#6B7280]">
+            *Prices are subject to tax depending on your location. Rivinity Agent is powered by large language models. While it can produce powerful results, its behavior is probabilistic meaning it may occasionally make mistakes.
+          </p>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="section-sm ">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl">
+              {/* Heading */}
+              <div className="mb-12 text-center">
+                <h2 className="text-3xl font-semibold tracking-tight text-[#1A1A1A] sm:text-4xl">
+                  Frequently asked questions
+                </h2>
+                <p className="mt-3 text-sm text-[#6B7280]">
+                  Everything you need to know about Rivinity plans and billing.
+                </p>
               </div>
 
-              <Link
-                href={plan.cta.href}
-                className={`mt-8 block rounded-lg px-4 py-3 text-center text-sm font-semibold transition ${
-                  plan.highlighted
-                    ? "bg-[#FF5A1F] text-white hover:bg-[#e64f18]"
-                    : "bg-black/5 text-gray-900 hover:bg-black/10"
-                }`}
-              >
-                {plan.cta.label}
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        <p className="mt-8 text-center text-xs text-gray-800 max-w-2xl mx-auto">
-          *Prices are subject to tax depending on your location. Rivinity Agent is powered by
-          large language models. While it can produce powerful results, its behavior is
-          probabilistic — meaning it may occasionally make mistakes.
-        </p>
-
-        {/* FAQ */}
-        <div className="mt-24 max-w-2xl mx-auto w-3xl flex flex-col justify-center">
-          <h2 className="text-center text-3xl font-semibold text-gray-900">
-            Frequently asked questions
-          </h2>
-          <div className="mt-8 divide-y divide-black/10 border-t border-b border-black/10">
-            {faqs.map((faq, idx) => {
-              const isOpen = openFaq === idx;
-              return (
-                <div key={faq.q}>
-                  <button
-                    onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="flex w-full items-center justify-between py-5 text-left bg-transparent"
+              {/* FAQ Items */}
+              <div className="space-y-4">
+                {faqs.map((faq) => (
+                  <details
+                    key={faq.q}
+                    className="group overflow-hidden rounded-xl border border-[#E5E7EB] bg-white p-6 cursor-pointer shadow-xs transition-colors hover:border-gray-300"
                   >
-                    <span className="text-base font-medium text-gray-900">{faq.q}</span>
-                    <ChevronDown
-                      size={20}
-                      className={`shrink-0 text-gray-400 transition-transform ${
-                        isOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                  {isOpen && (
-                    <p className="pb-5 text-sm leading-relaxed text-gray-600">{faq.a}</p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    <summary className="font-medium list-none flex justify-between items-center text-sm sm:text-base text-[#1A1A1A]">
+                      <span>{faq.q}</span>
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-100 transition-transform duration-200 group-open:rotate-180">
+                        <ChevronDown size={16} className="text-[#6B7280]" />
+                      </span>
+                    </summary>
+                    <p className="mt-4 text-sm leading-relaxed text-[#6B7280] max-w-prose">
+                      {faq.a}
+                    </p>
+                  </details>
+                ))}
+              </div>
 
-          <div className="mt-15 flex flex-col items-center gap-1 text-center">
-            <span className="text-base font-medium text-gray-900">Still have questions?</span>
-            <span className="text-sm text-gray-500">
-              See more in our{" "}
-              <Link href="/docs" className="text-[#FF5A1F] hover:underline">
-                billing docs
-              </Link>
-              , or{" "}
-              <Link href="/enterprise" className="text-[#FF5A1F] hover:underline">
-                contact us
-              </Link>{" "}
-              about Enterprise.
-            </span>
+              {/* Still have questions */}
+              <div className="mt-12 text-center">
+                <p className="text-base font-medium text-[#1A1A1A]">
+                  Still have questions?
+                </p>
+                <p className="mt-2 text-sm text-[#6B7280]">
+                  See more in our{" "}
+                  <Link
+                    href="/docs/billing"
+                    className="font-semibold text-[#FF6B00] hover:underline"
+                  >
+                    billing docs
+                  </Link>
+                  , or{" "}
+                  <Link
+                    href="/contact"
+                    className="font-semibold text-[#FF6B00] hover:underline"
+                  >
+                    contact us
+                  </Link>{" "}
+                  about Enterprise.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="border-b border-gray-200 mt-10"></div>
+        </section>
       </main>
-    <Footer/>
+      <Footer />
     </>
   );
 }
