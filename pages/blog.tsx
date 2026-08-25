@@ -425,7 +425,7 @@ export default function BlogPage() {
       <main className="container">
         {/* HERO / FEATURED SECTION */}
         <section className="section">
-          <div className="container mx-auto max-w-7xl px-6 pb-20 pt-16 sm:px-8 lg:px-12">
+          <div className="container mx-auto max-w-7xl px-6 pb-20 pt-20 sm:px-8 lg:px-12">
             <div className="flex items-end justify-between gap-6 pb-4">
               <div>
                 <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl text-neutral-950">
@@ -456,7 +456,7 @@ export default function BlogPage() {
               </div>
             </div>
 
-           <div
+            <div
               ref={featuredRef}
               className="blog-carousel mt-8 flex gap-6 overflow-x-auto overflow-y-hidden pb-4 snap-x snap-proximity"
             >
@@ -505,7 +505,7 @@ export default function BlogPage() {
             </div>
 
             {/* Research Cards Carousel */}
-           <div
+            <div
               ref={researchRef}
               className="blog-carousel mt-10 flex gap-5 overflow-x-auto overflow-y-hidden pb-4 snap-x snap-proximity"
             >
@@ -556,11 +556,10 @@ export default function BlogPage() {
                     setActiveCategory(category);
                     setVisiblePosts(6);
                   }}
-                  className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium transition ${
-                    activeCategory === category
+                  className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium transition ${activeCategory === category
                       ? "bg-neutral-900 text-white shadow-sm"
                       : "bg-white border border-neutral-200 text-neutral-600 hover:border-neutral-300 hover:text-neutral-900"
-                  }`}
+                    }`}
                 >
                   {category}
                 </button>
@@ -568,7 +567,7 @@ export default function BlogPage() {
             </div>
 
             {/* Articles List */}
-            <div className="mt-8 divide-y divide-neutral-200 border-y border-neutral-200 bg-white rounded-2xl px-6 sm:px-8 shadow-xs">
+            <div className="mt-8 divide-y divide-neutral-200 border-y border-neutral-200 bg-white rounded-2xl px-4 sm:px-8 shadow-xs">
               {visibleLatestPosts.length > 0 ? (
                 visibleLatestPosts.map((post) => (
                   <LatestPostRow key={post.id} post={post} />
@@ -599,7 +598,7 @@ export default function BlogPage() {
           <div className="container mx-auto max-w-5xl px-6 lg:px-8">
             <div className="relative overflow-hidden rounded-3xl border border-neutral-200/90 bg-gradient-to-b from-slate-50 to-slate-100/70 px-8 py-16 text-center shadow-xl sm:px-16 sm:py-20">
               <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 size-96 rounded-full bg-blue-500/5 blur-3xl" />
-              
+
               <div className="relative z-10">
                 <span className="inline-block text-[11px] font-semibold tracking-widest text-neutral-500 uppercase">
                   BUILD WITH RIVINITY
@@ -614,12 +613,12 @@ export default function BlogPage() {
                 </p>
 
                 <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                  <Link 
-                    href="#" 
+                  <Link
+                    href="#"
                     className="flex items-center gap-2 rounded-xl bg-white border border-neutral-200 px-6 py-3 text-xs font-semibold text-neutral-950 transition hover:bg-neutral-50 shadow-sm"
-                  > 
-                    <span>Start building</span> 
-                    <ArrowUpRight className="size-4" /> 
+                  >
+                    <span>Start building</span>
+                    <ArrowUpRight className="size-4" />
                   </Link>
 
                   <Link
@@ -773,33 +772,36 @@ function LatestPostRow({ post }: { post: Post }) {
   return (
     <Link
       href={post.href || "#"}
-      className="group block py-6 transition first:pt-8 last:pb-8"
+      className="group block py-5 sm:py-6 transition first:pt-6 sm:first:pt-8 last:pb-6 sm:last:pb-8"
     >
-      <article className="flex items-center justify-between gap-6 sm:gap-10">
+      <article className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-4 sm:gap-8">
+        {/* Text Details */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 text-xs text-neutral-500 font-medium">
-            <span className="font-semibold text-neutral-900 uppercase tracking-wide text-[11px]">
+          {/* Metadata Row */}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-neutral-500 font-medium">
+            <span className="font-semibold text-neutral-900 uppercase tracking-wide text-[11px] shrink-0">
               {post.category}
             </span>
-            <span>•</span>
-            <span>{post.date}</span>
-            <span>•</span>
-            <span className="flex items-center gap-1">
+            <span className="text-neutral-300">•</span>
+            <span className="whitespace-nowrap shrink-0">{post.date}</span>
+            <span className="text-neutral-300">•</span>
+            <span className="flex items-center gap-1 whitespace-nowrap shrink-0">
               <Clock3 className="size-3" />
               {post.readingTime}
             </span>
           </div>
 
-          <h3 className="mt-2 text-base sm:text-lg font-semibold tracking-tight text-neutral-900 group-hover:text-neutral-600 transition">
+          <h3 className="mt-2 text-base sm:text-lg font-semibold tracking-tight text-neutral-900 group-hover:text-neutral-600 transition leading-snug">
             {post.title}
           </h3>
 
-          <p className="mt-2 line-clamp-2 text-xs sm:text-sm leading-relaxed text-neutral-500 max-w-[65ch]">
+          <p className="mt-1.5 line-clamp-2 text-xs sm:text-sm leading-relaxed text-neutral-500 max-w-[65ch]">
             {post.description}
           </p>
         </div>
 
-        <div className="relative aspect-[16/10] w-28 sm:w-44 shrink-0 overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80">
+        {/* Thumbnail Image */}
+        <div className="relative aspect-[16/9] sm:aspect-[16/10] w-full sm:w-44 shrink-0 overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80">
           <img
             src={post.image}
             alt={post.title}

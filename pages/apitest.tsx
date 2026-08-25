@@ -126,7 +126,7 @@ export default function ApiStatusPage() {
         {/* =====================================================
             HERO
         ====================================================== */}
-      <Header/>
+        <Header />
         <section className="border-b border-black/[0.08]">
           <div className="mx-auto max-w-5xl px-5 pb-16 pt-20 sm:px-8 sm:pb-20 sm:pt-24">
 
@@ -501,9 +501,8 @@ function ServiceRow({
 }) {
   return (
     <div
-      className={`group flex flex-col gap-4 px-5 py-5 transition hover:bg-black/[0.015] sm:flex-row sm:items-center sm:justify-between sm:px-6 ${
-        !isLast ? "border-b border-black/[0.08]" : ""
-      }`}
+      className={`group flex flex-col gap-4 px-5 py-5 transition hover:bg-black/[0.015] sm:flex-row sm:items-center sm:justify-between sm:px-6 ${!isLast ? "border-b border-black/[0.08]" : ""
+        }`}
     >
       <div className="flex items-center gap-4">
 

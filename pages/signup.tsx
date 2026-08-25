@@ -9,38 +9,38 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <main className="min-h-screen bg-[#FAF7F2] text-[#181818]">
-      <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[480px_1fr]">
+    <main className="h-screen w-screen overflow-hidden bg-[#FAF7F2] text-[#181818]">
+      <div className="grid h-full grid-cols-1 lg:grid-cols-[480px_1fr]">
         {/* LEFT: SIGN UP */}
-        <section className="relative flex min-h-screen flex-col bg-[#FAF7F2] px-6 sm:px-10 lg:px-21.5">
+        <section className="relative flex h-full flex-col justify-between bg-[#FAF7F2] px-6 sm:px-10 lg:px-16">
           {/* Logo */}
-          <div className="pt-8 lg:pt-9">
+          <div className="pt-6">
             <Link href="/" className="inline-flex items-center gap-1 text-xl font-medium">
               <Image
                 src="/logo.png"
                 alt="Rivinity Logo"
-                width={40}
-                height={40}
-                className="h-10 w-10"
-                sizes="40px"
+                width={36}
+                height={36}
+                className="h-9 w-9"
+                sizes="36px"
               />
               Rivinity
             </Link>
           </div>
 
           {/* Form */}
-          <div className="mx-auto flex w-full max-w-77.5 flex-1 flex-col justify-center py-12">
-            <h1 className="mb-7 text-[21px] font-semibold tracking-[-0.03em]">
-              Sign up for Replit
+          <div className="mx-auto flex w-full max-w-77.5 flex-col justify-center py-4">
+            <h1 className="mb-5 text-[20px] font-semibold tracking-[-0.03em]">
+              Sign up for Rivinity
             </h1>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               <button
                 type="button"
-                className="flex h-10 w-full items-center rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3.5 text-left text-[15px] transition hover:bg-white"
+                className="flex h-9 w-full items-center rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3.5 text-left text-[14px] transition hover:bg-white"
               >
                 <svg
-                  className="mr-3 h-5 w-5"
+                  className="mr-3 h-4 w-4"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
                 >
@@ -66,10 +66,10 @@ export default function SignUpPage() {
 
               <button
                 type="button"
-                className="flex h-10 w-full items-center rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3.5 text-left text-[15px] transition hover:bg-white"
+                className="flex h-9 w-full items-center rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3.5 text-left text-[14px] transition hover:bg-white"
               >
                 <svg
-                  className="mr-3 h-5 w-5"
+                  className="mr-3 h-4 w-4"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   aria-hidden="true"
@@ -82,10 +82,10 @@ export default function SignUpPage() {
 
               <button
                 type="button"
-                className="flex h-10 w-full items-center rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3.5 text-left text-[15px] transition hover:bg-white"
+                className="flex h-9 w-full items-center rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3.5 text-left text-[14px] transition hover:bg-white"
               >
                 <svg
-                  className="mr-3 h-5 w-5"
+                  className="mr-3 h-4 w-4"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   aria-hidden="true"
@@ -96,15 +96,15 @@ export default function SignUpPage() {
               </button>
             </div>
 
-            <div className="my-5 flex items-center gap-3">
+            <div className="my-3 flex items-center gap-3">
               <div className="h-px flex-1 bg-[#D9D5D0]" />
-              <span className="text-[13px] text-[#767270]">or</span>
+              <span className="text-[12px] text-[#767270]">or</span>
               <div className="h-px flex-1 bg-[#D9D5D0]" />
             </div>
 
-            <form className="space-y-3.5" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-2.5" onSubmit={(e) => e.preventDefault()}>
               <label className="block">
-                <span className="mb-1.5 block text-[13px] text-[#625F5B]">
+                <span className="mb-1 block text-[12px] text-[#625F5B]">
                   Email
                 </span>
                 <div className="relative">
@@ -112,26 +112,26 @@ export default function SignUpPage() {
                   <input
                     type="email"
                     placeholder="you@example.com"
-                    className="h-10 w-full rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3 text-[12px] outline-none transition placeholder:text-[#8E8984] focus:border-[#A7A19A]"
+                    className="h-9 w-full rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3 text-[12px] outline-none transition placeholder:text-[#8E8984] focus:border-[#A7A19A]"
                   />
                 </div>
               </label>
 
               <label className="block">
-                <div className="mb-1.5 flex items-center justify-between">
-                  <span className="text-[13px] text-[#625F5B]">Password</span>
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-[12px] text-[#625F5B]">Password</span>
                 </div>
 
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
-                    className="h-10 w-full rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3 pr-12 text-[12px] outline-none transition placeholder:text-[#8E8984] focus:border-[#A7A19A]"
+                    className="h-9 w-full rounded-lg border border-[#DCD9D5] bg-[#FFFEFC] px-3 pr-12 text-[12px] outline-none transition placeholder:text-[#8E8984] focus:border-[#A7A19A]"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-[#767270] bg-transparent"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent text-[10px] text-[#767270]"
                   >
                     {showPassword ? "Hide" : "Show"}
                   </button>
@@ -140,13 +140,13 @@ export default function SignUpPage() {
 
               <button
                 type="submit"
-                className="mt-1 h-10 w-full rounded-full bg-[#F54A00] text-[13px] font-semibold text-white transition hover:bg-[#E74400]"
+                className="mt-1 h-9 w-full rounded-full bg-[#F54A00] text-[13px] font-semibold text-white transition hover:bg-[#E74400]"
               >
                 Create account
               </button>
             </form>
 
-            <p className="mt-5 text-center text-[13px] text-[#767270]">
+            <p className="mt-4 text-center text-[12px] text-[#767270]">
               Already have an account?{" "}
               <a href="/login" className="font-medium text-[#F04A00] hover:underline">
                 Log in
@@ -155,7 +155,7 @@ export default function SignUpPage() {
           </div>
 
           {/* Bottom agreement */}
-          <div className="pb-8 text-[12px] leading-5 text-[#767270]">
+          <div className="pb-5 text-[11px] leading-4 text-[#767270]">
             By continuing, you agree to Replit&apos;s{" "}
             <a href="#" className="underline">Terms of Service</a>{" "}
             and{" "}
@@ -171,7 +171,7 @@ export default function SignUpPage() {
 
 function AuthMarketingPanel() {
   return (
-    <aside className="relative hidden min-h-screen overflow-hidden lg:block">
+    <aside className="relative hidden h-full overflow-hidden lg:block">
       <div className="absolute inset-0 bg-[#101017]" />
 
       {/* Orange-to-purple glow */}
@@ -193,17 +193,17 @@ function AuthMarketingPanel() {
         }}
       />
 
-      <div className="absolute bottom-14.5 left-13.5 max-w-152.5">
-        <span className="mb-8 inline-flex rounded-full border border-[#3A3C4B] bg-[#191B25]/70 px-3 py-1.5 text-[10px] text-[#A9B0C5]">
+      <div className="absolute bottom-12 left-12 max-w-140">
+        <span className="mb-6 inline-flex rounded-full border border-[#3A3C4B] bg-[#191B25]/70 px-3 py-1 text-[10px] text-[#A9B0C5]">
           Trusted by 50M+ creators
         </span>
 
-        <h2 className="max-w-155 text-[27px] font-medium leading-[1.3] tracking-[-0.035em] text-[#FAF7F2]">
+        <h2 className="text-[25px] font-medium leading-[1.3] tracking-[-0.035em] text-[#FAF7F2]">
           Build and deploy software collaboratively with the power of AI,
           without spending a second on setup.
         </h2>
 
-        <p className="mt-5 text-[11px] text-[#A6A5AF]">— Rivinity</p>
+        <p className="mt-4 text-[11px] text-[#A6A5AF]">— Rivinity</p>
       </div>
     </aside>
   );

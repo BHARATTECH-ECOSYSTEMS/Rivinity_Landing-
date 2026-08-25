@@ -113,7 +113,7 @@ const navItems: NavItem[] = [
         label: "Automate",
         items: [
           { label: "Publish", href: "/products/deployments" },
-          { label: "Integrations", href: "/integrations" },
+          { label: "Integrations", href: "/integration" },
         ],
       },
       {
@@ -143,7 +143,7 @@ const navItems: NavItem[] = [
         items: [
           {
             label: "Enterprise",
-            href: "/enterprise",
+            href: "/contact",
             description: "Scale Rivinity across your org with security & controls",
           },
           {
@@ -158,7 +158,7 @@ const navItems: NavItem[] = [
           },
           {
             label: "Developers",
-            href: "/developers",
+            href: "/developer",
             description: "APIs, SDKs, and CLI tooling",
           },
           {
@@ -178,7 +178,7 @@ const navItems: NavItem[] = [
         items: [
           { label: "Research", href: "/research" },
           { label: "Blog", href: "/blog" },
-          { label: "Papers", href: "/research/papers" },
+          { label: "Papers", href: "/papers" },
           { label: "Rivinity Academy", href: "/academy" },
         ],
       },
@@ -192,7 +192,7 @@ const navItems: NavItem[] = [
       {
         items: [
           { label: "About", href: "/about" },
-          // { label: "Team", href: "/team" },
+          { label: "Team", href: "/team" },
           { label: "Careers", href: "/carrers" },
           { label: "Certificate", href: "/certificate" },
           { label: "Contact", href: "/contact" },
@@ -306,13 +306,13 @@ export default function Header() {
       >
         {/* Logo */}
         <Link href="/" className="group flex items-center shrink-0">
-          <div className="relative h-35 w-35 transition-transform duration-300 group-hover:scale-110">
+          <div className="transition-transform duration-300 group-hover:scale-110">
             <Image
               src="/rivinity_logo.png"
               alt="Rivinity Logo"
               width={140}
-              height={140}
-              className="object-contain"
+              height={60}
+              className="object-cover"
               priority
               sizes="140px"
             />

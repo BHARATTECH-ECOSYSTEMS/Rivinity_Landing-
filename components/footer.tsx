@@ -22,10 +22,10 @@ const COLUMNS: FooterColumn[] = [
   {
     title: "Company",
     links: [
-      { label: "Our Story", href: "#" },
+      { label: "Our Story", href: "/about" },
       { label: "Team", href: "/team" },
       { label: "Careers", href: "/carrers" },
-      { label: "Governance", href: "#" },
+      { label: "Governance", href: "/governance" },
     ],
   },
   {
@@ -42,7 +42,7 @@ const COLUMNS: FooterColumn[] = [
     links: [
       { label: "Research", href: "/research" },
       { label: "Blog", href: "/blog" },
-      { label: "Documentation", href: "/documentation" },
+      { label: "Documentation", href: "/docs" },
       { label: "API Status", href: "/apitest" },
     ],
   },
@@ -51,7 +51,7 @@ const COLUMNS: FooterColumn[] = [
     links: [
       { label: "CLOS-AI", href: "#" },
       { label: "Deepfake Detection", href: "#" },
-      { label: "Post Your Ad", href: "#" },
+      { label: "Post Your Ad", href: "/advertise" },
       { label: "Agent as a Platform", href: "#" },
     ],
   },
@@ -60,7 +60,7 @@ const COLUMNS: FooterColumn[] = [
 const SOCIAL_LINKS: SocialLink[] = [
   { label: "Twitter/X", href: "https://twitter.com/rivinity" },
   { label: "GitHub", href: "https://github.com/rivinity" },
-  { label: "LinkedIn", href: "https://linkedin.com/company/rivinity" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/bharatartificialintelligence/" },
   { label: "Discord", href: "https://discord.gg/rivinity" },
 ];
 

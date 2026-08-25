@@ -286,7 +286,7 @@ export default function PrivacyPolicyPage() {
       <Header/>
 
       <main className="container">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-10 pt-32 pb-20">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-10 pt-20 pb-20">
           <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-[#1a1a1a]">
             Privacy Policy
           </h1>

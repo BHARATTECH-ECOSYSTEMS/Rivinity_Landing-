@@ -15,12 +15,8 @@ export default function ResearchPage() {
         {/* ---------------------------------------------------------------- */}
         {/* HERO */}
         {/* ---------------------------------------------------------------- */}
-        <section className="section-sm mt-12">
+        <section className="section mt-12">
           <div className="mx-auto max-w-5xl text-center">
-            <span className="text-sm uppercase tracking-wider text-[#77748F]">
-              Rivinity Research
-            </span>
-
             <h1 className="mx-auto mt-4 max-w-4xl text-4xl font-semibold leading-tight tracking-tight text-[#1F2937] sm:text-6xl">
               Foundation research for{" "}
               <span className="text-[#F97316]">Rivinity.</span>
@@ -106,10 +102,6 @@ export default function ResearchPage() {
 
             {/* Section Heading */}
             <div className="mb-12 max-w-2xl">
-              <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.2em] text-[#77748F]">
-                Research Capabilities
-              </p>
-
               <h2 className="text-4xl font-semibold leading-tight tracking-tight text-[#1F2937] sm:text-5xl">
                 Intelligence built for{" "}
                 <span className="text-[#F97316]">
