@@ -60,8 +60,121 @@
      ============================================ */
   --container-max: 1200px;
   --container-padding: 24px;
-  --content-max: 720px; /* for reading text */
+  --content-max: 65ch; /* updated to match optimal reading width */
   --headline-max: 900px; /* for headlines */
+}
+
+/* ============================================
+   FIX 1: CONTAINER + LINE LENGTH
+   ============================================ */
+
+/* Main page wrapper — prevents full-width stretch */
+.container,
+.max-w-7xl,
+.wrapper,
+.page-wrapper {
+  max-width: 1200px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+/* Body text — THE KEY FIX for readability */
+p,
+.body-text,
+.faq-answer,
+.terms-content p,
+.about-text,
+.careers-text,
+.card p,
+section > p {
+  max-width: 65ch !important; /* ~560px optimal reading width */
+  line-height: 1.6 !important;
+}
+
+/* Headlines can be slightly wider */
+h1, h2, h3,
+.headline,
+.section-title,
+.hero-title {
+  max-width: 900px !important;
+}
+
+/* Center text when inside centered parents */
+.text-center p,
+.text-center .description,
+.text-center .body-text,
+.text-center h1,
+.text-center h2 {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Full-bleed exceptions (hero images, banners) */
+.hero-visual,
+.gradient-banner,
+.full-bleed img {
+  max-width: 100% !important;
+}
+
+/* Mobile & Desktop Container Adjustments */
+@media (max-width: 768px) {
+  .container,
+  .max-w-7xl,
+  .wrapper,
+  .page-wrapper {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container,
+  .max-w-7xl,
+  .wrapper,
+  .page-wrapper {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+}
+
+/* ============================================
+   FIX 6: SECTION SPACING
+   ============================================ */
+
+section,
+.section {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+
+/* Smaller sections */
+section.small,
+.section-sm {
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+/* Hero gets more space */
+section.hero,
+.hero-section {
+  padding-top: 160px;
+  padding-bottom: 120px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  section,
+  .section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  section.hero,
+  .hero-section {
+    padding-top: 100px;
+    padding-bottom: 80px;
+  }
 }
 
 /* ============================================
@@ -71,8 +184,6 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  /* margin: 0; */
-  /* padding: 0; */
 }
 
 html {
@@ -139,7 +250,6 @@ body {
     font-size: clamp(36px, 5vw, 56px);
     line-height: 1.1;
     letter-spacing: -0.02em;
-    max-width: var(--headline-max);
   }
 
   h2,
@@ -147,7 +257,6 @@ body {
     font-size: clamp(28px, 3vw, 36px);
     line-height: 1.2;
     letter-spacing: -0.01em;
-    max-width: var(--headline-max);
   }
 
   h3 {
@@ -156,22 +265,10 @@ body {
     letter-spacing: 0;
   }
 
-  /* Body copy line-length constraint */
-  p,
-  .body-text,
-  .description,
-  .faq-answer,
-  .terms-content p,
-  .about-text,
-  .careers-text {
-    max-width: 65ch;
-    line-height: 1.6;
-  }
-
   .body-large {
     font-size: 18px;
     line-height: 1.6;
-    max-width: 65ch;
+    max-width: 65ch !important;
   }
 
   .caption {
@@ -195,38 +292,12 @@ body {
   .text-muted {
     color: var(--color-text-muted);
   }
-
-  /* Center text blocks inside centered sections */
-  .text-center p,
-  .text-center .description,
-  .text-center .body-text {
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
 
 @layer components {
   /* ============================================
      CONTAINER SYSTEM
      ============================================ */
-  .container {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: 0 var(--container-padding);
-  }
-
-  @media (min-width: 1280px) {
-    .container {
-      padding: 0 32px;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .container {
-      padding: 0 16px;
-    }
-  }
-
   .content-narrow {
     max-width: var(--content-max);
     margin: 0 auto;
@@ -235,33 +306,6 @@ body {
   .headline-narrow {
     max-width: var(--headline-max);
     margin: 0 auto;
-  }
-
-  /* ============================================
-     SECTION SPACING
-     ============================================ */
-  .section {
-    padding: var(--space-9) 0;
-  }
-
-  .section-sm {
-    padding: var(--space-7) 0;
-  }
-
-  .section-lg {
-    padding: 160px 0;
-  }
-
-  @media (max-width: 768px) {
-    .section {
-      padding: var(--space-7) 0;
-    }
-    .section-sm {
-      padding: var(--space-6) 0;
-    }
-    .section-lg {
-      padding: var(--space-8) 0;
-    }
   }
 
   /* ============================================
@@ -358,27 +402,4 @@ body {
   .mb-8 {
     margin-bottom: var(--space-5);
   }
-}
-
-/* Mobile First Approach */
-.container {
-max-width: 1200px;
-margin: 0 auto;
-padding: 0 16px;
-}
-.section {
-padding: 64px 0;
-}
-/* Tablet */
-@media (min-width: 640px) {
-.container { padding: 0 24px; }
-.section { padding: 80px 0; }
-}
-/* Desktop */
-@media (min-width: 1024px) {
-.section { padding: 120px 0; }
-}
-/* Wide */
-@media (min-width: 1280px) {
-.container { padding: 0 32px; }
 }

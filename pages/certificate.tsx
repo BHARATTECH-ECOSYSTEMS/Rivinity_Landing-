@@ -1,17 +1,16 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import {
   ArrowRight,
   Check,
-  Sparkles,
   RefreshCw,
   Globe,
   Share2,
 } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import LogoMarquee from "@/components/logoslide";
 
 interface ProficiencyLevel {
   level: number;
@@ -120,48 +119,51 @@ const features: Feature[] = [
 
 export default function CertificatePage() {
   return (
-    <>
+    <div className="min-h-screen bg-white text-[#1A1A1A] font-sans antialiased overflow-x-hidden">
       <Header />
-      <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] font-[family-name:var(--font-body)] container">
+
+      <main>
         {/* Hero Section */}
-        <section className="section-lg py-16 md:py-24">
-          <div className="container grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 flex flex-col items-start">
-              <h1 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] text-[var(--color-text-primary)] mb-6">
+        <section className="section border-b border-[#E5E7EB] mt-12 sm:mt-20 pt-16 sm:pt-28 pb-12 sm:pb-20">
+          <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+            {/* Left Content */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#1A1A1A] leading-[1.15] mb-4 sm:mb-6">
                 Get your
+                <span className="text-[#FF6B00]"> Rivinity</span>
                 <br />
-                <span className="text-[var(--color-accent)]">Rivinity</span>
-                <br />
-                <span className="text-[var(--color-accent)]">Certification.</span>
+                <span className="text-[#FF6B00]">Certification.</span>
               </h1>
-              <p className="text-lg leading-relaxed text-[var(--color-text-secondary)] mb-8 max-w-[480px]">
+              <p className="text-sm sm:text-base lg:text-lg text-[#6B7280] leading-relaxed mb-6 sm:mb-8 max-w-lg">
                 Fetch your official Rivinity certification and add it to your
                 LinkedIn profile in seconds.
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
                 <Link
                   href="/certifications/start"
-                  className="btn btn-primary rounded-full px-6 py-3.5 text-sm font-semibold transition-all hover:bg-[var(--color-accent-hover)] flex items-center gap-2"
+                  className="rounded-xl bg-[#FF6B00] px-6 py-3.5 text-center text-sm font-bold text-white shadow-xs hover:bg-[#FF6B00]/90 active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
                   Get My Certification
                   <ArrowRight className="w-4 h-4" strokeWidth={2} />
                 </Link>
                 <a
                   href="#proficiency-levels"
-                  className="btn btn-secondary rounded-full px-6 py-3.5 text-sm font-semibold border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-all"
+                  className="rounded-xl border border-[#E5E7EB] bg-white px-6 py-3.5 text-center text-sm font-bold text-[#1A1A1A] hover:border-gray-400 hover:bg-gray-50 active:scale-95 transition-all shadow-xs"
                 >
                   Explore the levels
                 </a>
               </div>
             </div>
 
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-[420px] aspect-[1/0.8] bg-[#e8e2d9] rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-sm">
-                <div className="relative w-20 h-20 rounded-full bg-[var(--color-accent)]/20 flex items-center justify-center mb-3">
+            {/* Right Certificate Preview Card - Hidden on Mobile/Tablet, Only Visible on Large Screens */}
+            <div className="lg:col-span-5 hidden lg:flex justify-center">
+              <div className="relative w-full max-w-[380px] aspect-[4/3] bg-[#F7F7F8] border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-xs">
+                <div className="relative w-16 h-16 rounded-2xl bg-[#FF6B00]/10 flex items-center justify-center mb-4">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
-                    className="w-10 h-10 text-[var(--color-accent)]"
+                    className="w-8 h-8 text-[#FF6B00]"
                     aria-hidden="true"
                   >
                     <circle cx="12" cy="9" r="6" stroke="currentColor" strokeWidth="1.5" />
@@ -172,68 +174,81 @@ export default function CertificatePage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="absolute top-0 right-0 w-6 h-6 rounded-full bg-[var(--color-accent)] text-white flex items-center justify-center border-2 border-[#e8e2d9]">
-                    <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#FF6B00] text-white flex items-center justify-center border-2 border-white">
+                    <Check className="w-3 h-3" strokeWidth={3} />
                   </span>
                 </div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)] mb-1">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#FF6B00] mb-1">
                   Verified by Rivinity
                 </p>
-                <p className="font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--color-text-primary)] leading-tight">
+                <p className="text-xl font-bold text-[#1A1A1A] leading-tight">
                   Official Builder Certification
                 </p>
               </div>
             </div>
+
           </div>
         </section>
 
         {/* Trusted By Section */}
-        <section className="py-10 border-y border-[var(--color-border-subtle)]">
-          <div className="container text-center">
-            <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
-              <LogoMarquee />
+        <div className="py-8 sm:py-12 border-b border-[#E5E7EB] bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-6 text-center">
+            <p className="text-[#6B7280] text-xs font-bold uppercase tracking-widest mb-6">
+              Trusted by teams at
+            </p>
+
+            <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 lg:gap-16 opacity-60">
+              <span className="text-base sm:text-xl font-extrabold text-[#1A1A1A]">
+                Microsoft
+              </span>
+              <span className="text-base sm:text-xl font-extrabold text-[#1A1A1A]">
+                Google
+              </span>
+              <span className="text-base sm:text-xl font-extrabold text-[#1A1A1A]">
+                Adobe
+              </span>
+              <span className="text-base sm:text-xl font-extrabold text-[#1A1A1A]">
+                Atlassian
+              </span>
             </div>
           </div>
-        </section>
+        </div>
 
         {/* Proficiency Levels Section */}
-        <section id="proficiency-levels" className="section py-20 bg-[var(--color-bg-secondary)] px-20 mt-10">
-          <div className="container">
-            <div className="text-center max-w-160 mx-auto">
-              <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-accent)] mb-2 block">
-                Proficiency
-              </span>
-              <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-extrabold text-[var(--color-text-primary)] mb-4 tracking-tight">
+        <section id="proficiency-levels" className="section py-12 sm:py-20 bg-white">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-[#1A1A1A] mb-3 tracking-tight">
                 The 5 proficiency levels.
               </h2>
-              <p className="text-base text-[var(--color-text-secondary)] leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#6B7280] leading-relaxed">
                 Showcase your growth and expertise within the Rivinity ecosystem
                 with an officially recognized proficiency level.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {proficiencyLevels.map((level) => (
                 <div
                   key={level.level}
-                  className="bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-2xl p-6 flex flex-col gap-3 shadow-xs hover:border-[var(--color-accent)]/40 transition-colors"
+                  className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-3xl p-5 sm:p-6 flex flex-col justify-between shadow-xs hover:border-[#FF6B00]/40 transition-all hover:-translate-y-1 text-left"
                 >
-                  <span className="self-start bg-[var(--color-accent)] text-white text-[10px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-full">
-                    LEVEL {level.level}
-                  </span>
-                  <h3 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text-primary)]">
-                    {level.title}
-                  </h3>
-                  <ul className="flex flex-col gap-2 mt-1 pl-0">
-                    {level.points.map((point) => (
-                      <li
-                        key={point}
-                        className="relative pl-3.5 text-xs leading-relaxed text-[var(--color-text-secondary)] before:content-[''] before:absolute before:left-0 before:top-[7px] before:w-1.5 before:h-1.5"
-                      >
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
+                  <div>
+                    <span className="inline-block bg-[#FF6B00] text-white text-[10px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-full mb-4">
+                      LEVEL {level.level}
+                    </span>
+                    <h3 className="text-base sm:text-lg font-bold text-[#1A1A1A] mb-4">
+                      {level.title}
+                    </h3>
+                    <ul className="space-y-3 text-xs text-[#6B7280] leading-relaxed text-left p-0 m-0">
+                      {level.points.map((point) => (
+                        <li key={point} className="flex items-start gap-2 text-left">
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B00] shrink-0 mt-1.5" />
+                          <span className="flex-1">{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               ))}
             </div>
@@ -241,62 +256,58 @@ export default function CertificatePage() {
         </section>
 
         {/* How It Works Section */}
-        <section className="section py-20">
-          <div className= "bg-gray-50 rounded-3xl p-8 md:p-16">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-              <div className="lg:col-span-5">
-                <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-accent)] mb-3 block">
-                  How it works
-                </span>
-                <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-extrabold text-[var(--color-text-primary)] leading-tight mb-4">
-                  Certified in three
-                  <br />
-                  simple steps.
+        <section className="section py-12 sm:py-20 bg-[#F7F7F8] border-y border-[#E5E7EB]">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+              <div className="lg:col-span-5 text-left">
+                <h2 className="text-2xl sm:text-4xl font-extrabold text-[#1A1A1A] leading-tight mb-4">
+                  Certified in three simple steps.
                 </h2>
-                <p className="text-base text-[var(--color-text-secondary)] leading-relaxed mb-6">
+                <p className="text-xs sm:text-sm text-[#6B7280] leading-relaxed mb-6">
                   Getting your Rivinity certification is simple and automatic.
                 </p>
-                <p className="text-xs italic text-[var(--color-text-muted)]">
+                <p className="text-[11px] italic text-[#6B7280]">
                   * Please note that an active Rivinity subscription is required
                   to qualify for certification.
                 </p>
               </div>
 
               <div className="lg:col-span-7">
-                <ol className="relative flex flex-col gap-10 pl-6 border-l-2 border-border ml-2 list-none">
+                <div className="relative border-l-2 border-[#E5E7EB] pl-6 space-y-10 text-left">
                   {steps.map((step) => (
-                    <li key={step.number} className="relative pl-3">
-                      <span className="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-[var(--color-accent)] border-4 border-[#ece6de] mt-5" />
-                      <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-[var(--color-text-primary)] mb-2">
-                        {step.number}. {step.title}
+                    <div key={step.number} className="relative">
+                      {/* Clean solid orange dot marker */}
+                      <span className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-[#FF6B00] border-2 border-[#F7F7F8]" />
+                      <h3 className="text-base sm:text-lg font-bold text-[#1A1A1A] mb-1">
+                        {step.title}
                       </h3>
-                      <p className="text-sm leading-relaxed text-[var(--color-text-secondary)] max-w-lg">
+                      <p className="text-xs sm:text-sm text-[#6B7280] leading-relaxed max-w-lg">
                         {step.description}
                       </p>
-                    </li>
+                    </div>
                   ))}
-                </ol>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Features Section */}
-        <section className="section-sm">
-          <div>
+        <section className="section py-12 sm:py-20 bg-white">
+          <div className="container mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {features.map((feature) => (
                 <div
                   key={feature.title}
-                  className="bg-[var(--color-bg-secondary)] border border-[var(--color-border-subtle)] rounded-2xl p-8"
+                  className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 text-left"
                 >
-                  <div className="w-11 h-11 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] flex items-center justify-center mb-5">
+                  <div className="w-10 h-10 rounded-2xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center mb-4">
                     {feature.icon}
                   </div>
-                  <h3 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--color-text-primary)] mb-2">
+                  <h3 className="text-base sm:text-lg font-bold text-[#1A1A1A] mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                  <p className="text-xs sm:text-sm text-[#6B7280] leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -306,19 +317,19 @@ export default function CertificatePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="section pb-24">
-          <div className="container">
-            <div className="bg-gray-50 rounded-3xl p-10 md:p-16 text-center flex flex-col items-center justify-center">
-              <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+        <section className="section py-12 sm:py-20">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="bg-gray-50 border border-[#E5E7EB] rounded-3xl p-8 sm:p-12 lg:p-16 text-center flex flex-col items-center justify-center shadow-xs">
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#1A1A1A] mb-4 tracking-tight">
                 Ready to get certified?
               </h2>
-              <p className="text-base md:text-lg text-black max-w-[560px] mb-8 leading-relaxed">
+              <p className="text-xs sm:text-sm lg:text-base text-[#6B7280] max-w-xl mb-8 leading-relaxed">
                 Sign in with your Rivinity account to fetch your certification level
                 and add it to your professional profile.
               </p>
               <Link
                 href="/certifications/start"
-                className="btn-primary btn-primary:hover rounded-4xl px-8 py-4 text-sm font-bold shadow-md hover:bg-gray-100 transition-all flex items-center gap-2"
+                className="rounded-2xl bg-[#FF6B00] px-8 py-4 text-sm font-bold text-white shadow-xs hover:bg-[#FF6B00]/90 active:scale-95 transition-all flex items-center gap-2"
               >
                 Get My Certification
                 <ArrowRight className="w-4 h-4" strokeWidth={2} />
@@ -327,7 +338,8 @@ export default function CertificatePage() {
           </div>
         </section>
       </main>
+
       <Footer />
-    </>
+    </div>
   );
 }

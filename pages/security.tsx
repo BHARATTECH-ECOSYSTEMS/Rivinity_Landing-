@@ -84,7 +84,7 @@ export default function SecurityPage() {
       <Head>
         <title>Security & Trust — Rivinity</title>
       </Head>
-      <main className="min-h-screen pt-24 bg-[var(--color-bg-primary,#ffffff)]">
+      <main className="min-h-screen mt-20 bg-[var(--color-bg-primary,#ffffff)]">
         {/* Hero Section */}
         <section className="section py-16 md:py-20">
           <div className="container">

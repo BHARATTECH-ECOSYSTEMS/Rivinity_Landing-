@@ -2,13 +2,15 @@
 
 import React, { useState, useRef, useLayoutEffect } from "react";
 import {
-  Sparkles,
-  CheckCircle2,
   Bot,
   MessageSquare,
   GraduationCap,
   Wand2,
+  MonitorCloud,
+  Database,
+  Workflow,
 } from "lucide-react";
+import Image from "next/image";
 
 /* ============================================================
    TYPES & DATA DEFINITIONS
@@ -26,7 +28,7 @@ const rightPartners = [
 
 const features = [
   {
-    icon: Sparkles,
+    icon: MonitorCloud,
     title: "Unified Workspace",
     body: "Every studio shares the same canvas, memory, and history — nothing to stitch together manually.",
     badge: "Canvas V2",
@@ -50,7 +52,7 @@ const features = [
     ),
   },
   {
-    icon: CheckCircle2,
+    icon: Database,
     title: "Persistent Memory",
     body: "Context, files, and decisions carry from chat to agent to app — no restarts, no re-uploads.",
     badge: "ZERO LOSS",
@@ -83,7 +85,7 @@ const features = [
     ),
   },
   {
-    icon: Bot,
+    icon: Workflow,
     title: "Autonomous Workflows",
     body: "Route prompts, tools, and models automatically — Rivinity picks the right path per turn.",
     badge: "Smart Route",
@@ -179,9 +181,9 @@ export function WhyRivinity() {
 
         {/* Master Connected Canvas */}
         <div ref={mapRef} className="relative mx-auto w-full max-w-5xl">
-          
+
           {/* Top Node Row */}
-          <div className="relative z-10">
+          <div className="relative z-10 hidden md:block">
             {/* Top Side Connectors SVG */}
             <svg
               aria-hidden
@@ -197,11 +199,12 @@ export function WhyRivinity() {
                 </linearGradient>
               </defs>
               {(() => {
+                /* Updated paths with extended offsets clearing the central logo */
                 const paths = [
-                  { id: "l-top", d: "M 427 100 L 305 100 Q 290 100 290 85 L 290 75 Q 290 60 275 60 L 158 60" },
-                  { id: "l-bot", d: "M 427 100 L 305 100 Q 290 100 290 115 L 290 125 Q 290 140 275 140 L 158 140" },
-                  { id: "r-top", d: "M 573 100 L 695 100 Q 710 100 710 85 L 710 75 Q 710 60 725 60 L 842 60" },
-                  { id: "r-bot", d: "M 573 100 L 695 100 Q 710 100 710 115 L 710 125 Q 710 140 725 140 L 842 140" },
+                  { id: "l-top", d: "M 475 100 L 290 100 Q 275 100 275 85 L 275 75 Q 275 60 260 60 L 110 60" },
+                  { id: "l-bot", d: "M 380 100 L 290 100 Q 275 100 275 115 L 275 125 Q 275 140 260 140 L 110 140" },
+                  { id: "r-top", d: "M 525 100 L 710 100 Q 725 100 725 85 L 725 75 Q 725 60 740 60 L 890 60" },
+                  { id: "r-bot", d: "M 620 100 L 710 100 Q 725 100 725 115 L 725 125 Q 725 140 740 140 L 890 140" },
                 ];
                 return (
                   <>
@@ -220,16 +223,16 @@ export function WhyRivinity() {
               })()}
             </svg>
 
-            <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 sm:gap-6 min-h-[160px] z-10">
+            <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-4 sm:gap-6 min-h-40 z-10">
               <div className="flex flex-row md:flex-col gap-3 justify-center items-center md:items-start">
                 {leftPartners.map(({ name, icon: Icon }) => (
                   <div
                     key={name}
-                    className="bg-white border border-gray-200 rounded-2xl shadow-xs px-4 py-3 flex items-center gap-3 w-full sm:w-44 hover:border-gray-400 transition-all hover:-translate-y-0.5"
+                    className="bg-white border border-gray-200 rounded-2xl shadow-xs ml-12 p-3 hover:border-gray-400 transition-all hover:-translate-y-0.5"
                   >
-                    <div className="w-8 h-8 rounded-xl bg-gray-100 text-[#1A1A1A] flex items-center justify-center shrink-0">
+                    {/* <div className="w-8 h-8 rounded-xl bg-gray-100 text-[#1A1A1A] flex items-center justify-center shrink-0">
                       <Icon size={16} />
-                    </div>
+                    </div> */}
                     <span className="text-xs font-bold text-[#1A1A1A] truncate">{name}</span>
                   </div>
                 ))}
@@ -239,7 +242,7 @@ export function WhyRivinity() {
               <div className="flex items-center justify-center my-4 md:my-0" data-testid="rivinity-center-pill">
                 <div
                   ref={pillRef}
-                  className="relative rounded-full px-6 py-3.5 flex items-center gap-3 shadow-md border border-gray-800 bg-[#1A1A1A] z-10"
+                  className="relative rounded-full px-6 py-3 flex items-center justify-center z-10"
                 >
                   <span
                     aria-hidden
@@ -248,9 +251,14 @@ export function WhyRivinity() {
                       background: "radial-gradient(circle, rgba(249,115,22,0.35) 0%, transparent 80%)",
                     }}
                   />
-                  <span className="text-white font-extrabold tracking-tight text-base sm:text-lg">
-                    Rivinity Engine
-                  </span>
+                  <Image
+                    src="/logo.png"
+                    alt="Rivinity Logo"
+                    width={120}
+                    height={32}
+                    className="h-30 w-auto object-contain"
+                    priority
+                  />
                 </div>
               </div>
 
@@ -258,11 +266,11 @@ export function WhyRivinity() {
                 {rightPartners.map(({ name, icon: Icon }) => (
                   <div
                     key={name}
-                    className="bg-white border border-gray-200 rounded-2xl shadow-xs px-4 py-3 flex items-center gap-3 w-full sm:w-44 hover:border-gray-400 transition-all hover:-translate-y-0.5"
+                    className="bg-white border border-gray-200 rounded-2xl shadow-xs mr-12 p-3  hover:border-gray-400 transition-all hover:-translate-y-0.5"
                   >
-                    <div className="w-8 h-8 rounded-xl bg-gray-100 text-[#1A1A1A] flex items-center justify-center shrink-0">
+                    {/* <div className="w-8 h-8 rounded-xl bg-gray-100 text-[#1A1A1A] flex items-center justify-center shrink-0">
                       <Icon size={16} />
-                    </div>
+                    </div> */}
                     <span className="text-xs font-bold text-[#1A1A1A] truncate">{name}</span>
                   </div>
                 ))}
@@ -270,7 +278,7 @@ export function WhyRivinity() {
             </div>
           </div>
 
-          <div className="h-16 md:h-24" />
+          <div className="hidden md:block h-16 md:h-24" />
 
           {/* Bottom SVG Overlay Lines & Subtle Orange Traveling Pulse Dots */}
           {connectors && (
@@ -284,17 +292,19 @@ export function WhyRivinity() {
                 const bend = 16;
 
                 const paths = cardTops.map((ct, i) => {
+                  const startY = pillBottom.y - 40; // Shift start point higher up
+
                   if (Math.abs(ct.x - pillBottom.x) < 30) {
                     return {
                       id: `trunk-${i}`,
-                      d: `M ${pillBottom.x} ${pillBottom.y} L ${ct.x} ${ct.y}`,
+                      d: `M ${pillBottom.x} ${startY} L ${ct.x} ${ct.y}`,
                     };
                   }
-                  
+
                   const dir = ct.x > pillBottom.x ? 1 : -1;
                   return {
                     id: `trunk-${i}`,
-                    d: `M ${pillBottom.x} ${pillBottom.y}
+                    d: `M ${pillBottom.x} ${startY}
                         L ${pillBottom.x} ${busY - bend}
                         Q ${pillBottom.x} ${busY} ${pillBottom.x + dir * bend} ${busY}
                         L ${ct.x - dir * bend} ${busY}
@@ -365,7 +375,7 @@ export function WhyRivinity() {
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-4">
-                      <div className="w-10 h-10 rounded-2xl bg-[#1A1A1A] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:bg-[#F97316] transition-colors">
+                      <div className="w-10 h-10 rounded-2xl text-black flex items-center justify-center shrink-0 bg-orange-400/50 group-hover:bg-orange-400 transition-colors">
                         <IconComp size={20} />
                       </div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-gray-600 bg-gray-100 px-2.5 py-1 rounded-full border border-gray-200">

@@ -138,7 +138,6 @@ export default function ResearchPapersPage() {
           <section className="section py-12 md:py-16">
             <div className="container">
               <div className="flex items-center gap-2 mb-8">
-                <Sparkles size={18} className="text-[#FF6B00]" />
                 <h2 className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A]">
                   Featured Publications
                 </h2>

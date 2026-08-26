@@ -422,10 +422,10 @@ export default function BlogPage() {
 
       <Header />
 
-      <main className="container">
+      <main className="container mt-10">
         {/* HERO / FEATURED SECTION */}
         <section className="section">
-          <div className="container mx-auto max-w-7xl px-6 pb-20 pt-20 sm:px-8 lg:px-12">
+          <div className="container mx-auto max-w-7xl px-6 pb-20 sm:px-8 lg:px-12">
             <div className="flex items-end justify-between gap-6 pb-4">
               <div>
                 <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl text-neutral-950">
@@ -469,12 +469,9 @@ export default function BlogPage() {
 
         {/* RESEARCH BLOG SECTION */}
         <section className="section-sm bg-gray-50">
-          <div className="container mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+          <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
             <div className="flex items-end justify-between gap-6">
               <div>
-                <span className="text-[11px] font-semibold tracking-widest text-blue-600 uppercase">
-                  Rivinity Labs
-                </span>
                 <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl text-neutral-950">
                   Research blog
                 </h2>
@@ -540,8 +537,8 @@ export default function BlogPage() {
         </section>
 
         {/* LATEST BLOG POSTS */}
-        <section className="section bg-gray-50">
-          <div className="container mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-12">
+        <section className="section-sm bg-gray-50">
+          <div className="container mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
             <h2 className="text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl">
               Latest blog posts
             </h2>
@@ -578,18 +575,6 @@ export default function BlogPage() {
                 </div>
               )}
             </div>
-
-            {visiblePosts < filteredLatestPosts.length && (
-              <div className="flex justify-center pt-10">
-                <button
-                  type="button"
-                  onClick={() => setVisiblePosts((current) => current + 3)}
-                  className="rounded-full bg-neutral-900 px-8 py-3 text-xs font-medium text-white shadow-sm transition hover:bg-neutral-800"
-                >
-                  Load more
-                </button>
-              </div>
-            )}
           </div>
         </section>
 

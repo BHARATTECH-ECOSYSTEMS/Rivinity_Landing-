@@ -165,7 +165,7 @@ export default function LogoMarquee({
   title?: string;
 }) {
   return (
-    <section className="section-sm border-y border-gray-100">
+    <section className="section">
       <div className="container text-center">
         <p className="text-muted text-sm mb-6">{title}</p>
         <div className="flex justify-center items-center w-full">

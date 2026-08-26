@@ -85,12 +85,9 @@ export default function TeamPage() {
       <Header />
       <main className="min-h-screen pt-24 bg-[var(--color-bg-primary,#ffffff)]">
         {/* Hero Section */}
-        <section className="section py-16 md:py-20">
+        <section className="section-sm py-16 md:py-20">
           <div className="container">
             <div className="text-center max-w-3xl mx-auto">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#FF6B00] mb-3 block">
-                Our Team
-              </span>
               <h1 className="text-4xl font-extrabold tracking-tight text-[#1A1A1A] sm:text-5xl lg:text-6xl w-full max-w-none">
                 The minds behind <span className="text-[#FF6B00]">Rivinity</span>
               </h1>

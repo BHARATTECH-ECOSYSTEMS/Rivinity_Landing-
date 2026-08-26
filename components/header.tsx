@@ -143,7 +143,7 @@ const navItems: NavItem[] = [
         items: [
           {
             label: "Enterprise",
-            href: "/contact",
+            href: "/enterprise",
             description: "Scale Rivinity across your org with security & controls",
           },
           {
@@ -193,7 +193,7 @@ const navItems: NavItem[] = [
         items: [
           { label: "About", href: "/about" },
           { label: "Team", href: "/team" },
-          { label: "Careers", href: "/carrers" },
+          { label: "Careers", href: "/careers" },
           { label: "Certificate", href: "/certificate" },
           { label: "Contact", href: "/contact" },
         ],
@@ -238,7 +238,7 @@ function PlatformDropdownPanel({
               onClick={onNavigate}
               className="group relative flex items-start gap-3 rounded-lg p-3 hover:bg-black/5 transition-colors"
             >
-              <Icon className="h-5 w-5 mt-0.5 text-gray-500 group-hover:text-gray-900 transition-colors shrink-0" />
+              {/* <Icon className="h-5 w-5 mt-0.5 text-gray-500 group-hover:text-gray-900 transition-colors shrink-0" /> */}
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-900">{product.label}</span>

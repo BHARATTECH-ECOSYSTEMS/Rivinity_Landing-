@@ -63,7 +63,7 @@ export default function AboutPage() {
     <>
       <div className="container">
         <Header />
-        <main className="rp-main">
+        <main className="rp-main mt-20">
           {/* Hero */}
           <section className="rp-hero">
             <div className="rp-container">
@@ -127,9 +127,9 @@ export default function AboutPage() {
           {/* CTA */}
           <section className="rp-cta">
             <div className="rp-container">
-              <h2 className="rp-ctaHeading w-full max-w-none text-center">
+              <div className="rp-ctaHeading">
                 Join us in democratizing software creation
-              </h2>
+              </div>
               <Link href="/careers" className="rp-ctaLink">
                 See our open positions →
               </Link>

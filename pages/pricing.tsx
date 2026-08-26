@@ -142,7 +142,7 @@ export default function PricingPage() {
       <Head>
         <title>Pricing - Rivinity</title>
       </Head>
-      <main className="min-h-screen overflow-x-hidden pt-24 container">
+      <main className="min-h-screen overflow-x-hidden mt-15 container">
         <section className="section-sm mt-10">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-12 text-center max-w-3xl mx-auto">
@@ -270,11 +270,11 @@ export default function PricingPage() {
         </section>
 
         {/* Disclaimer */}
-        <section className="">
+        <div>
           <p className="mx-auto max-w-3xl text-center text-xs text-[#6B7280]">
             *Prices are subject to tax depending on your location. Rivinity Agent is powered by large language models. While it can produce powerful results, its behavior is probabilistic meaning it may occasionally make mistakes.
           </p>
-        </section>
+        </div>
 
         {/* FAQ Section */}
         <section className="section-sm ">

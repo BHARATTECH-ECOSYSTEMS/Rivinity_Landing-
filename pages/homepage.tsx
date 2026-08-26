@@ -43,7 +43,7 @@ import {
   MessageSquare,
   Bot,
 } from "lucide-react";
-
+import { Warp } from "@paper-design/shaders-react";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 // Adjust these two paths to match where these components actually live
@@ -200,7 +200,7 @@ function WhatWillYouBuild() {
       <div className="relative z-10 w-full max-w-7xl">
         <ContainerScroll
           titleComponent={
-            <section className="py-20 sm:px-8 lg:px-12">
+            <div className="py-20 sm:px-8 lg:px-12">
               <div className="mx-auto max-w-6xl text-center">
                 <h1 className="mx-auto max-w-4xl text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-7xl">
                   Build with AI that actually understands your code
@@ -219,7 +219,7 @@ function WhatWillYouBuild() {
                   </Link>
                 </div>
               </div>
-            </section>
+            </div>
           }
         >
           <HeroWorkflow />
@@ -654,7 +654,7 @@ function PoweredByRivinity({ className = "" }: PoweredByRivinityType) {
 
       {/* Horizontal Tabs Row (Scrollable on mobile) */}
       <div className="w-full flex items-center justify-start sm:justify-center overflow-x-auto pb-3 mb-4 sm:mb-6 scrollbar-none -mx-3 px-3 sm:mx-0 sm:px-0">
-        <div className="flex items-center gap-1 sm:gap-1.5 bg-gray-50 p-4 sm:p-1.5 rounded-2xl border border-black/5 shrink-0">
+        <div className="flex items-center justify-between gap-4 bg-gray-50 p-2 rounded-2xl border border-black/5 shrink-0">
           {USE_CASES.map((uc) => {
             const Icon = uc.icon;
             const isActive = activeTab.id === uc.id;
@@ -663,15 +663,15 @@ function PoweredByRivinity({ className = "" }: PoweredByRivinityType) {
               <button
                 key={uc.id}
                 onClick={() => setActiveTab(uc)}
-                className={`relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition-all duration-200 shrink-0 ${isActive
+                className={`relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-md font-semibold transition-all duration-200 shrink-0 ${isActive
                   ? "bg-white text-[#191818] shadow-xs scale-[1.01]"
                   : "text-[#191818]/60 hover:text-[#191818] hover:bg-white/50"
                   }`}
               >
-                <Icon
+                {/* <Icon
                   className="w-3.5 h-3.5 transition-colors shrink-0"
                   style={{ color: isActive ? uc.accentColor : "currentColor" }}
-                />
+                /> */}
                 <span className="whitespace-nowrap">{uc.tabLabel}</span>
 
                 {/* Subtle active highlight dot */}
@@ -786,68 +786,88 @@ function PoweredByRivinity({ className = "" }: PoweredByRivinityType) {
 // ============================================================
 // AI bento features
 // ============================================================
-function AIBentoFeatures() {
+export function AIBentoFeatures() {
+  const bentoItems = [
+    {
+      step: "01",
+      title: "Intelligent Orchestrator",
+      description:
+        "Automatically routes your prompts to the most capable model for the task, balancing speed, cost, and complex reasoning in real-time.",
+      badge: "Real-time Routing",
+    },
+    {
+      step: "02",
+      title: "Infinite Context Memory",
+      description:
+        "Never repeat yourself. The AI remembers your past sessions, files, and preferences across all studios.",
+      badge: "Zero-loss State",
+    },
+    {
+      step: "03",
+      title: "One-Click Deploy",
+      description:
+        "From a local development environment to a globally distributed edge network in seconds. Zero DevOps required.",
+      badge: "Global Edge",
+    },
+  ];
+
   return (
-    <section className="section">
-      <div className="container">
-        <div className="text-center mb-16">
-          <h2 className="mx-auto">Everything you need to build faster</h2>
-          <p className="text-secondary mx-auto mt-4">
-            A complete suite of AI-powered tools designed to supercharge your workflow from idea to
-            production.
+    <div className="container mt-25 mb-25 text-[#1A1A1A]">
+      <div className="section-sm mx-auto px-5 sm:px-8 max-w-6xl">
+        
+        {/* Header Section */}
+        <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20 space-y-4">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#1A1A1A] leading-[1.1]">
+            Everything you need to build faster
+          </h2>
+          <p className="text-xs sm:text-base text-[#6B7280] leading-relaxed font-medium max-w-lg mx-auto">
+            A complete suite of AI-powered tools designed to supercharge your workflow from idea to production.
           </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="card">
-            <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 5.562 5.562A4 4 0 0 0 12 19a3 3 0 1 0 5.997-.125 4 4 0 0 0 2.526-5.77 4 4 0 0 0-5.562-5.562A4 4 0 0 0 12 5z" />
-                <path d="M12 12h.01" />
-                <path d="M16 12h.01" />
-                <path d="M12 16h.01" />
-                <path d="M12 8h.01" />
-                <path d="M8 12h.01" />
-              </svg>
-            </div>
-            <h3>Intelligent Orchestrator</h3>
-            <p className="text-secondary mt-2">
-              Automatically routes your prompts to the most capable model for the task, balancing speed,
-              cost, and complex reasoning in real-time.↪
-            </p>
-          </div>
-          <div className="card">
-            <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
-                <path d="m22 12.5-8.58 3.91a2 2 0 0 1-1.66 0L3.18 12.5" />
-                <path d="m22 17.5-8.58 3.91a2 2 0 0 1-1.66 0L3.18 17.5" />
-              </svg>
-            </div>
-            <h3>Infinite Context Memory</h3>
-            <p className="text-secondary mt-2">
-              Never repeat yourself. The AI remembers your past sessions, files, and preferences across all
-              ↪
-              studios.
-            </p>
-          </div>
-          <div className="card">
-            <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                <path d="M2 12h20" />
-              </svg>
 
+        {/* Bento Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          {bentoItems.map((item) => (
+            <div
+              key={item.title}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white p-8 transition-all duration-300 hover:border-[#1A1A1A]/30 hover:-translate-y-1 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
+            >
+              {/* Subtle Ambient Hover Effect */}
+              <div className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-black/[0.02] blur-2xl transition-all duration-500 group-hover:scale-150" />
+
+              {/* Card Top: Step Number & Badge */}
+              <div>
+                <div className="flex items-center justify-between mb-8">
+                  <span className="font-mono text-xs font-bold text-[#6B7280] tracking-widest">
+                    {item.step}
+                  </span>
+                  <span className="rounded-full border border-[#E5E7EB] bg-[#F7F7F8] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A] transition-colors group-hover:border-gray-300">
+                    {item.badge}
+                  </span>
+                </div>
+
+                {/* Card Main Header & Text */}
+                <h3 className="text-xl font-bold tracking-tight text-[#1A1A1A] mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-xs sm:text-sm leading-relaxed text-[#6B7280] font-normal">
+                  {item.description}
+                </p>
+              </div>
+
+              {/* Card Bottom: Minimalist Indicator Line */}
+              <div className="mt-8 pt-6 border-t border-[#E5E7EB] flex items-center justify-between">
+                <span className="text-[11px] font-semibold tracking-wider text-[#6B7280] uppercase">
+                  Overview
+                </span>
+                <div className="h-[2px] w-6 bg-gray-300 rounded-full transition-all duration-300 group-hover:w-12 group-hover:bg-[#1A1A1A]" />
+              </div>
             </div>
-            <h3>One-Click Deploy</h3>
-            <p className="text-secondary mt-2">
-              From a local development environment to a globally distributed edge network in seconds. Zero
-              DevOps required.↪
-            </p>
-          </div>
+          ))}
         </div>
+
       </div>
-    </section >
+    </div>
   );
 }
 // ============================================================
@@ -940,7 +960,7 @@ function ResearchCardItem({ card }: { card: ResearchCard }) {
       href={card.href}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group relative shrink-0 w-[240px] sm:w-[264px] h-[320px] sm:h-[340px] snap-start rounded-2xl border border-[#EDEAE4] bg-white p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-[0_2px_10px_rgba(17,26,74,0.04)] transition-all duration-300 hover:shadow-[0_10px_30px_rgba(255,60,0,0.10)]"
+      className="group relative w-full min-w-full sm:w-[264px] sm:min-w-0 shrink-0 h-[320px] sm:h-[340px] snap-start rounded-2xl border border-[#EDEAE4] bg-white p-5 sm:p-6 flex flex-col justify-between overflow-hidden shadow-[0_2px_10px_rgba(17,26,74,0.04)] transition-all duration-300 hover:shadow-[0_10px_30px_rgba(255,60,0,0.10)]"
     >
       {/* Background gradient, fades in on hover */}
       <div
@@ -1033,7 +1053,7 @@ function ResearchSection() {
         {/* Card Rail */}
         <div
           ref={scrollRef}
-          className="flex gap-4 sm:gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6"
+          className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {RESEARCH_CARDS.map((card) => (
@@ -1135,7 +1155,7 @@ function TestimonialsSection() {
   const current = TESTIMONIALS[active];
 
   return (
-    <section className="section py-20 bg-[var(--color-bg-primary,#ffffff)] border-y border-[#E5E7EB] overflow-hidden">
+    <section className="section py-20 bg-[var(--color-bg-primary,#ffffff)] overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto">
@@ -1267,10 +1287,10 @@ const FAQS: FaqItem[] = [
 ];
 
 function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>();
 
   return (
-    <section className="w-full section-sm bg-gray-50">
+    <section className="w-full section-sm ">
       <div className="container">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-center">Your questions, our answers
@@ -1328,7 +1348,7 @@ function FaqSection() {
 function Cta() {
   return (
     <section className="container">
-      <div className="section-sm text-center">
+      <div className="section-sm text-center bg-gray-50 rounded-4xl">
         <h2 className="mx-auto">Ready to ship faster?</h2>
         <p className="text-secondary mx-auto mt-4 text-lg">
           Join thousands of developers building with AI.
@@ -1349,7 +1369,6 @@ export {
   LogoMarquee,
   PoweredByRivinity,
   WhyRivinity,
-  AIBentoFeatures,
   ResearchSection,
   TestimonialsSection,
   FaqSection,

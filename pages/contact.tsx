@@ -59,7 +59,7 @@ export default function ContactPage() {
               {/* Left Column: Contact Cards */}
               <div className="lg:col-span-5 space-y-6">
                 <div className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-2xl p-6 flex items-start gap-4 shadow-xs">
-                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
                     <Mail size={20} />
                   </div>
                   <div>
@@ -72,7 +72,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-2xl p-6 flex items-start gap-4 shadow-xs">
-                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
                     <MessageSquare size={20} />
                   </div>
                   <div>
@@ -85,7 +85,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-2xl p-6 flex items-start gap-4 shadow-xs">
-                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
                     <MapPin size={20} />
                   </div>
                   <div>

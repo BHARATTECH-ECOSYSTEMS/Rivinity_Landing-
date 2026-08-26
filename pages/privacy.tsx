@@ -1,8 +1,10 @@
+"use client";
+
 import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
-import Header from "../components/header";  
+import { ChevronDown, ArrowLeft } from "lucide-react";
+import Header from "../components/header";
 import Footer from "../components/footer";
 
 type Block = {
@@ -24,7 +26,8 @@ const sections: Section[] = [
     id: "personal-data-we-collect",
     number: "1",
     heading: "Personal Data We Collect",
-    summary: "The categories below describe the Personal Data we collect from or about you when you provide the Services.",
+    summary:
+      "The categories below describe the Personal Data we collect from or about you when you provide the Services.",
     blocks: [
       {
         subheading: "Registration and Profile Data.",
@@ -64,7 +67,8 @@ const sections: Section[] = [
     id: "how-we-collect-or-receive",
     number: "2",
     heading: "How We Collect or Receive Personal Data",
-    summary: "We gather information directly from you, automatically through use, and from third-party sources.",
+    summary:
+      "We gather information directly from you, automatically through use, and from third-party sources.",
     blocks: [
       {
         subheading: "Your Use of the Services.",
@@ -96,22 +100,45 @@ const sections: Section[] = [
     id: "how-we-use-personal-data",
     number: "3",
     heading: "How We Use Personal Data",
-    summary: "We utilize personal data to operate, secure, enhance, and market our services effectively.",
+    summary:
+      "We utilize personal data to operate, secure, enhance, and market our services effectively.",
     blocks: [
-      { subheading: "For Account and Profile Registration.", body: "To verify your identity and set up your user account profile." },
-      { subheading: "To Provide and Maintain Our Services.", body: "To deliver core functionalities, execute commands, and process your project files." },
-      { subheading: "To Communicate With You.", body: "To send service updates, technical notices, security alerts, and support messages." },
-      { subheading: "For Marketing Purposes.", body: "To send promotional communications about new features, updates, and events where permitted." },
-      { subheading: "To Analyze, Maintain, and Enhance Our Services.", body: "To monitor usage trends, run analytics, and improve user experience and AI performance." },
-      { subheading: "For Preventing Fraud, Security, and Other Malicious Activity.", body: "To detect, prevent, and respond to potential security threats, fraud, or violations." },
-      { subheading: "For Legal and Compliance Purposes.", body: "To comply with legal obligations, legal processes, and enforce our terms." },
+      {
+        subheading: "For Account and Profile Registration.",
+        body: "To verify your identity and set up your user account profile.",
+      },
+      {
+        subheading: "To Provide and Maintain Our Services.",
+        body: "To deliver core functionalities, execute commands, and process your project files.",
+      },
+      {
+        subheading: "To Communicate With You.",
+        body: "To send service updates, technical notices, security alerts, and support messages.",
+      },
+      {
+        subheading: "For Marketing Purposes.",
+        body: "To send promotional communications about new features, updates, and events where permitted.",
+      },
+      {
+        subheading: "To Analyze, Maintain, and Enhance Our Services.",
+        body: "To monitor usage trends, run analytics, and improve user experience and AI performance.",
+      },
+      {
+        subheading: "For Preventing Fraud, Security, and Other Malicious Activity.",
+        body: "To detect, prevent, and respond to potential security threats, fraud, or violations.",
+      },
+      {
+        subheading: "For Legal and Compliance Purposes.",
+        body: "To comply with legal obligations, legal processes, and enforce our terms.",
+      },
     ],
   },
   {
     id: "how-we-share-or-disclose",
     number: "4",
     heading: "How We Share or Disclose Personal Data",
-    summary: "We share personal data with trusted vendors, partners, and under specific legal compliance guidelines.",
+    summary:
+      "We share personal data with trusted vendors, partners, and under specific legal compliance guidelines.",
     blocks: [
       {
         subheading: "Service Providers.",
@@ -147,10 +174,11 @@ const sections: Section[] = [
     id: "your-privacy-rights",
     number: "5",
     heading: "Your Privacy Rights and Choices",
-    summary: "You retain rights to manage, access, or delete your personal information.",
+    summary:
+      "You retain rights to manage, access, or delete your personal information.",
     blocks: [
       {
-        subheading: "Your Privacy Rights",
+        subheading: "Your Privacy Rights.",
         body: "Depending on your jurisdiction, you may have legal rights concerning your data:",
         list: [
           "Access and Data Portability",
@@ -161,11 +189,11 @@ const sections: Section[] = [
         ],
       },
       {
-        subheading: "Exercising Your Rights",
+        subheading: "Exercising Your Rights.",
         body: "You can submit a rights request by contacting us directly. We will complete identity verification and support authorized-agent processes where applicable.",
       },
       {
-        subheading: "Additional Choices and Preferences",
+        subheading: "Additional Choices and Preferences.",
         list: [
           "Marketing Communications — unsubscribe via the link provided in any promotional email.",
           "App Notification Preferences — update toggle settings directly inside your account profile.",
@@ -177,18 +205,19 @@ const sections: Section[] = [
     id: "additional-jurisdictional-disclosures",
     number: "6",
     heading: "Additional Jurisdictional Disclosures",
-    summary: "Specific regional provisions apply depending on whether you reside in the EU, UK, or under state laws like the CCPA.",
+    summary:
+      "Specific regional provisions apply depending on whether you reside in the EU, UK, or under state laws like the CCPA.",
     blocks: [
       {
-        subheading: "Legal Bases",
+        subheading: "Legal Bases.",
         body: "If subject to GDPR or UK GDPR, we process data based on consent, contract fulfillment, compliance with legal obligations, and legitimate business interests.",
       },
       {
-        subheading: "EU Representative and Your Rights",
+        subheading: "EU Representative and Your Rights.",
         body: "EEA and UK users can exercise rights or file complaints with their local supervisory authority by reaching out to our designated privacy contact.",
       },
       {
-        subheading: "Cookies",
+        subheading: "Cookies.",
         body: "We use cookie categories to optimize site performance and delivery:",
         list: [
           "Strictly Necessary Cookies",
@@ -198,7 +227,7 @@ const sections: Section[] = [
         ],
       },
       {
-        subheading: "Notice at Collection",
+        subheading: "Notice at Collection.",
         body: "A summary of data categories collected, processing purposes, and sharing practices under state privacy laws like the CCPA is detailed in preceding sections.",
       },
     ],
@@ -218,7 +247,8 @@ const sections: Section[] = [
     id: "security",
     number: "8",
     heading: "Security",
-    summary: "We employ technical and organizational safeguards to protect your personal data.",
+    summary:
+      "We employ technical and organizational safeguards to protect your personal data.",
     blocks: [
       {
         body: "We implement industry-standard technical and organizational security measures to protect data against unauthorized access, loss, or alteration. However, no method of transmission over the internet or electronic storage is 100% secure.",
@@ -229,7 +259,8 @@ const sections: Section[] = [
     id: "third-party-sites",
     number: "9",
     heading: "Third Party Sites",
-    summary: "External sites linked through our platform operate under their own independent policies.",
+    summary:
+      "External sites linked through our platform operate under their own independent policies.",
     blocks: [
       {
         body: "Links to third-party websites or services are not covered by this Privacy Policy. We encourage you to review the separate privacy policies of any third-party services you visit.",
@@ -240,7 +271,8 @@ const sections: Section[] = [
     id: "cross-border-transfers",
     number: "10",
     heading: "Cross-Border Data Transfers",
-    summary: "Your data may be hosted and processed internationally using compliant legal safeguards.",
+    summary:
+      "Your data may be hosted and processed internationally using compliant legal safeguards.",
     blocks: [
       {
         body: "Rivinity's services are hosted and processed globally. Your personal data may be transferred to and processed in countries outside your home jurisdiction, supported by appropriate legal data protection safeguards.",
@@ -251,7 +283,8 @@ const sections: Section[] = [
     id: "changes",
     number: "11",
     heading: "Changes",
-    summary: "We will provide notice whenever material modifications are made to this policy.",
+    summary:
+      "We will provide notice whenever material modifications are made to this policy.",
     blocks: [
       {
         body: "We may update this Privacy Policy from time to time. When we make material changes, we will notify you through the Services or via email prior to the changes taking effect.",
@@ -262,7 +295,8 @@ const sections: Section[] = [
     id: "contact",
     number: "12",
     heading: "Contact",
-    summary: "Get in touch with our team if you have questions or concerns regarding your privacy.",
+    summary:
+      "Get in touch with our team if you have questions or concerns regarding your privacy.",
     blocks: [
       {
         body: "If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at privacy@rivinity.com or via mail at Rivinity Privacy Team.",
@@ -275,7 +309,7 @@ export default function PrivacyPolicyPage() {
   const [openPreviousVersions, setOpenPreviousVersions] = useState(false);
 
   return (
-    <>
+    <div className="min-h-screen bg-white text-[#1A1A1A] font-sans antialiased">
       <Head>
         <title>Privacy Policy - Rivinity</title>
         <meta
@@ -283,99 +317,107 @@ export default function PrivacyPolicyPage() {
           content="Read Rivinity's Privacy Policy to learn how we collect, use, and protect your personal data."
         />
       </Head>
-      <Header/>
+      <Header />
 
-      <main className="container">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-10 pt-20 pb-20">
-          <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-[#1a1a1a]">
-            Privacy Policy
-          </h1>
-          <p className="mt-3 text-sm text-gray-500">
-            Last updated: August 20, 2026
-          </p>
+      <main className="pt-20 pb-20">
+        <div className="mx-auto px-4 sm:px-6 max-w-3xl">
+          
+          {/* Header Container */}
+          <div className="border-b border-[#E5E7EB] pb-6 mb-8">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#1A1A1A]">
+              Privacy Policy
+            </h1>
+            <p className="mt-1.5 text-xs font-medium text-[#6B7280]">
+              Last updated: August 20, 2026
+            </p>
 
-          {/* Previous versions dropdown pattern */}
-          <div className="mt-2">
-            <button
-              onClick={() => setOpenPreviousVersions((v) => !v)}
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
-            >
-              Previous Versions
-              <ChevronDown
-                size={14}
-                className={`transition-transform ${openPreviousVersions ? "rotate-180" : ""}`}
-              />
-            </button>
-            {openPreviousVersions && (
-              <ul className="mt-2 flex flex-col gap-1 text-sm">
-                <li>
-                  <a href="#" className="text-[#FF5A1F] hover:underline">
-                    August 20, 2025 — Initial Release Archive
-                  </a>
-                </li>
-              </ul>
-            )}
+            {/* Dropdown Container */}
+            <div className="mt-2">
+              <button
+                onClick={() => setOpenPreviousVersions((v) => !v)}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#6B7280] hover:text-[#1A1A1A] transition-colors cursor-pointer"
+              >
+                <span>Previous Versions</span>
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform duration-200 ${
+                    openPreviousVersions ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {openPreviousVersions && (
+                <ul className="mt-1.5 text-xs font-medium">
+                  <li>
+                    <a href="#" className="text-[#FF6B00] hover:underline">
+                      August 20, 2025 — Initial Release Archive
+                    </a>
+                  </li>
+                </ul>
+              )}
+            </div>
+
+            {/* Introductory Notice Container */}
+            <div className="mt-4 rounded-xl border border-[#E5E7EB] bg-[#F7F7F8] p-4 text-xs leading-relaxed text-[#6B7280]">
+              Rivinity, Inc., its subsidiaries and affiliates value the privacy of individuals who use our website and related Services (collectively, the "Services"). This privacy policy ("Privacy Policy") explains how we collect, use, and share Personal Data about you when providing our Services. Beyond this Privacy Policy, your use of our Services is also subject to our{" "}
+              <Link href="/terms" className="text-[#FF6B00] font-bold hover:underline">
+                Terms of Service
+              </Link>
+              .
+            </div>
           </div>
 
-          <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-5 text-sm text-gray-700">
-            Rivinity, Inc., its subsidiaries and affiliates value the privacy of individuals who use our website and related Services (collectively, the "Services"). This privacy policy ("Privacy Policy") explains how we collect, use, and share Personal Data about you when providing our Services. Beyond this Privacy Policy, your use of our Services is also subject to our{" "}
-            <Link href="/terms" className="text-[#FF5A1F] hover:underline">
-              Terms of Service
-            </Link>
-            .
-          </div>
-
-          <div className="mt-10 flex flex-col gap-12">
+          {/* Main Block Stack Container */}
+          <div className="space-y-8">
             {sections.map((section) => (
-              <section key={section.id} id={section.id}>
-                <h2 className="text-2xl font-semibold text-gray-900">
+              <div key={section.id} id={section.id}>
+                <h2 className="text-lg sm:text-xl font-bold text-[#1A1A1A] tracking-tight">
                   {section.number}. {section.heading}
                 </h2>
                 {section.summary && (
-                  <p className="mt-2 text-sm font-medium text-gray-500">{section.summary}</p>
+                  <p className="mt-1 text-xs sm:text-sm font-semibold text-[#6B7280]">
+                    {section.summary}
+                  </p>
                 )}
 
-                <div className="mt-4 flex flex-col gap-4">
+                <div className="mt-3 space-y-3">
                   {section.blocks.map((block, idx) => (
-                    <div key={idx}>
-                      {block.subheading && (
-                        <h3 className="text-base font-semibold text-gray-900">
-                          {block.subheading}
-                        </h3>
-                      )}
-                      {block.body && (
-                        <p className="mt-1 text-sm leading-relaxed text-gray-700">
+                    <div key={idx} className="text-xs sm:text-sm leading-relaxed text-[#6B7280]">
+                      {block.subheading ? (
+                        <p>
+                          <span className="font-bold text-[#1A1A1A] mr-1.5">
+                            {block.subheading}
+                          </span>
                           {block.body}
                         </p>
+                      ) : (
+                        block.body && <p>{block.body}</p>
                       )}
+
                       {block.list && (
-                        <ul className="mt-1 list-disc pl-5 flex flex-col gap-1">
+                        <ul className="mt-1.5 list-disc pl-5 space-y-1">
                           {block.list.map((item) => (
-                            <li key={item} className="text-sm leading-relaxed text-gray-700">
-                              {item}
-                            </li>
+                            <li key={item}>{item}</li>
                           ))}
                         </ul>
                       )}
                     </div>
                   ))}
                 </div>
-              </section>
+              </div>
             ))}
+
+            <div className="pt-6 border-t border-[#E5E7EB] text-xs text-[#6B7280]">
+              This policy outlines our data handling practices. For specific legal inquiries, please contact our compliance team at{" "}
+              <a href="mailto:privacy@rivinity.com" className="text-[#FF6B00] font-bold hover:underline">
+                privacy@rivinity.com
+              </a>.
+            </div>
           </div>
 
-          <div className="mt-12 border-t border-black/10 pt-6 text-xs text-gray-400">
-            This policy outlines our data handling practices. For specific legal inquiries, please contact our compliance team.
-          </div>
-
-          <div className="mt-8">
-            <Link href="/" className="text-sm text-[#FF5A1F] hover:underline">
-              ← Back to home
-            </Link>
-          </div>
         </div>
       </main>
-      <Footer/>
-    </>
+
+      <Footer />
+    </div>
   );
 }
