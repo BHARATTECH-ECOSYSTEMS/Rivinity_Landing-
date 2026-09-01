@@ -132,8 +132,10 @@ function LogoCloud({ className, logos, ...props }: LogoCloudProps) {
         {logos.map((logo) => (
           <img
             alt={logo.alt}
-            className="pointer-events-none h-5 w-auto select-none brightness-0 opacity-60 hover:opacity-100 transition-opacity"
+            width={110}
             height={20}
+            decoding="async"
+            className="pointer-events-none h-5 w-auto max-w-[130px] object-contain select-none brightness-0 opacity-60 hover:opacity-100 transition-opacity"
             key={`logo-${logo.alt}`}
             loading="lazy"
             src={logo.src}
@@ -159,19 +161,27 @@ const DEFAULT_LOGOS: Logo[] = [
 
 export default function LogoMarquee({
   logos = DEFAULT_LOGOS,
-  title = "Trusted by teams at",
+  title = "TRUSTED BY ENGINEERING TEAMS AT HIGH-GROWTH STARTUPS & ENTERPRISES",
 }: {
   logos?: Logo[];
   title?: string;
 }) {
   return (
-    <section className="section">
-      <div className="container text-center">
-        <p className="text-muted text-sm mb-6">{title}</p>
-        <div className="flex justify-center items-center w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="w-full py-10 sm:py-14 border-y border-gray-100 bg-slate-50/50 backdrop-blur-xs"
+    >
+      <div className="container mx-auto px-4 text-center">
+        <p className="text-[11px] font-mono uppercase tracking-widest text-gray-400 font-semibold mb-6">
+          {title}
+        </p>
+        <div className="flex justify-center items-center w-full max-w-5xl mx-auto">
           <LogoCloud logos={logos} />
         </div>
       </div>
-    </section>
+    </motion.div>
   );
 }

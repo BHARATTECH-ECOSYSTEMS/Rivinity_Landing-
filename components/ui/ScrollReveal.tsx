@@ -1,34 +1,28 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useMotionTemplate } from "framer-motion";
+"use client";
 
-interface ScrollRevealProps {
-  children: React.ReactNode;
+import { motion, useReducedMotion } from "framer-motion";
+import { type ReactNode } from "react";
+
+export default function ScrollReveal({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: ReactNode;
   className?: string;
-  depth?: number;
-}
-
-export const ScrollReveal = ({ children, className, depth = 1 }: ScrollRevealProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [18 * depth, -18 * depth]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.985, 1, 0.985]);
-  const blur = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [2, 0, 0, 1]);
-  const filter = useMotionTemplate`blur(${blur}px)`;
+  delay?: number;
+}) {
+  const reduce = useReducedMotion();
 
   return (
     <motion.div
-      ref={ref}
-      style={{ y, scale, filter }}
       className={className}
+      initial={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={reduce ? { duration: 0 } : { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
     </motion.div>
   );
-};
-
-export default ScrollReveal;
+}
