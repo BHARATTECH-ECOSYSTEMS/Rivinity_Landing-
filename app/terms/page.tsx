@@ -252,7 +252,7 @@ const sections: Section[] = [
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1A] font-sans antialiased flex flex-col justify-between">
+    <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased flex flex-col justify-between">
       <Header />
 
       <motion.main
@@ -263,16 +263,16 @@ export default function TermsOfServicePage() {
       >
         <div className="mx-auto px-6 sm:px-10 max-w-4xl">
           {/* Header Container */}
-          <div className="border-b border-[#E5E7EB] pb-8 mb-10">
-            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-[#1A1A1A]">
+          <div className="border-b border-slate-200 pb-8 mb-10">
+            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-[#0f172a]">
               Terms and Conditions
             </h1>
-            <p className="mt-2.5 text-sm font-medium text-[#6B7280]">
+            <p className="mt-2.5 text-sm font-medium text-[#64748b]">
               Last updated: August 20, 2026
             </p>
 
             {/* Introductory Callout Notice */}
-            <div className="mt-6 rounded-2xl border border-[#E5E7EB] bg-[#F7F7F8] p-5 text-sm leading-relaxed text-[#6B7280]">
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-[#F7F7F8] p-5 text-sm leading-relaxed text-[#64748b]">
               This agreement governs your access to and use of the Services and is
               between you and Rivinity, Inc. ("Rivinity", "we," "us," or "our") and is
               binding on you individually and, if applicable, on behalf of any entity
@@ -280,7 +280,7 @@ export default function TermsOfServicePage() {
               not agree, you must not use the Services.
               <br />
               <br />
-              <strong className="text-[#1A1A1A]">NOTICE REGARDING ARBITRATION:</strong> PLEASE NOTE THAT SECTION 7
+              <strong className="text-[#0f172a]">NOTICE REGARDING ARBITRATION:</strong> PLEASE NOTE THAT SECTION 7
               CONTAINS AN ARBITRATION AGREEMENT THAT REQUIRES ALL DISPUTES TO BE
               RESOLVED ON AN INDIVIDUAL BASIS THROUGH BINDING ARBITRATION RATHER THAN IN
               COURT OR JURY TRIALS, UNLESS YOU OPT OUT WITHIN 30 DAYS.

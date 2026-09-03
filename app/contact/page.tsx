@@ -51,10 +51,10 @@ export default function ContactPage() {
           <div className="container">
             {/* Header */}
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h1 className="text-4xl font-extrabold tracking-tight text-[#1A1A1A] sm:text-5xl lg:text-6xl w-full max-w-none text-center">
+              <h1 className="text-4xl font-semibold tracking-tight text-[#0f172a] sm:text-5xl lg:text-6xl text-center">
                 Let&apos;s talk about your <span className="text-[#FF6B00]">AI infrastructure</span>
               </h1>
-              <p className="mt-4 text-base sm:text-lg text-[#6B7280] leading-relaxed max-w-2xl mx-auto">
+              <p className="mt-4 text-base sm:text-lg text-[#64748b] leading-relaxed max-w-2xl mx-auto">
                 Have questions about our agentic runtime, models, or enterprise security? Our team is here to help.
               </p>
             </div>
@@ -62,39 +62,39 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-6xl mx-auto items-start">
               {/* Left Column: Contact Cards */}
               <div className="lg:col-span-5 space-y-6">
-                <div className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-2xl p-6 flex items-start gap-4 shadow-xs">
+                <div className="bg-[#F7F7F8] border border-slate-200 rounded-2xl p-6 flex items-start gap-4 shadow-xs">
                   <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
                     <Mail size={20} />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-[#1A1A1A]">Email Us</h3>
-                    <p className="text-xs text-[#6B7280] mt-1 mb-2">For general support and developer questions.</p>
+                    <h3 className="text-base font-semibold text-[#0f172a]">Email Us</h3>
+                    <p className="text-xs text-[#64748b] mt-1 mb-2">For general support and developer questions.</p>
                     <a href="mailto:support@rivinity.com" className="text-sm font-semibold text-[#FF6B00] hover:underline">
                       support@rivinity.com
                     </a>
                   </div>
                 </div>
 
-                <div className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-2xl p-6 flex items-start gap-4 shadow-xs">
+                <div className="bg-[#F7F7F8] border border-slate-200 rounded-2xl p-6 flex items-start gap-4 shadow-xs">
                   <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
                     <MessageSquare size={20} />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-[#1A1A1A]">Enterprise Sales</h3>
-                    <p className="text-xs text-[#6B7280] mt-1 mb-2">Custom deployments, SLAs, and dedicated compute.</p>
+                    <h3 className="text-base font-semibold text-[#0f172a]">Enterprise Sales</h3>
+                    <p className="text-xs text-[#64748b] mt-1 mb-2">Custom deployments, SLAs, and dedicated compute.</p>
                     <a href="mailto:sales@rivinity.com" className="text-sm font-semibold text-[#FF6B00] hover:underline">
                       sales@rivinity.com
                     </a>
                   </div>
                 </div>
 
-                <div className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-2xl p-6 flex items-start gap-4 shadow-xs">
+                <div className="bg-[#F7F7F8] border border-slate-200 rounded-2xl p-6 flex items-start gap-4 shadow-xs">
                   <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
                     <MapPin size={20} />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-[#1A1A1A]">Global HQ</h3>
-                    <p className="text-xs text-[#6B7280] mt-1">
+                    <h3 className="text-base font-semibold text-[#0f172a]">Global HQ</h3>
+                    <p className="text-xs text-[#64748b] mt-1">
                       Rivinity Technologies Inc.<br />
                       Lucknow, Uttar Pradesh, India
                     </p>
@@ -169,7 +169,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-[#1A1A1A] uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-semibold text-[#0f172a] uppercase tracking-wider mb-2">
                         Message
                       </label>
                       <textarea
@@ -178,13 +178,13 @@ export default function ContactPage() {
                         placeholder="Tell us about your project or technical requirements..."
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-[#F7F7F8] text-sm text-[#1A1A1A] focus:outline-none focus:border-[#FF6B00] focus:bg-white transition resize-none"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-[#F7F7F8] text-sm text-[#0f172a] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:bg-white transition resize-none"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full bg-[#FF6B00] hover:bg-[#e66000] text-white py-3.5 px-6 rounded-xl font-semibold text-sm shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full min-h-[44px] bg-[#FF6B00] hover:bg-[#e66000] text-white py-3 px-6 rounded-xl font-semibold text-sm shadow-xs transition flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
                     >
                       <span>Send Message</span>
                       <Send size={16} />

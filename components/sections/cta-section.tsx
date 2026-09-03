@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useAuthModal } from "@/components/auth/auth-context";
 
 export interface CtaSectionProps {
@@ -18,8 +18,8 @@ export interface CtaSectionProps {
 
 export function CtaSection({
   title = "Ready to ship production AI software?",
-  description = "Join thousands of engineers orchestrating multi-agent systems, persistent canvas memory, and real-time inference on Rivinity.",
-  buttonText = "Get Started for Free",
+  description = "Join engineering teams deploying sub-50ms model routing, persistent canvas memory, and autonomous agents on Rivinity.",
+  buttonText = "Start Building",
   buttonHref,
   onClick,
   variant = "subpage",
@@ -38,8 +38,8 @@ export function CtaSection({
   // Landing Page Variant (Logo-Inspired Multi-Stop Fluid Gradient Glow + Glassmorphism)
   if (variant === "landing") {
     return (
-      <section className={className || "relative w-full py-20 sm:py-28 overflow-hidden"}>
-        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section className={className || "section relative overflow-hidden py-12 sm:py-16"}>
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="relative rounded-3xl sm:rounded-[36px] bg-white/80 backdrop-blur-2xl border border-white/90 shadow-[0_20px_60px_-15px_rgba(236,72,153,0.12),0_15px_40px_-10px_rgba(139,92,246,0.1),0_0_0_1px_rgba(255,255,255,0.9)_inset] p-8 sm:p-14 md:p-16 text-center overflow-hidden">
             {/* Logo Gradient Ambient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#FD881F]/10 via-[#EC4899]/10 to-[#8B5CF6]/15 pointer-events-none" />
@@ -104,39 +104,47 @@ export function CtaSection({
 
             {/* Content Layer */}
             <div className="relative z-10 max-w-2xl mx-auto space-y-6">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#0f172a] leading-tight">
                 {title}
               </h2>
 
               {description && (
-                <p className="text-sm sm:text-base md:text-lg text-gray-600 font-normal leading-relaxed max-w-xl mx-auto">
+                <p className="text-sm sm:text-base md:text-lg text-slate-600 font-normal leading-relaxed max-w-xl mx-auto">
                   {description}
                 </p>
               )}
 
-              <div className="pt-2 flex items-center justify-center">
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                 {buttonHref ? (
                   <Link
                     href={buttonHref}
-                    className="w-full sm:w-auto px-9 py-4 rounded-full bg-white hover:bg-white/95 border border-white/80 shadow-[0_10px_30px_-5px_rgba(236,72,153,0.15),0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_35px_-5px_rgba(236,72,153,0.25),0_0_20px_rgba(139,92,246,0.15)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer group text-black font-extrabold"
+                    className="w-full sm:w-auto min-h-[44px] px-8 py-3 rounded-full bg-[#0f172a] hover:bg-slate-800 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group font-semibold text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
                   >
-                    <span className="font-extrabold tracking-wider uppercase text-xs sm:text-sm text-black">
-                      {buttonText}
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-black group-hover:translate-x-0.5 transition-transform" />
+                    <span>{buttonText}</span>
+                    <ArrowUpRight className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </Link>
                 ) : (
                   <button
                     type="button"
                     onClick={handleAction}
-                    className="w-full sm:w-auto px-9 py-4 rounded-full bg-white hover:bg-white/95 border border-white/80 shadow-[0_10px_30px_-5px_rgba(236,72,153,0.15),0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_35px_-5px_rgba(236,72,153,0.25),0_0_20px_rgba(139,92,246,0.15)] hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer group text-black font-extrabold"
+                    className="w-full sm:w-auto min-h-[44px] px-8 py-3 rounded-full bg-[#0f172a] hover:bg-slate-800 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group font-semibold text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
                   >
-                    <span className="font-extrabold tracking-wider uppercase text-xs sm:text-sm text-black">
-                      {buttonText}
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-black group-hover:translate-x-0.5 transition-transform" />
+                    <span>{buttonText}</span>
+                    <ArrowUpRight className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </button>
                 )}
+
+                <Link
+                  href="/docs"
+                  className="w-full sm:w-auto min-h-[44px] px-7 py-3 rounded-full bg-white/95 hover:bg-white text-slate-800 border border-slate-200 shadow-xs hover:border-slate-300 hover:bg-slate-50 transition-all font-medium text-sm flex items-center justify-center gap-2 group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+                >
+                  <span>View Documentation</span>
+                  <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-slate-800 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </Link>
+              </div>
+
+              <div className="text-xs text-slate-500 pt-1 font-mono">
+                14-day free trial • No credit card required • SOC 2 & GDPR Ready
               </div>
             </div>
           </div>
@@ -147,16 +155,16 @@ export function CtaSection({
 
   // Sub-pages Variant (Clean Light Gray Background with Logo Gradient Accents)
   return (
-    <section className={className || "w-full py-16 sm:py-20 bg-[#F7F7F8] border-t border-gray-200/80"}>
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-2xl sm:rounded-3xl bg-white border border-gray-200/90 shadow-sm p-8 sm:p-12 md:p-14 text-center overflow-hidden">
+    <section className={className || "section bg-slate-50/60 border-t border-slate-200 py-12 sm:py-16"}>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="relative rounded-2xl sm:rounded-3xl bg-white border border-slate-200 shadow-xs p-8 sm:p-12 md:p-14 text-center overflow-hidden">
           <div className="max-w-2xl mx-auto space-y-5">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#1A1A1A]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-[#0f172a]">
               {title}
             </h2>
 
             {description && (
-              <p className="text-sm sm:text-base text-[#6B7280] font-normal leading-relaxed max-w-xl mx-auto">
+              <p className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-xl mx-auto">
                 {description}
               </p>
             )}
@@ -165,19 +173,19 @@ export function CtaSection({
               {buttonHref ? (
                 <Link
                   href={buttonHref}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-[#FD881F] via-[#EC4899] to-[#8B5CF6] hover:opacity-95 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto min-h-[44px] px-8 py-3 rounded-full bg-gradient-to-r from-[#FD881F] via-[#EC4899] to-[#8B5CF6] hover:opacity-95 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
                 >
                   <span>{buttonText}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Link>
               ) : (
                 <button
                   type="button"
                   onClick={handleAction}
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-[#FD881F] via-[#EC4899] to-[#8B5CF6] hover:opacity-95 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto min-h-[44px] px-8 py-3 rounded-full bg-gradient-to-r from-[#FD881F] via-[#EC4899] to-[#8B5CF6] hover:opacity-95 text-white text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
                 >
                   <span>{buttonText}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </button>
               )}
             </div>

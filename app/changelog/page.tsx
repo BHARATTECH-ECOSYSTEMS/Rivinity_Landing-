@@ -96,19 +96,19 @@ export default function ChangelogPage() {
         );
 
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1A] font-sans antialiased flex flex-col justify-between">
+    <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased flex flex-col justify-between">
       <Header />
 
       <motion.main
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="container mx-auto px-4 sm:px-6 pt-28 sm:pt-32 md:pt-36 pb-16"
+        className="container pt-28 sm:pt-32 md:pt-36 pb-16"
       >
         {/* Compact Title & Category Filters */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-gray-200 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-slate-200 pb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1A1A1A]">
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#0f172a]">
               Changelog
             </h1>
           </div>
@@ -123,10 +123,10 @@ export default function ChangelogPage() {
               <button
                 key={tag.id}
                 onClick={() => setSelectedTag(tag.id)}
-                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+                className={`rounded-xl px-3 py-1.5 text-xs font-semibold min-h-[36px] transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] ${
                   selectedTag === tag.id
-                    ? "bg-[#1A1A1A] text-white shadow-xs"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    ? "bg-[#0f172a] text-white shadow-xs"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900"
                 }`}
               >
                 {tag.label}
@@ -140,22 +140,22 @@ export default function ChangelogPage() {
           {filteredReleases.map((release) => (
             <div
               key={release.version}
-              className="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-xs hover:border-[#FF6B00]/40 transition-all"
+              className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-xs hover:border-[#FF6B00]/40 transition-all"
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
                 {/* Left Version & Meta Header */}
                 <div className="lg:col-span-4 flex flex-col justify-between space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-extrabold text-[#1A1A1A]">
+                    <span className="font-mono text-sm font-semibold text-[#0f172a]">
                       {release.version}
                     </span>
                     <span
-                      className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider border ${release.badgeColor}`}
+                      className={`px-2 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider border ${release.badgeColor}`}
                     >
                       {release.badge}
                     </span>
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">
+                  <span className="text-xs text-slate-500 font-medium">
                     {release.date}
                   </span>
                   <h3 className="text-base sm:text-lg font-bold text-[#1A1A1A] pt-1">

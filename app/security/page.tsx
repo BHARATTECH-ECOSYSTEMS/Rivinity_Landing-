@@ -93,10 +93,10 @@ export default function SecurityPage() {
         <section className="section py-8 sm:py-12 md:py-16">
           <div className="container">
             <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl font-extrabold tracking-tight text-[#1A1A1A] sm:text-5xl lg:text-6xl w-full max-w-none text-center">
+              <h1 className="text-4xl font-semibold tracking-tight text-[#0f172a] sm:text-5xl lg:text-6xl text-center">
                 Enterprise trust built into <span className="text-[#FF6B00]">every layer</span>
               </h1>
-              <p className="mt-4 text-base sm:text-lg text-[#6B7280] leading-relaxed max-w-2xl mx-auto">
+              <p className="mt-4 text-base sm:text-lg text-[#64748b] leading-relaxed max-w-2xl mx-auto">
                 We design AI infrastructure with defense-in-depth principles — protecting your data, agent workflows, and cloud deployments around the clock.
               </p>
             </div>
@@ -106,12 +106,12 @@ export default function SecurityPage() {
               {complianceStandards.map((item) => (
                 <div
                   key={item.name}
-                  className="bg-[#F7F7F8] border border-[#E5E7EB] rounded-2xl p-5 text-center shadow-xs"
+                  className="bg-[#F7F7F8] border border-slate-200 rounded-2xl p-5 text-center shadow-xs"
                 >
                   <div className="w-8 h-8 rounded-full bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center mx-auto mb-2">
                     <CheckCircle2 size={18} />
                   </div>
-                  <h3 className="text-sm font-bold text-[#1A1A1A]">{item.name}</h3>
+                  <h3 className="text-sm font-semibold text-[#0f172a]">{item.name}</h3>
                   <p className="text-xs font-semibold text-[#FF6B00] mt-0.5">
                     {item.status} ({item.year})
                   </p>
@@ -125,7 +125,7 @@ export default function SecurityPage() {
         <section className="section pb-20">
           <div className="container">
             <div className="text-center mb-12 max-w-2xl mx-auto">
-              <h2 className="text-3xl font-bold text-[#1A1A1A] sm:text-4xl w-full max-w-none text-center">
+              <h2 className="text-3xl font-semibold text-[#0f172a] sm:text-4xl text-center">
                 Our Security Foundations
               </h2>
             </div>
@@ -136,15 +136,15 @@ export default function SecurityPage() {
                 return (
                   <div
                     key={feature.title}
-                    className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs hover:border-[#FF6B00]/40 transition-all"
+                    className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs hover:border-[#FF6B00]/40 transition-all"
                   >
                     <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center mb-4">
                       <IconComponent size={20} />
                     </div>
-                    <h3 className="text-lg font-bold text-[#1A1A1A] mb-2">
+                    <h3 className="text-lg font-semibold text-[#0f172a] mb-2">
                       {feature.title}
                     </h3>
-                    <p className="text-sm text-[#6B7280] leading-relaxed">
+                    <p className="text-sm text-[#64748b] leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
@@ -155,24 +155,24 @@ export default function SecurityPage() {
         </section>
 
         {/* Responsible Disclosure Banner */}
-        <section className="section py-16 bg-[#F7F7F8] border-t border-[#E5E7EB]">
+        <section className="section py-16 bg-[#F7F7F8] border-t border-slate-200">
           <div className="container">
-            <div className="max-w-4xl mx-auto bg-white border border-[#E5E7EB] rounded-3xl p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
+            <div className="max-w-4xl mx-auto bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-[#FF6B00] mb-1 block">
                   Vulnerability Disclosure
                 </span>
-                <h3 className="text-2xl font-bold text-[#1A1A1A]">
+                <h3 className="text-2xl font-semibold text-[#0f172a]">
                   Found a security issue?
                 </h3>
-                <p className="text-sm text-[#6B7280] mt-2 max-w-xl">
+                <p className="text-sm text-[#64748b] mt-2 max-w-xl">
                   We value the security community. If you discover a vulnerability, please report it to our security team for a prompt response.
                 </p>
               </div>
 
               <a
                 href="mailto:security@rivinity.com"
-                className="inline-flex items-center gap-2 bg-[#FF6B00] text-white px-6 py-3.5 rounded-xl font-semibold text-sm shadow-xs hover:bg-[#e66000] transition whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-2 bg-[#FF6B00] text-white px-6 py-3.5 rounded-xl font-semibold text-sm shadow-xs hover:bg-[#e66000] transition whitespace-nowrap shrink-0 min-h-[44px] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
               >
                 Report Vulnerability
                 <ArrowRight size={16} />

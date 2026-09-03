@@ -311,28 +311,28 @@ export default function SecurityPage() {
         className="w-full pt-28 sm:pt-32 md:pt-36 pb-16"
       >
         {/* Hero Section */}
-        <section className="section border-b border-[#E5E7EB] pb-12 sm:pb-20">
-          <div className="container mx-auto px-4 sm:px-6">
+        <section className="section border-b border-slate-200 pb-12 sm:pb-20">
+          <div className="container">
             <div className="max-w-4xl">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#1A1A1A] leading-[1.18] sm:leading-[1.15]">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#0f172a] leading-[1.18] sm:leading-[1.15]">
                 Building Trust Through <span className="text-[#FF6B00]">Verifiable Security</span>
               </h1>
-              <p className="mt-4 sm:mt-6 max-w-2xl text-sm sm:text-base lg:text-lg text-[#6B7280] leading-relaxed">
+              <p className="mt-4 sm:mt-6 max-w-2xl text-sm sm:text-base lg:text-lg text-[#64748b] leading-relaxed">
                 Rivinity is committed to protecting customer data, enforcing strict zero-training privacy guarantees, and maintaining bank-grade security standards across every engine tier.
               </p>
 
               <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 <div className="text-white flex flex-col">
                   <a
-                  href="#privacy"
-                  className="rounded-xl bg-[#1A1A1A] px-6 py-3.5 text-center text-sm font-bold shadow-xs hover:bg-neutral-800 active:scale-95 transition-all"
-                >
-                  View Privacy Framework &darr;
-                </a>
+                    href="#privacy"
+                    className="rounded-full bg-[#0f172a] px-6 py-3 min-h-[44px] flex items-center justify-center text-center text-sm font-semibold shadow-xs hover:bg-slate-800 active:scale-95 transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
+                  >
+                    View Privacy Framework &darr;
+                  </a>
                 </div>
                 <Link
                   href="/contact"
-                  className="rounded-xl border border-[#E5E7EB] bg-white px-6 py-3.5 text-center text-sm font-bold text-[#1A1A1A] hover:border-gray-400 hover:bg-gray-50 active:scale-95 transition-all shadow-xs"
+                  className="rounded-full border border-slate-200 bg-white px-6 py-3 min-h-[44px] flex items-center justify-center text-center text-sm font-semibold text-slate-800 hover:border-slate-300 hover:bg-slate-50 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
                 >
                   Contact Security Team
                 </Link>

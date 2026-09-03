@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
+import { cn } from "@/lib/utils";
+
 export interface FaqItem {
   question?: string;
   q?: string;
@@ -20,34 +22,24 @@ export interface FaqSectionProps {
 
 const DEFAULT_FAQS: FaqItem[] = [
   {
-    question: "How does the Intelligent Orchestrator choose models?",
+    question: "Is customer data used to train foundation models?",
     answer:
-      "Our orchestrator analyzes your prompt complexity, required reasoning depth, and latency requirements to route to the optimal model— whether that's a fast lightweight model or a powerful reasoning engine.",
+      "Your data is isolated and never used for model training. Period. All prompts and outputs remain strictly within your dedicated tenant with zero persistence to public foundation model providers.",
   },
   {
-    question: "What file types can I upload for context memory?",
+    question: "How does sub-50ms intelligent routing reduce inference costs?",
     answer:
-      "You can upload PDFs, Word documents, code files, images, and spreadsheets. Rivinity extracts context and maintains it across all your sessions and studios.",
+      "Rivinity evaluates prompt complexity in under 10ms and dynamically dispatches tasks to the fastest, most cost-efficient frontier or specialized model that satisfies quality requirements — cutting inference costs by up to 60%.",
   },
   {
-    question: "Is my data used to train models?",
+    question: "How does persistent memory survive across team workflows?",
     answer:
-      "No. Your data is never used to train foundation models. We maintain strict data isolation and offer enterprise-grade privacy controls.",
+      "Project schemas, architecture decisions, and code context are indexed in a high-speed encrypted context mesh. Agents and developers access identical state across sessions without re-prompting or losing context.",
   },
   {
-    question: "Can I deploy apps built with Rivinity?",
+    question: "What enterprise security and compliance standards are supported?",
     answer:
-      "Yes. With one-click deploy, your apps go from local development to a globally distributed edge network in seconds.",
-  },
-  {
-    question: "What integrations are supported?",
-    answer:
-      "Rivinity connects with GitHub, Vercel, OpenAI, Anthropic, Google Cloud, AWS, and 50+ other tools. New integrations are added weekly.",
-  },
-  {
-    question: "How is my data protected?",
-    answer:
-      "We implement SOC 2 controls, SSO/SAML authentication, end-to-end encryption, and workspace-level permissions to keep your data secure.",
+      "Rivinity is built on SOC 2 Type II, GDPR, and ISO 27001 compliant infrastructure with automated in-line PII redaction, prompt injection defense, and comprehensive audit logging.",
   },
 ];
 
@@ -56,13 +48,13 @@ export function FaqSection({
   subtitle = "Everything you need to know about getting started with Rivinity.",
   items = DEFAULT_FAQS,
   id = "faq",
-  className = "w-full py-16 md:py-24 bg-white",
+  className,
 }: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className={className} id={id}>
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
+    <section className={cn("w-full py-16 sm:py-20 bg-white", className)} id={id}>
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -70,18 +62,18 @@ export function FaqSection({
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="max-w-2xl mx-auto text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#16181A]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-[#0f172a]">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-sm sm:text-base text-gray-500 mt-3 font-normal leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-500 mt-3 font-normal leading-relaxed">
               {subtitle}
             </p>
           )}
         </motion.div>
 
         {/* Accordion list with Staggered Entrance */}
-        <div className="divide-y divide-[#E5E7EB] border-y border-[#E5E7EB]">
+        <div className="divide-y divide-slate-200 border-y border-slate-200">
           {items.map((item, i) => {
             const questionText = item.question || item.q || "";
             const answerText = item.answer || item.a || "";
@@ -100,14 +92,14 @@ export function FaqSection({
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                   aria-expanded={isOpen}
-                  className="flex w-full items-center justify-between gap-4 py-5 text-left bg-transparent outline-none transition-colors sm:py-6 cursor-pointer"
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left bg-transparent min-h-[44px] transition-colors sm:py-6 cursor-pointer rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
                 >
-                  <span className="text-base font-semibold text-[#16181A] group-hover:text-[#FD881F] transition-colors sm:text-lg">
+                  <span className="text-base font-semibold text-[#0f172a] group-hover:text-[#FF6B00] transition-colors sm:text-lg">
                     {questionText}
                   </span>
                   <span
-                    className={`flex h-6 w-6 shrink-0 items-center justify-center text-[#16181A] transition-transform duration-200 ${
-                      isOpen ? "rotate-45 text-[#FD881F]" : ""
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center text-[#0f172a] transition-transform duration-200 ${
+                      isOpen ? "rotate-45 text-[#FF6B00]" : ""
                     }`}
                     aria-hidden="true"
                   >
@@ -132,7 +124,7 @@ export function FaqSection({
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-sm leading-relaxed text-[#6b6f72] sm:text-base font-normal">
+                    <p className="text-sm leading-relaxed text-slate-600 sm:text-base font-normal">
                       {answerText}
                     </p>
                   </div>

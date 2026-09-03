@@ -7,175 +7,76 @@
 
 @theme {
   /* ============================================
-     FONTS
+     FONTS (PDF Page 10, 24)
      ============================================ */
-  --font-display: "General Sans", "Geist", -apple-system, BlinkMacSystemFont,
-    sans-serif;
-  --font-body: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont,
-    sans-serif;
-  --font-mono: "JetBrains Mono", "Geist Mono", ui-monospace, SFMono-Regular,
-    Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-display: "General Sans", "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* ============================================
-     COLOR PALETTE (Design System 1.1)
+     COLOR PALETTE (PDF Page 11, 12, 20, 24)
+     Max 5-6 core colors, dark slate text (no pure black)
      ============================================ */
+  --color-primary: #FF6B00;
+  --color-primary-hover: #E66000;
+  --color-text: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+
+  /* Legacy brand aliases for backward compatibility */
   --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f7f7f8;
+  --color-bg-secondary: #f8fafc;
   --color-bg-dark: #0a0a0a;
   --color-bg-dark-card: #1a1a1a;
-
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #6b7280;
-  --color-text-muted: #9ca3af;
-
-  --color-accent: #ff6b00;
-  --color-accent-hover: #e66000;
-
-  --color-border: #e5e7eb;
-  --color-border-subtle: rgba(0, 0, 0, 0.08);
-
-  /* legacy aliases kept for existing usage */
-  --color-ink: var(--color-text-primary);
-  --color-ink-muted: var(--color-text-secondary);
+  --color-text-primary: #0f172a;
+  --color-accent: #FF6B00;
+  --color-accent-hover: #E66000;
+  --color-ink: #0f172a;
+  --color-ink-muted: #64748b;
   --color-hairline: rgba(0, 0, 0, 0.08);
 
   /* ============================================
-     SPACING SCALE (Design System 1.3, 8px grid)
+     SPACING SYSTEM (Standard 8-Point Grid in REM - PDF Page 15, 23, 24)
+     Base unit: 0.25rem = 4px
      ============================================ */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 16px;
-  --space-4: 24px;
-  --space-5: 32px;
-  --space-6: 48px;
-  --space-7: 64px;
-  --space-8: 96px;
-  --space-9: 120px;
+  --space-xs: 0.25rem;    /* 4px */
+  --space-sm: 0.5rem;     /* 8px */
+  --space-md-sm: 0.75rem; /* 12px */
+  --space-md: 1rem;       /* 16px */
+  --space-lg: 1.5rem;     /* 24px */
+  --space-xl: 2rem;       /* 32px */
+  --space-2xl: 3rem;      /* 48px */
+  --space-3xl: 4rem;      /* 64px */
+  --space-4xl: 6rem;      /* 96px */
+  --space-5xl: 8rem;      /* 128px */
+
+  /* Legacy aliases mapped to REM */
+  --space-1: var(--space-xs);
+  --space-2: var(--space-sm);
+  --space-3: var(--space-md);
+  --space-4: var(--space-lg);
+  --space-5: var(--space-xl);
+  --space-6: var(--space-2xl);
+  --space-7: var(--space-3xl);
+  --space-8: var(--space-4xl);
+  --space-9: 7.5rem;
 
   /* ============================================
-     CONTAINER SYSTEM (Design System 1.4)
+     CONTAINER & LAYOUT TOKENS (PDF Page 12, 19, 20, 25)
      ============================================ */
-  --container-max: 1200px;
-  --container-padding: 24px;
-  --content-max: 65ch; /* updated to match optimal reading width */
-  --headline-max: 900px; /* for headlines */
+  --container-max: 1280px;
+  --nav-height: 4rem;
+  --content-max: 65ch;
+  --headline-max: 900px;
 }
 
 /* ============================================
-   FIX 1: CONTAINER + LINE LENGTH
-   ============================================ */
-
-/* Main page wrapper — prevents full-width stretch */
-.container,
-.max-w-7xl,
-.wrapper,
-.page-wrapper {
-  max-width: 1200px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 24px !important;
-  padding-right: 24px !important;
-}
-
-/* Body text — THE KEY FIX for readability */
-p,
-.body-text,
-.faq-answer,
-.terms-content p,
-.about-text,
-.careers-text,
-.card p,
-section > p {
-  max-width: 65ch !important; /* ~560px optimal reading width */
-  line-height: 1.6 !important;
-}
-
-/* Headlines can be slightly wider */
-h1, h2, h3,
-.headline,
-.section-title,
-.hero-title {
-  max-width: 900px !important;
-}
-
-/* Center text when inside centered parents */
-.text-center p,
-.text-center .description,
-.text-center .body-text,
-.text-center h1,
-.text-center h2 {
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* Full-bleed exceptions (hero images, banners) */
-.hero-visual,
-.gradient-banner,
-.full-bleed img {
-  max-width: 100% !important;
-}
-
-/* Mobile & Desktop Container Adjustments */
-@media (max-width: 768px) {
-  .container,
-  .max-w-7xl,
-  .wrapper,
-  .page-wrapper {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
-}
-
-@media (min-width: 1280px) {
-  .container,
-  .max-w-7xl,
-  .wrapper,
-  .page-wrapper {
-    padding-left: 32px !important;
-    padding-right: 32px !important;
-  }
-}
-
-/* ============================================
-   FIX 6: SECTION SPACING
-   ============================================ */
-
-section,
-.section {
-  padding-top: 120px;
-  padding-bottom: 120px;
-}
-
-/* Smaller sections */
-section.small,
-.section-sm {
-  padding-top: 64px;
-  padding-bottom: 64px;
-}
-
-/* Hero gets more space */
-section.hero,
-.hero-section {
-  padding-top: 160px;
-  padding-bottom: 120px;
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  section,
-  .section {
-    padding-top: 64px;
-    padding-bottom: 64px;
-  }
-  section.hero,
-  .hero-section {
-    padding-top: 100px;
-    padding-bottom: 80px;
-  }
-}
-
-/* ============================================
-   BASE RESET
+   RESET & BASE (PDF Page 24)
    ============================================ */
 *,
 *::before,
@@ -184,24 +85,107 @@ section.hero,
 }
 
 html {
+  font-size: 16px;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-html,
 body {
   margin: 0;
   padding: 0;
   width: 100%;
   min-height: 100%;
   overflow-x: clip;
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.6;
   text-rendering: optimizeLegibility;
+}
+
+/* ============================================
+   CONTAINER SYSTEM (PDF Page 12, 15, 20, 25)
+   ============================================ */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-lg);
+  padding-right: var(--space-lg);
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+  }
+}
+
+/* Content Width Helpers for Readability (PDF Page 22) */
+.content-narrow,
+.reading-width,
+.prose-reading,
+.body-text {
+  max-width: var(--content-max);
+  line-height: 1.6;
+}
+
+.headline-narrow {
+  max-width: var(--headline-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-center p,
+.text-center .description,
+.text-center .body-text {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Full-bleed exception utilities */
+.hero-visual,
+.gradient-banner,
+.full-bleed img {
+  max-width: 100%;
+}
+
+/* ============================================
+   SECTION SYSTEM (PDF Page 15, 20, 25)
+   ============================================ */
+.section,
+section.section {
+  padding-top: var(--space-4xl);   /* 6rem = 96px */
+  padding-bottom: var(--space-4xl);
+}
+
+.section-alt {
+  background-color: var(--color-bg-alt);
+}
+
+.section-hero {
+  padding-top: var(--space-5xl);   /* 8rem = 128px */
+  padding-bottom: var(--space-4xl);
+}
+
+.section-sm {
+  padding-top: var(--space-2xl);   /* 3rem = 48px */
+  padding-bottom: var(--space-2xl);
+}
+
+@media (max-width: 768px) {
+  .section,
+  section.section {
+    padding-top: var(--space-3xl); /* 4rem = 64px */
+    padding-bottom: var(--space-3xl);
+  }
+  .section-hero {
+    padding-top: var(--space-4xl);
+    padding-bottom: var(--space-3xl);
+  }
 }
 
 @layer base {
@@ -213,6 +197,16 @@ body {
   a {
     text-decoration: none;
     color: inherit;
+  }
+
+  /* Accessible focus indicator for interactive elements (PDF Page 22) */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 
   code,
@@ -229,7 +223,7 @@ body {
   }
 
   /* ============================================
-     TYPOGRAPHY (Design System 1.2)
+     TYPOGRAPHY DEFAULTS (PDF Page 10, 11, 25, 26)
      ============================================ */
   h1,
   h2,
@@ -239,43 +233,51 @@ body {
   h6 {
     font-family: var(--font-display);
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--color-text);
   }
 
   h1,
   .text-display {
-    font-size: clamp(36px, 5vw, 56px);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
     line-height: 1.1;
     letter-spacing: -0.02em;
   }
 
   h2,
   .section-title {
-    font-size: clamp(28px, 3vw, 36px);
+    font-size: clamp(1.875rem, 3.5vw, 2.25rem);
     line-height: 1.2;
     letter-spacing: -0.01em;
   }
 
   h3 {
-    font-size: 20px;
+    font-size: 1.5rem;
     line-height: 1.3;
+    font-weight: 500;
     letter-spacing: 0;
   }
 
-  .body-large {
-    font-size: 18px;
+  p {
+    font-size: 1rem;
+    font-weight: 400;
     line-height: 1.6;
-    max-width: 65ch !important;
+    color: var(--color-text-secondary);
+  }
+
+  .body-large {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: var(--content-max);
   }
 
   .caption {
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.5;
     color: var(--color-text-secondary);
   }
 
   .label {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0.05em;
@@ -293,83 +295,90 @@ body {
 
 @layer components {
   /* ============================================
-     CONTAINER SYSTEM
-     ============================================ */
-  .content-narrow {
-    max-width: var(--content-max);
-    margin: 0 auto;
-  }
-
-  .headline-narrow {
-    max-width: var(--headline-max);
-    margin: 0 auto;
-  }
-
-  /* ============================================
-     BUTTONS
+     BUTTONS (PDF Page 20, 22, 26)
+     Minimum 44px touch target, 150ms hover transition
      ============================================ */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2);
-    padding: 12px var(--space-4);
-    font-size: 15px;
+    gap: var(--space-sm);
+    min-height: 2.75rem; /* 44px minimum touch target */
+    padding: var(--space-sm) var(--space-lg);
+    font-size: 0.875rem;
     font-weight: 500;
-    border-radius: 40px;
-    border: none;
+    border-radius: 9999px;
+    border: 1px solid transparent;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     text-decoration: none;
+    user-select: none;
   }
 
   .btn-primary {
-    background-color: var(--color-accent);
+    background-color: var(--color-primary);
     color: #ffffff;
+    border-color: transparent;
   }
 
   .btn-primary:hover {
-    background-color: var(--color-accent-hover);
+    background-color: var(--color-primary-hover);
     transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 107, 0, 0.25);
   }
 
   .btn-secondary {
     background-color: transparent;
-    color: var(--color-text-primary);
+    color: var(--color-text);
     border: 1px solid var(--color-border);
   }
 
   .btn-secondary:hover {
-    background-color: var(--color-bg-secondary);
-    border-color: #d1d5db;
+    background-color: var(--color-bg-alt);
+    border-color: #cbd5e1;
   }
 
   .btn-large {
-    padding: 16px var(--space-5);
-    font-size: 16px;
+    min-height: 3rem; /* 48px */
+    padding: var(--space-md) var(--space-xl);
+    font-size: 1rem;
   }
 
   /* ============================================
-     CARDS
+     CARDS (PDF Page 26-27)
      ============================================ */
   .card {
-    background: var(--color-bg-primary);
+    background: var(--color-bg);
     border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: var(--space-5);
-    transition: all 0.2s ease;
+    border-radius: 1rem;
+    padding: var(--space-xl);
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
   }
 
   .card:hover {
-    border-color: #d1d5db;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
   }
 
   .card-dark {
     background: var(--color-bg-dark-card);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: var(--space-5);
+    border-radius: 1rem;
+    padding: var(--space-xl);
+  }
+
+  /* ============================================
+     NAVIGATION (PDF Page 27)
+     ============================================ */
+  .nav {
+    position: sticky;
+    top: 0;
+    height: var(--nav-height);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+    z-index: 100;
   }
 }
 
@@ -380,24 +389,6 @@ body {
   .mx-auto {
     margin-left: auto;
     margin-right: auto;
-  }
-  .mt-4 {
-    margin-top: var(--space-3);
-  }
-  .mt-6 {
-    margin-top: var(--space-4);
-  }
-  .mt-8 {
-    margin-top: var(--space-5);
-  }
-  .mb-4 {
-    margin-bottom: var(--space-3);
-  }
-  .mb-6 {
-    margin-bottom: var(--space-4);
-  }
-  .mb-8 {
-    margin-bottom: var(--space-5);
   }
 
   /* Testimonial Glass Swiper Styles */
@@ -437,7 +428,7 @@ body {
 
   .pagination-dot.active {
     width: 24px;
-    background-color: #F97316;
+    background-color: #FF6B00;
   }
 
   .glass-card {
@@ -449,5 +440,45 @@ body {
 
   .btn-magnetic {
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* ============================================
+   ANIMATIONS (PDF Page 13, 27)
+   ============================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* ============================================
+   AUTH MODAL RESPONSIVE SPLIT PANEL
+   ============================================ */
+@media (min-width: 768px) {
+  .auth-panel-login {
+    transform: translateX(0%);
+    clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
+  }
+  .auth-panel-signup {
+    transform: translateX(72.4%);
+    clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+@media (max-width: 767px) {
+  .auth-panel-login,
+  .auth-panel-signup {
+    transform: none !important;
+    clip-path: none !important;
   }
 }

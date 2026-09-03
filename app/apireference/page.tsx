@@ -114,7 +114,7 @@ response = client.engine.orchestrate(
             : endpoints.filter((e) => e.category === selectedCategory);
 
     return (
-        <div className="min-h-screen bg-white text-[#1A1A1A] font-sans antialiased flex flex-col justify-between">
+        <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased flex flex-col justify-between">
             <Header />
 
             <motion.main
@@ -124,27 +124,27 @@ response = client.engine.orchestrate(
                 className="w-full pt-28 sm:pt-32 md:pt-36 pb-16"
             >
                 {/* Hero Section */}
-                <section className="section border-b border-[#E5E7EB] pb-14 sm:pb-20">
-                    <div className="container mx-auto px-4 sm:px-6">
+                <section className="section border-b border-slate-200 pb-14 sm:pb-20">
+                    <div className="container">
                         <div className="max-w-4xl">
-                            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#1A1A1A] leading-[1.15]">
+                            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#0f172a] leading-[1.15]">
                                 Engine API <span className="text-[#FF6B00]">Reference</span>
                             </h1>
-                        <p className="mt-4 sm:mt-6 max-w-2xl text-base sm:text-lg text-[#6B7280] leading-relaxed">
+                        <p className="mt-4 sm:mt-6 max-w-2xl text-base sm:text-lg text-[#64748b] leading-relaxed">
                             Programmatically orchestrate AI tools, sync persistent memory graphs, and stream inference calls directly into your engineering workflows.
                         </p>
                         <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                             <div className="text-white flex flex-col">
                                 <a
                                     href="#endpoints"
-                                    className="rounded-xl bg-[#1A1A1A] px-6 py-3.5 text-center text-sm font-bold shadow-xs hover:bg-neutral-800 active:scale-95 transition-all"
+                                    className="rounded-full bg-[#0f172a] px-6 py-3 min-h-[44px] flex items-center justify-center text-center text-sm font-semibold shadow-xs hover:bg-slate-800 active:scale-95 transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
                                 >
                                     Explore Endpoints &darr;
                                 </a>
                             </div>
                             <a
                                 href="#authentication"
-                                className="rounded-xl border border-[#E5E7EB] bg-white px-6 py-3.5 text-center text-sm font-bold text-[#1A1A1A] hover:border-gray-400 hover:bg-gray-50 active:scale-95 transition-all shadow-xs"
+                                className="rounded-full border border-slate-200 bg-white px-6 py-3 min-h-[44px] flex items-center justify-center text-center text-sm font-semibold text-slate-800 hover:border-slate-300 hover:bg-slate-50 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
                             >
                                 Authentication Guide
                             </a>
@@ -154,20 +154,20 @@ response = client.engine.orchestrate(
             </section>
 
             {/* Authentication & Quickstart Section */}
-            <section id="authentication" className="section border-b border-[#E5E7EB] bg-[#F7F7F8] py-16 sm:py-24">
-                <div className="container mx-auto px-4 sm:px-6">
+            <section id="authentication" className="section border-b border-slate-200 bg-slate-50 py-16 sm:py-24">
+                <div className="container">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-1">
                             <span className="text-xs font-bold uppercase tracking-widest text-[#FF6B00]">
                                 Security
                             </span>
-                            <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1A1A1A]">
+                            <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-[#0f172a]">
                                 Authentication
                             </h2>
-                            <p className="mt-3 text-xs sm:text-sm text-[#6B7280] leading-relaxed">
+                            <p className="mt-3 text-xs sm:text-sm text-[#64748b] leading-relaxed">
                                 All REST API requests require a valid Bearer token passed in the Authorization header.
                             </p>
-                            <div className="mt-6 flex items-center gap-2 text-xs font-bold text-[#1A1A1A]">
+                            <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-[#0f172a]">
                                 <Key size={16} className="text-[#FF6B00]" />
                                 <span>Base URL: https://api.rivinity.ai/v1</span>
                             </div>
@@ -200,7 +200,7 @@ response = client.engine.orchestrate(
                             <span className="text-xs font-bold uppercase tracking-widest text-[#FF6B00]">
                                 REST Endpoints
                             </span>
-                            <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-[#1A1A1A]">
+                            <h2 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-[#0f172a]">
                                 Core API Specs
                             </h2>
                         </div>
@@ -216,9 +216,9 @@ response = client.engine.orchestrate(
                                 <button
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
-                                    className={`rounded-2xl px-4 py-2 text-xs font-bold transition-all active:scale-95 cursor-pointer ${selectedCategory === cat.id
-                                            ? "bg-[#1A1A1A] text-white shadow-xs"
-                                            : "bg-[#F7F7F8] border border-[#E5E7EB] text-[#6B7280] hover:border-gray-400"
+                                    className={`rounded-2xl px-4 py-2 text-xs font-semibold min-h-[36px] transition-all active:scale-95 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] ${selectedCategory === cat.id
+                                            ? "bg-[#0f172a] text-white shadow-xs"
+                                            : "bg-slate-100 border border-slate-200 text-slate-600 hover:text-[#0f172a] hover:border-slate-300"
                                         }`}
                                 >
                                     {cat.label}
@@ -232,7 +232,7 @@ response = client.engine.orchestrate(
                         {filteredEndpoints.map((ep, idx) => (
                             <div
                                 key={ep.id}
-                                className="group bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 shadow-xs hover:border-[#FF6B00]/40 transition-all"
+                                className="group bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs hover:border-[#FF6B00]/40 transition-all"
                             >
                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                                     {/* Left Specs */}
@@ -240,36 +240,36 @@ response = client.engine.orchestrate(
                                         <div>
                                             <div className="flex items-center gap-3 mb-4">
                                                 <span
-                                                    className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${ep.method === "POST"
+                                                    className={`px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider ${ep.method === "POST"
                                                             ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
                                                             : "bg-blue-50 text-blue-600 border border-blue-200"
                                                         }`}
                                                 >
                                                     {ep.method}
                                                 </span>
-                                                <span className="text-xs font-bold text-[#FF6B00] uppercase tracking-wider bg-[#FF6B00]/10 px-2.5 py-1 rounded-full border border-[#FF6B00]/20">
+                                                <span className="text-xs font-semibold text-[#FF6B00] uppercase tracking-wider bg-[#FF6B00]/10 px-2.5 py-1 rounded-full border border-[#FF6B00]/20">
                                                     {ep.badge}
                                                 </span>
                                             </div>
 
-                                            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">
+                                            <h3 className="text-xl font-semibold text-[#0f172a] mb-2">
                                                 {ep.title}
                                             </h3>
-                                            <p className="text-xs sm:text-sm text-[#6B7280] leading-relaxed mb-4">
+                                            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
                                                 {ep.desc}
                                             </p>
                                         </div>
 
-                                        <div className="mt-4 rounded-2xl bg-[#F7F7F8] border border-[#E5E7EB] px-4 py-3 font-mono text-xs font-bold text-[#1A1A1A] break-all">
+                                        <div className="mt-4 rounded-2xl bg-slate-50 border border-slate-200 px-4 py-3 font-mono text-xs font-semibold text-[#0f172a] break-all">
                                             {ep.path}
                                         </div>
                                     </div>
 
                                     {/* Right Code Interactive Panel */}
                                     <div className="lg:col-span-7">
-                                        <div className="rounded-2xl bg-[#1A1A1A] border border-neutral-800 overflow-hidden shadow-xs">
+                                        <div className="rounded-2xl bg-[#0f172a] border border-slate-800 overflow-hidden shadow-xs">
                                             {/* Code Header Bar */}
-                                            <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-3 bg-neutral-900/50">
+                                            <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3 bg-slate-900/50">
                                                 <div className="flex items-center gap-2">
                                                     {(["curl", "node", "python"] as const).map((lang) => (
                                                         <button

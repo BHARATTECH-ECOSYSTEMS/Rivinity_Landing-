@@ -309,7 +309,7 @@ export default function PrivacyPolicyPage() {
   const [openPreviousVersions, setOpenPreviousVersions] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1A] font-sans antialiased flex flex-col justify-between">
+    <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased flex flex-col justify-between">
       <Header />
 
       <motion.main
@@ -321,11 +321,11 @@ export default function PrivacyPolicyPage() {
         <div className="mx-auto px-4 sm:px-6 max-w-3xl">
           
           {/* Header Container */}
-          <div className="border-b border-[#E5E7EB] pb-6 mb-8">
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#1A1A1A]">
+          <div className="border-b border-slate-200 pb-6 mb-8">
+            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[#0f172a]">
               Privacy Policy
             </h1>
-            <p className="mt-1.5 text-xs font-medium text-[#6B7280]">
+            <p className="mt-1.5 text-xs font-medium text-[#64748b]">
               Last updated: August 20, 2026
             </p>
 
@@ -333,7 +333,7 @@ export default function PrivacyPolicyPage() {
             <div className="mt-2">
               <button
                 onClick={() => setOpenPreviousVersions((v) => !v)}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-[#6B7280] hover:text-[#1A1A1A] transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#64748b] hover:text-[#0f172a] transition-colors cursor-pointer"
               >
                 <span>Previous Versions</span>
                 <ChevronDown
@@ -355,9 +355,9 @@ export default function PrivacyPolicyPage() {
             </div>
 
             {/* Introductory Notice Container */}
-            <div className="mt-4 rounded-xl border border-[#E5E7EB] bg-[#F7F7F8] p-4 text-xs leading-relaxed text-[#6B7280]">
+            <div className="mt-4 rounded-xl border border-slate-200 bg-[#F7F7F8] p-4 text-xs leading-relaxed text-[#64748b]">
               Rivinity, Inc., its subsidiaries and affiliates value the privacy of individuals who use our website and related Services (collectively, the "Services"). This privacy policy ("Privacy Policy") explains how we collect, use, and share Personal Data about you when providing our Services. Beyond this Privacy Policy, your use of our Services is also subject to our{" "}
-              <Link href="/terms" className="text-[#FF6B00] font-bold hover:underline">
+              <Link href="/terms" className="text-[#FF6B00] font-semibold hover:underline">
                 Terms of Service
               </Link>
               .
@@ -368,11 +368,11 @@ export default function PrivacyPolicyPage() {
           <div className="space-y-8">
             {sections.map((section) => (
               <div key={section.id} id={section.id}>
-                <h2 className="text-lg sm:text-xl font-bold text-[#1A1A1A] tracking-tight">
+                <h2 className="text-lg sm:text-xl font-semibold text-[#0f172a] tracking-tight">
                   {section.number}. {section.heading}
                 </h2>
                 {section.summary && (
-                  <p className="mt-1 text-xs sm:text-sm font-semibold text-[#6B7280]">
+                  <p className="mt-1 text-xs sm:text-sm font-medium text-[#64748b]">
                     {section.summary}
                   </p>
                 )}

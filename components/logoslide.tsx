@@ -146,14 +146,16 @@ function LogoCloud({ className, logos, ...props }: LogoCloudProps) {
   );
 }
 
+import Link from "next/link";
+import { ShieldCheck, Lock, Award, ArrowUpRight } from "lucide-react";
+
 /* ------------------------------------------------------------------ */
 /* Main LogoMarquee Component Export                                  */
 /* ------------------------------------------------------------------ */
 const DEFAULT_LOGOS: Logo[] = [
   { src: "https://svgl.app/library/nvidia-wordmark-light.svg", alt: "Nvidia" },
-  { src: "https://svgl.app/library/supabase_wordmark_light.svg", alt: "Supabase" },
   { src: "https://svgl.app/library/openai_wordmark_light.svg", alt: "OpenAI" },
-  { src: "https://svgl.app/library/turso-wordmark-light.svg", alt: "Turso" },
+  { src: "https://svgl.app/library/supabase_wordmark_light.svg", alt: "Supabase" },
   { src: "https://svgl.app/library/vercel_wordmark.svg", alt: "Vercel" },
   { src: "https://svgl.app/library/github_wordmark_light.svg", alt: "GitHub" },
   { src: "https://svgl.app/library/clerk-wordmark-light.svg", alt: "Clerk" },
@@ -172,14 +174,45 @@ export default function LogoMarquee({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full py-10 sm:py-14 border-y border-gray-100 bg-slate-50/50 backdrop-blur-xs"
+      className="w-full pt-10 pb-9 sm:pt-12 sm:pb-10 border-y border-neutral-100 bg-[#FAFAFA]"
     >
       <div className="container mx-auto px-4 text-center">
-        <p className="text-[11px] font-mono uppercase tracking-widest text-gray-400 font-semibold mb-6">
+        <p className="text-[11px] font-mono uppercase tracking-widest text-neutral-400 font-semibold mb-6">
           {title}
         </p>
+
         <div className="flex justify-center items-center w-full max-w-5xl mx-auto">
           <LogoCloud logos={logos} />
+        </div>
+
+        {/* Enterprise Compliance & Live Status Badge Row */}
+        <div className="mt-8 pt-6 border-t border-neutral-200/60 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-neutral-600">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-neutral-200/80 shadow-2xs font-medium text-neutral-700">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <span>SOC 2 Type II Certified</span>
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-neutral-200/80 shadow-2xs font-medium text-neutral-700">
+            <Lock className="w-3.5 h-3.5 text-blue-600" />
+            <span>GDPR Compliant</span>
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-neutral-200/80 shadow-2xs font-medium text-neutral-700">
+            <Award className="w-3.5 h-3.5 text-purple-600" />
+            <span>ISO 27001 Certified</span>
+          </div>
+
+          <Link
+            href="/status"
+            className="group inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white hover:bg-neutral-50 border border-neutral-200/80 shadow-2xs font-medium text-neutral-800 transition-colors"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>All systems operational (99.99% SLA)</span>
+            <ArrowUpRight className="w-3 h-3 text-neutral-400 group-hover:text-neutral-700 transition-colors" />
+          </Link>
         </div>
       </div>
     </motion.div>

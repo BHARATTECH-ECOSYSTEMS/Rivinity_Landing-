@@ -16,8 +16,8 @@ export default function Home() {
       <Header />
       <main className="w-full">
         <Hero />
-        <LogoMarquee />
-        <ProblemStatement />
+        {/* <LogoMarquee /> */}
+        {/* <ProblemStatement /> */}
         <BentoFeatures />
         <HowItWorks />
         <PoweredByRivinity />

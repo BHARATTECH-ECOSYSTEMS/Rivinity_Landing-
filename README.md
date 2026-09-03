@@ -1,6 +1,6 @@
 # Rivinity
 
-Rivinity is a modern Next.js marketing and product website for an AI application-building platform. The platform presents an AI workspace designed for generating, orchestrating, and deploying intelligent applications with autonomous agents, collaborative canvas tools, and instant edge deployment.
+Rivinity is a modern Next.js marketing and product website for an AI application-building platform. The platform presents an AI infrastructure and workspace layer designed for generating, orchestrating, and deploying intelligent applications with autonomous agents, collaborative canvas tools, and instant edge deployment.
 
 ---
 
@@ -8,10 +8,11 @@ Rivinity is a modern Next.js marketing and product website for an AI application
 
 - **Framework**: [Next.js 15](https://nextjs.org/) (App Router architecture)
 - **UI Library**: [React 19](https://react.dev/) & [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) with PostCSS & custom CSS variable tokens
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) with PostCSS & custom CSS variable design tokens
 - **Animations**: [Framer Motion](https://www.framer.com/motion/) & [Motion](https://motion.dev/)
 - **Shaders & Effects**: [@paper-design/shaders-react](https://www.npmjs.com/package/@paper-design/shaders-react)
 - **Primitives & UI**: [Radix UI](https://www.radix-ui.com/) (`NavigationMenu`, `Slot`), [Lucide React](https://lucide.dev/)
+- **Typography**: [Google Fonts](https://fonts.google.com/) (`Inter`, `JetBrains Mono`, `Fraunces`)
 - **Utilities**: `clsx`, `tailwind-merge`, `class-variance-authority`, `react-use-measure`
 
 ---
@@ -64,49 +65,49 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 ## Project Structure
 
 ```text
-├── app/                        # Next.js App Router root
-│   ├── (routes)/               # 26+ page routes (about, blog, docs, pricing, etc.)
-│   ├── globals.css             # Tailwind v4 theme, font definitions, and CSS variables
-│   ├── layout.tsx              # Root layout with fonts, metadata, and AuthProvider
-│   ├── not-found.tsx           # Custom 404 page
-│   └── page.tsx                # Main homepage assembling landing sections
-├── components/                 # UI components and layout building blocks
-│   ├── assets/                 # Component-specific media assets
-│   ├── auth/                   # Authentication context and sliding cards
-│   │   ├── auth-context.tsx    # Auth state management
-│   │   └── sliding-auth-card.tsx
-│   ├── layout/                 # Site navigation and shell
-│   │   ├── header.tsx          # Sticky responsive navigation bar with mega menu
-│   │   └── footer.tsx          # Site-wide footer with links & newsletter
-│   ├── sections/               # Modular landing page sections
-│   │   ├── bentofeatures.tsx   # Bento feature grid wrapper
-│   │   ├── cta-section.tsx     # Conversion CTA block
-│   │   ├── faq-section.tsx     # Interactive accordion FAQ
-│   │   ├── how-it-works.tsx    # Step-by-step interactive workflow
-│   │   ├── powered-by-rivinity.tsx # Platform capabilities breakdown
-│   │   ├── problem-statement.tsx # Visual problem/solution contrast
-│   │   └── testimonials-section.tsx # Social proof & customer reviews
-│   ├── ui/                     # Reusable UI primitives
-│   │   ├── auth-switch.tsx     # Toggleable login/signup modal
-│   │   ├── bento.tsx           # Bento grid card components
-│   │   └── ScrollReveal.tsx    # Viewport reveal animation component
-│   ├── ArrowButton.tsx         # Animated CTA arrow button
-│   ├── GlassAssistant.tsx      # Glassmorphic interactive AI assistant widget
-│   ├── Hero.tsx                # Hero section with interactive visuals & badges
-│   ├── Magnetic.tsx            # Cursor attraction wrapper
-│   ├── Reveal.tsx              # Scroll-triggered reveal effect
-│   └── logoslide.tsx           # Infinite logo marquee slider
-├── lib/                        # Shared utilities
-│   └── utils.ts                # Class merging utility (`cn`)
-├── public/                     # Static public assets
-│   ├── images/                 # Product and enterprise illustrations
-│   ├── logos/                  # Integration and partner SVG logos
-│   └── *.png                   # Brand logos and banners
-├── types/                      # TypeScript declarations & shared interfaces
-│   └── index.ts                # Navigation, team, FAQ, and testimonial types
-├── next.config.js              # Next.js configuration (images, compiler)
-├── tailwind.config.js          # Tailwind theme & color extensions
-└── tsconfig.json               # TypeScript path aliases & compiler settings
+├── app/                                 # Next.js App Router root
+│   ├── (routes)/                        # 26+ page routes (about, blog, docs, pricing, etc.)
+│   ├── globals.css                      # Tailwind v4 theme, font definitions, and CSS variables
+│   ├── layout.tsx                       # Root layout with fonts, metadata, OpenGraph, and AuthProvider
+│   ├── not-found.tsx                    # Custom 404 page
+│   └── page.tsx                         # Main homepage assembling landing sections
+├── components/                          # UI components and layout building blocks
+│   ├── assets/                          # Component-specific media assets
+│   ├── auth/                            # Authentication context and modal system
+│   │   ├── auth-context.tsx             # Auth state provider and hook (`useAuthModal`)
+│   │   └── auth-modal.tsx               # Unified login/signup modal and standalone page card
+│   ├── layout/                          # Site navigation and shell
+│   │   ├── header.tsx                   # Sticky responsive navigation bar with mega menu
+│   │   └── footer.tsx                   # Site-wide footer with links & newsletter
+│   ├── sections/                        # Modular landing page sections
+│   │   ├── bentofeatures.tsx            # Bento feature grid wrapper
+│   │   ├── cta-section.tsx              # Conversion CTA block
+│   │   ├── faq-section.tsx              # Interactive accordion FAQ
+│   │   ├── how-it-works.tsx             # Step-by-step interactive workflow
+│   │   ├── powered-by-rivinity.tsx      # Platform capabilities breakdown
+│   │   ├── problem-statement.tsx        # Visual problem/solution contrast
+│   │   └── testimonials-section.tsx     # Social proof & customer reviews
+│   ├── ui/                              # Reusable UI primitives
+│   │   ├── bento.tsx                    # Bento grid card components
+│   │   ├── interactive-pixel-background.tsx # Atmospheric diffused glass background
+│   │   └── ScrollReveal.tsx             # Viewport reveal animation component
+│   ├── ArrowButton.tsx                  # Animated CTA arrow button
+│   ├── GlassAssistant.tsx               # Glassmorphic interactive AI assistant widget
+│   ├── Hero.tsx                         # Hero section with interactive visuals & badges
+│   ├── Magnetic.tsx                     # Cursor attraction wrapper
+│   ├── Reveal.tsx                       # Scroll-triggered reveal effect
+│   └── logoslide.tsx                    # Infinite logo marquee slider
+├── lib/                                 # Shared utilities
+│   └── utils.ts                         # Class merging utility (`cn`)
+├── public/                              # Static public assets
+│   ├── images/                          # Product illustrations & `auth-bg.png`
+│   ├── logos/                           # Integration and partner SVG logos
+│   └── *.png                            # Brand logos, favicons, and banners
+├── types/                               # TypeScript declarations & shared interfaces
+│   └── index.ts                         # Navigation, team, FAQ, and testimonial types
+├── next.config.js                       # Next.js configuration (images, compiler)
+├── tailwind.config.js                   # Tailwind theme & color extensions
+└── tsconfig.json                        # TypeScript path aliases & compiler settings
 ```
 
 ---
@@ -134,13 +135,13 @@ All pages are located under the `app/` directory:
 | `/enterprise` | `app/enterprise/page.tsx` | Enterprise-grade AI solutions |
 | `/governance` | `app/governance/page.tsx` | AI governance & ethical frameworks |
 | `/integration` | `app/integration/page.tsx` | Ecosystem and third-party integrations |
-| `/login` | `app/login/page.tsx` | Authentication login page |
+| `/login` | `app/login/page.tsx` | Standalone sign-in page with atmospheric background |
 | `/papers` | `app/papers/page.tsx` | Research papers and technical whitepapers |
 | `/pricing` | `app/pricing/page.tsx` | Subscription tiers and feature comparison |
 | `/privacy` | `app/privacy/page.tsx` | Privacy policy and data handling |
 | `/research` | `app/research/page.tsx` | AI research and innovation initiatives |
 | `/security` | `app/security/page.tsx` | Security architecture and trust center |
-| `/signup` | `app/signup/page.tsx` | Account registration |
+| `/signup` | `app/signup/page.tsx` | Standalone registration page |
 | `/status` | `app/status/page.tsx` | Real-time platform status and uptime |
 | `/team` | `app/team/page.tsx` | Team members and leadership |
 | `/terms` | `app/terms/page.tsx` | Terms of service |
@@ -150,11 +151,13 @@ All pages are located under the `app/` directory:
 
 ## Configuration & Architecture
 
-- **Path Aliases**: The `@/*` path alias is mapped to the workspace root in [tsconfig.json](file:///Users/hardik/Downloads/BharatTech/main%20rep/tsconfig.json) (e.g. `@/components/...`, `@/lib/...`).
-- **Typography & Font Optimization**: Fonts are loaded in [app/layout.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/layout.tsx) via `next/font/google` using `--font-body` (`Inter`) and `--font-mono` (`JetBrains Mono`).
-- **Styling System**: Tailwind CSS 4 is imported in [app/globals.css](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/globals.css) with a centralized design system token set for colors, borders, and animations, extending [tailwind.config.js](file:///Users/hardik/Downloads/BharatTech/main%20rep/tailwind.config.js).
-- **Image Optimization**: [next.config.js](file:///Users/hardik/Downloads/BharatTech/main%20rep/next.config.js) is configured with `remotePatterns` (allowing all HTTPS domains) and AVIF/WebP next-gen format support.
-- **Global Authentication Context**: Wrapped in [app/layout.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/layout.tsx) via `AuthProvider` from [components/auth/auth-context.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/auth/auth-context.tsx).
+- **Path Aliases**: The `@/*` path alias is mapped to the workspace root in [tsconfig.json](file:///Users/hardik/Downloads/BharatTech/main%20rep/tsconfig.json) (e.g., `@/components/...`, `@/lib/...`).
+- **SEO & Social Metadata**: [app/layout.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/layout.tsx) configures comprehensive SEO metadata, including `metadataBase` (`https://rivinity.ai`), OpenGraph cards, Twitter preview cards, keywords, and favicon icons.
+- **Typography & Font Optimization**: Managed via `next/font/google` for `--font-body` (`Inter`), `--font-mono` (`JetBrains Mono`), and serif accents (`Fraunces`).
+- **Unified Authentication Architecture**: [components/auth/auth-modal.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/auth/auth-modal.tsx) consolidates login, signup, and password reset flows with built-in client rate limiting, input sanitization, and dual usage (overlay modal triggered by `useAuthModal()` or full-page embedded card).
+- **Atmospheric Backgrounds**: [components/ui/interactive-pixel-background.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/ui/interactive-pixel-background.tsx) renders ambient glass diffusion and high-resolution background art for auth views.
+- **Styling System**: Tailwind CSS 4 is loaded in [app/globals.css](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/globals.css) with design system variables extending [tailwind.config.js](file:///Users/hardik/Downloads/BharatTech/main%20rep/tailwind.config.js).
+- **Image Optimization**: Configured in [next.config.js](file:///Users/hardik/Downloads/BharatTech/main%20rep/next.config.js) with `remotePatterns` for external image providers and automatic AVIF/WebP conversion.
 
 ---
 

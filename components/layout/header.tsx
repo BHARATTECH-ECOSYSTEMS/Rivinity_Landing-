@@ -218,46 +218,39 @@ function PlatformDropdownPanel({
   onNavigate: () => void;
 }) {
   return (
-    <div className="w-[720px] p-5 bg-white" style={{ backgroundColor: "#ffffff" }}>
-      {/* Flagship row */}
-      <div className="grid grid-cols-3 gap-2 pb-4 mb-4 border-b border-neutral-100">
-        {featured.map((product) => {
-          const Icon = product.icon;
-          return (
+    <div className="w-[560px] p-3.5 bg-white" style={{ backgroundColor: "#ffffff" }}>
+      {/* Featured / Core Products Header & Grid */}
+      <div className="mb-2.5">
+        <div className="px-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+          Core Products
+        </div>
+        <div className="grid grid-cols-3 gap-0.5">
+          {featured.map((product) => (
             <Link
               key={product.label}
               href={product.href}
               onClick={onNavigate}
-              className="group relative flex items-start gap-3 rounded-xl p-2.5 hover:bg-neutral-50 transition-all"
+              className="group flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium text-neutral-800 hover:text-black hover:bg-neutral-100/80 transition-colors"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-orange-50 text-[#FF5A1F] shrink-0 group-hover:bg-[#FF5A1F] group-hover:text-white transition-colors">
-                <Icon className="h-4 w-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-semibold text-neutral-900 group-hover:text-[#FF5A1F] transition-colors">
-                    {product.label}
-                  </span>
-                  {product.badge && (
-                    <span className="text-[9px] uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-orange-100 text-[#FF5A1F] font-medium">
-                      {product.badge}
-                    </span>
-                  )}
-                </div>
-                <p className="text-[11px] text-neutral-500 mt-0.5 leading-snug">
-                  {product.description}
-                </p>
-              </div>
+              <span>{product.label}</span>
+              {product.badge && (
+                <span className="text-[9px] uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-neutral-100 text-neutral-600 font-medium">
+                  {product.badge}
+                </span>
+              )}
             </Link>
-          );
-        })}
+          ))}
+        </div>
       </div>
 
+      {/* Subtle Divider */}
+      <div className="h-px bg-neutral-100 my-2 mx-1" />
+
       {/* Categorized list */}
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-5 gap-1 pt-0.5">
         {categories.map((category) => (
-          <div key={category.label}>
-            <h4 className="px-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+          <div key={category.label} className="flex flex-col">
+            <h4 className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
               {category.label}
             </h4>
             {category.items.length > 0 ? (
@@ -267,7 +260,7 @@ function PlatformDropdownPanel({
                     <Link
                       href={link.href}
                       onClick={onNavigate}
-                      className="block rounded-lg px-2 py-1 text-xs font-medium text-neutral-700 hover:text-neutral-950 hover:bg-neutral-50 transition-colors"
+                      className="block rounded-md px-2 py-1 text-[12px] font-medium text-neutral-700 hover:text-black hover:bg-neutral-100/80 transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -275,7 +268,7 @@ function PlatformDropdownPanel({
                 ))}
               </ul>
             ) : (
-              <span className="px-2 text-xs text-neutral-400">Coming soon</span>
+              <span className="px-2 text-[11px] text-neutral-300">Coming soon</span>
             )}
           </div>
         ))}
@@ -292,11 +285,11 @@ function RegularDropdownPanel({
   onNavigate: () => void;
 }) {
   return (
-    <div className="flex gap-4 p-4 min-w-[320px] max-w-[480px] bg-white" style={{ backgroundColor: "#ffffff" }}>
+    <div className="flex gap-2 p-2 min-w-[200px] max-w-[260px] bg-white" style={{ backgroundColor: "#ffffff" }}>
       {sections.map((section, idx) => (
-        <div key={idx} className="flex flex-1 flex-col gap-1">
+        <div key={idx} className="flex flex-1 flex-col gap-0.5">
           {section.heading && (
-            <span className="px-2 pb-1 text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+            <span className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
               {section.heading}
             </span>
           )}
@@ -304,17 +297,10 @@ function RegularDropdownPanel({
             <Link
               key={sub.label}
               href={sub.href}
-              className="group rounded-xl px-3 py-2 text-xs transition-colors hover:bg-neutral-50"
+              className="group flex items-center rounded-xl px-3 py-2 text-xs font-semibold text-neutral-800 transition-colors hover:bg-neutral-50 hover:text-[#FF5A1F]"
               onClick={onNavigate}
             >
-              <div className="font-semibold text-neutral-900 group-hover:text-[#FF5A1F] transition-colors">
-                {sub.label}
-              </div>
-              {sub.description && (
-                <div className="mt-0.5 text-[11px] leading-snug text-neutral-500">
-                  {sub.description}
-                </div>
-              )}
+              <span>{sub.label}</span>
             </Link>
           ))}
         </div>
@@ -360,108 +346,115 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed top-3 sm:top-4 inset-x-0 z-50 px-3 sm:px-6 pointer-events-none">
+    <header className="fixed top-3 sm:top-4 inset-x-0 z-50 px-4 sm:px-6 lg:px-8 pointer-events-none">
       <motion.div
         initial={{ opacity: 0, y: -20, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ backgroundColor: "#ffffff" }}
-        className={`pointer-events-auto mx-auto flex h-[60px] sm:h-[66px] max-w-6xl items-center justify-between px-5 sm:px-7 rounded-full border border-neutral-200/80 bg-white transition-all duration-300 ${scrolled
+        className={`pointer-events-auto mx-auto flex h-[60px] sm:h-[66px] max-w-7xl items-center justify-between px-5 sm:px-8 rounded-full border border-neutral-200/80 bg-white transition-all duration-300 ${scrolled
           ? "shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
           : "shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
           }`}
       >
-        {/* Logo */}
-        <Link href="/" className="group flex items-center shrink-0 py-1">
-          <motion.div
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex items-center transition-transform duration-200"
-          >
-            <Image
-              src="/rivinity_logo_cropped.png"
-              alt="Rivinity Logo"
-              width={140}
-              height={46}
-              className="h-8 sm:h-9 w-auto object-contain"
-              priority
-            />
-          </motion.div>
-        </Link>
+        {/* Left: Logo & Nav Items */}
+        <div className="flex items-center gap-6 lg:gap-8">
+          {/* Logo */}
+          <Link href="/" className="group flex items-center shrink-0 py-1">
+            <motion.div
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-center transition-transform duration-200"
+            >
+              <Image
+                src="/rivinity_logo_cropped.png"
+                alt="Rivinity Logo"
+                width={140}
+                height={46}
+                className="h-8 sm:h-9 w-auto object-contain"
+                priority
+              />
+            </motion.div>
+          </Link>
 
-        {/* Desktop Nav */}
-        <nav
-          className="hidden items-center gap-1 lg:flex"
-          onMouseLeave={() => setOpenDropdown(null)}
-        >
-          {navItems.map((item) =>
-            item.type === "link" ? (
-              <Link
-                key={item.label}
-                href={item.href}
-                style={{ color: "#404040" }}
-                className="appearance-none border-0 outline-none bg-transparent inline-flex items-center justify-center rounded-full px-3.5 py-2 text-sm font-medium hover:!text-neutral-950 hover:bg-neutral-100 transition-colors select-none"
-              >
-                <span>{item.label}</span>
-              </Link>
-            ) : (
-              <div
-                key={item.label}
-                className="relative"
-                onMouseEnter={() => {
-                  if (canHover) setOpenDropdown(item.label);
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() =>
-                    setOpenDropdown(openDropdown === item.label ? null : item.label)
-                  }
-                  style={{ color: openDropdown === item.label ? "#0a0a0a" : "#404040" }}
-                  className={`appearance-none border-0 outline-none inline-flex items-center justify-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-colors cursor-pointer select-none ${openDropdown === item.label
-                    ? "bg-neutral-100 !text-neutral-950"
-                    : "bg-transparent hover:!text-neutral-950 hover:bg-neutral-100"
-                    }`}
+          {/* Desktop Nav */}
+          <nav
+            className="hidden items-center gap-1 lg:flex"
+            onMouseLeave={() => setOpenDropdown(null)}
+          >
+            {navItems.map((item) =>
+              item.type === "link" ? (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  style={{ color: "#404040" }}
+                  className="appearance-none border-0 outline-none bg-transparent inline-flex items-center justify-center rounded-full px-3.5 py-2 text-sm font-medium hover:!text-neutral-950 hover:bg-neutral-100 transition-colors select-none"
                 >
                   <span>{item.label}</span>
-                  <ChevronDown
-                    size={14}
-                    style={{ color: openDropdown === item.label ? "#0a0a0a" : "#737373" }}
-                    className={`transition-transform duration-200 ${openDropdown === item.label ? "rotate-180" : ""
+                </Link>
+              ) : (
+                <div
+                  key={item.label}
+                  className="relative"
+                  onMouseEnter={() => {
+                    if (canHover) setOpenDropdown(item.label);
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOpenDropdown(openDropdown === item.label ? null : item.label)
+                    }
+                    style={{ color: openDropdown === item.label ? "#0a0a0a" : "#404040" }}
+                    className={`appearance-none border-0 outline-none inline-flex items-center justify-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-colors cursor-pointer select-none ${openDropdown === item.label
+                      ? "bg-neutral-100 !text-neutral-950"
+                      : "bg-transparent hover:!text-neutral-950 hover:bg-neutral-100"
                       }`}
-                  />
-                </button>
+                  >
+                    <span>{item.label}</span>
+                    <ChevronDown
+                      size={14}
+                      style={{ color: openDropdown === item.label ? "#0a0a0a" : "#737373" }}
+                      className={`transition-transform duration-200 ${openDropdown === item.label ? "rotate-180" : ""
+                        }`}
+                    />
+                  </button>
 
-                {/* Dropdown panel */}
-                <AnimatePresence>
-                  {openDropdown === item.label && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                      transition={{ duration: 0.15, ease: "easeOut" }}
-                      style={{ backgroundColor: "#ffffff" }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 rounded-2xl border border-neutral-200 bg-white shadow-[0_20px_50px_-10px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.06)] z-50 overflow-hidden"
-                    >
-                      {item.variant === "platform" ? (
-                        <PlatformDropdownPanel
-                          featured={item.featured}
-                          categories={item.categories}
-                          onNavigate={() => setOpenDropdown(null)}
-                        />
-                      ) : (
-                        <RegularDropdownPanel
-                          sections={item.sections}
-                          onNavigate={() => setOpenDropdown(null)}
-                        />
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )
-          )}
-        </nav>
+                  {/* Dropdown panel */}
+                  <AnimatePresence>
+                    {openDropdown === item.label && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        style={{ backgroundColor: "#ffffff" }}
+                        className={`absolute top-full mt-2.5 rounded-2xl border border-neutral-200 bg-white shadow-[0_20px_50px_-10px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.06)] z-50 overflow-hidden ${
+                          item.variant === "platform"
+                            ? "left-0 sm:left-[-30px]"
+                            : "left-1/2 -translate-x-1/2"
+                        }`}
+                      >
+                        {item.variant === "platform" ? (
+                          <PlatformDropdownPanel
+                            featured={item.featured}
+                            categories={item.categories}
+                            onNavigate={() => setOpenDropdown(null)}
+                          />
+                        ) : (
+                          <RegularDropdownPanel
+                            sections={item.sections}
+                            onNavigate={() => setOpenDropdown(null)}
+                          />
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )
+            )}
+          </nav>
+        </div>
 
         {/* Right CTA Area (Desktop) */}
         <div className="hidden items-center gap-1.5 lg:flex">
@@ -514,7 +507,7 @@ export default function Header() {
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.2 }}
             style={{ backgroundColor: "#ffffff" }}
-            className="pointer-events-auto mx-auto mt-2 max-w-6xl rounded-3xl border border-neutral-200 bg-white shadow-2xl p-4 lg:hidden"
+            className="pointer-events-auto mx-auto mt-2 max-w-7xl rounded-3xl border border-neutral-200 bg-white shadow-2xl p-4 lg:hidden"
           >
             <div className="flex flex-col gap-1 max-h-[75vh] overflow-y-auto px-2">
               {navItems.map((item) =>
@@ -609,29 +602,23 @@ function MobileAccordion({
               <div className="py-2 space-y-3">
                 <div className="space-y-1">
                   <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
-                    Featured
+                    Core Products
                   </span>
-                  {item.featured.map((product) => {
-                    const Icon = product.icon;
-                    return (
-                      <Link
-                        key={product.label}
-                        href={product.href}
-                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs text-neutral-700 hover:bg-neutral-100"
-                        onClick={onNavigate}
-                      >
-                        <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-orange-50 text-[#FF5A1F]">
-                          <Icon size={13} />
-                        </div>
-                        <span className="font-medium text-neutral-900">{product.label}</span>
-                        {product.badge && (
-                          <span className="text-[9px] uppercase tracking-wide px-1.5 py-0.2 rounded-full bg-orange-100 text-[#FF5A1F] font-medium ml-auto">
-                            {product.badge}
-                          </span>
-                        )}
-                      </Link>
-                    );
-                  })}
+                  {item.featured.map((product) => (
+                    <Link
+                      key={product.label}
+                      href={product.href}
+                      className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-neutral-800 hover:bg-neutral-100 hover:text-black transition-colors"
+                      onClick={onNavigate}
+                    >
+                      <span>{product.label}</span>
+                      {product.badge && (
+                        <span className="text-[9px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600 font-medium">
+                          {product.badge}
+                        </span>
+                      )}
+                    </Link>
+                  ))}
                 </div>
 
                 {item.categories.map((category) =>

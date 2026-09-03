@@ -147,24 +147,24 @@ export default function PricingPage() {
           {/* Header & Title */}
           <div className="mx-auto px-4 sm:px-6 max-w-4xl">
             <div className="mb-8 text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl font-semibold tracking-tight text-[#1A1A1A] sm:text-5xl lg:text-6xl">
+              <h1 className="text-4xl font-semibold tracking-tight text-[#0f172a] sm:text-5xl lg:text-6xl">
                 Pricing
               </h1>
-              <p className="mt-3 text-lg text-[#6B7280]">
+              <p className="mt-3 text-lg text-[#64748b]">
                 Choose the best plan for you.
               </p>
             </div>
 
             {/* Toggle */}
             <div className="mb-10 sm:mb-12 flex justify-center">
-              <div className="inline-flex items-center rounded-xl bg-gray-100 p-1 border border-gray-200">
+              <div className="inline-flex items-center rounded-xl bg-gray-100 p-1 border border-slate-200">
                 <button
                   type="button"
                   onClick={() => setYearly(false)}
                   className={`rounded-lg px-4 py-2 text-sm font-medium transition cursor-pointer ${
                     !yearly
-                      ? "bg-white text-[#1A1A1A] shadow-xs"
-                      : "text-[#6B7280] hover:text-[#1A1A1A]"
+                      ? "bg-white text-[#0f172a] shadow-xs"
+                      : "text-[#64748b] hover:text-[#0f172a]"
                   }`}
                 >
                   Monthly
@@ -174,8 +174,8 @@ export default function PricingPage() {
                   onClick={() => setYearly(true)}
                   className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition cursor-pointer ${
                     yearly
-                      ? "bg-white text-[#1A1A1A] shadow-xs"
-                      : "text-[#6B7280] hover:text-[#1A1A1A]"
+                      ? "bg-white text-[#0f172a] shadow-xs"
+                      : "text-[#64748b] hover:text-[#0f172a]"
                   }`}
                 >
                   Yearly
@@ -188,7 +188,7 @@ export default function PricingPage() {
           </div>
 
           {/* 4 Cards Exactly in 1 Row */}
-          <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
             <div className="grid items-stretch gap-5 grid-cols-1 md:grid-cols-4">
               {plans.map((plan) => (
                 <div
@@ -196,7 +196,7 @@ export default function PricingPage() {
                   className={`pricing-card relative flex flex-col justify-between rounded-2xl bg-white border p-6 xl:p-7 transition-all hover:shadow-md ${
                     plan.highlighted
                       ? "featured border-2 border-[#FF6B00] shadow-md"
-                      : "border-[#E5E7EB]"
+                      : "border-slate-200"
                   }`}
                 >
                   {/* Badge */}
@@ -208,39 +208,39 @@ export default function PricingPage() {
 
                   {/* Top content */}
                   <div>
-                    <h3 className="text-xl font-semibold text-[#1A1A1A]">
+                    <h3 className="text-xl font-semibold text-[#0f172a]">
                       {plan.name}
                     </h3>
 
                     {/* Price */}
-                    <div className="pricing-price mt-2 flex items-baseline gap-1.5 text-3xl xl:text-4xl font-semibold text-[#1A1A1A]">
+                    <div className="pricing-price mt-2 flex items-baseline gap-1.5 text-3xl xl:text-4xl font-semibold text-[#0f172a]">
                       {yearly && plan.yearlyStrike && (
-                        <span className="text-base font-normal text-gray-400 line-through mr-1">
+                        <span className="text-base font-normal text-slate-400 line-through mr-1">
                           ${plan.yearlyStrike}
                         </span>
                       )}
                       <span>{formatPrice(plan, yearly)}</span>
                       {plan.priceSuffix && (
-                        <span className="text-sm xl:text-base font-normal text-[#6B7280]">
+                        <span className="text-sm xl:text-base font-normal text-[#64748b]">
                           {plan.priceSuffix}
                         </span>
                       )}
                     </div>
 
                     {/* Tagline */}
-                    <p className="pricing-description mt-1 text-xs xl:text-sm text-[#6B7280]">
+                    <p className="pricing-description mt-1 text-xs xl:text-sm text-[#64748b]">
                       {plan.tagline}
                     </p>
 
                     {/* Features */}
-                    <ul className="pricing-features mt-6 flex flex-col gap-2.5 text-xs xl:text-sm text-[#1A1A1A] pl-0">
+                    <ul className="pricing-features mt-6 flex flex-col gap-2.5 text-xs xl:text-sm text-[#0f172a] pl-0">
                       {plan.features.map((feature) => (
                         <li
                           key={feature.label}
                           className="flex items-start gap-2 py-0.5 pl-0"
                         >
                           {feature.isMuted ? (
-                            <span className="text-xs text-[#6B7280] italic mt-1 pl-6">
+                            <span className="text-xs text-[#64748b] italic mt-1 pl-6">
                               {feature.label}
                             </span>
                           ) : (
@@ -270,10 +270,10 @@ export default function PricingPage() {
                   <div className="mt-8 pt-2">
                     <Link
                       href={plan.cta.href}
-                      className={`block w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition ${
+                      className={`flex items-center justify-center min-h-[44px] w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 ${
                         plan.highlighted
                           ? "bg-[#FF6B00] text-white hover:bg-[#e66000] shadow-xs"
-                          : "bg-gray-100 text-[#1A1A1A] hover:bg-gray-200 border border-gray-200"
+                          : "bg-gray-100 text-[#0f172a] hover:bg-gray-200 border border-gray-200"
                       }`}
                     >
                       {plan.cta.label}
@@ -287,7 +287,7 @@ export default function PricingPage() {
 
         {/* Disclaimer */}
         <div className="px-4 mb-16">
-          <p className="mx-auto max-w-3xl text-center text-xs text-[#6B7280]">
+          <p className="mx-auto max-w-3xl text-center text-xs text-[#64748b]">
             *Prices are subject to tax depending on your location. Rivinity Agent is powered by large language models. While it can produce powerful results, its behavior is probabilistic meaning it may occasionally make mistakes.
           </p>
         </div>
@@ -301,16 +301,16 @@ export default function PricingPage() {
 
         {/* Still have questions banner */}
         <div className="text-center pb-16">
-          <p className="text-base font-medium text-[#1A1A1A]">
+          <p className="text-base font-medium text-[#0f172a]">
             Still have questions?
           </p>
-          <p className="mt-2 text-sm text-[#6B7280]">
+          <p className="mt-2 text-sm text-[#64748b]">
             See more in our{" "}
             <Link
               href="/docs"
-              className="font-semibold text-[#FF6B00] hover:underline"
+              className="text-[#FF6B00] hover:underline font-medium"
             >
-              documentation
+              Documentation
             </Link>
             , or{" "}
             <Link

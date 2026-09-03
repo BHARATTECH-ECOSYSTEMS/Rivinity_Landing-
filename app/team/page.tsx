@@ -1,24 +1,37 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import {
+  Sparkles,
+  ArrowRight,
+  Mail,
+  Check,
+} from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+
+/* =========================================================
+   TYPES & DATA MODELS
+========================================================= */
 
 interface TeamMember {
   id: string;
   name: string;
   role: string;
-  department: "Leadership" | "Engineering" | "Design" | "Product";
+  department: "Leadership" | "Engineering" | "Design" | "Product" | "Research";
   initials: string;
-  bio: string;
   location: string;
-  focus: string;
+  badge: string;
+  bio: string;
   skills: string[];
+  bannerGradient: string;
+  avatarBg: string;
   socials: {
     twitter?: string;
     linkedin?: string;
     github?: string;
+    email?: string;
   };
 }
 
@@ -30,10 +43,17 @@ const teamMembers: TeamMember[] = [
     department: "Leadership",
     initials: "AR",
     location: "San Francisco, CA",
-    focus: "AI Infrastructure & Long-term Strategy",
-    bio: "Passionate about democratizing AI infrastructure and empowering the next billion software creators.",
+    badge: "Founder",
+    bio: "Passionate about democratizing AI infrastructure and empowering the next billion software creators through autonomous agent workflows.",
     skills: ["AI Strategy", "Distributed Systems", "Ecosystem Architecture"],
-    socials: { twitter: "#", linkedin: "#", github: "#" },
+    bannerGradient: "from-[#FFB703] via-[#FF6B00] to-[#E85D9E]",
+    avatarBg: "from-[#1A1A1A] to-[#2D3748]",
+    socials: {
+      twitter: "https://x.com",
+      linkedin: "https://linkedin.com",
+      github: "https://github.com",
+      email: "alex@rivinity.com",
+    },
   },
   {
     id: "sarah-chen",
@@ -42,10 +62,16 @@ const teamMembers: TeamMember[] = [
     department: "Design",
     initials: "SC",
     location: "Tokyo, Japan",
-    focus: "Developer Experience & Spatial Interfaces",
-    bio: "Obsessed with intuitive user experiences, minimal interfaces, and human-centric developer tools.",
+    badge: "Design Lead",
+    bio: "Obsessed with intuitive developer experiences, clean user-centered design systems, and friction-free agent interaction models.",
     skills: ["UI/UX Systems", "Design Tokens", "Interaction Dynamics"],
-    socials: { twitter: "#", linkedin: "#" },
+    bannerGradient: "from-[#FF8C42] via-[#E85D9E] to-[#9D4EDD]",
+    avatarBg: "from-[#2A1B3D] to-[#44318D]",
+    socials: {
+      twitter: "https://x.com",
+      linkedin: "https://linkedin.com",
+      email: "sarah@rivinity.com",
+    },
   },
   {
     id: "david-miller",
@@ -54,10 +80,16 @@ const teamMembers: TeamMember[] = [
     department: "Engineering",
     initials: "DM",
     location: "Berlin, Germany",
-    focus: "Ultra Low-Latency Inference Runtimes",
-    bio: "Systems architect specializing in distributed LLM orchestration, agentic runtimes, and low-latency inference.",
+    badge: "Core Systems",
+    bio: "Systems architect specializing in distributed LLM orchestration, speculative decoding, and sub-millisecond execution harnesses.",
     skills: ["Rust", "GPU Kernels", "Distributed LLMs", "C++"],
-    socials: { linkedin: "#", github: "#" },
+    bannerGradient: "from-[#4361EE] via-[#4CC9F0] to-[#7209B7]",
+    avatarBg: "from-[#03045E] to-[#023E8A]",
+    socials: {
+      linkedin: "https://linkedin.com",
+      github: "https://github.com",
+      email: "david@rivinity.com",
+    },
   },
   {
     id: "elena-rostova",
@@ -66,10 +98,16 @@ const teamMembers: TeamMember[] = [
     department: "Product",
     initials: "ER",
     location: "London, UK",
-    focus: "Agent Developer Tooling & SDK Rollout",
-    bio: "Connecting cutting-edge AI research with real-world developer workflows and product execution.",
-    skills: ["Product Roadmap", "Developer APIs", "Growth Metrics"],
-    socials: { twitter: "#", linkedin: "#" },
+    badge: "Product Lead",
+    bio: "Connecting cutting-edge AI research with real-world enterprise developer workflows, API ergonomics, and rapid deployment cycles.",
+    skills: ["Product Strategy", "Developer APIs", "Growth Metrics"],
+    bannerGradient: "from-[#FB8500] via-[#FFB703] to-[#023047]",
+    avatarBg: "from-[#14213D] to-[#000000]",
+    socials: {
+      twitter: "https://x.com",
+      linkedin: "https://linkedin.com",
+      email: "elena@rivinity.com",
+    },
   },
   {
     id: "marcus-vance",
@@ -78,360 +116,315 @@ const teamMembers: TeamMember[] = [
     department: "Engineering",
     initials: "MV",
     location: "Austin, TX",
-    focus: "Multi-Region Cloud Reliability",
-    bio: "Scaling high-availability infrastructure, multi-cloud deployments, and developer tooling pipelines.",
+    badge: "Infrastructure",
+    bio: "Scaling zero-downtime high-availability infrastructure, single-tenant VPCs, and automated policy verification gateways.",
     skills: ["Kubernetes", "Observability", "DevOps Pipelines", "Go"],
-    socials: { linkedin: "#", github: "#" },
+    bannerGradient: "from-[#06D6A0] via-[#118AB2] to-[#073B4C]",
+    avatarBg: "from-[#0F4C5C] to-[#1D3557]",
+    socials: {
+      linkedin: "https://linkedin.com",
+      github: "https://github.com",
+      email: "marcus@rivinity.com",
+    },
   },
   {
     id: "aria-sharma",
-    name: "Aria Sharma",
+    name: "Dr. Aria Sharma",
     role: "Lead AI Researcher",
-    department: "Engineering",
+    department: "Research",
     initials: "AS",
     location: "Bengaluru, India",
-    focus: "Grounding Guardrails & Autonomous Tool Calling",
-    bio: "Focusing on grounding tool calls, safety guardrails, and contextual memory for autonomous agents.",
-    skills: ["PyTorch", "Safety Guardrails", "Contextual Memory"],
-    socials: { twitter: "#", github: "#" },
+    badge: "AI Labs",
+    bio: "Focusing on grounding LLM tool calls, formal policy verification, and contextual memory compression for long-horizon agents.",
+    skills: ["PyTorch", "Safety Guardrails", "Context Memory"],
+    bannerGradient: "from-[#F72585] via-[#7209B7] to-[#3A0CA3]",
+    avatarBg: "from-[#3F37C9] to-[#4895EF]",
+    socials: {
+      twitter: "https://x.com",
+      github: "https://github.com",
+      email: "aria@rivinity.com",
+    },
+  },
+  {
+    id: "leo-nakamura",
+    name: "Leo Nakamura",
+    role: "Staff Kernel Engineer",
+    department: "Engineering",
+    initials: "LN",
+    location: "Seattle, WA",
+    badge: "Performance",
+    bio: "Optimizing low-level CUDA kernels and WebAssembly sandboxes for deterministic high-throughput model serving.",
+    skills: ["CUDA", "WebAssembly", "TensorRT", "C++20"],
+    bannerGradient: "from-[#FF6B00] via-[#FF8C42] to-[#FFD166]",
+    avatarBg: "from-[#2B2D42] to-[#1A1A1A]",
+    socials: {
+      github: "https://github.com",
+      linkedin: "https://linkedin.com",
+      email: "leo@rivinity.com",
+    },
+  },
+  {
+    id: "maya-patel",
+    name: "Maya Patel",
+    role: "Head of AI Security",
+    department: "Research",
+    initials: "MP",
+    location: "New York, NY",
+    badge: "Security Lead",
+    bio: "Leading research on adversarial prompt injection defenses, multi-modal forensics, and cryptographic model provenance.",
+    skills: ["Threat Modeling", "Steganography", "SOC 2 Type II"],
+    bannerGradient: "from-[#7209B7] via-[#F72585] to-[#FFB703]",
+    avatarBg: "from-[#1F2421] to-[#363537]",
+    socials: {
+      twitter: "https://x.com",
+      linkedin: "https://linkedin.com",
+      email: "maya@rivinity.com",
+    },
   },
 ];
 
-const departments = ["All", "Leadership", "Engineering", "Design", "Product"] as const;
+/* =========================================================
+   MAIN COMPONENT
+========================================================= */
 
 export default function TeamPage() {
-  const [activeTab, setActiveTab] = useState<(typeof departments)[number]>("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
 
-  const filteredMembers = useMemo(() => {
-    return teamMembers.filter((m) => {
-      const matchDept = activeTab === "All" || m.department === activeTab;
-      const q = searchQuery.toLowerCase().trim();
-      const matchSearch =
-        !q ||
-        m.name.toLowerCase().includes(q) ||
-        m.role.toLowerCase().includes(q) ||
-        m.bio.toLowerCase().includes(q) ||
-        m.skills.some((s) => s.toLowerCase().includes(q));
-      return matchDept && matchSearch;
-    });
-  }, [activeTab, searchQuery]);
+  const handleCopyEmail = (email: string, id: string) => {
+    navigator.clipboard.writeText(email);
+    setCopiedEmail(id);
+    setTimeout(() => setCopiedEmail(null), 2000);
+  };
 
   return (
-    <div className="w-full min-h-screen bg-white text-[#1A1A1A] flex flex-col justify-between">
+    <div
+      className="w-full min-h-screen bg-[#F7F7F8] text-[#1A1A1A] flex flex-col justify-between"
+      style={{
+        fontFamily:
+          "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      }}
+    >
       <Header />
 
-      <main className="w-full pt-32 pb-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* 1. Hero Section */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-[#1A1A1A] tracking-tight">
-              The minds behind <span className="text-[#FF6B00]">Rivinity</span>
+      <main className="w-full flex-1 pt-28 sm:pt-32 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* ===================================================
+              1. HERO SECTION
+          =================================================== */}
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#1A1A1A] tracking-tight leading-[1.1]">
+              The minds engineering the{" "}
+              <span className="bg-gradient-to-r from-[#FF6B00] via-[#FF8C42] to-[#E85D9E] bg-clip-text text-transparent">
+                future of AI.
+              </span>
             </h1>
 
-            <p className="mt-4 text-base text-[#6B7280] max-w-2xl mx-auto leading-relaxed">
-              We are a global team of researchers, engineers, and designers building the future of intelligent AI infrastructure and autonomous agent workflows.
+            <p className="mt-4 text-sm sm:text-base text-[#6B7280] max-w-2xl mx-auto leading-relaxed">
+              We are a distributed team of researchers, systems architects, and product designers pushing the boundaries of autonomous agent runtimes and cryptographic AI security.
             </p>
           </div>
 
-          {/* 2. Search & Department Filters Toolbar */}
-          <div className="bg-gray-50/90 border border-gray-200 rounded-2xl p-3 mb-10 flex flex-col md:flex-row items-center justify-between gap-3 shadow-xs">
-            {/* Search Input */}
-            <div className="relative w-full md:w-80">
-              <svg
-                className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search name, role, or stack..."
-                className="w-full pl-10 pr-8 py-2 bg-white border border-gray-200 rounded-xl text-sm text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:border-[#FF6B00] focus:ring-1 focus:ring-[#FF6B00] transition"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-0.5 cursor-pointer"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 6 6 18M6 6l12 12" />
-                  </svg>
-                </button>
-              )}
-            </div>
-
-            {/* Department Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 w-full md:w-auto">
-              {departments.map((dept) => {
-                const count =
-                  dept === "All"
-                    ? teamMembers.length
-                    : teamMembers.filter((m) => m.department === dept).length;
-                const isActive = activeTab === dept;
-
-                return (
-                  <button
-                    key={dept}
-                    type="button"
-                    onClick={() => setActiveTab(dept)}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-                      isActive
-                        ? "bg-[#FF6B00] text-white shadow-xs"
-                        : "bg-white text-[#6B7280] border border-gray-200 hover:bg-gray-100 hover:text-[#1A1A1A]"
-                    }`}
-                  >
-                    <span>{dept}</span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-medium ${
-                        isActive ? "bg-black/20 text-white" : "bg-gray-100 text-gray-500"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* 3. Team Cards Grid */}
-          <div className="mb-16">
-            {filteredMembers.length > 0 ? (
-              <div
-                className={`grid gap-6 ${
-                  filteredMembers.length === 1
-                    ? "grid-cols-1 max-w-sm mx-auto"
-                    : filteredMembers.length === 2
-                    ? "grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto"
-                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                }`}
-              >
-                {filteredMembers.map((member) => (
+          {/* ===================================================
+              2. MODERN TEAM CARDS GRID (WITH DIRECT SOCIALS)
+          =================================================== */}
+          <div className="mb-20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-7">
+              {teamMembers.map((member) => (
                   <div
                     key={member.id}
-                    onClick={() => setSelectedMember(member)}
-                    className="group bg-white border border-gray-200 hover:border-[#FF6B00]/40 rounded-2xl p-6 flex flex-col justify-between hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer min-h-[340px]"
+                    className="group relative bg-white border border-[#E5E7EB] rounded-[2rem] p-4 sm:p-5 flex flex-col justify-between shadow-[0_15px_35px_-15px_rgba(0,0,0,0.06)] hover:shadow-[0_25px_60px_-20px_rgba(255,107,0,0.18)] hover:border-[#FFD9BF] transition-all duration-300 hover:-translate-y-1.5"
                   >
                     <div>
-                      {/* Avatar & Department Tag */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="relative">
-                          <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-[#FF6B00] to-[#FF8C42] flex items-center justify-center font-bold text-lg text-white shadow-xs group-hover:scale-105 transition-transform">
-                            {member.initials}
-                          </div>
-                          <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-white" />
-                          </span>
+                      {/* =====================================
+                          Top Gradient Banner
+                      ===================================== */}
+                      <div className="relative w-full h-28 sm:h-32 rounded-[1.5rem] overflow-visible shadow-inner">
+                        {/* Background Gradient Mesh */}
+                        <div
+                          className={`w-full h-full rounded-[1.5rem] bg-gradient-to-br ${member.bannerGradient} relative overflow-hidden`}
+                        >
+                          {/* Organic Decorative Shapes */}
+                          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/20 blur-xl pointer-events-none" />
+                          <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-black/10 blur-lg pointer-events-none" />
                         </div>
 
-                        <span className="text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-md">
-                          {member.department}
-                        </span>
+                        {/* Avatar overlapping banner (Bottom Left) */}
+                        <div className="absolute -bottom-6 left-3.5 sm:left-4 z-10">
+                          <div className="relative">
+                            <div
+                              className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br ${member.avatarBg} border-[3.5px] border-white shadow-md flex items-center justify-center font-bold text-base sm:text-lg text-white group-hover:scale-105 transition-transform duration-200`}
+                            >
+                              {member.initials}
+                            </div>
+
+                            {/* Active Status Beacon */}
+                            <span className="absolute bottom-0 right-0 flex h-3.5 w-3.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white" />
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Floating Platform / Badge Pill (Bottom Right) */}
+                        <div className="absolute -bottom-3 right-3 sm:right-3.5 z-10">
+                          <div className="inline-flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-xs border border-[#E5E7EB] px-3 py-1 text-[11px] font-semibold text-[#1A1A1A] shadow-xs">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B00]" />
+                            <span>{member.badge}</span>
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Member Info */}
-                      <h3 className="text-xl font-bold text-[#1A1A1A] group-hover:text-[#FF6B00] transition-colors leading-snug">
-                        {member.name}
-                      </h3>
-                      <p className="text-xs font-bold text-[#FF6B00] uppercase tracking-wider mt-0.5 mb-3">
-                        {member.role}
-                      </p>
+                      {/* =====================================
+                          Member Identity & Description
+                      ===================================== */}
+                      <div className="mt-8 px-1">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <h3 className="text-lg sm:text-xl font-bold text-[#1A1A1A] group-hover:text-[#FF6B00] transition-colors leading-tight">
+                            {member.name}
+                          </h3>
+                        </div>
 
-                      <p className="text-sm text-[#6B7280] leading-relaxed line-clamp-3 mb-4">
-                        {member.bio}
-                      </p>
+                        <p className="text-xs font-semibold text-[#FF6B00] mt-0.5 mb-2">
+                          {member.role}
+                        </p>
 
-                      {/* Skills */}
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {member.skills.map((skill) => (
-                          <span
-                            key={skill}
-                            className="text-xs font-medium bg-gray-50 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-md"
-                          >
-                            {skill}
-                          </span>
-                        ))}
+                        <p className="text-xs text-[#6B7280] leading-relaxed line-clamp-3 mb-4">
+                          {member.bio}
+                        </p>
+
+                        {/* Skills / Badges */}
+                        <div className="flex flex-wrap gap-1.5 mb-5">
+                          {member.skills.map((skill) => (
+                            <span
+                              key={skill}
+                              className="text-[10px] sm:text-[11px] font-medium bg-[#F9FAFB] text-[#4B5563] border border-[#E5E7EB] px-2 py-0.5 rounded-lg"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Card Bottom Links */}
-                    <div className="pt-4 border-t border-gray-100 flex items-center justify-between mt-auto">
-                      <div className="flex items-center gap-3 text-gray-400">
-                        {member.socials.twitter && (
-                          <a
-                            href={member.socials.twitter}
-                            onClick={(e) => e.stopPropagation()}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`${member.name}'s Twitter`}
-                            className="hover:text-[#FF6B00] transition-colors p-1"
-                          >
-                            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                            </svg>
-                          </a>
-                        )}
+                    {/* =====================================
+                        Card Actions Footer: Direct Socials & Contact
+                    ===================================== */}
+                    <div className="pt-3 border-t border-[#F3F4F6] flex items-center justify-between gap-2 mt-auto">
+                      {/* Direct Social Links (LinkedIn, X, GitHub) */}
+                      <div className="flex items-center gap-1.5">
                         {member.socials.linkedin && (
                           <a
                             href={member.socials.linkedin}
-                            onClick={(e) => e.stopPropagation()}
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`${member.name}'s LinkedIn`}
-                            className="hover:text-[#FF6B00] transition-colors p-1"
+                            className="p-2 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB] text-[#4B5563] hover:border-[#FF6B00] hover:bg-[#FF6B00] hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-2xs"
                           >
-                            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <svg
+                              className="w-3.5 h-3.5 fill-current"
+                              viewBox="0 0 24 24"
+                            >
                               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
                             </svg>
                           </a>
                         )}
+
+                        {member.socials.twitter && (
+                          <a
+                            href={member.socials.twitter}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${member.name}'s X (Twitter)`}
+                            className="p-2 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB] text-[#4B5563] hover:border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-2xs"
+                          >
+                            <svg
+                              className="w-3.5 h-3.5 fill-current"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg>
+                          </a>
+                        )}
+
                         {member.socials.github && (
                           <a
                             href={member.socials.github}
-                            onClick={(e) => e.stopPropagation()}
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`${member.name}'s GitHub`}
-                            className="hover:text-[#FF6B00] transition-colors p-1"
+                            className="p-2 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB] text-[#4B5563] hover:border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-2xs"
                           >
-                            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <svg
+                              className="w-3.5 h-3.5 fill-current"
+                              viewBox="0 0 24 24"
+                            >
                               <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z" />
                             </svg>
                           </a>
                         )}
                       </div>
 
-                      <span className="text-xs font-semibold text-[#6B7280] group-hover:text-[#FF6B00] flex items-center gap-1 transition-colors">
-                        Details
-                        <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M5 12h14m-7-7 7 7-7 7" />
-                        </svg>
-                      </span>
+                      {/* Direct Email / Get in Touch Action */}
+                      {member.socials.email && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleCopyEmail(member.socials.email!, member.id)
+                          }
+                          className="inline-flex items-center gap-1.5 rounded-full bg-[#1A1A1A] px-3.5 py-1.5 text-[11px] font-semibold text-white hover:bg-[#333333] transition-all active:scale-[0.98] cursor-pointer"
+                        >
+                          {copiedEmail === member.id ? (
+                            <>
+                              <Check className="h-3 w-3 text-emerald-400" />
+                              <span>Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Mail className="h-3 w-3 text-[#FF6B00]" />
+                              <span>Contact</span>
+                            </>
+                          )}
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
               </div>
-            ) : (
-              <div className="text-center py-12 bg-gray-50 border border-gray-200 rounded-2xl">
-                <p className="text-sm font-semibold text-[#1A1A1A]">No team members match your filter.</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveTab("All");
-                    setSearchQuery("");
-                  }}
-                  className="mt-2 text-xs text-[#FF6B00] font-semibold hover:underline cursor-pointer"
-                >
-                  Reset search
-                </button>
-              </div>
-            )}
-          </div>
+            </div>
 
-          {/* 4. Perfectly Spaced CTA Box */}
-          <div className="bg-gray-50 border border-gray-200 rounded-3xl p-8 sm:p-10 text-center max-w-3xl mx-auto shadow-xs">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1A1A] mb-3">
-              Want to build the future with us?
-            </h2>
-            <p className="text-sm text-[#6B7280] max-w-xl mx-auto mb-6 leading-relaxed">
-              We are always looking for curious researchers, developers, and designers to join our mission.
-            </p>
-            <Link
-              href="/careers"
-              className="inline-flex items-center gap-2 bg-[#FF6B00] text-white px-7 py-3 rounded-full text-sm font-semibold shadow-xs hover:bg-[#e66000] hover:shadow-md transition-all cursor-pointer"
-            >
-              <span>View open positions</span>
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path d="M5 12h14m-7-7 7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
-
-        </div>
-
-        {/* 5. Detail Modal */}
-        {selectedMember && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200"
-            onClick={() => setSelectedMember(null)}
-          >
+          {/* ===================================================
+              4. RECRUITMENT CTA BANNER
+          =================================================== */}
+          <div className="bg-white border border-[#E5E7EB] rounded-[2.5rem] p-8 sm:p-12 text-center max-w-4xl mx-auto shadow-xs relative overflow-hidden">
             <div
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-md bg-white border border-gray-200 rounded-3xl p-6 sm:p-7 shadow-2xl text-[#1A1A1A]"
-            >
-              <button
-                type="button"
-                onClick={() => setSelectedMember(null)}
-                className="absolute top-4 right-4 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-900 transition cursor-pointer"
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full opacity-40 blur-2xl bg-[#FF6B00]"
+            />
+
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#FFD9BF] bg-[#FFF4EC] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#FF6B00] mb-3">
+                <Sparkles className="h-3.5 w-3.5" />
+                JOIN OUR GLOBAL LABS
+              </span>
+
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1A1A1A] mb-3">
+                Want to build next-generation AI with us?
+              </h2>
+
+              <p className="text-xs sm:text-sm text-[#6B7280] max-w-xl mx-auto mb-7 leading-relaxed">
+                We are always hiring world-class research scientists, compiler engineers, and frontend systems creators to build scalable AI infrastructure.
+              </p>
+
+              <Link
+                href="/careers"
+                className="inline-flex items-center gap-2 bg-[#FF6B00] text-white px-7 py-3 rounded-full text-xs sm:text-sm font-semibold shadow-xs hover:bg-[#E55F00] transition-all cursor-pointer active:scale-[0.98]"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </button>
-
-              <div className="flex items-center gap-3.5 mb-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FF6B00] to-[#FF8C42] flex items-center justify-center font-bold text-xl text-white shadow-xs">
-                  {selectedMember.initials}
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-[#1A1A1A]">{selectedMember.name}</h3>
-                  <p className="text-xs font-semibold text-[#FF6B00] uppercase tracking-wider mt-0.5">
-                    {selectedMember.role}
-                  </p>
-                  <p className="text-xs text-[#6B7280] flex items-center gap-1 mt-1">
-                    <svg className="w-3.5 h-3.5 text-[#FF6B00]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    {selectedMember.location}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mb-4 p-3 rounded-xl bg-orange-50/60 border border-orange-200/60 flex items-center gap-2 text-xs">
-                <span className="w-2 h-2 rounded-full bg-[#FF6B00] animate-ping" />
-                <span className="font-semibold text-[#1A1A1A]">Focus:</span>
-                <span className="text-[#6B7280]">{selectedMember.focus}</span>
-              </div>
-
-              <p className="text-xs text-[#4B5563] leading-relaxed mb-4">{selectedMember.bio}</p>
-
-              <div className="flex flex-wrap gap-1.5 mb-6">
-                {selectedMember.skills.map((s) => (
-                  <span
-                    key={s}
-                    className="text-xs bg-gray-100 text-gray-700 font-medium px-2.5 py-1 rounded-md border border-gray-200"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-
-              <div className="pt-3 border-t border-gray-100 flex items-center justify-end">
-                <button
-                  type="button"
-                  onClick={() => setSelectedMember(null)}
-                  className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-semibold text-gray-800 transition cursor-pointer"
-                >
-                  Close
-                </button>
-              </div>
+                <span>Explore Open Roles</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
-        )}
+        </div>
       </main>
 
       <Footer />

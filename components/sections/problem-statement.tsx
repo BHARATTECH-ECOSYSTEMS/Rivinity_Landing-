@@ -336,25 +336,25 @@ const PROBLEMS: ProblemItem[] = [
   {
     id: "context-fragmentation",
     topBg: "bg-gradient-to-br from-[#FFF7ED] via-[#FFEDD5] to-[#FED7AA]/50",
-    headline: "Context resets across 10+ disconnected tools",
+    headline: "Unified Model Orchestration",
     description:
-      "Engineers lose 14+ hours every sprint copy-pasting schemas, prompts, and stack traces across siloed browser tabs. Every tool starts from scratch, resetting project context and introducing repetitive hallucination loops.",
+      "Connect directly to leading frontier models through a single low-latency gateway. Eliminate fragmented SDKs, duplicated schemas, and manual prompt maintenance.",
     renderVisual: (isHovered) => <OrangeContextVisual isHovered={isHovered} />,
   },
   {
     id: "runaway-spend",
     topBg: "bg-gradient-to-br from-[#FDF2F8] via-[#FCE7F3] to-[#FBCFE8]/50",
-    headline: "Uncontrolled token spend on simple, repetitive queries",
+    headline: "Intelligent Dynamic Routing",
     description:
-      "Without dynamic intent classification and semantic prompt caching, simple lookups, parsing, and regex tasks blindly hit expensive $30/M frontier models, burning through 40–60% of monthly budgets.",
+      "Automatically evaluate prompt complexity and dispatch to the optimal model. Maximize developer velocity and eliminate wasted inference spend.",
     renderVisual: (isHovered) => <PinkSpendVisual isHovered={isHovered} />,
   },
   {
     id: "session-amnesia",
     topBg: "bg-gradient-to-br from-[#FAF5FF] via-[#F3E8FF] to-[#E9D5FF]/50",
-    headline: "Zero persistent memory between team workflows",
+    headline: "Shared Context & Persistent Memory",
     description:
-      "Standalone AI assistants lose architectural decisions and team contracts the moment a session closes. Teams suffer from repetitive context resets, high hallucination risk, and broken conventions.",
+      "Preserve project state, architecture contracts, and team conventions across workflows and sessions. Never restart from scratch or lose active context.",
     renderVisual: (isHovered) => <PurpleMemoryVisual isHovered={isHovered} />,
   },
 ];
@@ -380,11 +380,11 @@ function ProblemCardItem({ item, index }: { item: ProblemItem; index: number }) 
 
       {/* BOTTOM SECTION: Clean Content Area */}
       <div className="p-6 sm:p-8 flex flex-col justify-start space-y-3.5 flex-1 bg-white">
-        <h3 className="text-lg sm:text-xl font-extrabold text-[#191818] tracking-tight leading-snug">
+        <h3 className="text-lg sm:text-xl font-semibold text-[#0f172a] tracking-tight leading-snug">
           {item.headline}
         </h3>
 
-        <p className="text-xs sm:text-sm text-gray-500 leading-relaxed font-normal pt-1">
+        <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-normal pt-1">
           {item.description}
         </p>
       </div>
@@ -397,8 +397,8 @@ function ProblemCardItem({ item, index }: { item: ProblemItem; index: number }) 
 /* ------------------------------------------------------------------ */
 export function ProblemStatement() {
   return (
-    <section className="section py-16 md:py-24 bg-white" id="problem">
-      <div className="container mx-auto px-4 sm:px-6">
+    <section className="section bg-white" id="problem">
+      <div className="container">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -407,11 +407,11 @@ export function ProblemStatement() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3"
         >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#191818] leading-tight">
-            Why traditional AI workflows break down
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-[#0f172a] leading-tight">
+            Deploy autonomous AI agents in minutes, not weeks
           </h2>
-          <p className="text-sm sm:text-base text-gray-500 leading-relaxed max-w-2xl mx-auto font-normal">
-            Building mission-critical AI applications requires solving deep fragmentation across memory, routing, and developer velocity.
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto font-normal">
+            Rivinity unifies model routing, persistent memory, and global deployment into a single orchestration layer — so your team ships faster and spends less.
           </p>
         </motion.div>
 

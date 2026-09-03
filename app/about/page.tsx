@@ -135,9 +135,9 @@ export default function AboutPage() {
           <style jsx>{`
             .rp-main {
               --local-bg: var(--rp-bg, #ffffff);
-              --local-text: var(--rp-text, #1b2333);
-              --local-text-secondary: var(--rp-text-secondary, #666d79);
-              --local-orange: var(--rp-orange, #ff5a1f);
+              --local-text: var(--rp-text, #0f172a);
+              --local-text-secondary: var(--rp-text-secondary, #64748b);
+              --local-orange: var(--rp-orange, #ff6b00);
 
               background-color: var(--local-bg);
               color: var(--local-text);
@@ -151,14 +151,20 @@ export default function AboutPage() {
 
             .rp-container {
               width: 100%;
-              max-width: 1200px;
+              max-width: var(--container-max, 1280px);
               margin: 0 auto;
-              padding: 0 24px;
+              padding: 0 1.5rem;
+            }
+
+            @media (min-width: 1024px) {
+              .rp-container {
+                padding: 0 2rem;
+              }
             }
 
             /* ---------- Hero ---------- */
             .rp-hero {
-              padding: 80px 0 32px;
+              padding: 5rem 0 2rem;
             }
 
             .rp-heroContent {
@@ -171,24 +177,19 @@ export default function AboutPage() {
             }
 
             .rp-heroTitle {
-              font-size: 44px;
+              font-size: clamp(2.5rem, 5vw, 3.75rem);
               line-height: 1.1;
               letter-spacing: -0.02em;
-              font-weight: 700;
-              margin: 16px 0;
-            }
-
-            @media (min-width: 1000px) {
-              .rp-heroTitle {
-                font-size: 64px;
-              }
+              font-weight: 600;
+              color: var(--local-text);
+              margin: 1rem 0;
             }
 
             .rp-heroSubtitle {
-              font-size: 18px;
-              line-height: 1.5;
+              font-size: 1.125rem;
+              line-height: 1.6;
               color: var(--local-text-secondary);
-              margin: 8px 0;
+              margin: 0.5rem 0;
             }
 
             /* ---------- Editorial Rows ---------- */

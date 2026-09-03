@@ -9,7 +9,7 @@ type Pt = [number, number];
 const VIEW_W = 1000;
 const VIEW_H = 480;
 const CENTER: Pt = [VIEW_W / 2, VIEW_H / 2];
-const SAMPLES = 64;
+const SAMPLES = 32;
 
 // -------- Source SVG (uploaded, immutable) --------
 const LOGO_GRADIENT_ID = "rivinity-logo-gradient";
@@ -35,7 +35,7 @@ const RAW_PATHS: { d: string; tx: number; ty: number }[] = [
 
 const WAVES_PER_PATH = [11, 6];
 const COUNT = WAVES_PER_PATH.reduce((a, b) => a + b, 0);
-const FIT_SIZE = 300;
+const FIT_SIZE = 380;
 
 // Dual-stream gradient colors
 const COLORS = [
@@ -159,19 +159,21 @@ function lerpPts(a: Pt[], b: Pt[], t: number): Pt[] {
   return out;
 }
 
+const round1 = (n: number) => Math.round(n * 10) / 10;
+
 function toPath(pts: Pt[]): string {
   if (pts.length < 2) return "";
-  let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  let d = `M${round1(pts[0][0])} ${round1(pts[0][1])}`;
   for (let i = 0; i < pts.length - 1; i++) {
     const p0 = pts[i - 1] ?? pts[i];
     const p1 = pts[i];
     const p2 = pts[i + 1];
     const p3 = pts[i + 2] ?? p2;
-    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
-    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
-    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
-    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
-    d += ` C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+    const c1x = round1(p1[0] + (p2[0] - p0[0]) / 6);
+    const c1y = round1(p1[1] + (p2[1] - p0[1]) / 6);
+    const c2x = round1(p2[0] - (p3[0] - p1[0]) / 6);
+    const c2y = round1(p2[1] - (p3[1] - p1[1]) / 6);
+    d += `C${c1x} ${c1y},${c2x} ${c2y},${round1(p2[0])} ${round1(p2[1])}`;
   }
   return d;
 }
@@ -188,6 +190,11 @@ export const RivinityFlowSVG: React.FC<FlowProps> = ({ progress }) => {
 
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const overlayRef = useRef<SVGGElement | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+  const stateRef = useRef<{ fullyFormed: boolean; atZero: boolean }>({
+    fullyFormed: false,
+    atZero: false,
+  });
 
   const initialWavePaths = useMemo(
     () =>
@@ -203,40 +210,74 @@ export const RivinityFlowSVG: React.FC<FlowProps> = ({ progress }) => {
     if (overlayRef.current) {
       overlayRef.current.setAttribute(
         "transform",
-        `translate(${sampled.fit.tx.toFixed(3)} ${sampled.fit.ty.toFixed(3)}) scale(${sampled.fit.scale.toFixed(6)})`
+        `translate(${sampled.fit.tx.toFixed(2)} ${sampled.fit.ty.toFixed(2)}) scale(${sampled.fit.scale.toFixed(5)})`
       );
     }
   }, []);
 
-  useMotionValueEvent(progress, "change", (latest) => {
+  const renderFrame = (latest: number) => {
     const p = clamp01(latest);
+    const state = stateRef.current;
+
+    // Early exit optimization: once fully formed (p >= 0.85), skip 100% of wave math & DOM attribute sets!
+    if (p >= 0.85) {
+      if (state.fullyFormed) return;
+      state.fullyFormed = true;
+      state.atZero = false;
+      if (overlayRef.current) {
+        overlayRef.current.style.opacity = "1";
+      }
+      for (let i = 0; i < COUNT; i++) {
+        const el = pathRefs.current[i];
+        if (el) el.style.opacity = "0";
+      }
+      return;
+    }
+
+    if (p <= 0.001) {
+      if (state.atZero) return;
+      state.atZero = true;
+      state.fullyFormed = false;
+      if (overlayRef.current) {
+        overlayRef.current.style.opacity = "0";
+      }
+      for (let i = 0; i < COUNT; i++) {
+        const el = pathRefs.current[i];
+        if (el) {
+          el.setAttribute("d", initialWavePaths[i]);
+          el.style.opacity = "1";
+        }
+      }
+      return;
+    }
+
+    state.fullyFormed = false;
+    state.atZero = false;
+
     const { targets, fit } = sampledRef.current;
     const hasTargets = targets.length === COUNT;
 
     if (overlayRef.current && hasTargets) {
       overlayRef.current.setAttribute(
         "transform",
-        `translate(${fit.tx.toFixed(3)} ${fit.ty.toFixed(3)}) scale(${fit.scale.toFixed(6)})`
+        `translate(${fit.tx.toFixed(2)} ${fit.ty.toFixed(2)}) scale(${fit.scale.toFixed(5)})`
       );
     }
 
     // Phase 1: Dual-side lines enter from Left and Right (p: 0 -> 0.35)
     const entryProgress = smooth(p / 0.35);
 
-    // Phase 2: Lines calm down and converge (p: 0.25 -> 0.45)
-    const calm = smooth((p - 0.25) / 0.20);
+    // Phase 2: Lines calm down and converge (p: 0.20 -> 0.50)
+    const calm = smooth((p - 0.20) / 0.30);
 
-    // Phase 3: Smooth morph into the Rivinity logo (p: 0.35 -> 0.72)
+    // Phase 3: Smooth morph into the Rivinity logo (p: 0.35 -> 0.85)
     let morph = 0;
     if (p < 0.35) morph = 0;
-    else if (p < 0.55) morph = easeInOut((p - 0.35) / 0.20) * 0.60;
-    else if (p < 0.72) morph = 0.60 + easeInOut((p - 0.55) / 0.17) * 0.40;
-    else if (p <= 0.85) morph = 1; // Logo stays fully formed
-    else if (p < 0.98) morph = 1 - easeInOut((p - 0.85) / 0.13); // Disintegrates back
-    else morph = 0;
+    else if (p < 0.85) morph = easeInOut((p - 0.35) / 0.50);
+    else morph = 1;
 
     // Cross-fade to the rich multi-stop gradient logo
-    const overlay = hasTargets ? smooth((morph - 0.85) / 0.15) : 0;
+    const overlay = hasTargets ? smooth((morph - 0.60) / 0.40) : 0;
     const strokeOp = 1 - overlay;
 
     for (let i = 0; i < COUNT; i++) {
@@ -245,13 +286,31 @@ export const RivinityFlowSVG: React.FC<FlowProps> = ({ progress }) => {
       const wave = buildWave(i, COUNT, entryProgress, calm);
       const pts = morph > 0 && hasTargets ? lerpPts(wave, targets[i], morph) : wave;
       el.setAttribute("d", toPath(pts));
-      el.style.opacity = `${strokeOp}`;
+      el.style.opacity = strokeOp > 0.01 ? `${strokeOp}` : "0";
     }
 
     if (overlayRef.current) {
       overlayRef.current.style.opacity = `${overlay}`;
     }
+  };
+
+  useMotionValueEvent(progress, "change", (latest) => {
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current);
+    }
+    rafIdRef.current = requestAnimationFrame(() => {
+      rafIdRef.current = null;
+      renderFrame(latest);
+    });
   });
+
+  useEffect(() => {
+    return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+    };
+  }, []);
 
   return (
     <svg
@@ -259,7 +318,8 @@ export const RivinityFlowSVG: React.FC<FlowProps> = ({ progress }) => {
       width="100%"
       height="100%"
       preserveAspectRatio="xMidYMid meet"
-      className="block w-full h-full"
+      className="block w-full h-full pointer-events-none"
+      style={{ transform: "translateZ(0)", willChange: "transform", contain: "layout paint" }}
       aria-hidden="true"
     >
       {initialWavePaths.map((d, i) => {
@@ -320,30 +380,19 @@ export const GoogleGeminiEffect = ({
   const master = pathLengths[0];
 
   return (
-    <div className={cn("section-sm sticky top-14 sm:top-16 md:top-20 w-full px-4 sm:px-6 pt-2 sm:pt-4 md:pt-6 flex flex-col items-center justify-start pointer-events-none", className)}>
-      <div className="text-center max-w-3xl mx-auto space-y-1 sm:space-y-2 shrink-0">
-        {(() => {
-          const full = title || "Born from motions, unified as Rivinity";
-          const parts = full.trim().split(/\s+/);
-          const tail = parts.pop() ?? full;
-          const head = parts.join(" ");
-          return (
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#1A1A1A]">
-              {head && <>{head}{" "}</>}
-              <span className="bg-gradient-to-r from-[#FD881F] via-[#F5A9D0] to-[#7C3AED] bg-clip-text text-transparent">
-                {tail}
-              </span>
-            </h2>
-          );
-        })()}
-        <p className="text-xs sm:text-sm md:text-base font-normal text-gray-500 max-w-xl mx-auto">
+    <div className={cn("w-full px-4 sm:px-6 flex flex-col items-center justify-center pointer-events-none", className)}>
+      <div className="text-center max-w-4xl mx-auto space-y-2 sm:space-y-3 shrink-0 mb-4 sm:mb-6">
+        <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#0f172a] leading-tight">
+          {title || "Born from motions, unified as Rivinity"}
+        </h2>
+        <p className="text-sm sm:text-base md:text-lg font-normal text-slate-500 max-w-2xl mx-auto leading-relaxed">
           {description ||
             "Flowing intelligence organizes itself into the Rivinity identity — then returns to motion."}
         </p>
       </div>
 
       {/* Responsive Canvas Frame */}
-      <div className="w-full max-w-3xl mx-auto h-[190px] sm:h-[250px] md:h-[340px] relative flex items-center justify-center shrink-0 mt-1 sm:mt-2">
+      <div className="w-full max-w-4xl mx-auto h-[240px] sm:h-[320px] md:h-[420px] relative flex items-center justify-center shrink-0 mt-2">
         <RivinityFlowSVG progress={master} />
       </div>
     </div>
@@ -359,13 +408,13 @@ export function PoweredByRivinity() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"],
+    offset: ["start end", "center 45%"],
   });
 
   return (
-    <div
+    <section
       ref={containerRef}
-      className="relative h-[75vh] sm:h-[90vh] md:h-[115vh] bg-white border-gray-200/80"
+      className="relative w-full py-16 sm:py-20 md:py-24 bg-white border-b border-gray-100/60 overflow-hidden"
       id="powered-by-rivinity"
     >
       <GoogleGeminiEffect
@@ -373,7 +422,7 @@ export function PoweredByRivinity() {
         title="Born from motions, unified as Rivinity"
         description="Flowing intelligence organizes itself into the Rivinity identity — then returns to motion."
       />
-    </div>
+    </section>
   );
 }
 

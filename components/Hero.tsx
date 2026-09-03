@@ -12,8 +12,11 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import Link from "next/link";
+import { useAuthModal } from "@/components/auth/auth-context";
 import {
   ArrowUp,
+  ArrowUpRight,
   Bot,
   Code2,
   FileText,
@@ -67,22 +70,11 @@ const PRODUCTS: Product[] = [
 ];
 
 const ROTATING_PROMPTS = [
-  "Create a landing page",
-  "Generate an AI agent",
-  "Build a website",
-  "Create a marketing campaign",
-  "Generate a video",
-  "Analyze my PDF",
-  "Create an HR workflow",
-];
-
-const QUICK_ACTIONS: { label: string; product: ProductId }[] = [
-  { label: "Generate image", product: "image" },
-  { label: "Make a video", product: "video" },
-  { label: "Build a website", product: "website" },
-  { label: "Draft a plan", product: "workflow" },
-  { label: "Analyze a PDF", product: "document" },
-  { label: "Write code", product: "code" },
+  "Route prompt to optimal frontier model",
+  "Deploy autonomous agent swarm in minutes",
+  "Configure enterprise guardrails and PII defense",
+  "Maintain persistent context memory across tools",
+  "Automate sub-50ms inference routing",
 ];
 
 function routePrompt(text: string): ProductId {
@@ -105,6 +97,7 @@ function routePrompt(text: string): ProductId {
 /* ------------------------------------------------------------------ */
 
 export function Hero() {
+  const { openAuth } = useAuthModal();
   const [state, setState] = useState<AssistantState>("idle");
   const [active, setActive] = useState<ProductId | null>(null);
   const [reply, setReply] = useState<string>("");
@@ -139,19 +132,19 @@ export function Hero() {
   const activeProduct = active ? PRODUCTS.find((p) => p.id === active) ?? null : null;
 
   return (
-    <section className="relative isolate overflow-hidden pt-28 sm:pt-32 md:pt-36 pb-28">
+    <section className="relative isolate overflow-hidden pt-28 sm:pt-32 md:pt-36 pb-24 sm:pb-28">
       <HeroAmbient />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6 text-center">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="mt-6 mx-auto max-w-4xl text-[44px] md:text-[68px] leading-[1.02] tracking-[-0.035em] font-semibold text-ink">
-            One intelligence.
+          <h1 className="mt-6 mx-auto max-w-4xl text-[2.5rem] sm:text-[3.25rem] md:text-[4.25rem] leading-[1.05] tracking-[-0.035em] font-semibold text-[#0f172a]">
+            The AI Infrastructure Layer
             <br />
-            Every surface you work in.
+            for Engineering Teams
           </h1>
         </motion.div>
 
@@ -160,9 +153,33 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="mt-5 mx-auto max-w-xl text-[15px] md:text-[16px] text-ink-muted leading-relaxed">
-            Rivinity routes every request chat, code, video, research, workflows through a single, living intelligence that understands your work.
+          <p className="mt-5 mx-auto max-w-2xl text-[1rem] md:text-[1.125rem] text-[#64748b] leading-relaxed font-normal">
+            One orchestration platform. Every major model. Sub-50ms routing. Deploy autonomous agents in minutes.
           </p>
+        </motion.div>
+
+        {/* Dual Call-to-Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-8 flex flex-wrap items-center justify-center gap-3.5"
+        >
+          <button
+            type="button"
+            onClick={() => openAuth("signup")}
+            className="group inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-[#0f172a] text-white text-sm font-semibold hover:bg-[#1e293b] shadow-[0_4px_16px_rgba(15,23,42,0.14)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.22)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+          >
+            <span>Start Building</span>
+            <ArrowUpRight className="w-4 h-4 text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </button>
+          <Link
+            href="/docs"
+            className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-white/95 hover:bg-white text-slate-800 text-sm font-medium border border-slate-200 shadow-xs hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+          >
+            <span>View Documentation</span>
+            <ArrowUpRight className="w-4 h-4 text-slate-500" />
+          </Link>
         </motion.div>
 
         {/* Living assistant */}
@@ -262,19 +279,6 @@ export function Hero() {
                 </motion.button>
               );
             })}
-          </div>
-
-          {/* Quick actions */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
-            {QUICK_ACTIONS.map((q) => (
-              <button
-                key={q.label}
-                onClick={() => submit(q.label)}
-                className="h-8.5 px-3.5 sm:px-4 rounded-full text-[13px] text-[#6B7280] font-normal hover:text-[#18181B] hover:bg-[#EBECEF] active:scale-[0.97] transition-all duration-200 cursor-pointer"
-              >
-                {q.label}
-              </button>
-            ))}
           </div>
         </div>
       </div>
@@ -496,18 +500,18 @@ function Composer({
             aria-label="Ask Rivinity"
           />
           {!input && (
-            <div className="pointer-events-none absolute inset-0 flex items-center text-[14px] text-ink-muted">
-              <span className="mr-1.5">What would you like to build today?</span>
+            <div className="pointer-events-none absolute inset-0 flex items-center text-[13.5px] sm:text-[14px] text-ink-muted">
+              <span className="mr-2 text-neutral-400 font-normal shrink-0">Try prompt:</span>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={placeholder}
                   initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: focused ? 0.35 : 0.75, y: 0 }}
+                  animate={{ opacity: focused ? 0.35 : 0.8, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.35 }}
-                  className="text-ink/60"
+                  className="text-neutral-700 font-medium truncate"
                 >
-                  {placeholder}
+                  &ldquo;{placeholder}&rdquo;
                 </motion.span>
               </AnimatePresence>
             </div>

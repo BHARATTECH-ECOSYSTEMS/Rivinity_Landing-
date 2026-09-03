@@ -5,36 +5,34 @@ import { HomeIcon, CompassIcon } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-white text-[#1A1A1A]">
+    <div className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-white text-[#0f172a]">
       <div className="flex flex-col items-center justify-center text-center p-4">
         {/* Header / Title area */}
         <div className="flex flex-col items-center">
-          <div className="mask-b-from-20% mask-b-to-80% font-extrabold text-[200px] tracking-tight bg-gradient-to-b from-[#1A1A1A] via-[#1A1A1A]/80 to-transparent bg-clip-text text-transparent select-none">
+          <div className="mask-b-from-20% mask-b-to-80% font-semibold text-[180px] sm:text-[200px] tracking-tight bg-gradient-to-b from-[#0f172a] via-[#0f172a]/80 to-transparent bg-clip-text text-transparent select-none leading-none">
             404
           </div>
-          <p className="-mt-8 text-nowrap text-[#6B7280] text-sm sm:text-base font-medium">
+          <p className="mt-2 text-[#64748b] text-sm sm:text-base font-normal">
             The page you&apos;re looking for might have been <br />
             moved or doesn&apos;t exist.
           </p>
         </div>
 
         {/* Content / Buttons area */}
-        <div className="mt-6 flex gap-2">
+        <div className="mt-8 flex flex-col sm:flex-row gap-3">
           {/* Go Home Button */}
-          <div className="text-white">
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-xl text-sm font-bold h-10 px-5 py-2 bg-[#000000] text-white hover:bg-black/70 active:scale-95 transition-all shadow-xs"
-            >
-              <HomeIcon className="size-4 mr-2" data-icon="inline-start" />
-              Go Home
-            </Link>
-          </div>
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center rounded-full text-sm font-semibold min-h-[44px] px-6 py-2.5 bg-[#0f172a] text-white hover:bg-slate-800 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+          >
+            <HomeIcon className="size-4 mr-2" data-icon="inline-start" />
+            Go Home
+          </Link>
 
           {/* Explore Docs Button */}
           <Link
             href="/docs"
-            className="inline-flex items-center justify-center rounded-xl text-sm font-bold h-10 px-5 py-2 border border-[#E5E7EB] bg-[#F7F7F8] text-[#1A1A1A] hover:bg-gray-100 hover:border-gray-300 active:scale-95 transition-all shadow-xs"
+            className="inline-flex items-center justify-center rounded-full text-sm font-semibold min-h-[44px] px-6 py-2.5 border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 hover:border-slate-300 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
           >
             <CompassIcon className="size-4 mr-2" data-icon="inline-start" />
             Explore Docs

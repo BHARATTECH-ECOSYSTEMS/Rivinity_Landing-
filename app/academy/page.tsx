@@ -104,34 +104,34 @@ export default function AcademyPage() {
         className="w-full pt-28 sm:pt-32 md:pt-36 pb-16 bg-[var(--color-bg-primary,#ffffff)] flex-1"
       >
         {/* Hero Section */}
-        <section className="section-sm pb-12 sm:pb-16 border-b border-[#E5E7EB] bg-[#F7F7F8]">
+        <section className="section-sm pb-12 sm:pb-16 border-b border-slate-200 bg-[#F7F7F8]">
           <div className="container">
             <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl font-extrabold tracking-tight text-[#1A1A1A] sm:text-5xl lg:text-6xl w-full max-w-none text-center">
+              <h1 className="text-4xl font-semibold tracking-tight text-[#0f172a] sm:text-5xl lg:text-6xl text-center">
                 Master the art of <span className="text-[#FF6B00]">AI Systems Engineering</span>
               </h1>
-              <p className="mt-4 text-base sm:text-lg text-[#6B7280] leading-relaxed max-w-2xl mx-auto">
+              <p className="mt-4 text-base sm:text-lg text-[#64748b] leading-relaxed max-w-2xl mx-auto">
                 Free hands-on courses, certification tracks, and technical tutorials built for developers, AI researchers, and security architects.
               </p>
             </div>
 
             {/* Platform Stats */}
             <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 text-center shadow-xs">
-                <p className="text-2xl font-extrabold text-[#FF6B00]">12+</p>
-                <p className="text-xs font-medium text-[#6B7280] mt-1">Free Interactive Tracks</p>
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-xs">
+                <p className="text-2xl font-semibold text-[#FF6B00]">12+</p>
+                <p className="text-xs font-medium text-[#64748b] mt-1">Free Interactive Tracks</p>
               </div>
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 text-center shadow-xs">
-                <p className="text-2xl font-extrabold text-[#1A1A1A]">100%</p>
-                <p className="text-xs font-medium text-[#6B7280] mt-1">Self-Paced & Open</p>
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-xs">
+                <p className="text-2xl font-semibold text-[#0f172a]">100%</p>
+                <p className="text-xs font-medium text-[#64748b] mt-1">Self-Paced & Open</p>
               </div>
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 text-center shadow-xs">
-                <p className="text-2xl font-extrabold text-[#FF6B00]">Verified</p>
-                <p className="text-xs font-medium text-[#6B7280] mt-1">Developer Badges</p>
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-xs">
+                <p className="text-2xl font-semibold text-[#FF6B00]">Verified</p>
+                <p className="text-xs font-medium text-[#64748b] mt-1">Developer Badges</p>
               </div>
-              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-5 text-center shadow-xs">
-                <p className="text-2xl font-extrabold text-[#1A1A1A]">SDKs</p>
-                <p className="text-xs font-medium text-[#6B7280] mt-1">Real Code Labs</p>
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 text-center shadow-xs">
+                <p className="text-2xl font-semibold text-[#0f172a]">SDKs</p>
+                <p className="text-xs font-medium text-[#64748b] mt-1">Real Code Labs</p>
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function AcademyPage() {
         <section className="section py-16">
           <div className="container">
             <div className="flex items-center gap-2 mb-8">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A]">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[#0f172a]">
                 Featured Learning Tracks
               </h2>
             </div>
@@ -219,7 +219,7 @@ export default function AcademyPage() {
                       className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition cursor-pointer ${
                         selectedCategory === cat
                           ? "bg-[#FF6B00] text-white shadow-xs"
-                          : "bg-white text-[#6B7280] border border-[#E5E7EB] hover:bg-gray-100 hover:text-[#1A1A1A]"
+                          : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-[#0f172a]"
                       }`}
                     >
                       {cat}
@@ -228,13 +228,13 @@ export default function AcademyPage() {
                 </div>
 
                 <div className="relative w-full md:w-72">
-                  <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                   <input
                     type="text"
                     placeholder="Search academy topics..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-[#E5E7EB] bg-white text-xs text-[#1A1A1A] focus:outline-none focus:border-[#FF6B00] shadow-xs transition"
+                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 bg-white text-xs text-[#0f172a] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] shadow-xs transition"
                   />
                 </div>
               </div>
@@ -247,35 +247,35 @@ export default function AcademyPage() {
                 return (
                   <div
                     key={course.id}
-                    className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-xs flex flex-col justify-between hover:border-[#FF6B00]/40 transition-all"
+                    className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col justify-between hover:border-[#FF6B00]/40 transition-all"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-4">
                         <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center">
                           <IconComp size={20} />
                         </div>
-                        <span className="text-[11px] font-semibold text-[#6B7280] bg-gray-100 px-2.5 py-1 rounded-full">
+                        <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
                           {course.level}
                         </span>
                       </div>
 
-                      <h3 className="text-lg font-bold text-[#1A1A1A] mb-2">
+                      <h3 className="text-lg font-semibold text-[#0f172a] mb-2">
                         {course.title}
                       </h3>
-                      <p className="text-xs text-[#6B7280] leading-relaxed mb-6">
+                      <p className="text-xs text-slate-600 leading-relaxed mb-6">
                         {course.description}
                       </p>
                     </div>
 
                     <div>
-                      <div className="flex items-center justify-between text-xs text-[#6B7280] pt-4 border-t border-[#E5E7EB] mb-4">
+                      <div className="flex items-center justify-between text-xs text-slate-500 pt-4 border-t border-slate-200 mb-4">
                         <span>{course.duration}</span>
                         <span>{course.modules} Modules</span>
                       </div>
 
                       <Link
                         href={`/academy/${course.id}`}
-                        className="inline-flex items-center justify-center gap-1.5 w-full bg-[#F7F7F8] border border-[#E5E7EB] text-[#1A1A1A] py-2.5 rounded-xl text-xs font-semibold hover:border-[#FF6B00] hover:text-[#FF6B00] transition"
+                        className="inline-flex items-center justify-center gap-1.5 w-full min-h-[44px] bg-[#F7F7F8] border border-slate-200 text-[#0f172a] py-2.5 rounded-xl text-xs font-semibold hover:border-[#FF6B00] hover:text-[#FF6B00] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] transition"
                       >
                         Enroll Free
                         <ArrowRight size={14} />

@@ -109,7 +109,7 @@ export default function ApiStatusPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#1A1A1A] font-sans antialiased overflow-x-hidden flex flex-col justify-between">
+    <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased overflow-x-hidden flex flex-col justify-between">
       <Header />
 
       <motion.main
@@ -119,20 +119,20 @@ export default function ApiStatusPage() {
         className="w-full pt-28 sm:pt-32 md:pt-36 pb-16"
       >
         {/* Hero Section */}
-        <section className="container mx-auto px-4 sm:px-6 mb-10">
+        <section className="container mb-10">
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#1A1A1A] leading-[1.15]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#0f172a] leading-[1.15]">
               API Status
             </h1>
-            <p className="mt-4 sm:mt-6 max-w-xl text-sm sm:text-base lg:text-lg text-[#6B7280] leading-relaxed">
+            <p className="mt-4 sm:mt-6 max-w-xl text-sm sm:text-base lg:text-lg text-[#64748b] leading-relaxed">
               Real-time information about Rivinity&apos;s APIs, infrastructure, and platform services.
             </p>
           </div>
         </section>
 
         {/* Overall Status Banner */}
-        <section className="section py-8 sm:py-12 bg-[#F7F7F8] border-b border-[#E5E7EB]">
-          <div className="container mx-auto px-4 sm:px-6">
+        <section className="section py-8 sm:py-12 bg-slate-50 border-b border-slate-200">
+          <div className="container">
             <div className="rounded-2xl sm:rounded-3xl border border-emerald-200 bg-white p-5 sm:p-8 shadow-xs max-w-5xl mx-auto">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-4">
@@ -140,10 +140,10 @@ export default function ApiStatusPage() {
                     <CheckCircle2 className="size-5" />
                   </div>
                   <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-[#1A1A1A]">
+                    <h2 className="text-lg sm:text-xl font-semibold text-[#0f172a]">
                       All systems operational
                     </h2>
-                    <p className="mt-0.5 text-xs sm:text-sm text-[#6B7280]">
+                    <p className="mt-0.5 text-xs sm:text-sm text-[#64748b]">
                       All Rivinity services are running normally.
                     </p>
                   </div>

@@ -45,7 +45,7 @@ const socialStyle = "text-gray-400 hover:!text-gray-900 transition-colors durati
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-gray-100 bg-white pt-12 sm:pt-16 pb-0 overflow-hidden">
+    <footer className="w-full bg-white pt-12 sm:pt-16 pb-0 overflow-hidden">
       <motion.div
         variants={staggerContainer}
         initial="hidden"
@@ -54,7 +54,7 @@ export default function Footer() {
         className="w-full"
       >
         {/* Main Grid Content */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="container">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-start">
             {/* Brand Column */}
             <motion.div variants={riseItem} className="col-span-2 sm:col-span-3 md:col-span-2">
@@ -226,12 +226,19 @@ export default function Footer() {
             variants={riseItem}
             className="border-t border-gray-100 mt-10 sm:mt-12 pt-5 sm:pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-400 mb-8"
           >
-            <p className="m-0 text-center sm:text-left">© 2026 Rivinity, Inc. All rights reserved.</p>
-            <p className="m-0 text-center sm:text-right">Made with care in India</p>
+            <div className="m-0 text-center sm:text-left">© 2026 Rivinity, Inc. All rights reserved.</div>
+            <div className="flex items-center gap-4">
+              <a href="/status" className="inline-flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>All Systems Operational</span>
+              </a>
+              <span className="text-gray-200">|</span>
+              <div className="m-0 text-center sm:text-right">Made with care in India</div>
+            </div>
           </motion.div>
         </div>
 
-        {/* Edge-to-Edge Fully Responsive Orange Gradient Typography SVG with Smooth Reveal */}
+        {/* Edge-to-Edge Fully Responsive Glassmorphic Gradient Typography SVG with Smooth Reveal */}
         <motion.div
           initial={{ opacity: 0, y: 35, scale: 0.98 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -239,34 +246,64 @@ export default function Footer() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="container relative w-full overflow-hidden select-none pointer-events-none -mt-1 sm:-mt-3 md:-mt-4"
         >
+          {/* Ambient Glassmorphic Diffusion Blobs behind the text */}
+          <div className="absolute inset-0 flex items-center justify-between px-8 sm:px-16 pointer-events-none opacity-45 blur-3xl">
+            <div className="w-64 sm:w-96 h-24 sm:h-32 rounded-full bg-orange-200/50" />
+            <div className="w-64 sm:w-96 h-24 sm:h-32 rounded-full bg-pink-200/50" />
+            <div className="w-64 sm:w-96 h-24 sm:h-32 rounded-full bg-purple-200/50" />
+          </div>
+
           <svg
             viewBox="0 0 1440 260"
-            className="w-full h-auto block select-none"
+            className="w-full h-auto block select-none relative z-10"
             preserveAspectRatio="xMidYMid meet"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              {/* Rich Multi-Stop Shades of Orange Gradient */}
+              {/* Lighter, Luminous Multi-Stop Pastel Glassmorphism Gradient */}
               <linearGradient
-                id="footerOrangeGradient"
+                id="footerGlassGradient"
                 x1="0%"
-                y1="20%"
+                y1="15%"
                 x2="100%"
-                y2="80%"
+                y2="45%"
               >
-                <stop offset="0%" stopColor="#FFA654" />
-                <stop offset="25%" stopColor="#FD881F" />
-                <stop offset="50%" stopColor="#FF6A00" />
-                <stop offset="75%" stopColor="#EA580C" />
-                <stop offset="100%" stopColor="#C2410C" />
+                <stop offset="0%" stopColor="#FFA666" stopOpacity="0.78" />
+                <stop offset="20%" stopColor="#FF9678" stopOpacity="0.75" />
+                <stop offset="42%" stopColor="#FF8AA8" stopOpacity="0.72" />
+                <stop offset="62%" stopColor="#EB72B8" stopOpacity="0.75" />
+                <stop offset="82%" stopColor="#BA8EF6" stopOpacity="0.78" />
+                <stop offset="100%" stopColor="#9C6EF3" stopOpacity="0.82" />
               </linearGradient>
+
+              {/* Glass Specular Rim Highlight (Crisp White Top Edge Reflection) */}
+              <linearGradient
+                id="footerGlassRim"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
+                <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
+              </linearGradient>
+
+              {/* Subtle Glass Depth Shadow */}
+              <filter id="glassDepth" x="-10%" y="-10%" width="120%" height="130%">
+                <feDropShadow dx="0" dy="6" stdDeviation="12" floodColor="#8B5CF6" floodOpacity="0.12" />
+                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#FF6A00" floodOpacity="0.06" />
+              </filter>
             </defs>
 
             <text
               x="50%"
               y="76%"
               textAnchor="middle"
-              fill="url(#footerOrangeGradient)"
+              fill="url(#footerGlassGradient)"
+              stroke="url(#footerGlassRim)"
+              strokeWidth="2.5"
+              filter="url(#glassDepth)"
               textLength="1420"
               lengthAdjust="spacingAndGlyphs"
               className="select-none"
