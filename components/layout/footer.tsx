@@ -276,19 +276,6 @@ export default function Footer() {
                 <stop offset="100%" stopColor="#9C6EF3" stopOpacity="0.82" />
               </linearGradient>
 
-              {/* Glass Specular Rim Highlight (Crisp White Top Edge Reflection) */}
-              <linearGradient
-                id="footerGlassRim"
-                x1="0%"
-                y1="0%"
-                x2="0%"
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
-                <stop offset="45%" stopColor="#FFFFFF" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
-              </linearGradient>
-
               {/* Subtle Glass Depth Shadow */}
               <filter id="glassDepth" x="-10%" y="-10%" width="120%" height="130%">
                 <feDropShadow dx="0" dy="6" stdDeviation="12" floodColor="#8B5CF6" floodOpacity="0.12" />
@@ -301,8 +288,6 @@ export default function Footer() {
               y="76%"
               textAnchor="middle"
               fill="url(#footerGlassGradient)"
-              stroke="url(#footerGlassRim)"
-              strokeWidth="2.5"
               filter="url(#glassDepth)"
               textLength="1420"
               lengthAdjust="spacingAndGlyphs"

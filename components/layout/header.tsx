@@ -193,10 +193,8 @@ const navItems: NavItem[] = [
     sections: [
       {
         items: [
-          { label: "About", href: "/about", description: "Our mission to revolutionize AI workflows" },
-          { label: "Team", href: "/team", description: "The builders and researchers behind Rivinity" },
+          { label: "About Us", href: "/about", description: "Our mission, leadership, and global team" },
           { label: "Careers", href: "/careers", description: "Join our fast-growing global team" },
-          { label: "Certificate", href: "/certificate", description: "Verify official partner certificates" },
           { label: "Contact", href: "/contact", description: "Talk with our product specialists" },
         ],
       },
