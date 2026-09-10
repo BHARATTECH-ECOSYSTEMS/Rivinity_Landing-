@@ -150,18 +150,21 @@ export default function AuthModal({ isOpen = true, onClose, defaultMode = "login
     >
       {/* Top Header Bar for Mobile & Desktop */}
       <div className="flex items-center justify-between px-5 pt-5 sm:px-6 sm:pt-6 md:px-0 md:pt-0">
-        {/* Logo */}
+        {/* Logo with White Glassmorphism Effect */}
         <div className="md:absolute md:left-8 md:top-7 md:z-30">
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_8px_30px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)] group hover:bg-white/95 transition-all"
+          >
             <Image
               src="/logo.png"
               alt="Rivinity Logo"
-              width={38}
-              height={38}
-              className="h-9 w-9 sm:h-10 sm:w-10 object-contain group-hover:scale-105 transition-transform"
+              width={32}
+              height={32}
+              className="h-7 w-7 sm:h-8 sm:w-8 object-contain group-hover:scale-105 transition-transform"
               priority
             />
-            <span className="text-[20px] sm:text-[22px] font-bold tracking-tight text-[#0A0A0C]">Rivinity</span>
+            <span className="text-[18px] sm:text-[19px] font-bold tracking-tight text-[#0A0A0C]">Rivinity</span>
           </Link>
         </div>
 
@@ -170,7 +173,7 @@ export default function AuthModal({ isOpen = true, onClose, defaultMode = "login
           <Link
             href="/"
             aria-label="Back to home"
-            className="md:absolute md:right-6 md:top-6 md:z-50 flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-full bg-white/90 hover:bg-white text-[#0A0A0C] border border-neutral-200/80 transition shadow-2xs cursor-pointer backdrop-blur-xs"
+            className="md:absolute md:right-6 md:top-6 md:z-50 flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-full bg-white/85 hover:bg-white text-[#0A0A0C] backdrop-blur-xl border border-white/90 transition shadow-[0_4px_20px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,1)] cursor-pointer"
           >
             ← Back to Home
           </Link>
@@ -179,18 +182,18 @@ export default function AuthModal({ isOpen = true, onClose, defaultMode = "login
             ref={closeRef}
             onClick={onClose}
             aria-label="Close"
-            className="md:absolute md:right-5 md:top-5 md:z-50 flex h-9 w-9 items-center justify-center rounded-full text-[#0A0A0C] hover:bg-white/80 bg-white/50 backdrop-blur-xs border border-neutral-200/60 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/40 cursor-pointer transition shadow-2xs"
+            className="md:absolute md:right-6 md:top-6 md:z-50 flex h-9 w-9 items-center justify-center rounded-full text-[#0A0A0C] hover:bg-white/95 bg-white/80 backdrop-blur-xl border border-white/90 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/40 cursor-pointer transition shadow-[0_4px_20px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,1)]"
           >
             <Close />
           </button>
         )}
       </div>
 
-      {/* Orange Ambient Background with Image (Desktop Only) */}
-      <div className="hidden md:block absolute inset-0 overflow-hidden bg-[#FCFCFD] pointer-events-none rounded-[20px] sm:rounded-[26px]">
+      {/* Ambient Background with Cloud Image (Desktop Only) */}
+      <div className="hidden md:block absolute inset-0 overflow-hidden bg-[#0A0A0C] pointer-events-none rounded-[20px] sm:rounded-[26px]">
         {/* Auth Background Image */}
         <Image
-          src="/images/auth-bg.png"
+          src="/images/auth-clouds.png"
           alt="Auth Background"
           fill
           sizes="(max-width: 1024px) 100vw, 850px"
@@ -201,25 +204,29 @@ export default function AuthModal({ isOpen = true, onClose, defaultMode = "login
         <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
       </div>
 
-      {/* Marketing — Login */}
-      <div className={`hidden md:flex absolute inset-y-0 right-0 z-10 w-[48%] items-center justify-end px-8 lg:px-14 transition-all duration-300 ${isLogin ? "opacity-100 translate-x-0" : "pointer-events-none opacity-0 translate-x-4"}`}>
-        <div className="w-full max-w-[290px]">
-          <h2 className="text-[38px] font-semibold leading-[1.15] tracking-[-0.03em] text-[#0A0A0C]">
+      {/* Marketing — Login (White Glassmorphism Card on Photo) */}
+      <div className={`hidden md:flex absolute inset-y-0 right-0 z-10 w-[48%] items-center justify-end px-8 lg:px-12 transition-all duration-300 ${isLogin ? "opacity-100 translate-x-0" : "pointer-events-none opacity-0 translate-x-4"}`}>
+        <div className="w-full max-w-[330px] p-7 rounded-[26px] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)]">
+          <h2 className="text-[34px] font-semibold leading-[1.16] tracking-[-0.03em] text-[#0A0A0C]">
             Welcome<br />
-            <span className="inline-block text-[36px] font-normal italic leading-[1.15] text-[#0A0A0C]" style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.05em" }}>back.</span>
+            <span className="inline-block text-[34px] font-normal italic leading-[1.16] text-[#0A0A0C]" style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.05em" }}>back.</span>
           </h2>
-          <p className="mt-4 text-[14.5px] font-medium leading-[1.6] text-[#0A0A0C]">Your projects, your work and your people are exactly where you left them.</p>
+          <p className="mt-3.5 text-[14px] font-medium leading-[1.6] text-neutral-700">
+            Your projects, your work and your people are exactly where you left them.
+          </p>
         </div>
       </div>
 
-      {/* Marketing — Signup */}
-      <div className={`hidden md:flex absolute inset-y-0 left-0 z-10 w-[48%] items-center px-8 lg:px-14 transition-all duration-300 ${isLogin ? "pointer-events-none opacity-0 -translate-x-4" : "opacity-100 translate-x-0"}`}>
-        <div className="w-full max-w-[290px]">
-          <h2 className="text-[38px] font-semibold leading-[1.15] tracking-[-0.03em] text-[#0A0A0C]">
+      {/* Marketing — Signup (White Glassmorphism Card on Photo) */}
+      <div className={`hidden md:flex absolute inset-y-0 left-0 z-10 w-[48%] items-center px-8 lg:px-12 transition-all duration-300 ${isLogin ? "pointer-events-none opacity-0 -translate-x-4" : "opacity-100 translate-x-0"}`}>
+        <div className="w-full max-w-[330px] p-7 rounded-[26px] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)]">
+          <h2 className="text-[34px] font-semibold leading-[1.16] tracking-[-0.03em] text-[#0A0A0C]">
             Start your<br />
-            <span className="inline-block text-[36px] font-normal italic leading-[1.15] text-[#0A0A0C]" style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.1em", paddingRight: "0.1em" }}>journey.</span>
+            <span className="inline-block text-[34px] font-normal italic leading-[1.16] text-[#0A0A0C]" style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.1em", paddingRight: "0.1em" }}>journey.</span>
           </h2>
-          <p className="mt-4 text-[14.5px] font-medium leading-[1.6] text-[#0A0A0C]">One account for your projects, your ideas and everything you build with Rivinity.</p>
+          <p className="mt-3.5 text-[14px] font-medium leading-[1.6] text-neutral-700">
+            One account for your projects, your ideas and everything you build with Rivinity.
+          </p>
         </div>
       </div>
 

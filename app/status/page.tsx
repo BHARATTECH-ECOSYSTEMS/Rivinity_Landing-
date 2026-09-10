@@ -125,7 +125,8 @@ export default function ApiStatusPage() {
               API Status
             </h1>
             <p className="mt-4 sm:mt-6 max-w-xl text-sm sm:text-base lg:text-lg text-[#64748b] leading-relaxed">
-              Real-time information about Rivinity&apos;s APIs, infrastructure, and platform services.
+              Real-time information about Rivinity&apos;s APIs, infrastructure,
+              and platform services.
             </p>
           </div>
         </section>
@@ -200,7 +201,9 @@ export default function ApiStatusPage() {
                       Routine infrastructure maintenance
                     </h3>
                     <p className="mt-2 max-w-xl text-xs sm:text-sm text-[#6B7280] leading-relaxed">
-                      We&apos;ll perform routine infrastructure maintenance to improve reliability and performance. Some services may experience brief interruptions.
+                      We&apos;ll perform routine infrastructure maintenance to
+                      improve reliability and performance. Some services may
+                      experience brief interruptions.
                     </p>
                   </div>
 
@@ -288,56 +291,6 @@ export default function ApiStatusPage() {
             </div>
           </div>
         </section>
-
-        {/* Subscribe Notifications Section */}
-        <section className="section py-12 sm:py-20">
-          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-            <div className="bg-gray-50 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-white shadow-xs">
-              <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <div className="mb-4 flex size-10 items-center justify-center rounded-2xl bg-[#FF6B00]/20 text-[#FF6B00]">
-                    <Bell className="size-5" />
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold">
-                    Stay up to date
-                  </h2>
-                  <p className="mt-2 max-w-md text-xs sm:text-sm text-black leading-relaxed">
-                    Get notified when there&apos;s an incident, maintenance window, or important operational change to Rivinity services.
-                  </p>
-                </div>
-
-                {subscribed ? (
-                  <div className="flex items-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-bold text-[#1A1A1A]">
-                    <CheckCircle2 className="size-4 text-emerald-600" />
-                    You&apos;re subscribed
-                  </div>
-                ) : (
-                  <form
-                    onSubmit={handleSubscribe}
-                    className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto"
-                  >
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                      placeholder="you@example.com"
-                      required
-                      className="h-12 w-full rounded-2xl border border-neutral-700 bg-neutral-900 px-4 text-sm text-white outline-none placeholder:text-white focus:border-[#FF6B00] transition-all sm:w-64"
-                    />
-
-                    <button
-                      type="submit"
-                      className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#FF6B00] px-6 text-sm font-bold text-white transition hover:bg-[#FF6B00]/90 active:scale-95 cursor-pointer"
-                    >
-                      Subscribe
-                      <ArrowUpRight className="size-4" />
-                    </button>
-                  </form>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
       </motion.main>
 
       <Footer />
@@ -358,8 +311,9 @@ function ServiceRow({
 }) {
   return (
     <div
-      className={`flex flex-col gap-4 px-5 py-4 transition sm:flex-row sm:items-center sm:justify-between sm:px-6 hover:bg-[#F7F7F8] ${!isLast ? "border-b border-[#E5E7EB]" : ""
-        }`}
+      className={`flex flex-col gap-4 px-5 py-4 transition sm:flex-row sm:items-center sm:justify-between sm:px-6 hover:bg-[#F7F7F8] ${
+        !isLast ? "border-b border-[#E5E7EB]" : ""
+      }`}
     >
       <div className="flex items-center gap-4">
         <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-[#F7F7F8] border border-[#E5E7EB] text-[#1A1A1A] mb-6">

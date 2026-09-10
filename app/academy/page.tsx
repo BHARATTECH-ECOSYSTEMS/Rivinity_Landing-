@@ -19,10 +19,12 @@ import {
 } from "lucide-react";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import CtaSection from "@/components/sections/cta-section";
 import { FaqSection } from "@/components/sections/faq-section";
 import { TestimonialsSection, type TestimonialItem } from "@/components/sections/testimonials-section";
 import { ConnectToolsSlider } from "@/components/sections/connect-tools-slider";
 import { BouncyCardsFeatures } from "@/components/sections/bouncy-cards-features";
+import { useAuthModal } from "@/components/auth/auth-context";
 
 /* ------------------------------------------------------------------ */
 /* Image 1 Landscape Grid Icon Card Helper (Orange, Purple, Pink)     */
@@ -102,6 +104,7 @@ function Image1LandscapeCard({
 /* Image 3 Track Cards Component                                      */
 /* ------------------------------------------------------------------ */
 function Image3TrackCards() {
+  const { openAuth } = useAuthModal();
   const tracks = [
     {
       badge: "Open / Invite-priority",
@@ -216,13 +219,24 @@ function Image3TrackCards() {
 
               {/* Bottom Link with Arrow */}
               <div className="mt-8 pt-4 border-t border-slate-900/5">
-                <Link
-                  href={track.linkHref}
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-900 hover:text-[#FF6B00] transition-colors group cursor-pointer border-b border-slate-900 pb-0.5 hover:border-[#FF6B00]"
-                >
-                  <span>{track.linkText}</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                </Link>
+                {track.linkHref === "/signup" ? (
+                  <button
+                    type="button"
+                    onClick={() => openAuth("signup")}
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-900 hover:text-[#FF6B00] transition-colors group cursor-pointer border-b border-slate-900 pb-0.5 hover:border-[#FF6B00]"
+                  >
+                    <span>{track.linkText}</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </button>
+                ) : (
+                  <Link
+                    href={track.linkHref}
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-900 hover:text-[#FF6B00] transition-colors group cursor-pointer border-b border-slate-900 pb-0.5 hover:border-[#FF6B00]"
+                  >
+                    <span>{track.linkText}</span>
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                )}
               </div>
             </div>
           ))}
@@ -236,6 +250,7 @@ function Image3TrackCards() {
 /* Main Academy Page Export                                           */
 /* ------------------------------------------------------------------ */
 export default function AcademyPage() {
+  const { openAuth } = useAuthModal();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
 
   const academyTestimonials: TestimonialItem[] = [
@@ -481,12 +496,13 @@ export default function AcademyPage() {
                     ))}
                   </ul>
                 </div>
-                <Link
-                  href="/signup"
+                <button
+                  type="button"
+                  onClick={() => openAuth("signup")}
                   className="w-full rounded-xl border border-slate-200 bg-white py-3 text-xs font-bold text-slate-800 transition hover:bg-slate-50 text-center shadow-xs cursor-pointer"
                 >
                   Get Started Free
-                </Link>
+                </button>
               </div>
 
               {/* Pro Architect Plan (Signature Solid Orange Theme) */}
@@ -524,12 +540,13 @@ export default function AcademyPage() {
                     ))}
                   </ul>
                 </div>
-                <Link
-                  href="/signup"
+                <button
+                  type="button"
+                  onClick={() => openAuth("signup")}
                   className="w-full rounded-xl bg-[#FF6B00] hover:bg-[#E66000] py-3 text-xs font-bold text-white shadow-md shadow-orange-500/20 transition-all text-center cursor-pointer"
                 >
                   Start Pro Certification
-                </Link>
+                </button>
               </div>
 
               {/* Team Plan */}
@@ -588,39 +605,16 @@ export default function AcademyPage() {
           items={faqs}
         />
 
-        {/* ==================================================================== */}
-        {/* Pre-Footer CTA Banner (Light Theme, bg-gray-50, section class)       */}
-        {/* ==================================================================== */}
-        <section className="section py-12 sm:py-20 bg-white">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="relative bg-gray-50 border border-slate-200 rounded-3xl p-8 sm:p-12 lg:p-16 text-center flex flex-col items-center justify-center shadow-xs overflow-hidden">
-              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight max-w-2xl leading-tight">
-                Master production AI engineering & get certified today.
-              </h2>
-              <p className="text-xs sm:text-sm lg:text-base text-slate-600 max-w-xl mb-8 leading-relaxed">
-                Join 500,000+ developers learning autonomous agents, model safety, and sub-50ms vector infrastructure with Rivinity.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
-                <Link
-                  href="/signup"
-                  className="w-full sm:w-auto rounded-xl bg-[#FF6B00] hover:bg-[#E66000] px-8 py-3.5 text-xs sm:text-sm font-bold text-white shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <span>Get Certified Free</span>
-                  <ArrowRight className="w-4 h-4" strokeWidth={2} />
-                </Link>
-                <a
-                  href="#courses"
-                  className="w-full sm:w-auto rounded-xl border border-slate-200 bg-white px-7 py-3.5 text-xs sm:text-sm font-bold text-slate-800 hover:border-slate-300 hover:bg-slate-50 active:scale-95 transition-all shadow-xs flex items-center justify-center cursor-pointer"
-                >
-                  <span>Browse Catalog</span>
-                </a>
-              </div>
-              <p className="mt-5 text-xs text-slate-400">
-                No credit card required • 100% Free foundational tracks • Cancel anytime
-              </p>
-            </div>
-          </div>
-        </section>
+        {/* Pre-Footer Dynamic CTA Section */}
+        <CtaSection
+          title="Master production AI engineering & earn certifications"
+          description="Take structured courses on agentic runtime architecture, prompt injection mitigation, and distributed inference optimization."
+          buttonText="Enroll in Academy Free"
+          buttonHref="/signup"
+          secondaryText="View Course Catalog"
+          secondaryHref="#courses"
+          note="No credit card required • 100% Free foundational tracks • Verified digital credentials"
+        />
       </main>
 
       {/* Universal Rivinity Footer */}

@@ -71,15 +71,27 @@ function RoutingGraphic({ isHovered }: { isHovered: boolean }) {
 
       {/* Outer Concentric Blueprint Circle */}
       <motion.div
-        animate={isHovered ? { scale: [1, 1.04, 1], opacity: [0.5, 0.9, 0.5] } : { scale: 1, opacity: 0.5 }}
-        transition={{ duration: 3, repeat: isHovered ? Infinity : 0, ease: "easeInOut" }}
+        animate={
+          isHovered
+            ? { scale: [1, 1.04, 1], opacity: [0.5, 0.9, 0.5] }
+            : { scale: 1, opacity: 0.5 }
+        }
+        transition={{
+          duration: 3,
+          repeat: isHovered ? Infinity : 0,
+          ease: "easeInOut",
+        }}
         className="absolute w-44 h-44 rounded-full border border-orange-300/40"
       />
 
       {/* Middle Rotating Dashed Circle */}
       <motion.div
         animate={isHovered ? { rotate: 360 } : { rotate: 0 }}
-        transition={{ duration: 16, repeat: isHovered ? Infinity : 0, ease: "linear" }}
+        transition={{
+          duration: 16,
+          repeat: isHovered ? Infinity : 0,
+          ease: "linear",
+        }}
         className="absolute w-32 h-32 rounded-full border border-dashed border-orange-400/50"
       />
 
@@ -101,7 +113,11 @@ function RoutingGraphic({ isHovered }: { isHovered: boolean }) {
         {/* Left Badge */}
         <motion.div
           animate={isHovered ? { y: [-2, 2, -2], x: -2 } : { y: 0, x: 0 }}
-          transition={{ duration: 2.5, repeat: isHovered ? Infinity : 0, ease: "easeInOut" }}
+          transition={{
+            duration: 2.5,
+            repeat: isHovered ? Infinity : 0,
+            ease: "easeInOut",
+          }}
           className="w-9 h-9 rounded-xl bg-white/95 backdrop-blur-xs border border-orange-200 shadow-xs flex items-center justify-center text-orange-500 transition-transform"
         >
           <Layers className="w-4 h-4" />
@@ -120,8 +136,16 @@ function RoutingGraphic({ isHovered }: { isHovered: boolean }) {
           <motion.div
             animate={
               isHovered
-                ? { scale: 1.1, y: -2, boxShadow: "0 12px 28px -4px rgba(251,146,60,0.45)" }
-                : { scale: 1, y: 0, boxShadow: "0 8px 20px -6px rgba(251,146,60,0.35)" }
+                ? {
+                    scale: 1.1,
+                    y: -2,
+                    boxShadow: "0 12px 28px -4px rgba(251,146,60,0.45)",
+                  }
+                : {
+                    scale: 1,
+                    y: 0,
+                    boxShadow: "0 8px 20px -6px rgba(251,146,60,0.35)",
+                  }
             }
             transition={{ duration: 0.3 }}
             className="w-13 h-13 rounded-2xl bg-white backdrop-blur-xs border border-orange-300 flex items-center justify-center text-orange-500 relative z-10"
@@ -133,7 +157,12 @@ function RoutingGraphic({ isHovered }: { isHovered: boolean }) {
         {/* Right Badge */}
         <motion.div
           animate={isHovered ? { y: [2, -2, 2], x: 2 } : { y: 0, x: 0 }}
-          transition={{ duration: 2.5, repeat: isHovered ? Infinity : 0, ease: "easeInOut", delay: 0.2 }}
+          transition={{
+            duration: 2.5,
+            repeat: isHovered ? Infinity : 0,
+            ease: "easeInOut",
+            delay: 0.2,
+          }}
           className="w-9 h-9 rounded-xl bg-white/95 backdrop-blur-xs border border-orange-200 shadow-xs flex items-center justify-center text-orange-500 transition-transform"
         >
           <Cpu className="w-4 h-4" />
@@ -153,15 +182,27 @@ function MemoryGraphic({ isHovered }: { isHovered: boolean }) {
 
       {/* Concentric Radar Rings */}
       <motion.div
-        animate={isHovered ? { scale: [1, 1.05, 1], opacity: [0.6, 1, 0.6] } : { scale: 1, opacity: 0.6 }}
-        transition={{ duration: 2.8, repeat: isHovered ? Infinity : 0, ease: "easeInOut" }}
+        animate={
+          isHovered
+            ? { scale: [1, 1.05, 1], opacity: [0.6, 1, 0.6] }
+            : { scale: 1, opacity: 0.6 }
+        }
+        transition={{
+          duration: 2.8,
+          repeat: isHovered ? Infinity : 0,
+          ease: "easeInOut",
+        }}
         className="absolute w-56 h-56 rounded-full border border-pink-200/50"
       />
 
       {/* Middle Rotating Dashed Ring */}
       <motion.div
         animate={isHovered ? { rotate: -360 } : { rotate: 0 }}
-        transition={{ duration: 18, repeat: isHovered ? Infinity : 0, ease: "linear" }}
+        transition={{
+          duration: 18,
+          repeat: isHovered ? Infinity : 0,
+          ease: "linear",
+        }}
         className="absolute w-44 h-44 rounded-full border border-dashed border-pink-300/60"
       />
 
@@ -194,15 +235,31 @@ function MemoryGraphic({ isHovered }: { isHovered: boolean }) {
         <motion.div
           animate={
             isHovered
-              ? { scale: 1.12, y: -2, boxShadow: "0 12px 30px -4px rgba(244,114,182,0.5)" }
-              : { scale: 1, y: 0, boxShadow: "0 8px 24px -6px rgba(244,114,182,0.4)" }
+              ? {
+                  scale: 1.12,
+                  y: -2,
+                  boxShadow: "0 12px 30px -4px rgba(244,114,182,0.5)",
+                }
+              : {
+                  scale: 1,
+                  y: 0,
+                  boxShadow: "0 8px 24px -6px rgba(244,114,182,0.4)",
+                }
           }
           transition={{ duration: 0.3 }}
           className="relative z-10 w-13 h-13 rounded-2xl bg-white backdrop-blur-xs border border-pink-200 flex items-center justify-center text-pink-500"
         >
           <motion.div
-            animate={isHovered ? { scale: [1, 1.18, 1], rotate: [0, -6, 6, 0] } : { scale: 1, rotate: 0 }}
-            transition={{ duration: 1.8, repeat: isHovered ? Infinity : 0, ease: "easeInOut" }}
+            animate={
+              isHovered
+                ? { scale: [1, 1.18, 1], rotate: [0, -6, 6, 0] }
+                : { scale: 1, rotate: 0 }
+            }
+            transition={{
+              duration: 1.8,
+              repeat: isHovered ? Infinity : 0,
+              ease: "easeInOut",
+            }}
           >
             <Zap className="w-6 h-6 fill-pink-500/20 text-pink-500" />
           </motion.div>
@@ -242,7 +299,11 @@ function SecurityGraphic({ isHovered }: { isHovered: boolean }) {
 
       {/* Center Soft Purple Backdrop Disc */}
       <motion.div
-        animate={isHovered ? { scale: 1.08, opacity: 0.95 } : { scale: 1, opacity: 0.75 }}
+        animate={
+          isHovered
+            ? { scale: 1.08, opacity: 0.95 }
+            : { scale: 1, opacity: 0.75 }
+        }
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
         className="absolute w-28 h-28 rounded-full bg-purple-200/50 border border-purple-300/40 pointer-events-none"
       />
@@ -250,9 +311,7 @@ function SecurityGraphic({ isHovered }: { isHovered: boolean }) {
       {/* Left Elliptical Ring (Down at rest -> Lifts up on hover) */}
       <motion.div
         animate={
-          isHovered
-            ? { rotate: -40, scale: 1.05 }
-            : { rotate: -12, scale: 1 }
+          isHovered ? { rotate: -40, scale: 1.05 } : { rotate: -12, scale: 1 }
         }
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="absolute w-56 h-24 rounded-[100%] border border-purple-400/60 pointer-events-none"
@@ -261,9 +320,7 @@ function SecurityGraphic({ isHovered }: { isHovered: boolean }) {
       {/* Right Elliptical Ring (Down at rest -> Lifts up on hover) */}
       <motion.div
         animate={
-          isHovered
-            ? { rotate: 40, scale: 1.05 }
-            : { rotate: 12, scale: 1 }
+          isHovered ? { rotate: 40, scale: 1.05 } : { rotate: 12, scale: 1 }
         }
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="absolute w-56 h-24 rounded-[100%] border border-purple-400/60 pointer-events-none"
@@ -274,8 +331,16 @@ function SecurityGraphic({ isHovered }: { isHovered: boolean }) {
         <motion.div
           animate={
             isHovered
-              ? { y: -2, scale: 1.05, boxShadow: "0 8px 22px -3px rgba(168,85,247,0.35)" }
-              : { y: 0, scale: 1, boxShadow: "0 4px 12px -3px rgba(168,85,247,0.2)" }
+              ? {
+                  y: -2,
+                  scale: 1.05,
+                  boxShadow: "0 8px 22px -3px rgba(168,85,247,0.35)",
+                }
+              : {
+                  y: 0,
+                  scale: 1,
+                  boxShadow: "0 4px 12px -3px rgba(168,85,247,0.2)",
+                }
           }
           transition={{ duration: 0.35, ease: "easeOut" }}
           className="w-11 h-11 rounded-2xl bg-white backdrop-blur-xs border border-purple-200/90 flex items-center justify-center text-purple-600 shadow-sm"
@@ -286,8 +351,16 @@ function SecurityGraphic({ isHovered }: { isHovered: boolean }) {
         <motion.div
           animate={
             isHovered
-              ? { y: -2, scale: 1.05, boxShadow: "0 8px 22px -3px rgba(168,85,247,0.35)" }
-              : { y: 0, scale: 1, boxShadow: "0 4px 12px -3px rgba(168,85,247,0.2)" }
+              ? {
+                  y: -2,
+                  scale: 1.05,
+                  boxShadow: "0 8px 22px -3px rgba(168,85,247,0.35)",
+                }
+              : {
+                  y: 0,
+                  scale: 1,
+                  boxShadow: "0 4px 12px -3px rgba(168,85,247,0.2)",
+                }
           }
           transition={{ duration: 0.35, ease: "easeOut", delay: 0.03 }}
           className="w-11 h-11 rounded-2xl bg-white backdrop-blur-xs border border-purple-200/90 flex items-center justify-center text-purple-600 shadow-sm"
@@ -347,7 +420,7 @@ function PillarCard({ pillar, idx }: { pillar: PillarItem; idx: number }) {
 /* ------------------------------------------------------------------ */
 export function BentoGrid() {
   return (
-    <section className="section w-full py-12 sm:py-16" id="features">
+    <div className="section-sm w-full py-12 sm:py-16" id="features">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl sm:rounded-[36px] bg-gray-50 border border-gray-100/80 p-6 sm:p-10 md:p-12 lg:p-14 overflow-hidden">
           {/* Section Header */}
@@ -362,7 +435,8 @@ export function BentoGrid() {
               Built for engineering teams, optimized for production
             </h2>
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto font-normal">
-              Three foundational systems designed to unify model routing, eliminate context resets, and guarantee enterprise-grade security.
+              Three foundational systems designed to unify model routing,
+              eliminate context resets, and guarantee enterprise-grade security.
             </p>
           </motion.div>
 
@@ -374,7 +448,7 @@ export function BentoGrid() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 

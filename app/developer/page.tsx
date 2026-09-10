@@ -1629,10 +1629,12 @@ export default function DevelopersPage() {
 
       {/* Unified CTA Section */}
       <CtaSection
-        title="Ready to build the future of software?"
-        description="Explore the documentation, clone quickstart starter kits, and ship production AI systems."
-        buttonText="Explore Documentation"
-        buttonHref="/docs"
+        title="Start building autonomous software systems today"
+        description="Access our sub-50ms model gateway, persistent memory graphs, and unified SDKs in TypeScript and Python."
+        buttonText="Get API Keys"
+        buttonHref="/signup"
+        secondaryText="Explore Documentation"
+        secondaryHref="/docs"
       />
       </motion.main>
 

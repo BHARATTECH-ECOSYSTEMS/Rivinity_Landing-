@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from "framer-motion";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import CtaSection from "@/components/sections/cta-section";
 
 export default function GovernancePage() {
   const metrics = [
@@ -239,6 +240,16 @@ export default function GovernancePage() {
           </div>
         </div>
       </section>
+
+      {/* Pre-footer CTA */}
+      <CtaSection
+        title="Deploy verifiable AI for regulated mission systems"
+        description="Consult with our defense architecture and compliance teams on air-gapped enclaves, zero-trust inference, and sovereign data controls."
+        buttonText="Schedule Mission Briefing"
+        buttonHref="/contact"
+        secondaryText="View Compliance Matrix"
+        secondaryHref="#compliance"
+      />
       </motion.main>
 
       <Footer />

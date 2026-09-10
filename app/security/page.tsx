@@ -12,10 +12,9 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import FaqSection from "@/components/sections/faq-section";
-import CtaSection from "@/components/sections/cta-section";
 
 const securityFeatures = [
   {
@@ -199,14 +198,6 @@ export default function SecurityPage() {
             </Link>
           </p>
         </div>
-
-        {/* Unified CTA Section */}
-        <CtaSection
-          title="Ready for bank-grade AI security?"
-          description="Deploy intelligent agents with guaranteed privacy, zero data retention, and strict compliance."
-          buttonText="Contact Security Team"
-          buttonHref="/contact"
-        />
       </motion.main>
       <Footer />
     </div>

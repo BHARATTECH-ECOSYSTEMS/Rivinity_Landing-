@@ -1,6 +1,7 @@
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import Hero from "@/components/Hero";
+import { FeatureShowcaseSlider } from "@/components/sections/feature-showcase-slider";
 import LogoMarquee from "@/components/logoslide";
 import { ProblemStatement } from "@/components/sections/problem-statement";
 import { BentoFeatures } from "@/components/sections/bentofeatures";
@@ -16,6 +17,7 @@ export default function Home() {
       <Header />
       <main className="w-full">
         <Hero />
+        <FeatureShowcaseSlider />
         {/* <LogoMarquee /> */}
         {/* <ProblemStatement /> */}
         <BentoFeatures />

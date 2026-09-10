@@ -180,7 +180,6 @@ const navItems: NavItem[] = [
         items: [
           { label: "Research", href: "/research", description: "Advancing foundational AI architecture" },
           { label: "Blog", href: "/blog", description: "Product updates, engineering deep dives" },
-          { label: "Papers", href: "/papers", description: "Published academic benchmarks & papers" },
           { label: "Rivinity Academy", href: "/academy", description: "Guides, tutorials, and certifications" },
         ],
       },

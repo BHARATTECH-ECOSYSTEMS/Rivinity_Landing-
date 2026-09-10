@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import CtaSection from "@/components/sections/cta-section";
 import {
     Copy,
     Check,
@@ -316,6 +317,16 @@ response = client.engine.orchestrate(
                     </div>
                 </div>
             </section>
+
+            {/* Pre-footer CTA */}
+            <CtaSection
+                title="Test, debug, and deploy endpoints in real time"
+                description="Integrate our REST endpoints and WebSocket streaming kernels into your stack with sub-50ms latency guarantees."
+                buttonText="Generate API Keys"
+                buttonHref="/signup"
+                secondaryText="Read SDK Guides"
+                secondaryHref="/docs#typescript-sdk"
+            />
             </motion.main>
 
             <Footer />

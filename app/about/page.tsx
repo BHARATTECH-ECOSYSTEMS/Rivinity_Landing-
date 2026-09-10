@@ -1,16 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import {
-  Sparkles,
-  ArrowRight,
-  Mail,
-  Check,
-  Users,
-} from "lucide-react";
+import { Mail, Check } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import CtaSection from "@/components/sections/cta-section";
 
 /* =========================================================
    TYPES & DATA MODELS
@@ -491,36 +485,15 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ===================================================
-            4. PRE-FOOTER CTA BANNER (Rivinity Academy Style - About & Careers)
-        =================================================== */}
-        <section className="section py-12 sm:py-20 bg-white">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="relative bg-gray-50 border border-slate-200 rounded-3xl p-8 sm:p-12 lg:p-16 text-center flex flex-col items-center justify-center shadow-xs overflow-hidden">
-              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight max-w-2xl leading-tight">
-                Want to engineer the future of AI with us?
-              </h2>
-              <p className="text-xs sm:text-sm lg:text-base text-slate-600 max-w-xl mb-8 leading-relaxed">
-                We are actively looking for world-class systems architects, AI researchers, and product designers to help us empower the next billion software creators.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
-                <Link
-                  href="/careers"
-                  className="w-full sm:w-auto rounded-xl bg-[#FF6B00] hover:bg-[#E66000] px-8 py-3.5 text-xs sm:text-sm font-bold text-white shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <span>Explore Open Roles</span>
-                  <ArrowRight className="w-4 h-4" strokeWidth={2} />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="w-full sm:w-auto rounded-xl border border-slate-200 bg-white px-7 py-3.5 text-xs sm:text-sm font-bold text-slate-800 hover:border-slate-300 hover:bg-slate-50 active:scale-95 transition-all shadow-xs flex items-center justify-center cursor-pointer"
-                >
-                  <span>Contact Leadership</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Pre-footer CTA */}
+        <CtaSection
+          title="Discover the mission and people behind Rivinity"
+          description="Learn about our founding principles, our engineering culture, and our commitment to building open, verifiable, and safe AI systems for the world."
+          buttonText="Explore Our Principles"
+          buttonHref="#vision"
+          secondaryText="Read Company Blog"
+          secondaryHref="/blog"
+        />
       </main>
 
       <Footer />

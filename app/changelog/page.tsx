@@ -91,9 +91,7 @@ export default function ChangelogPage() {
   const filteredReleases =
     selectedTag === "all"
       ? releases
-      : releases.filter((r) =>
-          r.changes.some((c) => c.type === selectedTag)
-        );
+      : releases.filter((r) => r.changes.some((c) => c.type === selectedTag));
 
   return (
     <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased flex flex-col justify-between">
@@ -167,7 +165,9 @@ export default function ChangelogPage() {
                 <div className="lg:col-span-8">
                   <div className="space-y-2.5">
                     {release.changes
-                      .filter((c) => selectedTag === "all" || c.type === selectedTag)
+                      .filter(
+                        (c) => selectedTag === "all" || c.type === selectedTag,
+                      )
                       .map((change, idx) => (
                         <div
                           key={idx}
@@ -178,8 +178,8 @@ export default function ChangelogPage() {
                               change.type === "feature"
                                 ? "bg-emerald-100 text-emerald-700"
                                 : change.type === "improvement"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-amber-100 text-amber-700"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : "bg-amber-100 text-amber-700"
                             }`}
                           >
                             {change.label}
@@ -196,7 +196,6 @@ export default function ChangelogPage() {
           ))}
         </div>
       </motion.main>
-
       <Footer />
     </div>
   );

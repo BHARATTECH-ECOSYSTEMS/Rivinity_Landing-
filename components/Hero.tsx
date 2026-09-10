@@ -132,7 +132,7 @@ export function Hero() {
   const activeProduct = active ? PRODUCTS.find((p) => p.id === active) ?? null : null;
 
   return (
-    <section className="relative isolate overflow-hidden pt-28 sm:pt-32 md:pt-36 pb-24 sm:pb-28">
+    <section className="relative isolate overflow-hidden pt-24 sm:pt-28 md:pt-32 pb-10 sm:pb-14 md:pb-20">
       <HeroAmbient />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
@@ -524,7 +524,7 @@ function Composer({
           className="h-10 w-10 rounded-full bg-ink text-white grid place-items-center transition shadow-[0_10px_24px_-8px_rgba(15,23,42,0.45)] cursor-pointer"
           aria-label="Send"
         >
-          <ArrowUp className="h-4 w-4" strokeWidth={2} />
+          <ArrowUp className="h-4 w-4 rotate-45" strokeWidth={2} />
         </motion.button>
       </motion.div>
     </form>

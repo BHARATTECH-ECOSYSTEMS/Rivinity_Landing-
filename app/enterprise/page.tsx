@@ -34,6 +34,7 @@ import {
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import CtaSection from "@/components/sections/cta-section";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import orbImage from "@/components/assets/rivinity-orb.png";
 import FaqSection from "@/components/sections/faq-section";
@@ -1787,121 +1788,27 @@ const EnterpriseReadiness = memo(() => {
           </div>
         </section>
 
-        {/* =====================================================
-            07 — ENTERPRISE CTA
-        ===================================================== */}
-
-        <section className="relative overflow-hidden border-y border-[#E5E7EB] bg-gray-50 py-20 sm:py-24">
-          {/* Subtle Ambient Background Mesh */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-70"
-            style={{
-              background:
-                "radial-gradient(50% 60% at 50% 0%, rgba(255,107,0,0.08), transparent 75%), radial-gradient(40% 50% at 90% 100%, rgba(255,140,66,0.05), transparent 70%)",
-            }}
-          />
-
-          <div className="relative mx-auto max-w-5xl px-5 sm:px-6 lg:px-8 text-center">
-            <ScrollReveal>
-              <h2
-                className="
-                  text-3xl
-                  font-extrabold
-                  leading-[1.15]
-                  tracking-[-0.035em]
-                  text-[#1A1A1A]
-                  sm:text-4xl
-                  lg:text-5xl
-                "
-              >
-                Accelerate your enterprise with{" "}
-                <span className="bg-gradient-to-r from-[#FF6B00] via-[#FF8C42] to-[#E85D9E] bg-clip-text text-transparent">
-                  Rivinity AI.
-                </span>
-              </h2>
-
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#6B7280] sm:text-lg">
-                Unify intelligent agents, custom workflows, secure integrations, and developer infrastructure on one enterprise-ready platform.
-              </p>
-
-              {/* Action Buttons */}
-              <div className="mt-8 flex flex-col items-center justify-center gap-3.5 sm:mt-10 sm:flex-row">
-                <a
-                  href="#contact"
-                  className="
-                    inline-flex
-                    w-full
-                    items-center
-                    justify-center
-                    gap-2
-                    rounded-xl
-                    bg-[#FF6B00]
-                    px-7
-                    py-3.5
-                    text-sm
-                    font-semibold
-                    text-white
-                    shadow-[0_12px_24px_-10px_rgba(255,107,0,0.45)]
-                    transition-all
-                    hover:bg-[#E55F00]
-                    hover:shadow-[0_16px_32px_-10px_rgba(255,107,0,0.55)]
-                    active:scale-[0.98]
-                    sm:w-auto
-                  "
-                >
-                  <span>Request Enterprise Demo</span>
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-
-                <a
-                  href="#contact"
-                  className="
-                    inline-flex
-                    w-full
-                    items-center
-                    justify-center
-                    rounded-xl
-                    border
-                    border-gray-300
-                    bg-white
-                    px-7
-                    py-3.5
-                    text-sm
-                    font-semibold
-                    text-[#374151]
-                    shadow-sm
-                    transition-all
-                    hover:border-gray-400
-                    hover:bg-gray-50
-                    active:scale-[0.98]
-                    sm:w-auto
-                  "
-                >
-                  Contact Enterprise Sales
-                </a>
+        {/* Metric Badges */}
+        <section className="border-b border-gray-200/80 bg-gray-50/50 py-12">
+          <div className="mx-auto max-w-5xl px-5 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+              <div className="flex flex-col items-center text-center">
+                <span className="text-2xl font-bold tracking-tight text-[#1A1A1A] sm:text-3xl">99.99%</span>
+                <span className="mt-1 text-xs text-[#6B7280]">Guaranteed SLA Uptime</span>
               </div>
-
-              {/* Steel Gray Metric Badges */}
-              <div className="mt-14 grid grid-cols-2 gap-6 border-t border-gray-200/90 pt-10 sm:grid-cols-4">
-                <div className="flex flex-col items-center text-center">
-                  <span className="text-2xl font-bold tracking-tight text-[#1A1A1A] sm:text-3xl">99.99%</span>
-                  <span className="mt-1 text-xs text-[#6B7280]">Guaranteed SLA Uptime</span>
-                </div>
-                <div className="flex flex-col items-center text-center">
-                  <span className="text-2xl font-bold tracking-tight text-[#1A1A1A] sm:text-3xl">SOC 2</span>
-                  <span className="mt-1 text-xs text-[#6B7280]">Type II Certified</span>
-                </div>
-                <div className="flex flex-col items-center text-center">
-                  <span className="text-2xl font-bold tracking-tight text-[#1A1A1A] sm:text-3xl">100+</span>
-                  <span className="mt-1 text-xs text-[#6B7280]">Supported Integrations</span>
-                </div>
-                <div className="flex flex-col items-center text-center">
-                  <span className="text-2xl font-bold tracking-tight text-[#1A1A1A] sm:text-3xl">24/7</span>
-                  <span className="mt-1 text-xs text-[#6B7280]">Enterprise Support</span>
-                </div>
+              <div className="flex flex-col items-center text-center">
+                <span className="text-2xl font-bold tracking-tight text-[#1A1A1A] sm:text-3xl">SOC 2</span>
+                <span className="mt-1 text-xs text-[#6B7280]">Type II Certified</span>
               </div>
-            </ScrollReveal>
+              <div className="flex flex-col items-center text-center">
+                <span className="text-2xl font-bold tracking-tight text-[#1A1A1A] sm:text-3xl">100+</span>
+                <span className="mt-1 text-xs text-[#6B7280]">Supported Integrations</span>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <span className="text-2xl font-bold tracking-tight text-[#1A1A1A] sm:text-3xl">24/7</span>
+                <span className="mt-1 text-xs text-[#6B7280]">Enterprise Support</span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1914,6 +1821,16 @@ const EnterpriseReadiness = memo(() => {
           subtitle="Everything you need to know about deploying intelligent systems across your organization."
           items={enterpriseFAQs}
           className="w-full py-16 md:py-24 bg-white"
+        />
+
+        {/* Pre-footer CTA */}
+        <CtaSection
+          title="Accelerate your enterprise with Rivinity AI"
+          description="Deploy isolated VPC runtimes, custom fine-tuned foundation models, and guaranteed 99.99% SLAs with dedicated solutions engineering support."
+          buttonText="Request Enterprise Demo"
+          buttonHref="/contact"
+          secondaryText="Contact Sales Team"
+          secondaryHref="/contact"
         />
       </main>
 

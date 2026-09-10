@@ -118,33 +118,34 @@ All pages are located under the `app/` directory:
 
 | Route | File Path | Description |
 | :--- | :--- | :--- |
-| `/` | `app/page.tsx` | Main Rivinity homepage |
-| `/about` | `app/about/page.tsx` | About company and mission |
-| `/academy` | `app/academy/page.tsx` | Learning resources and tutorials |
-| `/advertise` | `app/advertise/page.tsx` | Partnership and advertising info |
-| `/apireference` | `app/apireference/page.tsx` | Developer API reference |
-| `/blog` | `app/blog/page.tsx` | Company news and engineering blog |
-| `/careers` | `app/careers/page.tsx` | Open roles and culture |
-| `/certificate` | `app/certificate/page.tsx` | Certification verification |
-| `/changelog` | `app/changelog/page.tsx` | Product changelog and release notes |
-| `/compliance` | `app/compliance/page.tsx` | Regulatory and compliance certifications |
-| `/contact` | `app/contact/page.tsx` | Contact and support channels |
-| `/cybersecurity` | `app/cybersecurity/page.tsx` | Cybersecurity architecture & practices |
-| `/developer` | `app/developer/page.tsx` | Developer portal and SDKs |
-| `/docs` | `app/docs/page.tsx` | Comprehensive product documentation |
-| `/enterprise` | `app/enterprise/page.tsx` | Enterprise-grade AI solutions |
-| `/governance` | `app/governance/page.tsx` | AI governance & ethical frameworks |
-| `/integration` | `app/integration/page.tsx` | Ecosystem and third-party integrations |
+| `/` | `app/page.tsx` | Main Rivinity homepage with interactive bento sections and platform showcase |
+| `/about` | `app/about/page.tsx` | About company, mission, leadership, and values |
+| `/academy` | `app/academy/page.tsx` | Learning resources, certifications, and AI developer curriculum |
+| `/apireference` | `app/apireference/page.tsx` | Developer API reference and client endpoints |
+| `/blog` | `app/blog/page.tsx` | Engineering blog with custom procedural wireframe graphics and brand `#ff8b28` accents |
+| `/careers` | `app/careers/page.tsx` | Career opportunities, interactive principles, and role application flow |
+| `/certificate` | `app/certificate/page.tsx` | Certification verification portal |
+| `/changelog` | `app/changelog/page.tsx` | Product changelog and chronological release notes |
+| `/compliance` | `app/compliance/page.tsx` | Regulatory, HIPAA, GDPR, and enterprise compliance certifications |
+| `/contact` | `app/contact/page.tsx` | Contact, support inquiries, and sales consultation |
+| `/cybersecurity` | `app/cybersecurity/page.tsx` | Cybersecurity architecture, threat detection, and zero-trust controls |
+| `/developer` | `app/developer/page.tsx` | Developer portal, SDKs, and code quickstarts |
+| `/docs` | `app/docs/page.tsx` | Comprehensive product documentation and integration guides |
+| `/education` | `app/education/page.tsx` | Higher education solutions, campus AI labs, and academic grants |
+| `/enterprise` | `app/enterprise/page.tsx` | Enterprise-grade AI solutions, dedicated infrastructure, and SLA tiers |
+| `/governance` | `app/governance/page.tsx` | AI governance, ethical guardrails, and transparency frameworks |
+| `/government` | `app/government/page.tsx` | Sovereign AI, air-gapped deployments, and public sector compliance |
+| `/integration` | `app/integration/page.tsx` | Ecosystem connectors and third-party workflow integrations |
 | `/login` | `app/login/page.tsx` | Standalone sign-in page with atmospheric background |
-| `/papers` | `app/papers/page.tsx` | Research papers and technical whitepapers |
-| `/pricing` | `app/pricing/page.tsx` | Subscription tiers and feature comparison |
-| `/privacy` | `app/privacy/page.tsx` | Privacy policy and data handling |
-| `/research` | `app/research/page.tsx` | AI research and innovation initiatives |
+| `/papers` | `app/papers/page.tsx` | Peer-reviewed research papers and technical whitepapers |
+| `/pricing` | `app/pricing/page.tsx` | Subscription tiers, billing calculator, and feature comparison matrix |
+| `/privacy` | `app/privacy/page.tsx` | Privacy policy and data handling practices |
+| `/research` | `app/research/page.tsx` | AI research mission, technical grid blueprint cards, and publication archive |
 | `/security` | `app/security/page.tsx` | Security architecture and trust center |
-| `/signup` | `app/signup/page.tsx` | Standalone registration page |
-| `/status` | `app/status/page.tsx` | Real-time platform status and uptime |
-| `/team` | `app/team/page.tsx` | Team members and leadership |
-| `/terms` | `app/terms/page.tsx` | Terms of service |
+| `/signup` | `app/signup/page.tsx` | Standalone registration page with unified auth context |
+| `/status` | `app/status/page.tsx` | Real-time platform status, incident history, and uptime metrics |
+| `/team` | `app/team/page.tsx` | Team members and leadership directory |
+| `/terms` | `app/terms/page.tsx` | Terms of service and usage policies |
 | `404` | `app/not-found.tsx` | Custom 404 Not Found error page |
 
 ---
@@ -153,6 +154,8 @@ All pages are located under the `app/` directory:
 
 - **Path Aliases**: The `@/*` path alias is mapped to the workspace root in [tsconfig.json](file:///Users/hardik/Downloads/BharatTech/main%20rep/tsconfig.json) (e.g., `@/components/...`, `@/lib/...`).
 - **SEO & Social Metadata**: [app/layout.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/layout.tsx) configures comprehensive SEO metadata, including `metadataBase` (`https://rivinity.ai`), OpenGraph cards, Twitter preview cards, keywords, and favicon icons.
+- **Brand Identity & Color Tokens**: Tailored brand primary `#ff8b28` accents paired with clean monochrome slate/zinc palettes, dark borders, and responsive hover feedback.
+- **Procedural SVG Illustration System**: Dynamic, zero-raster geometric illustrations for blog cards, principle badges, and technical publication visualizers.
 - **Typography & Font Optimization**: Managed via `next/font/google` for `--font-body` (`Inter`), `--font-mono` (`JetBrains Mono`), and serif accents (`Fraunces`).
 - **Unified Authentication Architecture**: [components/auth/auth-modal.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/auth/auth-modal.tsx) consolidates login, signup, and password reset flows with built-in client rate limiting, input sanitization, and dual usage (overlay modal triggered by `useAuthModal()` or full-page embedded card).
 - **Atmospheric Backgrounds**: [components/ui/interactive-pixel-background.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/ui/interactive-pixel-background.tsx) renders ambient glass diffusion and high-resolution background art for auth views.

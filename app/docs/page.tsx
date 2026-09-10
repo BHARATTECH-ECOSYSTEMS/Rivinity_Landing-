@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
+import { useAuthModal } from "@/components/auth/auth-context";
+import CtaSection from "@/components/sections/cta-section";
 import {
   Search,
   Copy,
@@ -99,6 +101,7 @@ const jsonResponse = `{
 }`;
 
 export default function DocumentationPage() {
+  const { openAuth } = useAuthModal();
   const [activeTab, setActiveTab] = useState("overview");
   const [langTab, setLangTab] = useState<"curl" | "node" | "python">("node");
   const [copied, setCopied] = useState(false);
@@ -196,13 +199,14 @@ export default function DocumentationPage() {
 
             {/* Right: CTA Button */}
             <div className="flex items-center gap-3 shrink-0 text-white">
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-[#FF6B00] px-5 py-2 text-xs font-semibold shadow-xs hover:bg-[#FF6B00]/90 active:scale-95 transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
+              <button
+                type="button"
+                onClick={() => openAuth("signup")}
+                className="inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-[#FF6B00] px-5 py-2 text-xs font-semibold shadow-xs hover:bg-[#FF6B00]/90 active:scale-95 transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
               >
                 Start Building
                 <ChevronRight size={14} />
-              </Link>
+              </button>
             </div>
 
           </div>
@@ -510,28 +514,15 @@ export default function DocumentationPage() {
             </div>
 
             {/* Support Footer CTA */}
-            <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 text-center space-y-4">
-              <h3 className="text-2xl font-semibold text-[#0f172a]">Need technical support?</h3>
-              <p className="text-xs sm:text-sm text-slate-600">
-                Our solutions engineers are available for custom API integrations, private VPC setup, and dedicated latency SLAs.
-              </p>
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link
-                  href="/contact"
-                  className="bg-[#FF6B00] text-white px-6 py-3 rounded-xl text-xs sm:text-sm font-semibold hover:bg-[#FF6B00]/90 active:scale-95 transition shadow-xs w-full sm:w-auto min-h-[44px] flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
-                >
-                  Contact API Support
-                </Link>
-                <Link
-                  href="https://github.com/rivinity"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white border border-slate-200 text-[#0f172a] px-6 py-3 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 active:scale-95 transition shadow-xs w-full sm:w-auto min-h-[44px] flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
-                >
-                  GitHub Community
-                </Link>
-              </div>
-            </div>
+            <CtaSection
+              title="Ready to launch your first intelligent agent?"
+              description="Follow our 5-minute quickstart guide to authenticate, define custom tool sets, and orchestrate production workflows."
+              buttonText="Start Quickstart Guide"
+              buttonHref="#quickstart"
+              secondaryText="Browse SDK References"
+              secondaryHref="#typescript-sdk"
+              className="py-8 sm:py-12"
+            />
 
           </main>
         </div>

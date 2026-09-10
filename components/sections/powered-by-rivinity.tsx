@@ -1,23 +1,24 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef } from "react";
-import { MotionValue, useScroll, useMotionValueEvent } from "framer-motion";
-import { cn } from "@/lib/utils";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+  MotionValue,
+} from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 type Pt = [number, number];
 
-const VIEW_W = 1000;
-const VIEW_H = 480;
-const CENTER: Pt = [VIEW_W / 2, VIEW_H / 2];
-const SAMPLES = 32;
-
-// -------- Source SVG (uploaded, immutable) --------
-const LOGO_GRADIENT_ID = "rivinity-logo-gradient";
-const LOGO_GRADIENT_STOPS: { offset: string; color: string }[] = [
-  { offset: "0%", color: "#FD881F" },   // vibrant orange
-  { offset: "35%", color: "#F5A9D0" },  // bright pink
-  { offset: "70%", color: "#D8A5F2" },  // soft violet
-  { offset: "100%", color: "#8B5CF6" }, // deep purple
+// -------- Source SVG (official Rivinity brand geometry) --------
+const LOGO_GRADIENT_ID = "rivinity-supernova-gradient";
+const LOGO_GRADIENT_STOPS = [
+  { offset: "0%", color: "#EA580C" }, // little dark orange (top-left)
+  { offset: "35%", color: "#FF6B00" }, // rich vibrant brand orange
+  { offset: "70%", color: "#FF8C33" }, // warm orange
+  { offset: "100%", color: "#FDB06C" }, // clearly visible light orange (bottom-right)
 ];
 
 const RAW_PATHS: { d: string; tx: number; ty: number }[] = [
@@ -33,373 +34,710 @@ const RAW_PATHS: { d: string; tx: number; ty: number }[] = [
   },
 ];
 
-const WAVES_PER_PATH = [11, 6];
-const COUNT = WAVES_PER_PATH.reduce((a, b) => a + b, 0);
-const FIT_SIZE = 380;
+// Coordinate Dimensions: FIT_SIZE = 340 gives 110px padding top/bottom inside 560px height
+const FIT_SIZE = 340;
+const V_WIDTH = 1000;
+const V_HEIGHT = 560;
+const CENTER_X = V_WIDTH / 2;
+const CENTER_Y = V_HEIGHT / 2;
 
-// Dual-stream gradient colors
-const COLORS = [
-  "hsl(22, 95%, 58%)",   // orange
-  "hsl(330, 85%, 65%)",  // pink
-  "hsl(280, 80%, 65%)",  // purple
-  "hsl(255, 88%, 70%)",  // soft violet
-];
+// High-definition Supernova Particle Interface
+interface SupernovaParticle {
+  targetX: number;
+  targetY: number;
+  normTargetDist: number;
+  isInner: boolean;
 
-function sampleUploadedSvg(): {
-  targets: Pt[][];
-  fit: { scale: number; tx: number; ty: number };
-} {
-  if (typeof document === "undefined") {
-    return { targets: [], fit: { scale: 1, tx: 0, ty: 0 } };
+  infallRadius: number;
+  infallAngle: number;
+  infallSpiralTurns: number;
+
+  blastRadius: number;
+  blastAngle: number;
+  blastSpeed: number;
+
+  x: number;
+  y: number;
+  prevX: number;
+  prevY: number;
+  size: number;
+  baseColor: string;
+  glowColor: string;
+  alpha: number;
+  twinklePhase: number;
+  twinkleSpeed: number;
+}
+
+interface CosmicDust {
+  radius: number;
+  angle: number;
+  speed: number;
+  size: number;
+  color: string;
+  alpha: number;
+  pulsePhase: number;
+}
+
+// Color palette mapping based on relative position or angle
+function getRivinityColor(angle: number): { hex: string; glow: string } {
+  const normalized = ((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  const frac = normalized / (Math.PI * 2);
+
+  if (frac < 0.3) {
+    return { hex: "#EA580C", glow: "rgba(234, 88, 12, 0.75)" }; // Dark Orange
+  } else if (frac < 0.6) {
+    return { hex: "#FF6B00", glow: "rgba(255, 107, 0, 0.75)" }; // Vibrant Brand Orange
+  } else if (frac < 0.85) {
+    return { hex: "#FF8C33", glow: "rgba(255, 140, 51, 0.8)" }; // Warm Orange
+  } else {
+    return { hex: "#FDB06C", glow: "rgba(253, 176, 108, 0.85)" }; // Visible Light Orange
   }
-  const svgNS = "http://www.w3.org/2000/svg";
-  const holder = document.createElementNS(svgNS, "svg");
-  holder.setAttribute("width", "0");
-  holder.setAttribute("height", "0");
-  holder.style.position = "absolute";
-  holder.style.visibility = "hidden";
-  document.body.appendChild(holder);
+}
 
-  const rawSubs: Pt[][] = [];
-  RAW_PATHS.forEach((rp, pi) => {
-    const p = document.createElementNS(svgNS, "path");
-    p.setAttribute("d", rp.d);
-    holder.appendChild(p);
-    const total = p.getTotalLength();
-    const K = WAVES_PER_PATH[pi];
-    for (let k = 0; k < K; k++) {
-      const startL = (k / K) * total;
-      const endL = ((k + 1) / K) * total;
-      const pts: Pt[] = new Array(SAMPLES);
-      for (let i = 0; i < SAMPLES; i++) {
-        const l = startL + (endL - startL) * (i / (SAMPLES - 1));
-        const pt = p.getPointAtLength(l);
-        pts[i] = [pt.x + rp.tx, rp.ty - pt.y];
-      }
-      rawSubs.push(pts);
-    }
+// Easing helpers
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - clamp01(t), 3);
+const easeOutBack = (x: number): number => {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  const t = clamp01(x);
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+};
+
+interface SupernovaCanvasProps {
+  scrollProgress: MotionValue<number>;
+}
+
+export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
+  scrollProgress,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const overlaySvgRef = useRef<SVGSVGElement>(null);
+  const overlayGroupRef = useRef<SVGGElement>(null);
+  const auraRef = useRef<HTMLDivElement>(null);
+
+  // Smooth interpolated scroll progress (prevents discrete wheel jump)
+  const targetProgressRef = useRef<number>(0);
+  const smoothProgressRef = useRef<number>(0);
+
+  // Fit transform in React state for full vector rendering
+  const [fit, setFit] = useState<{
+    scale: number;
+    tx: number;
+    ty: number;
+  } | null>(null);
+
+  // Mouse interaction
+  const mouseRef = useRef<{ x: number; y: number; active: boolean }>({
+    x: CENTER_X,
+    y: CENTER_Y,
+    active: false,
   });
-  document.body.removeChild(holder);
 
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-  for (const sub of rawSubs) {
-    for (const [x, y] of sub) {
+  // Shockwave pulses triggered on manual click
+  const shockwavesRef = useRef<
+    Array<{
+      x: number;
+      y: number;
+      radius: number;
+      maxRadius: number;
+      alpha: number;
+    }>
+  >([]);
+
+  // Particles state ref
+  const particlesRef = useRef<SupernovaParticle[]>([]);
+  const dustRef = useRef<CosmicDust[]>([]);
+  const fitRef = useRef<{ scale: number; tx: number; ty: number }>({
+    scale: 1,
+    tx: 0,
+    ty: 0,
+  });
+
+  // Update target progress when user scrolls
+  useMotionValueEvent(scrollProgress, "change", (latest) => {
+    targetProgressRef.current = clamp01(latest);
+  });
+
+  // Sample SVG Logo Points once on mount
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const holder = document.createElementNS(svgNS, "svg");
+    holder.setAttribute("width", "0");
+    holder.setAttribute("height", "0");
+    holder.style.position = "absolute";
+    holder.style.visibility = "hidden";
+    document.body.appendChild(holder);
+
+    const outerSamples = 760;
+    const innerSamples = 400;
+    const sampleConfigs = [
+      { pathIndex: 0, count: outerSamples, isInner: false },
+      { pathIndex: 1, count: innerSamples, isInner: true },
+    ];
+
+    const rawSubs: { pt: Pt; isInner: boolean }[] = [];
+
+    sampleConfigs.forEach(({ pathIndex, count, isInner }) => {
+      const rp = RAW_PATHS[pathIndex];
+      const p = document.createElementNS(svgNS, "path");
+      p.setAttribute("d", rp.d);
+      holder.appendChild(p);
+      const totalLen = p.getTotalLength();
+
+      for (let i = 0; i < count; i++) {
+        const len = (i / count) * totalLen;
+        const pt = p.getPointAtLength(len);
+        rawSubs.push({
+          pt: [pt.x + rp.tx, rp.ty - pt.y],
+          isInner,
+        });
+      }
+    });
+
+    document.body.removeChild(holder);
+
+    // Compute bounding box
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
+    for (const item of rawSubs) {
+      const [x, y] = item.pt;
       if (x < minX) minX = x;
       if (y < minY) minY = y;
       if (x > maxX) maxX = x;
       if (y > maxY) maxY = y;
     }
-  }
-  const w = maxX - minX;
-  const h = maxY - minY;
-  const scale = FIT_SIZE / Math.max(w, h);
-  const cx = (minX + maxX) / 2;
-  const cy = (minY + maxY) / 2;
-  const tx = CENTER[0] - cx * scale;
-  const ty = CENTER[1] - cy * scale;
 
-  const targets = rawSubs.map((sub) =>
-    sub.map(([x, y]) => [x * scale + tx, y * scale + ty] as Pt),
-  );
-  return { targets, fit: { scale, tx, ty } };
-}
+    const w = maxX - minX;
+    const h = maxY - minY;
+    const scale = FIT_SIZE / Math.max(w, h);
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+    const tx = CENTER_X - cx * scale;
+    const ty = CENTER_Y - cy * scale;
 
-// -------- Dual-Side Wave Construction (Left & Right streams converging) --------
-function buildWave(
-  index: number,
-  count: number,
-  entryProgress: number, // 0 (far offscreen) to 1 (at center)
-  calm: number,
-): Pt[] {
-  const midline = VIEW_H / 2;
-  const rowOffset = (index - (count - 1) / 2) * 11;
-  const baseAmp = 36 + (index % 4) * 10;
-  const amp = baseAmp * (1 - calm) + 4 * calm;
-  const freq = 1.15 + (index % 5) * 0.28;
-  const phase = index * 0.85;
+    const fitData = { scale, tx, ty };
+    fitRef.current = fitData;
+    setFit(fitData);
 
-  // Alternate streams: Even indices come from Left (-), Odd indices come from Right (+)
-  const isLeft = index % 2 === 0;
-  const direction = isLeft ? -1 : 1;
-  const distance = (1 - entryProgress) * VIEW_W * 0.85;
-  const shift = direction * distance;
-
-  const pts: Pt[] = new Array(SAMPLES);
-  for (let i = 0; i < SAMPLES; i++) {
-    const t = i / (SAMPLES - 1);
-    const x = -40 + t * (VIEW_W + 80) + shift;
-    const env = Math.sin(Math.PI * t);
-    const y =
-      midline +
-      rowOffset * (1 - calm * 0.3) +
-      amp * env * Math.sin(t * Math.PI * 2 * freq + phase);
-    pts[i] = [x, y];
-  }
-  return pts;
-}
-
-const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-const smooth = (v: number) => {
-  const t = clamp01(v);
-  return t * t * (3 - 2 * t);
-};
-const easeInOut = (v: number) => {
-  const t = clamp01(v);
-  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-};
-
-function lerpPts(a: Pt[], b: Pt[], t: number): Pt[] {
-  const out: Pt[] = new Array(a.length);
-  for (let i = 0; i < a.length; i++) {
-    out[i] = [
-      a[i][0] + (b[i][0] - a[i][0]) * t,
-      a[i][1] + (b[i][1] - a[i][1]) * t,
-    ];
-  }
-  return out;
-}
-
-const round1 = (n: number) => Math.round(n * 10) / 10;
-
-function toPath(pts: Pt[]): string {
-  if (pts.length < 2) return "";
-  let d = `M${round1(pts[0][0])} ${round1(pts[0][1])}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[i - 1] ?? pts[i];
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const p3 = pts[i + 2] ?? p2;
-    const c1x = round1(p1[0] + (p2[0] - p0[0]) / 6);
-    const c1y = round1(p1[1] + (p2[1] - p0[1]) / 6);
-    const c2x = round1(p2[0] - (p3[0] - p1[0]) / 6);
-    const c2y = round1(p2[1] - (p3[1] - p1[1]) / 6);
-    d += `C${c1x} ${c1y},${c2x} ${c2y},${round1(p2[0])} ${round1(p2[1])}`;
-  }
-  return d;
-}
-
-interface FlowProps {
-  progress: MotionValue<number>;
-}
-
-export const RivinityFlowSVG: React.FC<FlowProps> = ({ progress }) => {
-  const sampledRef = useRef<{
-    targets: Pt[][];
-    fit: { scale: number; tx: number; ty: number };
-  }>({ targets: [], fit: { scale: 1, tx: 0, ty: 0 } });
-
-  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
-  const overlayRef = useRef<SVGGElement | null>(null);
-  const rafIdRef = useRef<number | null>(null);
-  const stateRef = useRef<{ fullyFormed: boolean; atZero: boolean }>({
-    fullyFormed: false,
-    atZero: false,
-  });
-
-  const initialWavePaths = useMemo(
-    () =>
-      Array.from({ length: COUNT }, (_, i) =>
-        toPath(buildWave(i, COUNT, 0, 0)),
-      ),
-    [],
-  );
-
-  useEffect(() => {
-    const sampled = sampleUploadedSvg();
-    sampledRef.current = sampled;
-    if (overlayRef.current) {
-      overlayRef.current.setAttribute(
+    if (overlayGroupRef.current) {
+      overlayGroupRef.current.setAttribute(
         "transform",
-        `translate(${sampled.fit.tx.toFixed(2)} ${sampled.fit.ty.toFixed(2)}) scale(${sampled.fit.scale.toFixed(5)})`
+        `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${scale.toFixed(5)})`,
       );
     }
+
+    // Build Supernova Particles
+    const particles: SupernovaParticle[] = rawSubs.map(({ pt, isInner }) => {
+      const targetX = pt[0] * scale + tx;
+      const targetY = pt[1] * scale + ty;
+
+      const dx = targetX - CENTER_X;
+      const dy = targetY - CENTER_Y;
+      const targetDist = Math.sqrt(dx * dx + dy * dy);
+      const targetAngle = Math.atan2(dy, dx);
+
+      // Infall initial properties: spiral in from outer cosmos (260px - 650px)
+      const infallRadius = 280 + Math.random() * 400 + (isInner ? 50 : 0);
+      const infallAngle = targetAngle + (Math.random() - 0.5) * 2.5;
+      const infallSpiralTurns = 1.8 + Math.random() * 2.2;
+
+      // Supernova explosion blast properties (shoot outward 180px - 480px)
+      const blastRadius = 160 + Math.random() * 340;
+      const blastAngle = targetAngle + (Math.random() - 0.5) * 0.9;
+      const blastSpeed = 0.8 + Math.random() * 0.8;
+
+      const colors = getRivinityColor(targetAngle);
+
+      return {
+        targetX,
+        targetY,
+        normTargetDist: targetDist / (FIT_SIZE / 2),
+        isInner,
+
+        infallRadius,
+        infallAngle,
+        infallSpiralTurns,
+
+        blastRadius,
+        blastAngle,
+        blastSpeed,
+
+        x: CENTER_X + Math.cos(infallAngle) * infallRadius,
+        y: CENTER_Y + Math.sin(infallAngle) * infallRadius,
+        prevX: CENTER_X + Math.cos(infallAngle) * infallRadius,
+        prevY: CENTER_Y + Math.sin(infallAngle) * infallRadius,
+        size: isInner ? 1.4 + Math.random() * 1.0 : 1.8 + Math.random() * 1.5,
+        baseColor: colors.hex,
+        glowColor: colors.glow,
+        alpha: 0.85 + Math.random() * 0.15,
+        twinklePhase: Math.random() * Math.PI * 2,
+        twinkleSpeed: 0.04 + Math.random() * 0.06,
+      };
+    });
+
+    particlesRef.current = particles;
+
+    // Ambient floating space dust
+    const dustParticles: CosmicDust[] = [];
+    for (let i = 0; i < 90; i++) {
+      const radius = 60 + Math.random() * 450;
+      const angle = Math.random() * Math.PI * 2;
+      dustParticles.push({
+        radius,
+        angle,
+        speed: (Math.random() - 0.5) * 0.003,
+        size: 0.8 + Math.random() * 1.6,
+        color: i % 2 === 0 ? "#FF6B00" : i % 3 === 0 ? "#EA580C" : "#FDB06C",
+        alpha: 0.2 + Math.random() * 0.5,
+        pulsePhase: Math.random() * Math.PI * 2,
+      });
+    }
+    dustRef.current = dustParticles;
   }, []);
 
-  const renderFrame = (latest: number) => {
-    const p = clamp01(latest);
-    const state = stateRef.current;
+  // Canvas render loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d", { alpha: true });
+    if (!ctx) return;
 
-    // Early exit optimization: once fully formed (p >= 0.85), skip 100% of wave math & DOM attribute sets!
-    if (p >= 0.85) {
-      if (state.fullyFormed) return;
-      state.fullyFormed = true;
-      state.atZero = false;
-      if (overlayRef.current) {
-        overlayRef.current.style.opacity = "1";
-      }
-      for (let i = 0; i < COUNT; i++) {
-        const el = pathRefs.current[i];
-        if (el) el.style.opacity = "0";
-      }
-      return;
-    }
+    let animFrameId: number;
+    let lastTime = performance.now();
 
-    if (p <= 0.001) {
-      if (state.atZero) return;
-      state.atZero = true;
-      state.fullyFormed = false;
-      if (overlayRef.current) {
-        overlayRef.current.style.opacity = "0";
+    const render = (time: number) => {
+      const dt = Math.min((time - lastTime) / 1000, 0.05);
+      lastTime = time;
+
+      // Smooth exponential lerp toward current scroll target
+      const targetP = targetProgressRef.current;
+      smoothProgressRef.current += (targetP - smoothProgressRef.current) * 0.12;
+      const p = clamp01(smoothProgressRef.current);
+
+      // Cross-fade:
+      // When p reaches 0.65 -> 0.85:
+      // - The proper vector logo smoothly cross-fades in to 100%
+      // - The particle dots smoothly fade out to 0%
+      // Once p >= 0.85, ALL DOTS ARE COMPLETELY REMOVED, leaving only the clean proper logo!
+      const logoOpacity = clamp01((p - 0.65) / 0.18);
+      const particleAlpha = Math.max(0, 1 - logoOpacity);
+
+      if (overlaySvgRef.current) {
+        overlaySvgRef.current.style.opacity = `${logoOpacity}`;
       }
-      for (let i = 0; i < COUNT; i++) {
-        const el = pathRefs.current[i];
-        if (el) {
-          el.setAttribute("d", initialWavePaths[i]);
-          el.style.opacity = "1";
+      if (auraRef.current) {
+        auraRef.current.style.opacity = `${0.2 + logoOpacity * 0.7}`;
+      }
+
+      // Handle Canvas Sizing with Retina / High-DPI support
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (
+        canvas.width !== rect.width * dpr ||
+        canvas.height !== rect.height * dpr
+      ) {
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+      }
+
+      ctx.save();
+      ctx.scale((rect.width * dpr) / V_WIDTH, (rect.height * dpr) / V_HEIGHT);
+
+      // Clear canvas
+      ctx.clearRect(0, 0, V_WIDTH, V_HEIGHT);
+
+      // -----------------------------------------------------------------
+      // LAYER 1: Deep Cosmic Nebula & Singularity Back-Glow
+      // -----------------------------------------------------------------
+      ctx.globalCompositeOperation = "source-over";
+
+      // Soft elliptical cosmic nebula aura (safely bounded so it terminates well within canvas boundaries)
+      ctx.save();
+      ctx.translate(CENTER_X, CENTER_Y);
+      ctx.scale(1.2, 0.65); // Elliptical scaling keeps vertical reach ~195px, well clear of the 280px top/bottom canvas edge
+
+      const nebulaGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 300);
+
+      if (p >= 0.22 && p < 0.45) {
+        // Flash aura during detonation
+        const flashIntensity = 1 - (p - 0.22) / 0.23;
+        nebulaGrad.addColorStop(
+          0,
+          `rgba(255, 255, 255, ${0.45 * flashIntensity})`,
+        );
+        nebulaGrad.addColorStop(
+          0.2,
+          `rgba(253, 136, 31, ${0.26 * flashIntensity})`,
+        );
+        nebulaGrad.addColorStop(
+          0.5,
+          `rgba(245, 169, 208, ${0.16 * flashIntensity})`,
+        );
+        nebulaGrad.addColorStop(
+          0.75,
+          `rgba(139, 92, 246, ${0.08 * flashIntensity})`,
+        );
+        nebulaGrad.addColorStop(1, "rgba(139, 92, 246, 0)");
+      } else if (p >= 0.65) {
+        // Soft ethereal corona behind the formed logo
+        const settleOp = clamp01((p - 0.65) / 0.35);
+        const pulse = 1 + Math.sin(time * 0.002) * 0.03;
+        nebulaGrad.addColorStop(
+          0,
+          `rgba(253, 136, 31, ${0.07 * settleOp * pulse})`,
+        );
+        nebulaGrad.addColorStop(
+          0.35,
+          `rgba(245, 169, 208, ${0.055 * settleOp})`,
+        );
+        nebulaGrad.addColorStop(0.7, `rgba(139, 92, 246, ${0.03 * settleOp})`);
+        nebulaGrad.addColorStop(1, "rgba(139, 92, 246, 0)");
+      } else {
+        // Infall singularity core
+        const coreIntensity = p / 0.22;
+        nebulaGrad.addColorStop(
+          0,
+          `rgba(253, 136, 31, ${0.2 + coreIntensity * 0.4})`,
+        );
+        nebulaGrad.addColorStop(
+          0.4,
+          `rgba(216, 165, 242, ${0.1 + coreIntensity * 0.2})`,
+        );
+        nebulaGrad.addColorStop(1, "rgba(216, 165, 242, 0)");
+      }
+
+      ctx.fillStyle = nebulaGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, 300, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // -----------------------------------------------------------------
+      // LAYER 2: Detonation Shockwave Rings & Diffraction Star Spikes
+      // -----------------------------------------------------------------
+      ctx.globalCompositeOperation = "lighter";
+
+      // Active detonation flash & star spikes scrubbable directly by scroll (p: 0.22 -> 0.45)
+      if (p >= 0.22 && p < 0.45) {
+        const blastT = (p - 0.22) / 0.23; // 0..1
+        const flashRadius = blastT * 420;
+        const flashAlpha = Math.max(0, 1 - blastT * 1.2);
+
+        // Expanding supersonic shockwave ring 1
+        ctx.beginPath();
+        ctx.arc(CENTER_X, CENTER_Y, flashRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(253, 136, 31, ${flashAlpha * 0.9})`;
+        ctx.lineWidth = Math.max(1, 14 * (1 - blastT));
+        ctx.stroke();
+
+        // Expanding shockwave ring 2 (chromatic lag)
+        if (blastT > 0.08) {
+          const r2 = (blastT - 0.08) * 380;
+          ctx.beginPath();
+          ctx.arc(CENTER_X, CENTER_Y, r2, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(245, 169, 208, ${flashAlpha * 0.8})`;
+          ctx.lineWidth = Math.max(1, 8 * (1 - blastT));
+          ctx.stroke();
+        }
+
+        // Expanding shockwave ring 3 (violet aura)
+        if (blastT > 0.16) {
+          const r3 = (blastT - 0.16) * 350;
+          ctx.beginPath();
+          ctx.arc(CENTER_X, CENTER_Y, r3, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(139, 92, 246, ${flashAlpha * 0.7})`;
+          ctx.lineWidth = Math.max(1, 6 * (1 - blastT));
+          ctx.stroke();
+        }
+
+        // Diffraction spikes (8-point starburst rays)
+        const rayLen = (1 - blastT) * 440;
+        if (rayLen > 10) {
+          for (let i = 0; i < 8; i++) {
+            const rayAngle = (i * Math.PI) / 4 + blastT * 0.4;
+            const rx = Math.cos(rayAngle) * rayLen;
+            const ry = Math.sin(rayAngle) * rayLen;
+
+            const rayGrad = ctx.createLinearGradient(
+              CENTER_X - rx,
+              CENTER_Y - ry,
+              CENTER_X + rx,
+              CENTER_Y + ry,
+            );
+            rayGrad.addColorStop(0, "rgba(255, 255, 255, 0)");
+            rayGrad.addColorStop(
+              0.5,
+              `rgba(255, 255, 255, ${flashAlpha * 0.9})`,
+            );
+            rayGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+            ctx.beginPath();
+            ctx.moveTo(CENTER_X - rx, CENTER_Y - ry);
+            ctx.lineTo(CENTER_X + rx, CENTER_Y + ry);
+            ctx.strokeStyle = rayGrad;
+            ctx.lineWidth = Math.max(0.5, 4 * (1 - blastT));
+            ctx.stroke();
+          }
         }
       }
-      return;
-    }
 
-    state.fullyFormed = false;
-    state.atZero = false;
+      // Manual interactive shockwaves
+      if (shockwavesRef.current.length > 0) {
+        shockwavesRef.current.forEach((sw) => {
+          sw.radius += dt * 420;
+          sw.alpha = Math.max(0, 1 - sw.radius / sw.maxRadius);
 
-    const { targets, fit } = sampledRef.current;
-    const hasTargets = targets.length === COUNT;
-
-    if (overlayRef.current && hasTargets) {
-      overlayRef.current.setAttribute(
-        "transform",
-        `translate(${fit.tx.toFixed(2)} ${fit.ty.toFixed(2)}) scale(${fit.scale.toFixed(5)})`
-      );
-    }
-
-    // Phase 1: Dual-side lines enter from Left and Right (p: 0 -> 0.35)
-    const entryProgress = smooth(p / 0.35);
-
-    // Phase 2: Lines calm down and converge (p: 0.20 -> 0.50)
-    const calm = smooth((p - 0.20) / 0.30);
-
-    // Phase 3: Smooth morph into the Rivinity logo (p: 0.35 -> 0.85)
-    let morph = 0;
-    if (p < 0.35) morph = 0;
-    else if (p < 0.85) morph = easeInOut((p - 0.35) / 0.50);
-    else morph = 1;
-
-    // Cross-fade to the rich multi-stop gradient logo
-    const overlay = hasTargets ? smooth((morph - 0.60) / 0.40) : 0;
-    const strokeOp = 1 - overlay;
-
-    for (let i = 0; i < COUNT; i++) {
-      const el = pathRefs.current[i];
-      if (!el) continue;
-      const wave = buildWave(i, COUNT, entryProgress, calm);
-      const pts = morph > 0 && hasTargets ? lerpPts(wave, targets[i], morph) : wave;
-      el.setAttribute("d", toPath(pts));
-      el.style.opacity = strokeOp > 0.01 ? `${strokeOp}` : "0";
-    }
-
-    if (overlayRef.current) {
-      overlayRef.current.style.opacity = `${overlay}`;
-    }
-  };
-
-  useMotionValueEvent(progress, "change", (latest) => {
-    if (rafIdRef.current !== null) {
-      cancelAnimationFrame(rafIdRef.current);
-    }
-    rafIdRef.current = requestAnimationFrame(() => {
-      rafIdRef.current = null;
-      renderFrame(latest);
-    });
-  });
-
-  useEffect(() => {
-    return () => {
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current);
+          if (sw.alpha > 0.01) {
+            ctx.beginPath();
+            ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(253, 136, 31, ${sw.alpha * 0.6})`;
+            ctx.lineWidth = Math.max(1, 4 * sw.alpha);
+            ctx.stroke();
+          }
+        });
+        shockwavesRef.current = shockwavesRef.current.filter(
+          (sw) => sw.alpha > 0.02,
+        );
       }
+
+      // -----------------------------------------------------------------
+      // LAYER 3: Ambient Cosmic Dust (Fades out when logo forms)
+      // -----------------------------------------------------------------
+      if (particleAlpha > 0.01) {
+        dustRef.current.forEach((dust) => {
+          dust.angle += dust.speed;
+          const dx = Math.cos(dust.angle) * dust.radius;
+          const dy = Math.sin(dust.angle) * dust.radius;
+          const px = CENTER_X + dx;
+          const py = CENTER_Y + dy;
+
+          const pulse = 0.6 + 0.4 * Math.sin(time * 0.002 + dust.pulsePhase);
+          ctx.fillStyle = dust.color;
+          ctx.globalAlpha = dust.alpha * pulse * particleAlpha * 0.35;
+          ctx.beginPath();
+          ctx.arc(px, py, dust.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      // -----------------------------------------------------------------
+      // LAYER 4: Supernova Particles (Fades out completely once proper logo is made)
+      // -----------------------------------------------------------------
+      if (particleAlpha > 0.005) {
+        const particles = particlesRef.current;
+
+        for (let i = 0; i < particles.length; i++) {
+          const pt = particles[i];
+          pt.prevX = pt.x;
+          pt.prevY = pt.y;
+
+          if (p < 0.22) {
+            // PHASE 0: Singularity Accretion (Cosmic Infall)
+            const tInfall = p / 0.22; // 0..1
+            const currentRadius = pt.infallRadius * Math.pow(1 - tInfall, 1.8);
+            const currentAngle =
+              pt.infallAngle +
+              pt.infallSpiralTurns * Math.PI * 2 * Math.pow(tInfall, 1.4);
+
+            const jitter =
+              tInfall > 0.7 ? (Math.random() - 0.5) * 8 * (tInfall - 0.7) : 0;
+            pt.x = CENTER_X + Math.cos(currentAngle) * currentRadius + jitter;
+            pt.y = CENTER_Y + Math.sin(currentAngle) * currentRadius + jitter;
+          } else if (p < 0.45) {
+            // PHASE 1: Supernova Detonation (Violent Blast Outward)
+            const tBlast = (p - 0.22) / 0.23; // 0..1
+            const blastDist =
+              pt.blastRadius * easeOutCubic(tBlast) * pt.blastSpeed;
+            const currentAngle = pt.blastAngle;
+
+            pt.x = CENTER_X + Math.cos(currentAngle) * blastDist;
+            pt.y = CENTER_Y + Math.sin(currentAngle) * blastDist;
+          } else {
+            // PHASE 2 & 3: Magnetic Coalescence & Locking (Curving to Target)
+            const tMorph = (p - 0.45) / 0.45; // 0..1
+            const easedMorph = easeOutBack(Math.min(1, tMorph));
+
+            const blastX =
+              CENTER_X +
+              Math.cos(pt.blastAngle) * (pt.blastRadius * pt.blastSpeed);
+            const blastY =
+              CENTER_Y +
+              Math.sin(pt.blastAngle) * (pt.blastRadius * pt.blastSpeed);
+
+            const controlRadius = pt.blastRadius * 0.6;
+            const arcAngle =
+              (pt.blastAngle +
+                Math.atan2(pt.targetY - CENTER_Y, pt.targetX - CENTER_X)) /
+                2 +
+              0.4;
+            const ctrlX = CENTER_X + Math.cos(arcAngle) * controlRadius;
+            const ctrlY = CENTER_Y + Math.sin(arcAngle) * controlRadius;
+
+            const mt = 1 - easedMorph;
+            const targetCurX =
+              mt * mt * blastX +
+              2 * mt * easedMorph * ctrlX +
+              easedMorph * easedMorph * pt.targetX;
+            const targetCurY =
+              mt * mt * blastY +
+              2 * mt * easedMorph * ctrlY +
+              easedMorph * easedMorph * pt.targetY;
+
+            pt.x = targetCurX;
+            pt.y = targetCurY;
+          }
+
+          // Draw particle dot with smooth cross-fade out
+          const twinkle =
+            0.7 + 0.3 * Math.sin(time * pt.twinkleSpeed + pt.twinklePhase);
+          ctx.globalAlpha = pt.alpha * twinkle * particleAlpha;
+
+          ctx.fillStyle = pt.baseColor;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Speed trail during detonation & locking
+          if (
+            p >= 0.22 &&
+            p < 0.7 &&
+            (Math.abs(pt.x - pt.prevX) > 1.5 || Math.abs(pt.y - pt.prevY) > 1.5)
+          ) {
+            ctx.beginPath();
+            ctx.moveTo(pt.prevX, pt.prevY);
+            ctx.lineTo(pt.x, pt.y);
+            ctx.strokeStyle = pt.glowColor;
+            ctx.lineWidth = pt.size * 0.8 * particleAlpha;
+            ctx.stroke();
+          }
+        }
+      }
+
+      ctx.restore();
+      animFrameId = requestAnimationFrame(render);
+    };
+
+    animFrameId = requestAnimationFrame(render);
+
+    return () => {
+      cancelAnimationFrame(animFrameId);
     };
   }, []);
 
+  // Handle canvas mouse move for interactive deflection
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * V_WIDTH;
+    const y = ((e.clientY - rect.top) / rect.height) * V_HEIGHT;
+    mouseRef.current = { x, y, active: true };
+  };
+
+  const handleMouseLeave = () => {
+    mouseRef.current.active = false;
+  };
+
+  // Click on canvas triggers a shockwave pulse
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * V_WIDTH;
+    const y = ((e.clientY - rect.top) / rect.height) * V_HEIGHT;
+
+    shockwavesRef.current.push({
+      x,
+      y,
+      radius: 5,
+      maxRadius: 360,
+      alpha: 1.0,
+    });
+  };
+
   return (
-    <svg
-      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-      width="100%"
-      height="100%"
-      preserveAspectRatio="xMidYMid meet"
-      className="block w-full h-full pointer-events-none"
-      style={{ transform: "translateZ(0)", willChange: "transform", contain: "layout paint" }}
-      aria-hidden="true"
-    >
-      {initialWavePaths.map((d, i) => {
-        const color = COLORS[i % COLORS.length];
-        return (
-          <path
-            key={i}
-            ref={(el) => {
-              pathRefs.current[i] = el;
-            }}
-            d={d}
-            fill="none"
-            stroke={color}
-            strokeWidth={5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ willChange: "d, opacity" }}
-          />
-        );
-      })}
+    <div className="relative w-full max-w-4xl mx-auto flex-1 min-h-[260px] sm:min-h-[340px] md:min-h-[400px] max-h-[55vh] flex items-center justify-center select-none my-auto">
+      {/* Canvas for High-Performance 120fps Particle Supernova */}
+      <canvas
+        ref={canvasRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleCanvasClick}
+        className="absolute inset-0 w-full h-full cursor-crosshair z-10"
+        style={{
+          willChange: "transform",
+          touchAction: "none",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 92% 76% at 50% 50%, black 45%, black 68%, transparent 98%)",
+          maskImage:
+            "radial-gradient(ellipse 92% 76% at 50% 50%, black 45%, black 68%, transparent 98%)",
+        }}
+      />
 
-      <defs>
-        <linearGradient id={LOGO_GRADIENT_ID} x1="0%" y1="0%" x2="100%" y2="100%">
-          {LOGO_GRADIENT_STOPS.map((s) => (
-            <stop key={s.offset} offset={s.offset} stopColor={s.color} />
-          ))}
-        </linearGradient>
-      </defs>
-
-      <g
-        ref={overlayRef}
-        style={{ opacity: 0, willChange: "opacity" }}
+      {/* Crisp Vector SVG Logo (cross-fades in smoothly as particles crystallize) */}
+      <svg
+        ref={overlaySvgRef}
+        viewBox={`0 0 ${V_WIDTH} ${V_HEIGHT}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="absolute inset-0 w-full h-full pointer-events-none z-20 transition-opacity duration-200 ease-out"
+        style={{
+          opacity: 0,
+          filter:
+            "drop-shadow(0 0 18px rgba(255, 107, 0, 0.32)) drop-shadow(0 0 36px rgba(255, 163, 89, 0.20))",
+        }}
+        aria-hidden="true"
       >
-        {RAW_PATHS.map((rp, i) => (
-          <path
-            key={i}
-            d={rp.d}
-            transform={`matrix(1,0,0,-1,${rp.tx},${rp.ty})`}
-            fill={`url(#${LOGO_GRADIENT_ID})`}
-          />
-        ))}
-      </g>
-    </svg>
-  );
-};
+        <defs>
+          <linearGradient
+            id={LOGO_GRADIENT_ID}
+            x1="0%"
+            y1="100%"
+            x2="100%"
+            y2="0%"
+          >
+            {LOGO_GRADIENT_STOPS.map((s) => (
+              <stop key={s.offset} offset={s.offset} stopColor={s.color} />
+            ))}
+          </linearGradient>
+        </defs>
 
-export const GoogleGeminiEffect = ({
-  pathLengths,
-  title,
-  description,
-  className,
-}: {
-  pathLengths: MotionValue<number>[];
-  title?: string;
-  description?: string;
-  className?: string;
-}) => {
-  const master = pathLengths[0];
+        <g
+          ref={overlayGroupRef}
+          transform={
+            fit
+              ? `translate(${fit.tx.toFixed(2)} ${fit.ty.toFixed(2)}) scale(${fit.scale.toFixed(5)})`
+              : undefined
+          }
+        >
+          {RAW_PATHS.map((rp, i) => (
+            <path
+              key={i}
+              d={rp.d}
+              transform={`matrix(1,0,0,-1,${rp.tx},${rp.ty})`}
+              fill={`url(#${LOGO_GRADIENT_ID})`}
+            />
+          ))}
+        </g>
+      </svg>
 
-  return (
-    <div className={cn("w-full px-4 sm:px-6 flex flex-col items-center justify-center pointer-events-none", className)}>
-      <div className="text-center max-w-4xl mx-auto space-y-2 sm:space-y-3 shrink-0 mb-4 sm:mb-6">
-        <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#0f172a] leading-tight">
-          {title || "Born from motions, unified as Rivinity"}
-        </h2>
-        <p className="text-sm sm:text-base md:text-lg font-normal text-slate-500 max-w-2xl mx-auto leading-relaxed">
-          {description ||
-            "Flowing intelligence organizes itself into the Rivinity identity — then returns to motion."}
-        </p>
-      </div>
-
-      {/* Responsive Canvas Frame */}
-      <div className="w-full max-w-4xl mx-auto h-[240px] sm:h-[320px] md:h-[420px] relative flex items-center justify-center shrink-0 mt-2">
-        <RivinityFlowSVG progress={master} />
-      </div>
+      {/* Ambient cosmic aura ring behind the logo */}
+      <div
+        ref={auraRef}
+        className="absolute w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full pointer-events-none transition-opacity duration-500 blur-3xl z-0"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(255, 107, 0, 0.16) 0%, rgba(255, 163, 89, 0.10) 40%, rgba(255, 230, 210, 0.05) 70%, transparent 100%)",
+          opacity: 0.25,
+        }}
+      />
     </div>
   );
 };
-
-export const RivinityEffect = GoogleGeminiEffect;
 
 /* ------------------------------------------------------------------ */
 /* Scroll-Driven Section Component                                    */
@@ -408,20 +746,45 @@ export function PoweredByRivinity() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center 45%"],
+    offset: ["start start", "end end"],
   });
+
+  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full py-16 sm:py-20 md:py-24 bg-white border-b border-gray-100/60 overflow-hidden"
+      className="relative w-full h-[125vh] sm:h-[145vh] md:h-[175vh] lg:h-[195vh] bg-white border-b border-gray-100/60"
       id="powered-by-rivinity"
     >
-      <GoogleGeminiEffect
-        pathLengths={[scrollYProgress]}
-        title="Born from motions, unified as Rivinity"
-        description="Flowing intelligence organizes itself into the Rivinity identity — then returns to motion."
-      />
+      {/* Sticky Fullscreen Stage - Naturally positioned without unwanted top/bottom voids */}
+      <div className="sticky top-0 h-dvh min-h-[480px] w-full flex flex-col items-center justify-between pt-10 pb-5 sm:pt-14 sm:pb-7 md:pt-18 md:pb-8 px-4 sm:px-6">
+        {/* Section Header */}
+        <div className="text-center max-w-4xl mx-auto space-y-1.5 sm:space-y-2 shrink-0">
+          <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight">
+            Born from a supernova, unified as Rivinity
+          </h2>
+
+          <p className="text-xs sm:text-sm md:text-base font-normal text-slate-500 max-w-xl mx-auto leading-relaxed px-2">
+            Scroll to detonate cosmic energy into a radiant supernova
+            crystallizing into the unified Rivinity identity.
+          </p>
+        </div>
+
+        {/* Supernova Particle Canvas & Logo Fusion */}
+        <RivinitySupernovaCanvas scrollProgress={scrollYProgress} />
+
+        {/* Scroll Indicator Prompt */}
+        <motion.div
+          style={{ opacity: indicatorOpacity }}
+          className="flex flex-col items-center gap-0.5 sm:gap-1 text-slate-400 text-xs shrink-0 pointer-events-none select-none"
+        >
+          <span className="font-medium tracking-wider uppercase text-[10px] text-slate-400">
+            Scroll to trigger supernova
+          </span>
+          <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 animate-bounce" />
+        </motion.div>
+      </div>
     </section>
   );
 }

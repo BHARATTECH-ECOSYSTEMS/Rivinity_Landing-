@@ -115,17 +115,12 @@ export function TestimonialsSection({
     <section className={className || "section w-full py-12 sm:py-16"} id={id}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative rounded-3xl sm:rounded-[36px] bg-gray-50 border border-gray-100/80 p-6 sm:p-12 md:p-14 overflow-hidden">
-          {/* Subtle multi-color background ambiance */}
-          <div className="absolute top-0 right-1/4 w-72 h-72 bg-purple-200/25 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-pink-200/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-orange-200/15 rounded-full blur-3xl pointer-events-none" />
-
           <div className="max-w-4xl mx-auto relative z-10">
             {/* Minimal Header */}
             <div className="text-center mb-10 sm:mb-14">
               {badge && (
                 <div className="inline-flex items-center gap-2 rounded-full bg-white/90 border border-slate-200/90 px-3.5 py-1 text-xs font-semibold text-slate-700 shadow-2xs mb-4">
-                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#FF6B00] via-[#EC4899] to-[#8B5CF6] animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-[#FF6B00] animate-pulse" />
                   <span>{badge}</span>
                 </div>
               )}
@@ -139,10 +134,8 @@ export function TestimonialsSection({
               )}
             </div>
 
-        {/* Frosted Glassmorphism Master Card */}
-        <div className="relative rounded-3xl sm:rounded-[36px] bg-white/80 backdrop-blur-2xl border border-white/90 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06),0_0_0_1px_rgba(255,255,255,0.9)_inset] p-8 sm:p-14 overflow-hidden">
-          {/* Subtle Background Glass Reflection Accent */}
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
+        {/* Master Card */}
+        <div className="relative rounded-3xl sm:rounded-[36px] bg-white border border-slate-200/90 shadow-sm p-8 sm:p-14 overflow-hidden">
           <Quote className="absolute top-6 right-6 w-16 h-16 text-slate-200/40 pointer-events-none select-none" />
 
           <div className="relative z-10 min-h-[220px] sm:min-h-[190px] flex flex-col justify-between">
@@ -163,7 +156,7 @@ export function TestimonialsSection({
                 {/* Author Info & Verified Stat */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-5 border-t border-slate-200/60">
                   <div className="flex items-center gap-3.5">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 text-white flex items-center justify-center text-xs font-semibold shadow-xs ring-2 ring-white/80 shrink-0">
+                    <div className="w-10 h-10 rounded-2xl bg-[#0f172a] text-white flex items-center justify-center text-xs font-semibold shadow-xs ring-2 ring-white/80 shrink-0">
                       {current.avatar || current.name.split(" ").map(n => n[0]).join("")}
                     </div>
                     <div>
@@ -172,8 +165,8 @@ export function TestimonialsSection({
                           {current.name}
                         </span>
                         {current.verified && (
-                          <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
-                            <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600" />
+                          <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-orange-800 bg-orange-50 px-1.5 py-0.5 rounded-full border border-orange-200/60">
+                            <CheckCircle2 className="w-2.5 h-2.5 text-[#FF6B00]" />
                             Verified
                           </span>
                         )}
@@ -182,7 +175,7 @@ export function TestimonialsSection({
                             href={current.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-slate-400 hover:text-blue-600 transition-colors inline-flex items-center ml-1"
+                            className="text-slate-400 hover:text-[#FF6B00] transition-colors inline-flex items-center ml-1"
                             aria-label={`LinkedIn profile for ${current.name}`}
                           >
                             <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
@@ -200,7 +193,7 @@ export function TestimonialsSection({
                   {/* Outcome Highlight Pill */}
                   {current.stats && (
                     <div className="inline-flex items-center self-start sm:self-auto px-3 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 text-xs font-semibold text-slate-800 shadow-2xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 shrink-0 animate-pulse" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] mr-2 shrink-0 animate-pulse" />
                       {current.stats}
                     </div>
                   )}

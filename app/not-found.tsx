@@ -21,13 +21,16 @@ export default function NotFound() {
         {/* Content / Buttons area */}
         <div className="mt-8 flex flex-col sm:flex-row gap-3">
           {/* Go Home Button */}
-          <Link
+          <div className="text-white">
+            <Link
             href="/"
             className="inline-flex items-center justify-center rounded-full text-sm font-semibold min-h-[44px] px-6 py-2.5 bg-[#0f172a] text-white hover:bg-slate-800 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
           >
             <HomeIcon className="size-4 mr-2" data-icon="inline-start" />
             Go Home
           </Link>
+          </div>
+          
 
           {/* Explore Docs Button */}
           <Link

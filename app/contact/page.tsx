@@ -1,24 +1,70 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Send, Mail, MapPin, MessageSquare, CheckCircle2 } from "lucide-react";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import React, { useState } from "react";
+import {
+  Send,
+  Mail,
+  MapPin,
+  MessageSquare,
+  CheckCircle2,
+  Clock,
+  Sparkles,
+} from "lucide-react";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import FaqSection from "@/components/sections/faq-section";
+import CtaSection from "@/components/sections/cta-section";
 
-const faqs = [
+const FAQS = [
   {
     q: "How quickly does support respond?",
-    a: "Our typical response time for general inquiries is within 4 hours. Enterprise plan customers receive 24/7 priority support with dedicated SLAs.",
+    a: "Our typical response time for general technical inquiries is within 4 hours during business days. Enterprise tier customers receive 24/7 priority support with dedicated Slack channels and sub-30 minute SLAs.",
   },
   {
     q: "Can I request a custom enterprise demo?",
-    a: "Yes! Select 'Enterprise Sales' in the form topic, and our solutions engineering team will reach out to schedule a technical architecture walkthrough.",
+    a: "Yes! Select 'Enterprise Sales' in the contact form, and our solutions engineering team will reach out to coordinate a deep-dive technical architecture and live benchmark walkthrough.",
   },
   {
-    q: "Do you offer migration assistance?",
-    a: "Absolutely. We provide hands-on support for migrating agents, workflows, and cloud deployments to Rivinity.",
+    q: "Do you offer hands-on migration assistance?",
+    a: "Absolutely. We provide dedicated systems engineers to help migrate your existing agent workflows, model harnesses, prompt pipelines, and vector infrastructure to Rivinity with zero downtime.",
+  },
+  {
+    q: "Where is the Rivinity engineering team located?",
+    a: "Our core engineering team operates across distributed hubs in San Francisco, Tokyo, and Berlin, with global headquarters in Lucknow, Uttar Pradesh, India.",
+  },
+];
+
+const CONTACT_CHANNELS = [
+  {
+    icon: Mail,
+    title: "Email Us",
+    description:
+      "For developer questions, platform documentation, and general inquiries.",
+    action: "support@rivinity.com",
+    href: "mailto:support@rivinity.com",
+  },
+  {
+    icon: MessageSquare,
+    title: "Enterprise Sales",
+    description:
+      "Custom VPC clusters, dedicated H100 inference, volume discounts, and SLAs.",
+    action: "sales@rivinity.com",
+    href: "mailto:sales@rivinity.com",
+  },
+  {
+    icon: Clock,
+    title: "Response Guarantee",
+    description:
+      "Engineering team response within 4 hours. 24/7 dedicated escalation for Enterprise.",
+    action: "Sub-30m Enterprise SLA",
+    href: null,
+  },
+  {
+    icon: MapPin,
+    title: "Global HQ",
+    description: "Rivinity Technologies Inc.\nLucknow, Uttar Pradesh, India",
+    action: "Visit Office Information",
+    href: null,
   },
 ];
 
@@ -37,172 +83,231 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-white flex flex-col justify-between">
+    <div className="w-full min-h-screen bg-white text-gray-900 font-sans antialiased flex flex-col justify-between">
+      {/* Global Navigation */}
       <Header />
-      
-      <motion.main
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full pt-28 sm:pt-32 md:pt-36 bg-[var(--color-bg-primary,#ffffff)] flex-1"
-      >
-        {/* Hero & Contact Form Section */}
-        <section className="section py-8 sm:py-12 md:py-16">
-          <div className="container">
-            {/* Header */}
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h1 className="text-4xl font-semibold tracking-tight text-[#0f172a] sm:text-5xl lg:text-6xl text-center">
-                Let&apos;s talk about your <span className="text-[#FF6B00]">AI infrastructure</span>
+
+      {/* Main Contact Content */}
+      <main className="w-full relative overflow-x-clip bg-white flex-1 pt-18 sm:pt-26 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* ================================================================
+              SECTION 1: HERO, 4 TOP CARDS & CONTACT FORM (White & Gray-50)
+              ================================================================ */}
+          <section className="section section-hero text-center relative pt-4">
+            {/* Centered Hero Header */}
+            <div className="max-w-3xl mx-auto flex flex-col items-center mb-14 sm:mb-16">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-950 tracking-tight leading-[1.1] mb-6">
+                Let&apos;s talk about your AI infrastructure
               </h1>
-              <p className="mt-4 text-base sm:text-lg text-[#64748b] leading-relaxed max-w-2xl mx-auto">
-                Have questions about our agentic runtime, models, or enterprise security? Our team is here to help.
+
+              <p className="text-base sm:text-lg text-gray-600 max-w-2xl leading-relaxed">
+                Have questions about our agentic runtime, model latency, or
+                enterprise security? Our core systems team is ready to help you
+                architect and scale.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-6xl mx-auto items-start">
-              {/* Left Column: Contact Cards */}
-              <div className="lg:col-span-5 space-y-6">
-                <div className="bg-[#F7F7F8] border border-slate-200 rounded-2xl p-6 flex items-start gap-4 shadow-xs">
-                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
-                    <Mail size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-[#0f172a]">Email Us</h3>
-                    <p className="text-xs text-[#64748b] mt-1 mb-2">For general support and developer questions.</p>
-                    <a href="mailto:support@rivinity.com" className="text-sm font-semibold text-[#FF6B00] hover:underline">
-                      support@rivinity.com
-                    </a>
-                  </div>
-                </div>
-
-                <div className="bg-[#F7F7F8] border border-slate-200 rounded-2xl p-6 flex items-start gap-4 shadow-xs">
-                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
-                    <MessageSquare size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-[#0f172a]">Enterprise Sales</h3>
-                    <p className="text-xs text-[#64748b] mt-1 mb-2">Custom deployments, SLAs, and dedicated compute.</p>
-                    <a href="mailto:sales@rivinity.com" className="text-sm font-semibold text-[#FF6B00] hover:underline">
-                      sales@rivinity.com
-                    </a>
-                  </div>
-                </div>
-
-                <div className="bg-[#F7F7F8] border border-slate-200 rounded-2xl p-6 flex items-start gap-4 shadow-xs">
-                  <div className="w-10 h-10 rounded-xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 mt-4">
-                    <MapPin size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-[#0f172a]">Global HQ</h3>
-                    <p className="text-xs text-[#64748b] mt-1">
-                      Rivinity Technologies Inc.<br />
-                      Lucknow, Uttar Pradesh, India
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Contact Form */}
-              <div className="lg:col-span-7 bg-white border border-[#E5E7EB] rounded-3xl p-8 sm:p-10 shadow-xs">
-                {submitted ? (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-[#FF6B00]/10 text-[#FF6B00] rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle2 size={32} />
-                    </div>
-                    <h3 className="text-2xl font-bold text-[#1A1A1A] mb-2">Message Received</h3>
-                    <p className="text-sm text-[#6B7280] max-w-md mx-auto mb-6">
-                      Thank you for reaching out! Our solutions team will get back to you shortly.
-                    </p>
-                    <button
-                      onClick={() => setSubmitted(false)}
-                      className="text-xs font-semibold text-[#FF6B00] hover:underline cursor-pointer"
-                    >
-                      Send another message
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-xs font-semibold text-[#1A1A1A] uppercase tracking-wider mb-2">
-                          Your Name
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Alex Rivera"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-[#F7F7F8] text-sm text-[#1A1A1A] focus:outline-none focus:border-[#FF6B00] focus:bg-white transition"
-                        />
+            {/* TOP: 4 Contact Cards in a Row (Only Icons, White & Gray-50) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mb-12 sm:mb-16 text-left">
+              {CONTACT_CHANNELS.map((channel) => {
+                const Icon = channel.icon;
+                return (
+                  <div
+                    key={channel.title}
+                    className="relative rounded-3xl bg-gray-50 border border-gray-200/90 p-6 sm:p-7 shadow-xs hover:bg-white hover:border-gray-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between group"
+                  >
+                    <div>
+                      {/* Icon Only Container (No Numbers) */}
+                      <div className="w-12 h-12 rounded-2xl bg-white border border-gray-200 text-gray-900 flex items-center justify-center shrink-0 shadow-xs mb-5 group-hover:border-orange-200 group-hover:text-orange-600 group-hover:scale-105 transition-all">
+                        <Icon className="w-5 h-5" />
                       </div>
 
-                      <div>
-                        <label className="block text-xs font-semibold text-[#1A1A1A] uppercase tracking-wider mb-2">
-                          Work Email
-                        </label>
-                        <input
-                          type="email"
-                          required
-                          placeholder="alex@company.com"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-[#F7F7F8] text-sm text-[#1A1A1A] focus:outline-none focus:border-[#FF6B00] focus:bg-white transition"
-                        />
-                      </div>
+                      {/* Details */}
+                      <h3 className="text-base sm:text-lg font-bold text-gray-950 tracking-tight mb-2">
+                        {channel.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-500 leading-relaxed whitespace-pre-line mb-6">
+                        {channel.description}
+                      </p>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-[#1A1A1A] uppercase tracking-wider mb-2">
-                        Inquiry Topic
-                      </label>
-                      <select
-                        value={formData.topic}
-                        onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-[#E5E7EB] bg-[#F7F7F8] text-sm text-[#1A1A1A] focus:outline-none focus:border-[#FF6B00] focus:bg-white transition cursor-pointer"
-                      >
-                        <option value="General Inquiry">General Inquiry</option>
-                        <option value="Enterprise Sales">Enterprise Sales & Custom Pricing</option>
-                        <option value="Technical Support">Technical Support & Docs</option>
-                        <option value="Partnerships">Partnerships & Integrations</option>
-                      </select>
+                    {/* Bottom Action / Link */}
+                    <div className="pt-4 border-t border-gray-200/70">
+                      {channel.href ? (
+                        <a
+                          href={channel.href}
+                          className="text-xs sm:text-sm font-semibold text-gray-950 hover:text-orange-600 transition-colors inline-flex items-center gap-1 group-hover:underline"
+                        >
+                          <span>{channel.action}</span>
+                        </a>
+                      ) : (
+                        <span className="text-xs sm:text-sm font-semibold text-gray-700">
+                          {channel.action}
+                        </span>
+                      )}
                     </div>
+                  </div>
+                );
+              })}
+            </div>
 
+            {/* BELOW: Contact Form (Centered, White & Gray-50) */}
+            <div
+              id="contact-form"
+              className="max-w-3xl mx-auto rounded-3xl bg-white border border-gray-200 p-6 sm:p-10 md:p-12 shadow-xs text-left scroll-mt-28"
+            >
+              {submitted ? (
+                <div className="text-center py-12 sm:py-16">
+                  {/* Success Icon Only (No numbers) */}
+                  <div className="w-16 h-16 bg-gray-50 border border-gray-200 text-gray-950 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-xs">
+                    <CheckCircle2 className="w-8 h-8 text-orange-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-950 mb-2 tracking-tight">
+                    Message Received
+                  </h3>
+                  <p className="text-sm text-gray-600 max-w-md mx-auto mb-8 leading-relaxed">
+                    Thank you for contacting Rivinity. A systems engineer will
+                    review your inquiry and follow up shortly via email.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setSubmitted(false)}
+                    className="px-6 py-2.5 rounded-full bg-gray-50 hover:bg-white text-xs font-semibold text-gray-900 border border-gray-200 shadow-xs hover:border-gray-300 transition-all cursor-pointer"
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-5 sm:space-y-6"
+                >
+                  <div className="border-b border-gray-200 pb-5 mb-6">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-950 tracking-tight mb-2">
+                      Send a Message
+                    </h2>
+                    <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
+                      Fill out the form below and our team will get back to you
+                      within 4 hours.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                     <div>
-                      <label className="block text-xs font-semibold text-[#0f172a] uppercase tracking-wider mb-2">
-                        Message
+                      <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                        Your Name
                       </label>
-                      <textarea
+                      <input
+                        type="text"
                         required
-                        rows={5}
-                        placeholder="Tell us about your project or technical requirements..."
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-[#F7F7F8] text-sm text-[#0f172a] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:bg-white transition resize-none"
+                        placeholder="Alex Rivera"
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                        className="w-full px-4 py-3.5 rounded-2xl border border-gray-200 bg-gray-50 text-sm text-gray-950 placeholder-gray-400 focus:outline-none focus:border-gray-950 focus:bg-white transition-all shadow-xs"
                       />
                     </div>
 
-                    <button
-                      type="submit"
-                      className="w-full min-h-[44px] bg-[#FF6B00] hover:bg-[#e66000] text-white py-3 px-6 rounded-xl font-semibold text-sm shadow-xs transition flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
-                    >
-                      <span>Send Message</span>
-                      <Send size={16} />
-                    </button>
-                  </form>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                        Work Email
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        placeholder="alex@company.com"
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
+                        className="w-full px-4 py-3.5 rounded-2xl border border-gray-200 bg-gray-50 text-sm text-gray-950 placeholder-gray-400 focus:outline-none focus:border-gray-950 focus:bg-white transition-all shadow-xs"
+                      />
+                    </div>
+                  </div>
 
-        {/* Unified FAQ Section */}
-        <FaqSection
-          title="Frequently Asked Questions"
-          subtitle="Quick answers to common questions about our support, platform, and SLAs."
-          items={faqs}
-        />
-      </motion.main>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                      Inquiry Topic
+                    </label>
+                    <select
+                      value={formData.topic}
+                      onChange={(e) =>
+                        setFormData({ ...formData, topic: e.target.value })
+                      }
+                      className="w-full px-4 py-3.5 rounded-2xl border border-gray-200 bg-gray-50 text-sm text-gray-950 focus:outline-none focus:border-gray-950 focus:bg-white transition-all shadow-xs cursor-pointer"
+                    >
+                      <option value="General Inquiry">
+                        General Technical Inquiry
+                      </option>
+                      <option value="Enterprise Sales">
+                        Enterprise Sales & Custom VPC Deployments
+                      </option>
+                      <option value="Technical Support">
+                        Platform Support & Architecture Review
+                      </option>
+                      <option value="Partnerships">
+                        Strategic Partnerships & Integrations
+                      </option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+                      Message
+                    </label>
+                    <textarea
+                      required
+                      rows={5}
+                      placeholder="Tell us about your project, current stack, or technical requirements..."
+                      value={formData.message}
+                      onChange={(e) =>
+                        setFormData({ ...formData, message: e.target.value })
+                      }
+                      className="w-full px-4 py-3.5 rounded-2xl border border-gray-200 bg-gray-50 text-sm text-gray-950 placeholder-gray-400 focus:outline-none focus:border-gray-950 focus:bg-white transition-all shadow-xs resize-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full min-h-[48px] bg-gray-950 hover:bg-black text-white py-3.5 px-6 rounded-2xl font-semibold text-sm shadow-xs hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer group"
+                  >
+                    <span>Send Message</span>
+                    <Send className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </button>
+                </form>
+              )}
+            </div>
+          </section>
+
+          {/* ================================================================
+              SECTION 2: FREQUENTLY ASKED QUESTIONS (Standardized Section)
+              ================================================================ */}
+          <FaqSection
+            title="Frequently Asked Questions"
+            subtitle="Quick answers to common questions about our support, platform, and SLAs."
+            items={FAQS}
+            id="faqs"
+            className="section-sm bg-white"
+          />
+
+          {/* ================================================================
+              SECTION 3: PRE-FOOTER CTA (Standardized CtaSection)
+              ================================================================ */}
+          <CtaSection
+            variant="subpage"
+            title="Have questions? Our solutions team is here to help"
+            description="Whether you need a custom enterprise architecture, private VPC deployment, or technical support, we're ready to partner with you."
+            primaryText="Send Us a Message"
+            primaryHref="#contact-form"
+            secondaryText="Browse FAQs"
+            secondaryHref="#faqs"
+            className="section-sm"
+          />
+        </div>
+      </main>
+
+      {/* Global Footer */}
       <Footer />
     </div>
   );

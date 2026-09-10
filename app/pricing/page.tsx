@@ -7,6 +7,8 @@ import { Check, Plus } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import FaqSection from "@/components/sections/faq-section";
+import CtaSection from "@/components/sections/cta-section";
+import { useAuthModal } from "@/components/auth/auth-context";
 
 type Plan = {
   name: string;
@@ -131,6 +133,7 @@ function formatPrice(plan: Plan, yearly: boolean) {
 }
 
 export default function PricingPage() {
+  const { openAuth } = useAuthModal();
   const [yearly, setYearly] = useState(true);
 
   return (
@@ -268,16 +271,30 @@ export default function PricingPage() {
 
                   {/* CTA Button */}
                   <div className="mt-8 pt-2">
-                    <Link
-                      href={plan.cta.href}
-                      className={`flex items-center justify-center min-h-[44px] w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 ${
-                        plan.highlighted
-                          ? "bg-[#FF6B00] text-white hover:bg-[#e66000] shadow-xs"
-                          : "bg-gray-100 text-[#0f172a] hover:bg-gray-200 border border-gray-200"
-                      }`}
-                    >
-                      {plan.cta.label}
-                    </Link>
+                    {plan.custom ? (
+                      <Link
+                        href={plan.cta.href}
+                        className={`flex items-center justify-center min-h-[44px] w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 ${
+                          plan.highlighted
+                            ? "bg-[#FF6B00] text-white hover:bg-[#e66000] shadow-xs"
+                            : "bg-gray-100 text-[#0f172a] hover:bg-gray-200 border border-gray-200"
+                        }`}
+                      >
+                        {plan.cta.label}
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => openAuth("signup")}
+                        className={`flex items-center justify-center min-h-[44px] w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 ${
+                          plan.highlighted
+                            ? "bg-[#FF6B00] text-white hover:bg-[#e66000] shadow-xs"
+                            : "bg-gray-100 text-[#0f172a] hover:bg-gray-200 border border-gray-200"
+                        }`}
+                      >
+                        {plan.cta.label}
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -299,29 +316,16 @@ export default function PricingPage() {
           items={faqs}
         />
 
-        {/* Still have questions banner */}
-        <div className="text-center pb-16">
-          <p className="text-base font-medium text-[#0f172a]">
-            Still have questions?
-          </p>
-          <p className="mt-2 text-sm text-[#64748b]">
-            See more in our{" "}
-            <Link
-              href="/docs"
-              className="text-[#FF6B00] hover:underline font-medium"
-            >
-              Documentation
-            </Link>
-            , or{" "}
-            <Link
-              href="/contact"
-              className="font-semibold text-[#FF6B00] hover:underline"
-            >
-              contact us
-            </Link>{" "}
-            about Enterprise.
-          </p>
-        </div>
+        {/* Unified Pre-footer CTA */}
+        <CtaSection
+          title="Find the right plan for your engineering team"
+          description="Get started in minutes with 50,000 monthly free tokens, or scale seamlessly with dedicated compute clusters and custom SLA tiers."
+          buttonText="Create Free Account"
+          buttonHref="/signup"
+          secondaryText="Schedule Enterprise Consultation"
+          secondaryHref="/contact"
+          note="No credit card required for Free tier • Cancel or upgrade anytime"
+        />
       </motion.main>
       <Footer />
     </div>

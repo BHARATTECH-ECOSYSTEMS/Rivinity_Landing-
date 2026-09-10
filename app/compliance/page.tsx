@@ -4,7 +4,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import CtaSection from "@/components/cta-section";
 import FaqSection from "@/components/sections/faq-section";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -503,13 +502,6 @@ export default function SecurityPage() {
           title="Frequently Asked Questions"
           subtitle="Everything you need to know about our compliance certifications and privacy policies."
           items={FAQS}
-        />
-
-        <CtaSection
-          title="Ready for verifiable enterprise security?"
-          description="Speak with our compliance architects and security engineering team today."
-          buttonText="Contact Security Team"
-          buttonHref="/contact"
         />
       </motion.main>
 

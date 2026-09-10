@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import {
-  GitBranch,
-  Sliders,
-  Globe2,
-} from "lucide-react";
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+} from "framer-motion";
+import { GitBranch, Sliders, Globe2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -75,7 +76,8 @@ function PixelMosaicVisual({
   const rows = 6;
 
   // Precompute colors for each pixel in the 14x6 grid with wide luminous spread
-  const pixels: { col: number; row: number; color: string; delay: number }[] = [];
+  const pixels: { col: number; row: number; color: string; delay: number }[] =
+    [];
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -93,7 +95,7 @@ function PixelMosaicVisual({
 
       const paletteIndex = Math.min(
         palette.length - 1,
-        Math.floor(t * palette.length)
+        Math.floor(t * palette.length),
       );
 
       pixels.push({
@@ -240,18 +242,14 @@ export function HowItWorks() {
   const gap = 28;
   const totalShift = (cardWidth + gap) * (STEPS.length - 1);
 
-  const xTranslate = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0, -totalShift]
-  );
+  const xTranslate = useTransform(scrollYProgress, [0, 1], [0, -totalShift]);
 
   const trackProgress = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     const stepIndex = Math.min(
       STEPS.length - 1,
-      Math.max(0, Math.round(latest * (STEPS.length - 1)))
+      Math.max(0, Math.round(latest * (STEPS.length - 1))),
     );
     setActiveStep(stepIndex);
   });
@@ -261,7 +259,8 @@ export function HowItWorks() {
     const containerTop = containerRef.current.offsetTop;
     const containerHeight = containerRef.current.offsetHeight;
     const targetScroll =
-      containerTop + (index / (STEPS.length - 1)) * (containerHeight - window.innerHeight);
+      containerTop +
+      (index / (STEPS.length - 1)) * (containerHeight - window.innerHeight);
     window.scrollTo({
       top: targetScroll,
       behavior: "smooth",
@@ -271,10 +270,10 @@ export function HowItWorks() {
   return (
     <div
       ref={containerRef}
-      className="section relative w-full h-[220vh] sm:h-[260vh] bg-white border-t border-neutral-100"
+      className="section-sm relative w-full h-[150vh] sm:h-[180vh] md:h-[220vh] lg:h-[260vh] bg-white"
     >
-      {/* Sticky Viewport Container */}
-      <div className="sticky top-0 h-[100dvh] w-full flex flex-col justify-between py-6 sm:py-10 md:py-14 overflow-hidden">
+      {/* Sticky Viewport Container - Naturally distributed without top/bottom dead zones */}
+      <div className="sticky top-0 h-[100dvh] w-full flex flex-col justify-between pt-8 pb-5 sm:pt-12 sm:pb-7 md:pt-16 md:pb-10 overflow-hidden">
         {/* Section Header */}
         <div className="container relative z-10 text-center flex flex-col items-center shrink-0">
           <div className="max-w-2xl sm:max-w-3xl flex flex-col items-center">
@@ -285,12 +284,14 @@ export function HowItWorks() {
         </div>
 
         {/* Horizontally Sliding Cards Track */}
-        <div className="relative w-full z-10 overflow-visible my-auto py-2 sm:py-4">
+        <div className="relative w-full z-10 overflow-visible my-auto py-2">
           <div
             className="flex items-stretch w-max"
             style={{
               paddingLeft: mounted ? `calc(50vw - ${cardWidth / 2}px)` : "1rem",
-              paddingRight: mounted ? `calc(50vw - ${cardWidth / 2}px)` : "1rem",
+              paddingRight: mounted
+                ? `calc(50vw - ${cardWidth / 2}px)`
+                : "1rem",
             }}
           >
             <motion.div
@@ -307,14 +308,14 @@ export function HowItWorks() {
                     onClick={() => scrollToStep(idx)}
                     style={{ width: `${cardWidth}px` }}
                     className={cn(
-                      "group relative overflow-hidden rounded-2xl sm:rounded-3xl flex flex-col justify-between transition-all duration-300 cursor-pointer select-none shrink-0 bg-white",
+                      "group relative overflow-hidden rounded-2xl sm:rounded-3xl flex flex-col justify-between transition-all duration-300 ease-out cursor-pointer select-none shrink-0 bg-white border border-gray-200/90",
                       isCurrent
-                        ? "shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] border-2 border-gray-900 scale-[1.02] sm:scale-[1.03]"
-                        : "shadow-[0_8px_25px_rgba(0,0,0,0.03)] border border-gray-200/80 opacity-90 hover:opacity-100 scale-95"
+                        ? "shadow-[0_20px_50px_-15px_rgba(0,0,0,0.10)] scale-[1.02] sm:scale-[1.03] hover:scale-[1.05] sm:hover:scale-[1.06] hover:shadow-[0_25px_65px_-12px_rgba(0,0,0,0.14)]"
+                        : "shadow-[0_8px_25px_rgba(0,0,0,0.03)] opacity-90 hover:opacity-100 scale-95 hover:scale-[1.01] sm:hover:scale-[1.02] hover:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.08)]",
                     )}
                   >
                     {/* Top Visual Area (Pixelated Gradient Mosaic) */}
-                    <div className="w-full h-36 sm:h-40 relative overflow-hidden border-b border-gray-100">
+                    <div className="w-full h-44 sm:h-48 relative overflow-hidden border-b border-gray-100">
                       <PixelMosaicVisual
                         palette={step.palette}
                         label={step.label}
@@ -373,7 +374,7 @@ export function HowItWorks() {
                       "flex items-center justify-center min-h-[44px] px-4 sm:px-6 md:px-7 py-2 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2",
                       isCurrent
                         ? "bg-[#0f172a] text-white shadow-xl scale-110"
-                        : "bg-white text-slate-700 border border-slate-200 shadow-xs hover:border-slate-400 hover:text-slate-900 hover:scale-105"
+                        : "bg-white text-slate-700 border border-slate-200 shadow-xs hover:border-slate-400 hover:text-slate-900 hover:scale-105",
                     )}
                   >
                     {step.title}
