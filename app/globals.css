@@ -27,6 +27,7 @@
   --color-border: #e2e8f0;
   --color-success: #22c55e;
   --color-error: #ef4444;
+  --color-white: #ffffff;
 
   /* Legacy brand aliases for backward compatibility */
   --color-bg-primary: #ffffff;
