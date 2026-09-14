@@ -9,6 +9,8 @@ import {
     Copy,
     Check,
     Key,
+    ArrowRight,
+    ArrowUpRight,
 } from "lucide-react";
 
 export default function ApiReferencePage() {
@@ -125,29 +127,41 @@ response = client.engine.orchestrate(
                 className="w-full pt-28 sm:pt-32 md:pt-36 pb-16"
             >
                 {/* Hero Section */}
-                <section className="section border-b border-slate-200 pb-14 sm:pb-20">
+                <section className="section pb-14 sm:pb-20">
                     <div className="container">
                         <div className="max-w-4xl">
                             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#0f172a] leading-[1.15]">
-                                Engine API <span className="text-[#FF6B00]">Reference</span>
+                                Engine API Reference
                             </h1>
                         <p className="mt-4 sm:mt-6 max-w-2xl text-base sm:text-lg text-[#64748b] leading-relaxed">
                             Programmatically orchestrate AI tools, sync persistent memory graphs, and stream inference calls directly into your engineering workflows.
                         </p>
                         <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-                            <div className="text-white flex flex-col">
-                                <a
-                                    href="#endpoints"
-                                    className="rounded-full bg-[#0f172a] px-6 py-3 min-h-[44px] flex items-center justify-center text-center text-sm font-semibold shadow-xs hover:bg-slate-800 active:scale-95 transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
-                                >
-                                    Explore Endpoints &darr;
-                                </a>
-                            </div>
+                            <a
+                                href="#endpoints"
+                                style={{ color: "#ffffff" }}
+                                className="w-full sm:w-auto min-h-[44px] px-8 py-3.5 rounded-full bg-[#0f172a] hover:bg-slate-800 !text-white text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
+                            >
+                                <span className="!text-white text-white font-semibold" style={{ color: "#ffffff" }}>
+                                    Explore Endpoints
+                                </span>
+                                <ArrowUpRight
+                                    className="w-4 h-4 !text-white text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
+                                    style={{ color: "#ffffff", stroke: "#ffffff" }}
+                                />
+                            </a>
                             <a
                                 href="#authentication"
-                                className="rounded-full border border-slate-200 bg-white px-6 py-3 min-h-[44px] flex items-center justify-center text-center text-sm font-semibold text-slate-800 hover:border-slate-300 hover:bg-slate-50 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
+                                style={{ color: "#1e293b" }}
+                                className="w-full sm:w-auto min-h-[44px] px-7 py-3.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 !text-slate-800 text-slate-800 text-sm font-semibold tracking-wide shadow-xs hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
                             >
-                                Authentication Guide
+                                <span className="!text-slate-800 text-slate-800 font-semibold" style={{ color: "#1e293b" }}>
+                                    Authentication Guide
+                                </span>
+                                <ArrowUpRight
+                                    className="w-4 h-4 !text-slate-500 text-slate-500 group-hover:text-slate-800 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
+                                    style={{ color: "#64748b", stroke: "#64748b" }}
+                                />
                             </a>
                         </div>
                     </div>
@@ -155,13 +169,10 @@ response = client.engine.orchestrate(
             </section>
 
             {/* Authentication & Quickstart Section */}
-            <section id="authentication" className="section border-b border-slate-200 bg-slate-50 py-16 sm:py-24">
+            <section id="authentication" className="section py-16 sm:py-24">
                 <div className="container">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-1">
-                            <span className="text-xs font-bold uppercase tracking-widest text-[#FF6B00]">
-                                Security
-                            </span>
                             <h2 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-[#0f172a]">
                                 Authentication
                             </h2>
@@ -198,9 +209,6 @@ response = client.engine.orchestrate(
                 <div className="container mx-auto px-4 sm:px-6">
                     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
                         <div>
-                            <span className="text-xs font-bold uppercase tracking-widest text-[#FF6B00]">
-                                REST Endpoints
-                            </span>
                             <h2 className="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-[#0f172a]">
                                 Core API Specs
                             </h2>

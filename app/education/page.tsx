@@ -10,6 +10,7 @@ import {
   Bot,
   CheckCircle2,
   ArrowRight,
+  ArrowUpRight,
   Network,
   BarChart3,
   Zap,
@@ -25,7 +26,10 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CtaSection from "@/components/sections/cta-section";
 import { useAuthModal } from "@/components/auth/auth-context";
-import { TestimonialsSection, type TestimonialItem } from "@/components/sections/testimonials-section";
+import {
+  TestimonialsSection,
+  type TestimonialItem,
+} from "@/components/sections/testimonials-section";
 
 /* ------------------------------------------------------------------ */
 /* Mock Data & Types                                                  */
@@ -55,7 +59,8 @@ const AGENTS: AgentCard[] = [
     metrics: "94% Concept Retention",
     icon: Brain,
     tags: ["STEM & Humanities", "LaTeX & Code", "Adaptive Hinting"],
-    samplePrompt: "Explain Dijkstra's algorithm step-by-step using an intuitive city subway network analogy.",
+    samplePrompt:
+      "Explain Dijkstra's algorithm step-by-step using an intuitive city subway network analogy.",
     theme: "orange",
   },
   {
@@ -68,7 +73,8 @@ const AGENTS: AgentCard[] = [
     metrics: "12x Faster Course Prep",
     icon: BookOpen,
     tags: ["ABET / AACSB Ready", "Custom Rubrics", "Prerequisite Mapping"],
-    samplePrompt: "Generate a 4-week module on Distributed Consensus algorithms with weekly lab challenges.",
+    samplePrompt:
+      "Generate a 4-week module on Distributed Consensus algorithms with weekly lab challenges.",
     theme: "orange",
   },
   {
@@ -81,7 +87,8 @@ const AGENTS: AgentCard[] = [
     metrics: "99.2% Rubric Alignment",
     icon: FileCheck2,
     tags: ["AST Code Testing", "Plagiarism Defense", "Formative Critique"],
-    samplePrompt: "Analyze this Python sorting algorithm for edge cases and time complexity adherence.",
+    samplePrompt:
+      "Analyze this Python sorting algorithm for edge cases and time complexity adherence.",
     theme: "orange",
   },
   {
@@ -94,7 +101,8 @@ const AGENTS: AgentCard[] = [
     metrics: "+38% Course Completion",
     icon: BarChart3,
     tags: ["Bottleneck Alerts", "Intervention Flags", "Cohort Trends"],
-    samplePrompt: "Flag students struggling with Week 3 Recursion and draft individualized review material.",
+    samplePrompt:
+      "Flag students struggling with Week 3 Recursion and draft individualized review material.",
     theme: "orange",
   },
 ];
@@ -181,12 +189,401 @@ const EDUCATION_TESTIMONIALS: TestimonialItem[] = [
 ];
 
 /* ------------------------------------------------------------------ */
+/* Neo-Geometric Architectural Vector Art (Image 2 Style)              */
+/* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/* Futuristic 3D Vector Symbols (Matching User Image in Pastel Tones) */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Symbol 1 (Top-Left in Image): 3D Sphere with Curved Orbital Swoop Ribbon
+ * Rendered in soft pastel Orange
+ */
+function SphereOrbitSvg({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 120 120"
+      fill="none"
+      className={`overflow-visible select-none ${className}`}
+      aria-hidden="true"
+    >
+      <defs>
+        <radialGradient id="sphereGradOrange" cx="36%" cy="32%" r="68%">
+          <stop offset="0%" stopColor="#FFEDD5" />
+          <stop offset="35%" stopColor="#FDBA74" />
+          <stop offset="75%" stopColor="#FB923C" />
+          <stop offset="100%" stopColor="#EA580C" />
+        </radialGradient>
+        <linearGradient
+          id="orbitRibbonBack"
+          x1="0.2"
+          y1="0.8"
+          x2="0.9"
+          y2="0.2"
+        >
+          <stop offset="0%" stopColor="#C2410C" />
+          <stop offset="100%" stopColor="#EA580C" />
+        </linearGradient>
+        <linearGradient id="orbitRibbonFront" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#FFF7ED" />
+          <stop offset="30%" stopColor="#FED7AA" />
+          <stop offset="70%" stopColor="#FB923C" />
+          <stop offset="100%" stopColor="#EA580C" />
+        </linearGradient>
+        <filter
+          id="softShadowOrange"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
+          <feDropShadow
+            dx="2"
+            dy="4"
+            stdDeviation="4"
+            floodColor="#EA580C"
+            floodOpacity="0.25"
+          />
+        </filter>
+      </defs>
+
+      <g filter="url(#softShadowOrange)">
+        {/* Rear section of orbital swoop */}
+        <path
+          d="M 28 68 C 16 66 12 56 26 48 C 42 38 74 36 94 48 C 104 54 102 62 92 68"
+          stroke="url(#orbitRibbonBack)"
+          strokeWidth="12"
+          strokeLinecap="round"
+        />
+
+        {/* 3D Sphere */}
+        <circle cx="58" cy="58" r="32" fill="url(#sphereGradOrange)" />
+
+        {/* Front section of wrapping spiral / fluid swoop */}
+        <path
+          d="M 98 46 C 112 54 108 64 92 72 C 70 82 32 86 16 76 C 8 70 12 62 26 56 C 42 50 78 54 94 66"
+          fill="url(#orbitRibbonFront)"
+        />
+        <path
+          d="M 24 74 C 40 82 76 80 96 68 C 108 60 106 52 96 46"
+          stroke="#FFF7ED"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeOpacity="0.6"
+        />
+      </g>
+    </svg>
+  );
+}
+
+/**
+ * Symbol 2 (Bottom-Right in Image): Interlocking Staggered Rounded Pill Chain Loop
+ * Rendered in soft pastel Pink
+ */
+function StaggeredPillLoopSvg({ className = "" }: { className?: string }) {
+  // 6 isometric pill capsules woven into a staggered loop
+  const pills = [
+    { x: 42, y: 22, rot: -28 },
+    { x: 74, y: 24, rot: -28 },
+    { x: 26, y: 46, rot: -28 },
+    { x: 88, y: 48, rot: -28 },
+    { x: 38, y: 72, rot: -28 },
+    { x: 70, y: 74, rot: -28 },
+  ];
+
+  return (
+    <svg
+      viewBox="0 0 120 120"
+      fill="none"
+      className={`overflow-visible select-none ${className}`}
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="pillGradPink" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#FCE7F3" />
+          <stop offset="40%" stopColor="#F472B6" />
+          <stop offset="100%" stopColor="#DB2777" />
+        </linearGradient>
+        <linearGradient id="pillHighlightPink" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#F472B6" stopOpacity="0.1" />
+        </linearGradient>
+        <filter
+          id="softShadowPink"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
+          <feDropShadow
+            dx="2"
+            dy="4"
+            stdDeviation="3.5"
+            floodColor="#DB2777"
+            floodOpacity="0.25"
+          />
+        </filter>
+      </defs>
+
+      <g filter="url(#softShadowPink)">
+        {pills.map((p, idx) => (
+          <g key={idx} transform={`translate(${p.x}, ${p.y}) rotate(${p.rot})`}>
+            {/* Pill Body */}
+            <rect
+              x="-22"
+              y="-9"
+              width="44"
+              height="18"
+              rx="9"
+              fill="url(#pillGradPink)"
+            />
+            {/* Top Sheen Highlight */}
+            <rect
+              x="-18"
+              y="-7"
+              width="36"
+              height="7"
+              rx="3.5"
+              fill="url(#pillHighlightPink)"
+            />
+          </g>
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+/**
+ * Symbol 3 (Bottom-Left in Image): 4-Directional Symmetrical Radial Cross Node
+ * Rendered in soft pastel Blue
+ */
+function RadialCrossNodeSvg({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 120 120"
+      fill="none"
+      className={`overflow-visible select-none ${className}`}
+      aria-hidden="true"
+    >
+      <defs>
+        <radialGradient id="radialCrossGrad" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="25%" stopColor="#DBEAFE" />
+          <stop offset="65%" stopColor="#60A5FA" />
+          <stop offset="100%" stopColor="#2563EB" />
+        </radialGradient>
+        <radialGradient id="lobeGrad" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#EFF6FF" />
+          <stop offset="45%" stopColor="#93C5FD" />
+          <stop offset="100%" stopColor="#3B82F6" />
+        </radialGradient>
+        <filter
+          id="softShadowBlue"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
+          <feDropShadow
+            dx="2"
+            dy="4"
+            stdDeviation="4"
+            floodColor="#2563EB"
+            floodOpacity="0.25"
+          />
+        </filter>
+      </defs>
+
+      <g filter="url(#softShadowBlue)">
+        {/* 4 Outer Radial Capsule Lobes */}
+        {[
+          { cx: 34, cy: 34, rx: 17, ry: 9, rot: 45 },
+          { cx: 86, cy: 34, rx: 17, ry: 9, rot: -45 },
+          { cx: 34, cy: 86, rx: 17, ry: 9, rot: -45 },
+          { cx: 86, cy: 86, rx: 17, ry: 9, rot: 45 },
+        ].map((lobe, i) => (
+          <ellipse
+            key={i}
+            cx={lobe.cx}
+            cy={lobe.cy}
+            rx={lobe.rx}
+            ry={lobe.ry}
+            transform={`rotate(${lobe.rot} ${lobe.cx} ${lobe.cy})`}
+            fill="url(#lobeGrad)"
+          />
+        ))}
+
+        {/* Central 4-pointed Starburst Core */}
+        <path
+          d="M 60 26 C 60 44 44 60 26 60 C 44 60 60 76 60 94 C 60 76 76 60 94 60 C 76 60 60 44 60 26 Z"
+          fill="url(#radialCrossGrad)"
+        />
+
+        {/* Soft Center Sheen */}
+        <circle cx="60" cy="60" r="10" fill="#FFFFFF" fillOpacity="0.5" />
+      </g>
+    </svg>
+  );
+}
+
+/**
+ * Symbol 4 (Top-Right in Image): Orbital Ring with Tilted Play Button Slicing Through
+ * Rendered in soft pastel Purple
+ */
+function RingPlaySvg({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 120 120"
+      fill="none"
+      className={`overflow-visible select-none ${className}`}
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="ringTorusGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#DDD6FE" />
+          <stop offset="50%" stopColor="#A855F7" />
+          <stop offset="100%" stopColor="#7E22CE" />
+        </linearGradient>
+        <linearGradient id="orbitRingSwoop" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stopColor="#F3E8FF" />
+          <stop offset="40%" stopColor="#C084FC" />
+          <stop offset="100%" stopColor="#7C3AED" />
+        </linearGradient>
+        <linearGradient id="playBtnGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="40%" stopColor="#D8B4FE" />
+          <stop offset="100%" stopColor="#9333EA" />
+        </linearGradient>
+        <filter
+          id="softShadowPurple"
+          x="-20%"
+          y="-20%"
+          width="140%"
+          height="140%"
+        >
+          <feDropShadow
+            dx="2"
+            dy="4"
+            stdDeviation="4"
+            floodColor="#7E22CE"
+            floodOpacity="0.25"
+          />
+        </filter>
+      </defs>
+
+      <g filter="url(#softShadowPurple)">
+        {/* Outer Circular Ring */}
+        <circle
+          cx="60"
+          cy="60"
+          r="34"
+          stroke="url(#ringTorusGrad)"
+          strokeWidth="7"
+          fill="none"
+        />
+
+        {/* Tilted Angled Ellipse Ring Slicing Through */}
+        <ellipse
+          cx="60"
+          cy="60"
+          rx="48"
+          ry="11"
+          transform="rotate(-34 60 60)"
+          stroke="url(#orbitRingSwoop)"
+          strokeWidth="6"
+          fill="none"
+        />
+
+        {/* Tilted Rounded Play Button */}
+        <path
+          d="M 44 42 C 44 38 48 36 52 38 L 78 54 C 82 56 82 61 78 63 L 52 79 C 48 81 44 79 44 75 Z"
+          fill="url(#playBtnGrad)"
+          transform="rotate(-15 60 60)"
+        />
+
+        {/* Top Rim Sheen */}
+        <circle
+          cx="60"
+          cy="60"
+          r="34"
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
+          strokeDasharray="40 180"
+          fill="none"
+          strokeOpacity="0.75"
+        />
+      </g>
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Pixel Mosaic Heatmap Grid Art (Matching User Image 1)               */
+/* ------------------------------------------------------------------ */
+
+const PIXEL_GRID_MATRIX = [
+  [1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 1],
+  [1, 1, 2, 3, 4, 5, 5, 5, 4, 3, 2, 1],
+  [0, 1, 2, 4, 5, 5, 5, 5, 4, 3, 2, 2],
+  [0, 1, 2, 3, 4, 5, 5, 4, 4, 3, 2, 2],
+  [0, 1, 1, 2, 3, 4, 4, 3, 3, 2, 2, 1],
+  [0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1],
+];
+
+const PIXEL_COLOR_PALETTES = {
+  orange: ["#FB923C", "#FDBA74", "#FED7AA", "#FFEDD5", "#FFF7ED", "#FFFFFF"],
+  pink: ["#F472B6", "#F9A8D4", "#FBCFE8", "#FCE7F3", "#FDF2F8", "#FFFFFF"],
+  purple: ["#C084FC", "#D8B4FE", "#E9D5FF", "#F3E8FF", "#FAF5FF", "#FFFFFF"],
+};
+
+function PixelHeatGrid({
+  color,
+  className = "",
+}: {
+  color: "orange" | "pink" | "purple";
+  className?: string;
+}) {
+  const palette = PIXEL_COLOR_PALETTES[color];
+  const cols = 12;
+  const rows = 6;
+  const cellWidth = 240 / cols;
+  const cellHeight = 100 / rows;
+
+  return (
+    <svg
+      viewBox="0 0 240 100"
+      preserveAspectRatio="none"
+      className={`w-full h-full block select-none ${className}`}
+      aria-hidden="true"
+    >
+      {PIXEL_GRID_MATRIX.map((row, rIdx) =>
+        row.map((val, cIdx) => (
+          <rect
+            key={`${rIdx}-${cIdx}`}
+            x={cIdx * cellWidth}
+            y={rIdx * cellHeight}
+            width={cellWidth}
+            height={cellHeight}
+            fill={palette[val]}
+            stroke="#FFFFFF"
+            strokeWidth="1"
+          />
+        ))
+      )}
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Page Component                                                     */
 /* ------------------------------------------------------------------ */
 
 export default function EducationPage() {
   const { openAuth } = useAuthModal();
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">("annual");
+  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
+    "annual",
+  );
 
   return (
     <div className="w-full relative overflow-x-clip flex flex-col items-start bg-white text-[#0f172a] selection:bg-orange-100 selection:text-orange-900">
@@ -204,8 +601,7 @@ export default function EducationPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-700 mb-6 shadow-2xs"
-            >
-            </motion.div>
+            ></motion.div>
 
             {/* Main Headline (Clean solid typography) */}
             <motion.h1
@@ -224,10 +620,12 @@ export default function EducationPage() {
               transition={{ duration: 0.55, delay: 0.2 }}
               className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed"
             >
-              Empower colleges, schools, and self-directed learners with 24/7 Socratic AI tutors, instant rubric grading, adaptive curriculum maps, and institutional guardrails.
+              Empower colleges, schools, and self-directed learners with 24/7
+              Socratic AI tutors, instant rubric grading, adaptive curriculum
+              maps, and institutional guardrails.
             </motion.p>
 
-            {/* Dual CTAs (Solid Signature Buttons, No Gradients) */}
+            {/* Dual CTAs (Signature Rivinity CTA Buttons) */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -237,17 +635,35 @@ export default function EducationPage() {
               <button
                 type="button"
                 onClick={() => openAuth("signup")}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#FF6B00] hover:bg-[#E66000] text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                style={{ color: "#ffffff" }}
+                className="w-full sm:w-auto min-h-[44px] px-8 py-3.5 rounded-full bg-[#0f172a] hover:bg-slate-800 !text-white text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
               >
-                <span>Deploy Campus Agents</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <span
+                  className="!text-white text-white font-semibold"
+                  style={{ color: "#ffffff" }}
+                >
+                  Deploy Campus Agents
+                </span>
+                <ArrowUpRight
+                  className="w-4 h-4 !text-white text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
+                  style={{ color: "#ffffff", stroke: "#ffffff" }}
+                />
               </button>
               <Link
                 href="/contact"
-                className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 text-sm font-semibold tracking-wide shadow-2xs active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                style={{ color: "#1e293b" }}
+                className="w-full sm:w-auto min-h-[44px] px-7 py-3.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 !text-slate-800 text-slate-800 text-sm font-semibold tracking-wide shadow-xs hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
               >
-                <Calendar className="w-4 h-4 text-[#FF6B00]" />
-                <span>Schedule Institutional Demo</span>
+                <span
+                  className="!text-slate-800 text-slate-800 font-semibold"
+                  style={{ color: "#1e293b" }}
+                >
+                  Schedule Institutional Demo
+                </span>
+                <ArrowUpRight
+                  className="w-4 h-4 !text-slate-500 text-slate-500 group-hover:text-slate-800 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
+                  style={{ color: "#64748b", stroke: "#64748b" }}
+                />
               </Link>
             </motion.div>
 
@@ -295,7 +711,7 @@ export default function EducationPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
-                  <span className="hidden md:inline px-2 py-0.5 rounded bg-orange-50 border border-orange-200 text-orange-800 text-[11px] font-semibold">
+                  <span className="hidden md:inline px-2 py-0.5 rounded bg-orange-50 border border-orange-200/80 text-orange-800 text-[11px] font-semibold">
                     FALL SEMESTER 2026
                   </span>
                   <div className="w-6 h-6 rounded-full bg-[#FF6B00] flex items-center justify-center text-[10px] text-white font-bold">
@@ -304,147 +720,213 @@ export default function EducationPage() {
                 </div>
               </div>
 
-              {/* Main OS Mockup Body */}
-              <div className="rounded-xl border border-slate-200/70 bg-white overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[380px] sm:min-h-[440px]">
-                {/* Left Mini Sidebar */}
-                <div className="hidden md:flex md:col-span-3 border-r border-slate-100 bg-slate-50/40 p-3 flex-col justify-between text-xs">
+              {/* Main OS Mockup Body: Fake Skeleton Design */}
+              <div className="rounded-xl border border-slate-200/80 bg-white overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[380px] sm:min-h-[440px]">
+                {/* Left Mini Sidebar - Skeleton Design */}
+                <div className="hidden md:flex md:col-span-3 border-r border-slate-100 bg-slate-50/50 p-3.5 flex-col justify-between text-xs">
                   <div className="space-y-4">
-                    <div className="px-2 pt-1 font-semibold text-slate-800 flex items-center justify-between">
-                      <span className="flex items-center gap-1.5">
+                    {/* Header */}
+                    <div className="px-1.5 pt-1 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
                         <GraduationCap className="w-4 h-4 text-[#FF6B00]" />
-                        <span>CS 106A Studio</span>
-                      </span>
-                      <span className="text-[10px] px-1.5 py-0.5 bg-orange-50 text-orange-800 rounded font-mono font-medium border border-orange-200/60">
+                        <span className="font-semibold text-slate-700 text-[13px]">
+                          CS 106A
+                        </span>
+                      </div>
+                      <span className="text-[10px] px-1.5 py-0.5 bg-orange-50 text-orange-800 border border-orange-200/80 rounded font-mono font-medium flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] animate-pulse" />
                         LIVE
                       </span>
                     </div>
 
-                    <div className="space-y-1">
-                      <div className="px-2 py-1.5 rounded-lg bg-white border border-orange-200 text-orange-900 font-medium flex items-center justify-between shadow-2xs">
-                        <span className="flex items-center gap-2">
+                    {/* Nav Items with Skeletons */}
+                    <div className="space-y-1.5">
+                      {/* Active Item */}
+                      <div className="px-2.5 py-2 rounded-xl bg-white border border-orange-200 shadow-2xs flex items-center justify-between ring-1 ring-orange-400/20">
+                        <div className="flex items-center gap-2">
                           <Brain className="w-3.5 h-3.5 text-[#FF6B00]" />
-                          <span>Knowledge Graph</span>
-                        </span>
-                        <span className="text-[10px] bg-orange-50 px-1.5 py-0.5 rounded text-orange-800 font-mono font-bold">
+                          <div className="w-20 h-2.5 bg-slate-200 rounded animate-pulse" />
+                        </div>
+                        <span className="text-[10px] bg-orange-50 text-orange-800 border border-orange-200/70 px-1.5 py-0.5 rounded font-mono font-bold">
                           92%
                         </span>
                       </div>
-                      <div className="px-2 py-1.5 rounded-lg text-slate-600 hover:bg-orange-50/60 hover:text-orange-800 flex items-center gap-2 cursor-pointer transition-colors">
-                        <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
-                        <span>Socratic Tutor</span>
+
+                      {/* Nav Item 2 */}
+                      <div className="px-2.5 py-2 rounded-xl text-slate-500 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
+                          <div className="w-24 h-2.5 bg-slate-200/80 rounded animate-pulse" />
+                        </div>
+                        <div className="w-7 h-2 bg-slate-100 rounded animate-pulse" />
                       </div>
-                      <div className="px-2 py-1.5 rounded-lg text-slate-600 hover:bg-orange-50/60 hover:text-orange-800 flex items-center gap-2 cursor-pointer transition-colors">
-                        <FileCheck2 className="w-3.5 h-3.5 text-slate-400" />
-                        <span>Rubric Grader</span>
+
+                      {/* Nav Item 3 */}
+                      <div className="px-2.5 py-2 rounded-xl text-slate-500 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <FileCheck2 className="w-3.5 h-3.5 text-slate-400" />
+                          <div className="w-20 h-2.5 bg-slate-200/80 rounded animate-pulse" />
+                        </div>
+                        <div className="w-5 h-2 bg-slate-100 rounded animate-pulse" />
                       </div>
-                      <div className="px-2 py-1.5 rounded-lg text-slate-600 hover:bg-orange-50/60 hover:text-orange-800 flex items-center gap-2 cursor-pointer transition-colors">
-                        <BarChart3 className="w-3.5 h-3.5 text-slate-400" />
-                        <span>Cohort Retention</span>
+
+                      {/* Nav Item 4 */}
+                      <div className="px-2.5 py-2 rounded-xl text-slate-500 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <BarChart3 className="w-3.5 h-3.5 text-slate-400" />
+                          <div className="w-22 h-2.5 bg-slate-200/80 rounded animate-pulse" />
+                        </div>
+                        <div className="w-8 h-2 bg-slate-100 rounded animate-pulse" />
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-2.5 rounded-lg bg-orange-50/70 border border-orange-200/60 space-y-1">
-                    <div className="text-[11px] font-bold text-orange-900 flex items-center gap-1">
-                      <Zap className="w-3 h-3 text-[#FF6B00] fill-[#FF6B00]" />
-                      <span>Academic Agent Active</span>
+                  {/* Sidebar Bottom Skeleton Status */}
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
+                        <Zap className="w-3 h-3 text-[#FF6B00] fill-[#FF6B00]" />
+                        <span>Academic Agent</span>
+                      </div>
+                      <span className="w-2 h-2 rounded-full bg-[#FF6B00] animate-pulse" />
                     </div>
-                    <p className="text-[10px] text-orange-700/90 leading-tight">
-                      Orchestrator routed 4,120 queries with 0% hallucination today.
-                    </p>
+                    <div className="space-y-1.5">
+                      <div className="w-full h-2 bg-slate-200 rounded animate-pulse" />
+                      <div className="w-4/5 h-2 bg-slate-200/70 rounded animate-pulse" />
+                    </div>
+                    <div className="w-full h-1.5 bg-slate-200/70 rounded-full overflow-hidden">
+                      <div className="w-4/5 h-full bg-[#FF6B00] rounded-full" />
+                    </div>
                   </div>
                 </div>
 
-                {/* Right Main Stage */}
+                {/* Right Main Stage - Skeleton Grid Design */}
                 <div className="col-span-12 md:col-span-9 p-4 sm:p-6 flex flex-col justify-between bg-white">
-                  {/* Top Status Banner */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-100">
-                    <div>
-                      <h4 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
-                        <span>Module 4: Graph Theory & Heuristic Search</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
-                          240 Students Enrolled
+                  {/* Top Status Header */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-44 sm:w-60 h-3.5 sm:h-4 bg-slate-200 rounded-md animate-pulse" />
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200/60 font-medium">
+                          240 Students
                         </span>
-                      </h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Interactive Socratic tutor active with textbook groundings
-                      </p>
+                      </div>
+                      <div className="w-56 sm:w-72 h-2.5 bg-slate-100 rounded animate-pulse" />
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-orange-800 font-medium bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200/60">
+                    <div className="flex items-center gap-1.5 text-xs text-orange-800 font-medium bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200/70">
                       <div className="w-2 h-2 rounded-full bg-[#FF6B00] animate-pulse" />
-                      <span>Canvas 2-Way Sync Active</span>
+                      <span>Canvas 2-Way Sync</span>
                     </div>
                   </div>
 
-                  {/* Split Visual Interactive Area */}
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 my-4">
-                    {/* Visual Concept Nodes */}
-                    <div className="lg:col-span-6 space-y-2.5 bg-slate-50/70 p-3.5 rounded-xl border border-slate-200/70">
-                      <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
-                        <span>Adaptive Prerequisite Mastery</span>
-                        <span className="text-[#FF6B00] font-mono text-[11px] font-bold">88% Cohort Average</span>
+                  {/* Skeleton 2x2 Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 my-4">
+                    {/* Grid Cell 1: Adaptive Knowledge Graph */}
+                    <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
+                          <Brain className="w-3.5 h-3.5 text-slate-500" />
+                        </div>
+                        <div className="w-18 h-4 rounded-full bg-slate-100 text-[10px] font-mono font-bold text-slate-600 border border-slate-200/70 flex items-center justify-center">
+                          92% Graph
+                        </div>
                       </div>
-
-                      <div className="space-y-2 text-xs">
-                        <div className="p-2 bg-white rounded-lg border border-slate-200/80 shadow-2xs flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-[#FF6B00] shrink-0" />
-                            <span className="font-medium text-slate-800">1. Graph Traversal (BFS & DFS)</span>
-                          </div>
-                          <span className="text-[10px] font-mono font-bold text-slate-500">100%</span>
-                        </div>
-
-                        <div className="p-2 bg-white rounded-lg border border-orange-300 shadow-2xs flex items-center justify-between ring-1 ring-orange-400/25">
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 rounded-full bg-[#FF6B00] flex items-center justify-center text-white text-[9px] font-bold shrink-0">
-                              ★
-                            </div>
-                            <span className="font-semibold text-slate-900">2. A* Search & Admissible Heuristics</span>
-                          </div>
-                          <span className="text-[10px] font-mono font-bold text-[#FF6B00]">84% Current</span>
-                        </div>
-
-                        <div className="p-2 bg-white rounded-lg border border-slate-200/60 flex items-center justify-between text-slate-400">
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-slate-300 shrink-0" />
-                            <span>3. Minimax & Alpha-Beta Pruning</span>
-                          </div>
-                          <span className="text-[10px] font-mono">Unlocks Thu</span>
-                        </div>
+                      <div className="space-y-1.5">
+                        <div className="w-4/5 h-3 bg-slate-200/90 rounded animate-pulse" />
+                        <div className="w-3/5 h-2 bg-slate-100 rounded animate-pulse" />
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="w-4/5 h-full bg-slate-300 rounded-full" />
                       </div>
                     </div>
 
-                    {/* Active Socratic Tutor Box */}
-                    <div className="lg:col-span-6 bg-[#0f172a] text-slate-100 rounded-xl p-3.5 font-mono text-xs flex flex-col justify-between shadow-sm">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-[11px] text-slate-400">
-                        <span className="flex items-center gap-1.5 text-orange-400 font-semibold">
-                          <Bot className="w-3.5 h-3.5" />
-                          <span>Rivinity Socratic Tutor</span>
-                        </span>
-                        <span className="text-[10px] text-slate-500">Latency: 28ms</span>
-                      </div>
-
-                      <div className="space-y-2 py-2 text-[11px]">
-                        <div className="bg-slate-800/80 p-2 rounded text-slate-300 border border-slate-700/60">
-                          <span className="text-slate-200 font-bold">Student:</span> "Why does my heuristic overestimate the distance in Manhattan grid search?"
+                    {/* Grid Cell 2: Socratic Reasoning Engine */}
+                    <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
+                          <Bot className="w-3.5 h-3.5 text-slate-500" />
                         </div>
-                        <div className="bg-slate-900/90 p-2 rounded text-slate-300 border border-slate-800 space-y-1">
-                          <span className="text-orange-300 font-bold">Tutor:</span> Remember: for A* to guarantee optimality, your heuristic must be admissible:{" "}
-                          <span className="text-orange-200 bg-orange-950/60 px-1 rounded">h(n) ≤ h*(n)</span>. Did you account for diagonal steps?
+                        <div className="w-18 h-4 rounded-full bg-slate-100 text-[10px] font-mono font-bold text-slate-600 border border-slate-200/70 flex items-center justify-center">
+                          28ms TTFT
                         </div>
                       </div>
+                      <div className="space-y-1.5">
+                        <div className="w-5/6 h-3 bg-slate-200/90 rounded animate-pulse" />
+                        <div className="w-1/2 h-2 bg-slate-100 rounded animate-pulse" />
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="w-3/5 h-full bg-slate-300 rounded-full" />
+                      </div>
+                    </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-[10px] text-slate-400">
-                        <span>Rubric: Admissibility Verified</span>
-                        <span className="text-orange-400">✓ No Solution Leaked</span>
+                    {/* Grid Cell 3: Rubric Assessment & Grading (Subtle Orange Accent Highlight) */}
+                    <div className="bg-white border border-orange-200 rounded-xl p-3.5 shadow-2xs space-y-3 ring-1 ring-orange-400/20">
+                      <div className="flex items-center justify-between">
+                        <div className="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#FF6B00]" />
+                        </div>
+                        <div className="w-18 h-4 rounded-full bg-orange-50 text-[10px] font-mono font-bold text-orange-800 border border-orange-200 flex items-center justify-center">
+                          84% Current
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="w-3/4 h-3 bg-slate-200 rounded animate-pulse" />
+                        <div className="w-2/3 h-2 bg-slate-100 rounded animate-pulse" />
+                      </div>
+                      <div className="w-full h-1.5 bg-orange-50 rounded-full overflow-hidden">
+                        <div className="w-5/6 h-full bg-[#FF6B00] rounded-full" />
+                      </div>
+                    </div>
+
+                    {/* Grid Cell 4: Cohort Retention Analytics */}
+                    <div className="bg-white border border-slate-200/80 rounded-xl p-3.5 shadow-2xs space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
+                          <BarChart3 className="w-3.5 h-3.5 text-slate-500" />
+                        </div>
+                        <div className="w-18 h-4 rounded-full bg-slate-100 text-[10px] font-mono font-bold text-slate-600 border border-slate-200/70 flex items-center justify-center">
+                          99.4% Sync
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="w-4/5 h-3 bg-slate-200/90 rounded animate-pulse" />
+                        <div className="w-2/5 h-2 bg-slate-100 rounded animate-pulse" />
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="w-11/12 h-full bg-slate-300 rounded-full" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Skeleton Rows / Activity Queue */}
+                  <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-200/70 space-y-2">
+                    <div className="flex items-center justify-between text-xs text-slate-500">
+                      <div className="w-24 h-2.5 bg-slate-200 rounded animate-pulse" />
+                      <div className="w-16 h-2 bg-slate-100 rounded animate-pulse" />
+                    </div>
+                    <div className="space-y-1.5 pt-0.5">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] inline-block" />
+                          <div className="w-40 sm:w-56 h-2 bg-slate-200/90 rounded animate-pulse" />
+                        </div>
+                        <div className="w-14 h-2 bg-slate-200/60 rounded animate-pulse" />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-300 inline-block" />
+                          <div className="w-48 sm:w-64 h-2 bg-slate-200/90 rounded animate-pulse" />
+                        </div>
+                        <div className="w-12 h-2 bg-slate-200/60 rounded animate-pulse" />
                       </div>
                     </div>
                   </div>
 
                   {/* Bottom Tool Sync Bar */}
                   <div className="flex flex-wrap items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-100">
-                    <span className="font-medium text-slate-600">
-                      Connected to Stanford CS Course Repo • Auto-grades on git push
+                    <span className="font-medium text-slate-500">
+                      Connected to Stanford CS Course Repo • Auto-grades on git
+                      push
                     </span>
                     <span className="text-[#FF6B00] font-semibold cursor-pointer hover:underline">
                       View Full Lecture Workflow →
@@ -457,165 +939,103 @@ export default function EducationPage() {
         </section>
 
         {/* =========================================================
-            SECTION 2: LOGO SOCIAL PROOF MARQUEE
+            SECTION 2: BENTO GRID (Image 2 Style - 4 Light-Shaded Geometric Cards)
         ========================================================= */}
-        <section className="w-full py-12 border-y border-slate-100 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <p className="text-center text-xs font-semibold tracking-widest text-slate-400 uppercase mb-8">
-              Empowering top universities, accredited colleges & edtech leaders
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 md:gap-14 opacity-75 hover:opacity-100 transition-opacity">
-              {INSTITUTION_LOGOS.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center gap-2 text-slate-500 font-semibold text-sm sm:text-base hover:text-slate-900 transition-colors"
-                >
-                  <div className="w-7 h-7 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold font-mono">
-                    {item.initial}
-                  </div>
-                  <span>{item.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* =========================================================
-            SECTION 3: BENTO GRID (Clean Solid Highlights, No Gradients)
-        ========================================================= */}
-        <section className="w-full py-12 sm:py-16 md:py-24 bg-white border-b border-slate-100">
+        <section className="w-full py-16 sm:py-20 md:py-24 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
+            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight font-display">
                 One Dashboard. Infinite Learning Possibilities.
               </h2>
               <p className="mt-3 text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
-                Everything an academic department needs to deliver individualized mastery, automated assessment, and seamless curriculum deployment.
+                Everything an academic department needs to deliver
+                individualized mastery, automated assessment, and seamless
+                curriculum deployment.
               </p>
             </div>
 
-            {/* Bento Grid Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-              {/* Card 1: Adaptive Knowledge Graph & Pathing (Orange Accent) */}
-              <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 flex flex-col justify-between hover:shadow-lg hover:border-orange-300 transition-all group shadow-2xs">
+            {/* 2x2 Grid Layout with Compact Height & 3D Icons from User Image */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+              {/* Card 1: Knowledge Graphs (Soft Orange - 3D Sphere & Orbit Ribbon) */}
+              <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-orange-200 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group min-h-[210px] sm:min-h-[225px]">
+                {/* Title and Subtitle */}
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-200 text-[#FF6B00] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <Brain className="w-5 h-5 text-[#FF6B00]" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
-                    Adaptive Knowledge Graphs
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight leading-snug mb-2">
+                    Knowledge Graphs
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Automatically deconstruct textbooks and lecture videos into prerequisite concept trees that tailor practice to each student’s gaps.
+                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-sm">
+                    Map course syllabi, textbooks, and lecture transcripts into
+                    adaptive prerequisite trees.
                   </p>
                 </div>
 
-                {/* Visual Concept Flow */}
-                <div className="mt-6 p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2.5 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-800">Linear Algebra ➔ Neural Nets</span>
-                    <span className="text-[#FF6B00] font-bold text-[11px]">89% Cleared</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 flex-1 rounded-full bg-slate-200/80 overflow-hidden">
-                      <div className="h-full bg-[#FF6B00] rounded-full w-[89%]" />
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-500">
-                    <span>Vectors & Matrices ✓</span>
-                    <span>Eigenvalues ✓</span>
-                    <span className="text-[#FF6B00] font-semibold">Backpropagation (Next)</span>
+                {/* Bottom Right: 3D Sphere & Orbit Ribbon */}
+                <div className="flex items-end justify-end mt-4">
+                  <div className="relative w-24 sm:w-28 h-24 sm:h-28 -mr-4 -mb-4 sm:-mr-5 sm:-mb-5 pointer-events-none flex items-end justify-end">
+                    <SphereOrbitSvg className="w-full h-full group-hover:scale-105 transition-transform duration-300" />
                   </div>
                 </div>
               </div>
 
-              {/* Card 2: Ecosystem & LMS Integrations (Orange Accent) */}
-              <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 flex flex-col justify-between hover:shadow-lg hover:border-orange-300 transition-all group shadow-2xs">
+              {/* Card 2: Stack Integration (Soft Pink - 3D Interlocking Pills) */}
+              <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-pink-200 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group min-h-[210px] sm:min-h-[225px]">
+                {/* Title and Subtitle */}
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-200 text-[#FF6B00] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <Network className="w-5 h-5 text-[#FF6B00]" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
-                    Connects to Your Entire Academic Stack
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight leading-snug mb-2">
+                    Stack Integration
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Zero migration friction. Two-way synchronization with Canvas, Moodle, Blackboard, Google Classroom, JupyterHub, and Discord.
+                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-sm">
+                    Two-way synchronization with Canvas, Moodle, Blackboard, and
+                    campus workspaces.
                   </p>
                 </div>
 
-                {/* Integrations Grid */}
-                <div className="mt-6 p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 flex flex-wrap items-center justify-around gap-2 text-xs">
-                  {[
-                    { name: "Canvas", dot: "bg-[#FF6B00]" },
-                    { name: "Blackboard", dot: "bg-[#FF6B00]" },
-                    { name: "Moodle", dot: "bg-[#FF6B00]" },
-                    { name: "Google Classroom", dot: "bg-[#FF6B00]" },
-                    { name: "Jupyter", dot: "bg-[#FF6B00]" },
-                    { name: "GitHub Classroom", dot: "bg-[#FF6B00]" },
-                  ].map((app, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 font-medium text-slate-700 flex items-center gap-1.5 shadow-2xs"
-                    >
-                      <span className={`w-1.5 h-1.5 rounded-full ${app.dot}`} />
-                      {app.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card 3: Instant Rubric Grading & Code Analysis (Orange Accent) */}
-              <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 flex flex-col justify-between hover:shadow-lg hover:border-orange-300 transition-all group shadow-2xs">
-                <div>
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-200 text-[#FF6B00] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <FileCheck2 className="w-5 h-5 text-[#FF6B00]" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
-                    Automated Rubric & Proof Grading
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Grade hundreds of student submissions in seconds. Detailed constructive critique with AST static analysis and citation checking.
-                  </p>
-                </div>
-
-                <div className="mt-6 p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2 text-xs font-mono">
-                  <div className="flex items-center justify-between text-slate-600 border-b border-slate-200 pb-1.5">
-                    <span>rubric_evaluation.json</span>
-                    <span className="text-[#FF6B00] font-bold">Score: 98/100</span>
-                  </div>
-                  <div className="text-[11px] text-slate-600 space-y-1">
-                    <div className="text-slate-700">✓ Time Complexity: O(N log N) - Optimal</div>
-                    <div className="text-slate-700">✓ Edge Cases: Empty array, duplicates handled</div>
-                    <div className="text-orange-800 font-medium">⚡ Style: Consider descriptive variable naming at L42</div>
+                {/* Bottom Right: 3D Interlocking Pills */}
+                <div className="flex items-end justify-end mt-4">
+                  <div className="relative w-24 sm:w-28 h-24 sm:h-28 -mr-4 -mb-4 sm:-mr-5 sm:-mb-5 pointer-events-none flex items-end justify-end">
+                    <StaggeredPillLoopSvg className="w-full h-full group-hover:scale-105 transition-transform duration-300" />
                   </div>
                 </div>
               </div>
 
-              {/* Card 4: Cohort Analytics & Early-Warning Milestones (Warm Orange Accent) */}
-              <div className="rounded-2xl sm:rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 flex flex-col justify-between hover:shadow-lg hover:border-orange-300 transition-all group shadow-2xs">
+              {/* Card 3: Rubric Grading (Soft Blue - 3D Radial Cross Node) */}
+              <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-blue-200 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group min-h-[210px] sm:min-h-[225px]">
+                {/* Title and Subtitle */}
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-200 text-[#FF6B00] flex items-center justify-center mb-5 group-hover:scale-105 transition-transform">
-                    <BarChart3 className="w-5 h-5 text-[#FF6B00]" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
-                    Proactive Retention Sentinels
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight leading-snug mb-2">
+                    Rubric Grading
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Identify students at risk of falling behind 3 weeks before midterms. Automated nudges and personalized review assignments.
+                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-sm">
+                    Instant constructive critique with AST static analysis and
+                    citation validation.
                   </p>
                 </div>
 
-                <div className="mt-6 p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2 text-xs">
-                  <div className="flex items-center justify-between text-slate-700 font-semibold">
-                    <span>Retention Projection</span>
-                    <span className="text-[#FF6B00] font-mono font-bold">+18% vs Last Fall</span>
+                {/* Bottom Right: 3D Radial Cross Node */}
+                <div className="flex items-end justify-end mt-4">
+                  <div className="relative w-24 sm:w-28 h-24 sm:h-28 -mr-4 -mb-4 sm:-mr-5 sm:-mb-5 pointer-events-none flex items-end justify-end">
+                    <RadialCrossNodeSvg className="w-full h-full group-hover:scale-105 transition-transform duration-300" />
                   </div>
-                  <div className="grid grid-cols-4 gap-1.5 text-center font-mono text-[10px] text-slate-500 pt-1">
-                    <div className="p-1.5 bg-slate-50 rounded text-slate-800 font-bold border border-slate-200/60">Week 1-4: 98%</div>
-                    <div className="p-1.5 bg-orange-50 rounded text-orange-800 font-bold border border-orange-200/60">Midterm: 94%</div>
-                    <div className="p-1.5 bg-orange-50 rounded text-orange-800 font-bold border border-orange-200/60">Week 9-12: 91%</div>
-                    <div className="p-1.5 bg-orange-100 rounded text-orange-900 font-bold border border-orange-300/60">Finals: 93%</div>
+                </div>
+              </div>
+
+              {/* Card 4: Cohort Retention (Soft Purple - 3D Ring with Play Button) */}
+              <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-purple-200 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group min-h-[210px] sm:min-h-[225px]">
+                {/* Title and Subtitle */}
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight leading-snug mb-2">
+                    Cohort Retention
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-sm">
+                    Identify students needing review weeks before exams with
+                    automated interventions.
+                  </p>
+                </div>
+
+                {/* Bottom Right: 3D Ring with Play Button */}
+                <div className="flex items-end justify-end mt-4">
+                  <div className="relative w-24 sm:w-28 h-24 sm:h-28 -mr-4 -mb-4 sm:-mr-5 sm:-mb-5 pointer-events-none flex items-end justify-end">
+                    <RingPlaySvg className="w-full h-full group-hover:scale-105 transition-transform duration-300" />
                   </div>
                 </div>
               </div>
@@ -624,16 +1044,18 @@ export default function EducationPage() {
         </section>
 
         {/* =========================================================
-            SECTION 4: AGENT HIERARCHY TREE (Solid Badges & Colors)
+            SECTION 3: AGENT HIERARCHY TREE (Solid Badges & Colors)
         ========================================================= */}
-        <section className="w-full py-12 sm:py-16 md:py-24 bg-white border-b border-slate-100 relative overflow-hidden">
+        <section className="w-full py-12 sm:py-16 md:py-24 bg-white relative overflow-hidden">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight font-display">
                 Run Smarter Courses. With Education AI Agents.
               </h2>
               <p className="mt-3 text-sm sm:text-base text-slate-600 max-w-xl mx-auto">
-                Specialized autonomous agents coordinated by a centralized academic orchestrator that honors instructor guidelines and FERPA privacy.
+                Specialized autonomous agents coordinated by a centralized
+                academic orchestrator that honors instructor guidelines and
+                FERPA privacy.
               </p>
             </div>
 
@@ -712,17 +1134,25 @@ export default function EducationPage() {
                       className="rounded-2xl p-5 border border-slate-200 bg-white hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between text-left"
                     >
                       <div>
-                        <h4 className="text-base font-bold text-slate-900 mb-1">{agent.title}</h4>
+                        <h4 className="text-base font-bold text-slate-900 mb-1">
+                          {agent.title}
+                        </h4>
                         <div className="text-xs font-medium mb-2.5 text-orange-700">
                           {agent.role}
                         </div>
 
-                        <p className="text-xs text-slate-600 leading-relaxed mb-4">{agent.description}</p>
+                        <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                          {agent.description}
+                        </p>
                       </div>
 
                       <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <span className="text-slate-400 text-[11px]">Impact Metric:</span>
-                        <span className="font-mono font-bold text-slate-800">{agent.metrics}</span>
+                        <span className="text-slate-400 text-[11px]">
+                          Impact Metric:
+                        </span>
+                        <span className="font-mono font-bold text-slate-800">
+                          {agent.metrics}
+                        </span>
                       </div>
                     </div>
                   );
@@ -733,131 +1163,73 @@ export default function EducationPage() {
         </section>
 
         {/* =========================================================
-            SECTION 5: WORKFLOW BUILDER
+            SECTION 4: WORKFLOW BUILDER
         ========================================================= */}
-        <section className="w-full py-12 sm:py-16 md:py-24 bg-white border-b border-slate-100">
+        {/* =========================================================
+            SECTION 4: WORKFLOW ARCHITECTURE & INTEGRATIONS
+        ========================================================= */}
+        <section className="w-full py-16 sm:py-24 bg-white border-b border-slate-100">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              {/* Left Column: Descriptions & Bullet points */}
-              <div className="lg:col-span-6 space-y-6 text-left">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight font-display">
-                  Design AI Workflows. Without The Complexity.
-                </h2>
+            {/* Section Header */}
+            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight font-display">
+                Design AI Workflows. Without The Complexity.
+              </h2>
+              <p className="mt-3.5 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                Connect student submissions directly to multi-agent evaluation chains, automated code sandboxes, and campus LMS gradebooks without writing glue code.
+              </p>
+            </div>
 
-                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-                  Compose high-impact learning experiences with drag-and-drop clarity. Connect student submissions to AI evaluation chains, automated video walkthroughs, and LMS gradebooks without writing glue code.
-                </p>
+            {/* 3 Pillars Grid (Pixel Grid Flush to Bottom, Left & Right) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7">
+              {/* Pillar 1: Visual Course & Quiz Builder (Orange Pixel Grid) */}
+              <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 text-left">
+                <div className="p-6 sm:p-7 pb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight mb-2.5">
+                    Visual Course &amp; Quiz Builder
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Build dynamic branching assessments that adjust difficulty based on live student performance. Students receive Socratic hints and step-by-step guidance rather than blunt solutions.
+                  </p>
+                </div>
 
-                {/* Feature Bullet Points */}
-                <div className="space-y-4 pt-2">
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-6 h-6 rounded-full bg-orange-50 border border-orange-200 text-[#FF6B00] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                      ✓
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-slate-900">Visual Course & Quiz Builder</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Build dynamic branching assessments that automatically adjust difficulty based on live performance.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-6 h-6 rounded-full bg-orange-50 border border-orange-200 text-[#FF6B00] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                      ✓
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-slate-900">Bi-Directional LMS Sync</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Post grades, rubric feedback, and engagement metrics directly into Canvas or Moodle with instructor review gates.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3.5">
-                    <div className="w-6 h-6 rounded-full bg-orange-50 border border-orange-200 text-[#FF6B00] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                      ✓
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-slate-900">Strict Hallucination Safeguards</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Constrain models strictly to university textbooks, syllabus guidelines, and verified lecture recordings.
-                      </p>
-                    </div>
-                  </div>
+                {/* Bottom Pixel Heatmap Grid (Orange - Flush to Bottom/Left/Right) */}
+                <div className="w-full h-22 sm:h-26 border-t border-slate-100 mt-auto overflow-hidden">
+                  <PixelHeatGrid color="orange" />
                 </div>
               </div>
 
-              {/* Right Column: Visual Node Canvas Mockup */}
-              <div className="lg:col-span-6 rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-5 sm:p-7 shadow-lg relative">
-                <div className="flex items-center justify-between pb-4 border-b border-slate-100 text-xs font-semibold text-slate-700">
-                  <span className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#FF6B00] animate-pulse" />
-                    <span>Live Automated Grading Pipeline</span>
-                  </span>
-                  <span className="text-[#FF6B00] font-mono text-[11px] font-bold">Workflow ID: #WF-8820</span>
+              {/* Pillar 2: Bi-Directional LMS Sync (Pink Pixel Grid) */}
+              <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 text-left">
+                <div className="p-6 sm:p-7 pb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight mb-2.5">
+                    Bi-Directional LMS Sync
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Two-way synchronization with Canvas, Moodle, and Blackboard. Student grades, rubric annotations, and participation analytics sync seamlessly with instructor review gates.
+                  </p>
                 </div>
 
-                {/* Node Pipeline Diagram */}
-                <div className="py-6 space-y-4">
-                  {/* Step 1 Node */}
-                  <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200 shadow-2xs flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-orange-50 text-[#FF6B00] flex items-center justify-center font-mono text-xs font-bold border border-orange-200/60">
-                        1
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900">Trigger: Student Submits Homework 5</div>
-                        <div className="text-[11px] text-slate-500">GitHub Classroom Push or Canvas File Upload</div>
-                      </div>
-                    </div>
-                    <span className="text-[10px] bg-orange-50 text-orange-800 px-2 py-0.5 rounded font-mono font-medium border border-orange-200/60">
-                      EVENT
-                    </span>
-                  </div>
+                {/* Bottom Pixel Heatmap Grid (Pink - Flush to Bottom/Left/Right) */}
+                <div className="w-full h-22 sm:h-26 border-t border-slate-100 mt-auto overflow-hidden">
+                  <PixelHeatGrid color="pink" />
+                </div>
+              </div>
 
-                  {/* Connecting Line */}
-                  <div className="w-0.5 h-6 bg-slate-200 mx-auto" />
-
-                  {/* Step 2 Node */}
-                  <div className="p-3.5 rounded-xl bg-white border-2 border-orange-400 shadow-md flex items-center justify-between ring-1 ring-orange-400/20">
-                    <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-[#FF6B00] text-white flex items-center justify-center font-mono text-xs font-bold shadow-2xs">
-                        2
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900">Agent: Code Verification & AST Check</div>
-                        <div className="text-[11px] text-orange-800">Unit tests executed in secure ephemeral sandbox</div>
-                      </div>
-                    </div>
-                    <span className="text-[10px] bg-orange-50 text-orange-800 px-2 py-0.5 rounded font-mono font-bold border border-orange-200">
-                      AGENT
-                    </span>
-                  </div>
-
-                  {/* Connecting Line */}
-                  <div className="w-0.5 h-6 bg-slate-200 mx-auto" />
-
-                  {/* Step 3 Node */}
-                  <div className="p-3.5 rounded-xl bg-slate-50/70 border border-slate-200 shadow-2xs flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-orange-50 text-[#FF6B00] flex items-center justify-center font-mono text-xs font-bold border border-orange-200/60">
-                        3
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900">Action: Canvas Gradebook Sync & Video Tip</div>
-                        <div className="text-[11px] text-slate-500">Student receives private feedback with line annotations</div>
-                      </div>
-                    </div>
-                    <span className="text-[10px] bg-orange-50 text-orange-800 px-2 py-0.5 rounded font-mono font-medium border border-orange-200/60">
-                      OUTPUT
-                    </span>
-                  </div>
+              {/* Pillar 3: Strict Hallucination Safeguards (Purple Pixel Grid) */}
+              <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 text-left">
+                <div className="p-6 sm:p-7 pb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight mb-2.5">
+                    Strict Hallucination Safeguards
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                    Constrain models strictly to university textbooks, syllabus guidelines, and verified lecture recordings. Every insight includes traceable provenance citations.
+                  </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs flex items-center justify-between text-slate-800">
-                  <span className="font-semibold">Pipeline Execution Speed: 140ms</span>
-                  <span className="font-mono text-[11px] text-[#FF6B00] font-bold">100% Reliable</span>
+                {/* Bottom Pixel Heatmap Grid (Purple - Flush to Bottom/Left/Right) */}
+                <div className="w-full h-22 sm:h-26 border-t border-slate-100 mt-auto overflow-hidden">
+                  <PixelHeatGrid color="purple" />
                 </div>
               </div>
             </div>
@@ -865,26 +1237,27 @@ export default function EducationPage() {
         </section>
 
         {/* =========================================================
-            SECTION 6: TESTIMONIALS (Landing Page Style Master Card)
+            SECTION 5: TESTIMONIALS (Landing Page Style Master Card)
         ========================================================= */}
         <TestimonialsSection
           title="Don’t Just Take Our Word For It"
           subtitle="Hear how leading provosts, professors, and academic department chairs rely on Rivinity to scale high-touch teaching."
           items={EDUCATION_TESTIMONIALS}
-          className="w-full py-16 sm:py-24 bg-white border-b border-slate-100"
+          className="w-full py-16 sm:py-24 bg-white"
         />
 
         {/* =========================================================
-            SECTION 7: PRICING TIERS (Solid Colors, No Gradients)
+            SECTION 6: PRICING TIERS (Solid Colors, No Gradients)
         ========================================================= */}
-        <section className="w-full py-12 sm:py-16 md:py-24 bg-white border-b border-slate-100">
+        <section className="w-full py-12 sm:py-16 md:py-24 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
             <div className="max-w-3xl mx-auto mb-10">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight font-display">
                 Fair Pricing. No Funny Business.
               </h2>
               <p className="mt-3 text-sm sm:text-base text-slate-600 max-w-xl mx-auto">
-                Predictable plans designed for independent teachers, growing departments, and university-wide deployments.
+                Predictable plans designed for independent teachers, growing
+                departments, and university-wide deployments.
               </p>
             </div>
 
@@ -920,9 +1293,12 @@ export default function EducationPage() {
               {/* Plan 1: Individual Educator */}
               <div className="rounded-3xl border border-slate-200 bg-white p-7 sm:p-8 flex flex-col justify-between hover:shadow-md transition-shadow">
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900">Individual Educator</h3>
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Individual Educator
+                  </h3>
                   <p className="text-xs text-slate-500 mt-1">
-                    For individual professors, instructors, and tutors teaching single courses.
+                    For individual professors, instructors, and tutors teaching
+                    single courses.
                   </p>
 
                   <div className="mt-6 mb-6">
@@ -967,22 +1343,29 @@ export default function EducationPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900">Department & Campus</h3>
+                  <h3 className="text-xl font-bold text-slate-900">
+                    Department & Campus
+                  </h3>
                   <p className="text-xs text-slate-500 mt-1">
-                    For academic departments, multi-faculty teams, and degree programs.
+                    For academic departments, multi-faculty teams, and degree
+                    programs.
                   </p>
 
                   <div className="mt-6 mb-6">
                     <span className="text-4xl font-extrabold text-slate-900">
                       {billingPeriod === "annual" ? "$79" : "$99"}
                     </span>
-                    <span className="text-xs text-slate-500 ml-1">/ month / department</span>
+                    <span className="text-xs text-slate-500 ml-1">
+                      / month / department
+                    </span>
                   </div>
 
                   <div className="space-y-3 text-xs text-slate-700">
                     <div className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-[#FF6B00] shrink-0" />
-                      <span className="font-semibold text-slate-900">Unlimited students & courses</span>
+                      <span className="font-semibold text-slate-900">
+                        Unlimited students & courses
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Check className="w-4 h-4 text-[#FF6B00] shrink-0" />
@@ -1019,14 +1402,21 @@ export default function EducationPage() {
               {/* Plan 3: University Enterprise */}
               <div className="rounded-3xl border border-slate-200 bg-white p-7 sm:p-8 flex flex-col justify-between hover:shadow-md transition-shadow">
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900">University System</h3>
+                  <h3 className="text-xl font-bold text-slate-900">
+                    University System
+                  </h3>
                   <p className="text-xs text-slate-500 mt-1">
-                    For campus-wide rollouts, state systems, and research institutions.
+                    For campus-wide rollouts, state systems, and research
+                    institutions.
                   </p>
 
                   <div className="mt-6 mb-6">
-                    <span className="text-4xl font-extrabold text-slate-900">Custom</span>
-                    <span className="text-xs text-slate-500 ml-1">/ annual agreement</span>
+                    <span className="text-4xl font-extrabold text-slate-900">
+                      Custom
+                    </span>
+                    <span className="text-xs text-slate-500 ml-1">
+                      / annual agreement
+                    </span>
                   </div>
 
                   <div className="space-y-3 text-xs text-slate-700">

@@ -1,1641 +1,1081 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
-  BookOpen,
-  Braces,
+  ArrowUpRight,
   Check,
-  ChevronRight,
-  Cloud,
-  Code2,
-  Layers3,
-  Lock,
-  Layers,
+  Copy,
   Terminal,
+  Code,
+  Cpu,
   Zap,
+  ExternalLink,
+  GitBranch,
+  Layers,
+  Sparkles,
+  Server,
+  Clock,
+  Boxes,
 } from "lucide-react";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import FaqSection from "@/components/sections/faq-section";
 import CtaSection from "@/components/sections/cta-section";
 
-const DEVELOPER_TOOLS = [
-  {
-    icon: BookOpen,
-    title: "Documentation",
-    description:
-      "Learn how to integrate Rivinity APIs, build applications, and move from prototype to production.",
-    link: "Read the docs",
-  },
-  {
-    icon: Braces,
-    title: "APIs & SDKs",
-    description:
-      "Use simple, developer-friendly APIs and SDKs to connect intelligent capabilities to your applications.",
-    link: "Explore APIs",
-  },
-  {
-    icon: Terminal,
-    title: "Developer CLI",
-    description:
-      "Build, test, configure, and deploy your Rivinity projects directly from your terminal.",
-    link: "View CLI",
-  },
-  {
-    icon: Layers3,
-    title: "Integrations",
-    description:
-      "Connect Rivinity with the tools, platforms, and services already powering your workflow.",
-    link: "View integrations",
-  },
-];
+type CodeLang = "python" | "typescript" | "curl" | "go";
 
-const WORKFLOW = [
-  {
-    number: "01",
-    title: "Connect",
-    description:
-      "Create your project and connect Rivinity APIs to your application.",
-  },
-  {
-    number: "02",
-    title: "Build",
-    description:
-      "Build intelligent workflows, agents, and applications using familiar tools.",
-  },
-  {
-    number: "03",
-    title: "Test",
-    description:
-      "Experiment quickly and validate your application before going live.",
-  },
-  {
-    number: "04",
-    title: "Deploy",
-    description:
-      "Move production workloads to reliable Rivinity infrastructure.",
-  },
-  {
-    number: "05",
-    title: "Scale",
-    description:
-      "Grow from your first prototype to production workloads without rebuilding your stack.",
-  },
-];
+const CODE_SNIPPETS: Record<CodeLang, { filename: string; code: string }> = {
+  python: {
+    filename: "quickstart.py",
+    code: `from rivinity import Rivinity
 
-const FEATURES = [
-  "Simple, developer-first APIs",
-  "Type-safe SDKs",
-  "Secure authentication",
-  "Production-ready infrastructure",
-  "Built-in observability",
-  "Scalable deployments",
-];
+client = Rivinity(api_key="riv_live_...")
 
-const RESOURCES = [
-  {
-    icon: BookOpen,
-    title: "Documentation",
-    description: "Guides, concepts, tutorials, and getting-started resources.",
-  },
-  {
-    icon: Code2,
-    title: "API Reference",
-    description: "Explore endpoints, parameters, responses, and examples.",
-  },
-];
+stream = client.chat.completions.create(
+    model="rivinity-reasoner-v2",
+    messages=[
+        {"role": "system", "content": "You are a helpful coding assistant."},
+        {"role": "user", "content": "How do I implement rate limiting in FastAPI?"}
+    ],
+    stream=True,
+    temperature=0.2
+)
 
-export default function DevelopersPage() {
- const [activeWorkflow, setActiveWorkflow] = useState(0);
+for chunk in stream:
+    print(chunk.choices[0].delta.content or "", end="", flush=True)`,
+  },
+  typescript: {
+    filename: "quickstart.ts",
+    code: `import { Rivinity } from "@rivinity/sdk";
+
+const rivinity = new Rivinity({
+  apiKey: process.env.RIVINITY_API_KEY,
+});
+
+const stream = await rivinity.chat.completions.create({
+  model: "rivinity-reasoner-v2",
+  messages: [
+    { role: "system", content: "You are a helpful coding assistant." },
+    { role: "user", content: "Explain async/await in TypeScript." },
+  ],
+  stream: true,
+});
+
+for await (const chunk of stream) {
+  process.stdout.write(chunk.choices[0]?.delta?.content || "");
+}`,
+  },
+  curl: {
+    filename: "curl_request.sh",
+    code: `curl https://api.rivinity.ai/v1/chat/completions \\
+  -H "Authorization: Bearer $RIVINITY_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "rivinity-reasoner-v2",
+    "messages": [
+      {"role": "user", "content": "Hello world!"}
+    ],
+    "stream": true
+  }'`,
+  },
+  go: {
+    filename: "main.go",
+    code: `package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/rivinity/rivinity-go"
+)
+
+func main() {
+	client := rivinity.NewClient(os.Getenv("RIVINITY_API_KEY"))
+
+	stream, err := client.Chat.CreateStream(context.Background(), &rivinity.ChatRequest{
+		Model: "rivinity-reasoner-v2",
+		Messages: []rivinity.Message{
+			{Role: "user", Content: "Hello from Go!"},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	for chunk := range stream.Chunks() {
+		fmt.Print(chunk.Content)
+	}
+}`,
+  },
+};
+
+export default function DeveloperPage() {
+  const [activeLang, setActiveLang] = useState<CodeLang>("python");
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedInstall, setCopiedInstall] = useState<string | null>(null);
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(CODE_SNIPPETS[activeLang].code);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
+  const handleCopyInstall = (cmd: string, id: string) => {
+    navigator.clipboard.writeText(cmd);
+    setCopiedInstall(id);
+    setTimeout(() => setCopiedInstall(null), 2000);
+  };
+
   return (
-    <div className="w-full min-h-screen bg-white flex flex-col justify-between">
+    <div className="w-full min-h-screen bg-white text-[#0f172a] flex flex-col justify-between selection:bg-orange-500/20 selection:text-orange-900">
       <Header />
 
       <motion.main
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full pt-28 sm:pt-32 md:pt-36 pb-16 bg-white text-neutral-950"
+        className="w-full pt-20 sm:pt-24 md:pt-28 flex-1 bg-white"
       >
-        {/* =========================================================
-            HERO
-        ========================================================== */}
-        <section className="relative overflow-hidden border-b border-neutral-200 bg-neutral-50">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-orange-500/10 blur-3xl" />
-          </div>
-
-          <div className="relative mx-auto max-w-7xl px-6 pb-20 pt-2 sm:pt-4 lg:px-8 lg:pb-28">
-          <div className="grid items-center gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
-            {/* LEFT */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h1 className="max-w-3xl text-center lg:text-left text-5xl font-semibold tracking-tight text-neutral-950 sm:text-6xl lg:text-7xl">
-                Build the future with{" "}
-                <span className="text-orange-500">Rivinity.</span>
+        {/* =========================================================================
+            SECTION 1: HERO & INTERACTIVE QUICKSTART TERMINAL
+            ========================================================================= */}
+        <section className="relative overflow-hidden section py-20 sm:py-28 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+            {/* Headline & Subheadline */}
+            <div className="max-w-4xl mb-12 sm:mb-16">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#0f172a] leading-[1.08]">
+                Fast, Reliable AI APIs <br className="hidden sm:inline" />
+                for Developers.
               </h1>
-
-              <p className="mt-6 max-w-2xl text-center lg:text-left text-lg leading-8 text-neutral-600">
-                Build intelligent applications, autonomous agents, and
-                production-ready systems with developer-first APIs,
-                infrastructure, and tools.
+              <p className="mt-6 text-lg sm:text-xl text-[#64748b] leading-relaxed max-w-3xl">
+                Build streaming completions, structured data extraction, and
+                tool-calling workflows with clean SDKs and predictable latency.
               </p>
+            </div>
 
-              <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-3">
-                <Link
-                  href="/docs"
-                  className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
-                >
-                  Start building
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-
-                <Link
-                  href="/docs"
-                  className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-5 py-3 text-sm font-semibold text-neutral-900 transition hover:bg-neutral-50"
-                >
-                  Read documentation
-                </Link>
-              </div>
-
-              <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-3 text-sm text-neutral-500">
-                <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-orange-500" />
-                  Developer-first
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-orange-500" />
-                  Secure by design
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Check className="h-4 w-4 text-orange-500" />
-                  Built to scale
-                </div>
-              </div>
-            </motion.div>
-
-            {/* CODE PANEL */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="relative mx-auto w-full max-w-lg lg:max-w-none"
-            >
-              <div className="overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950 shadow-2xl">
-                <div className="flex items-center gap-2 border-b border-neutral-800 px-4 py-3">
-                  <span className="h-3 w-3 rounded-full bg-neutral-700" />
-                  <span className="h-3 w-3 rounded-full bg-neutral-700" />
-                  <span className="h-3 w-3 rounded-full bg-neutral-700" />
-
-                  <span className="ml-3 font-mono text-xs text-neutral-500">
-                    rivinity-example.ts
-                  </span>
-                </div>
-
-                <pre className="overflow-x-auto p-6 font-mono text-sm leading-7">
-                  <code>
-                    <span className="text-purple-400">import</span>{" "}
-                    <span className="text-white">{"{ Rivinity }"}</span>{" "}
-                    <span className="text-purple-400">from</span>{" "}
-                    <span className="text-green-400">
-                      "@rivinity/sdk"
-                    </span>
-                    {"\n\n"}
-                    <span className="text-purple-400">const</span>{" "}
-                    <span className="text-blue-300">client</span>{" "}
-                    <span className="text-neutral-400">=</span>{" "}
-                    <span className="text-purple-400">new</span>{" "}
-                    <span className="text-yellow-300">Rivinity</span>
-                    {"({\n"}
-                    {"  "}
-                    <span className="text-white">apiKey</span>
-                    <span className="text-neutral-400">:</span>{" "}
-                    <span className="text-blue-300">
-                      process.env.RIVINITY_API_KEY
-                    </span>
-                    {"\n});\n\n"}
-                    <span className="text-purple-400">const</span>{" "}
-                    <span className="text-blue-300">agent</span>{" "}
-                    <span className="text-neutral-400">=</span>{" "}
-                    <span className="text-purple-400">await</span>{" "}
-                    <span className="text-blue-300">client</span>
-                    <span className="text-white">.agents.create</span>
-                    {"({\n"}
-                    {"  "}
-                    <span className="text-white">name</span>
-                    <span className="text-neutral-400">:</span>{" "}
-                    <span className="text-green-400">
-                      "Research Agent"
-                    </span>
-                    <span className="text-neutral-400">,</span>
-                    {"\n  "}
-                    <span className="text-white">model</span>
-                    <span className="text-neutral-400">:</span>{" "}
-                    <span className="text-green-400">
-                      "rivinity-ai"
-                    </span>
-                    {"\n});"}
-                  </code>
-                </pre>
-
-                <div className="border-t border-neutral-800 px-6 py-4">
-                  <div className="flex items-center gap-2 text-sm text-neutral-400">
-                    <span className="h-2 w-2 rounded-full bg-green-500" />
-                    Ready to build
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute -bottom-6 -left-6 hidden rounded-xl border border-neutral-200 bg-white p-4 shadow-lg sm:block">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-orange-50 p-2">
-                    <Zap className="h-5 w-5 text-orange-500" />
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-900">
-                      Developer ready
-                    </p>
-                    <p className="text-xs text-neutral-500">
-                      Simple APIs. Powerful systems.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-      {/* =========================================================
-          BUILD WITH RIVINITY
-      ========================================================== */}
-      <section className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-orange-500">
-              Build with Rivinity
-            </p>
-
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Everything you need to build intelligent software.
-            </h2>
-
-            <p className="mt-4 text-lg leading-8 text-neutral-600">
-              From your first API call to production deployment, Rivinity
-              gives developers the tools and infrastructure to move faster.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {DEVELOPER_TOOLS.map((tool, index) => {
-              const Icon = tool.icon;
-
-              return (
-                <motion.div
-                  key={tool.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: index * 0.08 }}
-                  className="group rounded-2xl border border-neutral-200 bg-white p-7 transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="rounded-xl bg-orange-50 p-3">
-                      <Icon className="h-5 w-5 text-orange-500" />
-                    </div>
-
-                    <ChevronRight className="h-5 w-5 text-neutral-300 transition group-hover:translate-x-1 group-hover:text-orange-500" />
-                  </div>
-
-                  <h3 className="mt-6 text-xl font-semibold">
-                    {tool.title}
+            {/* Quickstart Code Console: 2-Column Split */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+              {/* Left Side: Fast-Start SDK Installation Steps */}
+              <div className="lg:col-span-5 flex flex-col justify-between bg-white border border-gray-200/90 rounded-3xl p-6 sm:p-8 shadow-sm">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+                    Quickstart
                   </h3>
-
-                  <p className="mt-3 leading-7 text-neutral-600">
-                    {tool.description}
+                  <p className="mt-2 text-sm text-[#64748b] leading-relaxed">
+                    Install the official client library for your stack and
+                    authenticate with your API key.
                   </p>
 
-                  <div className="mt-6 text-sm font-semibold text-orange-500">
-                    {tool.link} →
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-    DEVELOPER WORKFLOW
-========================================================= */}
-<section className="relative overflow-hidden border-b border-neutral-200 bg-white">
-  <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
-
-    {/* =====================================================
-        HEADER
-    ====================================================== */}
-    <div className="max-w-3xl">
-
-      <motion.p
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-500"
-      >
-        Developer workflow
-      </motion.p>
-
-      <motion.h2
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.05 }}
-        className="mt-4 text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl"
-      >
-        From idea to production.
-      </motion.h2>
-
-      <motion.p
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="mt-5 max-w-2xl text-lg leading-8 text-neutral-600"
-      >
-        A development workflow designed to help you move from your
-        first idea to a production-ready intelligent application.
-      </motion.p>
-
-    </div>
-
-   {/* WORKFLOW TABS */}
-<div className="mt-12 overflow-x-auto border-y border-neutral-200">
-  <div className="flex min-w-max lg:grid lg:min-w-0 lg:grid-cols-5">
-    {WORKFLOW.map((item, index) => (
-      <button
-        key={item.number}
-        onClick={() => setActiveWorkflow(index)}
-        className={`relative flex min-w-[125px] items-center gap-2 px-4 py-4 text-left transition sm:min-w-[150px] lg:min-w-0 ${
-          activeWorkflow === index
-            ? "text-neutral-950"
-            : "text-neutral-400 hover:text-neutral-700"
-        }`}
-      >
-        <span
-          className={`font-mono text-[10px] ${
-            activeWorkflow === index
-              ? "text-orange-500"
-              : "text-neutral-400"
-          }`}
-        >
-          {item.number}
-        </span>
-
-        <span className="text-xs font-semibold sm:text-sm">
-          {item.title}
-        </span>
-
-        {activeWorkflow === index && (
-          <motion.span
-            layoutId="workflow-active"
-            className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
-          />
-        )}
-      </button>
-    ))}
-  </div>
-</div>
-    {/* =====================================================
-        ACTIVE WORKFLOW
-    ====================================================== */}
-    <div className="relative mt-10 overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50">
-
-      <AnimatePresence mode="wait" custom={activeWorkflow}>
-
-        <motion.div
-          key={activeWorkflow}
-          initial={{
-            opacity: 0,
-            x: 40,
-          }}
-          animate={{
-            opacity: 1,
-            x: 0,
-          }}
-          exit={{
-            opacity: 0,
-            x: -40,
-          }}
-          transition={{
-            duration: 0.4,
-            ease: "easeOut",
-          }}
-          className="grid min-h-[430px] lg:grid-cols-[0.85fr_1.15fr]"
-        >
-
-          {/* =================================================
-              LEFT CONTENT
-          ================================================== */}
-          <div className="flex flex-col justify-between border-b border-neutral-200 p-8 lg:border-b-0 lg:border-r lg:p-12">
-
-            <div>
-
-              <div className="flex items-center gap-3">
-
-                <span className="font-mono text-xs text-orange-500">
-                  {WORKFLOW[activeWorkflow].number}
-                </span>
-
-                <span className="h-px w-8 bg-neutral-300" />
-
-                <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-                  Workflow
-                </span>
-
-              </div>
-
-              <h3 className="mt-8 text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl">
-                {WORKFLOW[activeWorkflow].title}
-              </h3>
-
-              <p className="mt-5 max-w-md text-base leading-8 text-neutral-600">
-                {WORKFLOW[activeWorkflow].description}
-              </p>
-
-            </div>
-
-            {/* Bottom info */}
-            <div className="mt-10 flex items-center gap-3">
-
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100">
-                <Check className="h-4 w-4 text-orange-500" />
-              </div>
-
-              <span className="text-sm font-medium text-neutral-700">
-                Ready for the next step
-              </span>
-
-            </div>
-
-          </div>
-
-          {/* =================================================
-              RIGHT VISUAL
-          ================================================== */}
-          <div className="relative flex min-h-[360px] items-center justify-center overflow-hidden bg-neutral-950 p-6 sm:p-10">
-
-            {/* Background grid */}
-            <div
-              className="pointer-events-none absolute inset-0 opacity-[0.05]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-                backgroundSize: "32px 32px",
-              }}
-            />
-
-            {/* Orange glow */}
-            <motion.div
-              animate={{
-                x: [0, 30, 0],
-                y: [0, -20, 0],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="pointer-events-none absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/10 blur-3xl"
-            />
-
-            {/* =================================================
-                VISUAL STAGE
-            ================================================== */}
-            <div className="relative w-full max-w-xl">
-
-              {/* Top label */}
-              <div className="mb-4 flex items-center justify-between">
-
-                <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-600">
-                  rivinity / workflow
-                </span>
-
-                <span className="flex items-center gap-2 font-mono text-[10px] text-green-400">
-
-                  <motion.span
-                    animate={{
-                      opacity: [1, 0.3, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                    }}
-                    className="h-1.5 w-1.5 rounded-full bg-green-400"
-                  />
-
-                  ACTIVE
-
-                </span>
-
-              </div>
-
-              {/* Visual */}
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-neutral-900 shadow-2xl">
-
-                {/* Window header */}
-                <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
-
-                  <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-                  <span className="ml-3 font-mono text-[10px] text-neutral-600">
-                   {WORKFLOW[activeWorkflow]?.title.toLowerCase() || "workflow"}.ts
-                  </span>
-
-                  
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-
-                  {activeWorkflow === 0 && (
-                    <div className="space-y-4">
-
-                      <div className="font-mono text-xs text-neutral-500">
-                        {"// Explore what you can build"}
+                  <div className="mt-6 space-y-4">
+                    {/* Step 1: Install */}
+                    <div className="bg-gray-50 border border-gray-200/90 rounded-2xl p-4">
+                      <div className="text-xs font-medium text-gray-500 mb-2">
+                        1. Install client library
                       </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-
-                        {[
-                          "Agents",
-                          "Models",
-                          "Knowledge",
-                          "Tools",
-                        ].map((item, index) => (
-                          <motion.div
-                            key={item}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                              delay: index * 0.08,
-                            }}
-                            className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
-                          >
-                            <div className="h-2 w-2 rounded-full bg-orange-500" />
-
-                            <p className="mt-3 text-sm font-medium text-neutral-300">
-                              {item}
-                            </p>
-                          </motion.div>
-                        ))}
-
-                      </div>
-
-                    </div>
-                  )}
-
-                  {activeWorkflow === 1 && (
-                    <div className="font-mono text-sm leading-7">
-
-                      <div className="text-neutral-500">
-                        {"// Create your first agent"}
-                      </div>
-
-                      <div className="mt-4 text-neutral-300">
-                        <span className="text-purple-400">
-                          const
-                        </span>{" "}
-                        agent = rivinity.agents.create({"{"}
-                      </div>
-
-                      <div className="pl-6 text-neutral-300">
-                        name:{" "}
-                        <span className="text-green-400">
-                          "Research Agent"
+                      <div className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 font-mono text-xs text-[#0f172a]">
+                        <span className="truncate">
+                          npm install @rivinity/sdk
                         </span>
-                        ,
-                      </div>
-
-                      <div className="pl-6 text-neutral-300">
-                        model:{" "}
-                        <span className="text-green-400">
-                          "rivinity-ai"
-                        </span>
-                      </div>
-
-                      <div className="text-neutral-300">
-                        {"});"}
-                      </div>
-
-                      <div className="mt-5 rounded-lg bg-green-500/10 px-4 py-3 text-xs text-green-400">
-                        ✓ Agent ready
-                      </div>
-
-                    </div>
-                  )}
-
-                  {activeWorkflow === 2 && (
-                    <div className="space-y-4">
-
-                      {[
-                        "Application",
-                        "Rivinity API",
-                        "Agent Runtime",
-                        "Knowledge",
-                      ].map((item, index) => (
-                        <div
-                          key={item}
-                          className="flex items-center gap-3"
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleCopyInstall(
+                              "npm install @rivinity/sdk",
+                              "npm",
+                            )
+                          }
+                          className="text-gray-400 hover:text-gray-900 transition-colors cursor-pointer shrink-0"
+                          aria-label="Copy npm command"
                         >
-
-                          <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] font-mono text-[10px] text-neutral-500">
-                            0{index + 1}
-                          </div>
-
-                          <div className="h-px w-6 bg-neutral-700" />
-
-                          <div className="flex-1 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-xs text-neutral-400">
-                            {item}
-                          </div>
-
-                        </div>
-                      ))}
-
-                    </div>
-                  )}
-
-                  {activeWorkflow === 3 && (
-                    <div className="space-y-4">
-
-                      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
-
-                        <div className="flex justify-between">
-
-                          <span className="font-mono text-xs text-neutral-500">
-                            TEST RUN
-                          </span>
-
-                          <span className="font-mono text-xs text-green-400">
-                            PASSED
-                          </span>
-
-                        </div>
-
-                        <div className="mt-5 h-2 overflow-hidden rounded-full bg-neutral-800">
-
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: "100%" }}
-                            transition={{
-                              duration: 1.2,
-                            }}
-                            className="h-full rounded-full bg-orange-500"
-                          />
-
-                        </div>
-
-                        <div className="mt-3 flex justify-between font-mono text-[10px] text-neutral-600">
-
-                          <span>Validation</span>
-                          <span>100%</span>
-
-                        </div>
-
+                          {copiedInstall === "npm" ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
+                        </button>
                       </div>
 
-                    </div>
-                  )}
-
-                  {activeWorkflow === 4 && (
-                    <div className="space-y-4">
-
-                      <div className="rounded-xl border border-green-500/20 bg-green-500/5 p-5">
-
-                        <div className="flex items-center gap-3">
-
-                          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-500/10">
-
-                            <Check className="h-4 w-4 text-green-400" />
-
-                          </div>
-
-                          <div>
-
-                            <p className="text-sm font-semibold text-green-400">
-                              Deployment ready
-                            </p>
-
-                            <p className="mt-1 font-mono text-[10px] text-neutral-600">
-                              production / rivinity
-                            </p>
-
-                          </div>
-
-                        </div>
-
+                      <div className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 font-mono text-xs text-[#0f172a] mt-2">
+                        <span className="truncate">pip install rivinity</span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleCopyInstall("pip install rivinity", "pip")
+                          }
+                          className="text-gray-400 hover:text-gray-900 transition-colors cursor-pointer shrink-0"
+                          aria-label="Copy pip command"
+                        >
+                          {copiedInstall === "pip" ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
+                        </button>
                       </div>
-
-                      <div className="grid grid-cols-3 gap-3">
-
-                        {[
-                          "Build",
-                          "Deploy",
-                          "Scale",
-                        ].map((item) => (
-                          <div
-                            key={item}
-                            className="rounded-lg border border-white/10 bg-white/[0.03] p-3 text-center"
-                          >
-                            <p className="font-mono text-[10px] text-neutral-500">
-                              {item}
-                            </p>
-
-                            <p className="mt-2 text-xs text-green-400">
-                              Ready
-                            </p>
-
-                          </div>
-                        ))}
-
-                      </div>
-
                     </div>
-                  )}
 
+                    {/* Step 2: Environment Config */}
+                    <div className="bg-gray-50 border border-gray-200/90 rounded-2xl p-4">
+                      <div className="text-xs font-medium text-gray-500 mb-2">
+                        2. Configure API key
+                      </div>
+                      <div className="flex items-center justify-between gap-3 bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 font-mono text-xs text-[#0f172a]">
+                        <span className="truncate">
+                          export RIVINITY_API_KEY=&quot;riv_live_...&quot;
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleCopyInstall(
+                              'export RIVINITY_API_KEY="riv_live_..."',
+                              "key",
+                            )
+                          }
+                          className="text-gray-400 hover:text-gray-900 transition-colors cursor-pointer shrink-0"
+                          aria-label="Copy API key command"
+                        >
+                          {copiedInstall === "key" ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
+                <div className="mt-6 pt-5 border-t border-gray-100 flex items-center justify-between text-xs text-[#64748b]">
+                  <span>Get your API key in the dashboard</span>
+                  <Link
+                    href="/docs"
+                    className="font-semibold text-[#0f172a] hover:text-orange-600 flex items-center gap-1 transition-colors"
+                  >
+                    <span>API Docs</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
 
+              {/* Right Side: Tabbed Interactive Terminal Box */}
+              <div className="lg:col-span-7 flex flex-col bg-gray-50 border border-gray-200 rounded-3xl p-5 sm:p-7 shadow-sm relative overflow-hidden">
+                {/* Terminal Header Bar */}
+                <div className="flex flex-wrap items-center justify-between pb-4 mb-4 border-b border-gray-200/90 gap-3">
+                  <div className="flex items-center gap-3">
+                    {/* Window Dot Indicators */}
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-400/80 inline-block" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80 inline-block" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80 inline-block" />
+                    </div>
+                    <span className="text-xs font-mono text-gray-600 font-semibold">
+                      {CODE_SNIPPETS[activeLang].filename}
+                    </span>
+                  </div>
+
+                  {/* Language Tab Switcher */}
+                  <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1 text-xs font-mono">
+                    {(["python", "typescript", "curl", "go"] as CodeLang[]).map(
+                      (lang) => (
+                        <button
+                          key={lang}
+                          type="button"
+                          onClick={() => setActiveLang(lang)}
+                          className={`px-3 py-1 rounded-lg transition-all capitalize cursor-pointer ${
+                            activeLang === lang
+                              ? "bg-[#0f172a] text-white font-semibold shadow-xs"
+                              : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                          }`}
+                        >
+                          {lang === "curl" ? "cURL" : lang}
+                        </button>
+                      ),
+                    )}
+                  </div>
+                </div>
+
+                {/* Terminal Code Body */}
+                <div className="flex-1 bg-white border border-gray-200/80 rounded-2xl p-4 sm:p-5 font-mono text-xs text-gray-800 overflow-x-auto relative">
+                  <button
+                    type="button"
+                    onClick={handleCopyCode}
+                    className="absolute top-4 right-4 flex items-center gap-1.5 text-[11px] font-mono bg-gray-50 hover:bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-lg text-gray-700 transition-all cursor-pointer shadow-xs"
+                    aria-label="Copy code to clipboard"
+                  >
+                    {copiedCode ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-700 font-semibold">
+                          Copied
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+
+                  <pre className="text-xs leading-relaxed font-mono whitespace-pre overflow-x-auto text-[#0f172a]">
+                    <code>{CODE_SNIPPETS[activeLang].code}</code>
+                  </pre>
+                </div>
+
+                {/* Terminal Footer Metas */}
+                <div className="mt-4 flex items-center justify-between text-xs text-gray-500 px-1">
+                  <span className="flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-orange-500" />
+                    <span>Streaming enabled</span>
+                  </span>
+                  <span>Server-Sent Events &amp; WebSockets</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            SECTION 2: CORE API PRIMITIVES (ASYMMETRIC BENTO GRID)
+            ========================================================================= */}
+        <section id="primitives" className="section py-20 sm:py-28 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            {/* Section Header */}
+            {/* Section Header */}
+            <div className="max-w-3xl mb-12 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0f172a]">
+                Core API Primitives
+              </h2>
+              <p className="mt-4 text-base sm:text-lg text-[#64748b] leading-relaxed">
+                Reliable building blocks for streaming chat, structured data
+                extraction, and tool execution.
+              </p>
             </div>
 
+            {/* 3 Folder-Tab Cards (Glassmorphism & White Borders - Full Text) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+              {/* Card 1: Orange (001) */}
+              <div className="relative aspect-[4/4] sm:aspect-[4/3.8] rounded-[32px] border-[2.5px] border-white overflow-hidden flex flex-col justify-between bg-white/40 backdrop-blur-xl shadow-[0_15px_35px_-5px_rgba(249,115,22,0.14),0_8px_20px_-4px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.04)] hover:shadow-[0_25px_50px_-12px_rgba(249,115,22,0.25)] hover:-translate-y-1.5 transition-all duration-300 group">
+                {/* Atmospheric Glowing Mesh Background (Orange) */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#fff7ed] via-[#ffedd5]/60 to-[#fff7ed] pointer-events-none">
+                  <div className="absolute -top-12 -right-8 w-72 h-72 rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 blur-2xl opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700" />
+                  <div className="absolute top-4 left-4 w-52 h-52 rounded-full bg-amber-300 blur-xl opacity-70 group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute bottom-6 right-8 w-48 h-48 rounded-full bg-orange-400/40 blur-2xl" />
+                  {/* Subtle Glass Diagonal Sheen */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-transparent pointer-events-none" />
+                </div>
+
+                {/* Top Spacer - Compact */}
+                <div className="relative z-0 h-6 sm:h-8" />
+
+                {/* Folder Flap with Glassmorphism & White Contour */}
+                <div className="relative z-10 w-full mt-auto backdrop-blur-md">
+                  <svg
+                    viewBox="0 0 400 255"
+                    preserveAspectRatio="none"
+                    className="w-full h-auto block filter drop-shadow-[0_-4px_16px_rgba(255,255,255,0.4)]"
+                  >
+                    <defs>
+                      <linearGradient
+                        id="glass-orange-flap"
+                        x1="0%"
+                        y1="0%"
+                        x2="0%"
+                        y2="100%"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#FFFFFF"
+                          stopOpacity="0.84"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#FFFFFF"
+                          stopOpacity="0.68"
+                        />
+                      </linearGradient>
+                    </defs>
+                    {/* Flap Fill (Frosted Glass Translucent) */}
+                    <path
+                      d="M -2, 0 L 205, 0 Q 220,0 228,14 L 238, 30 Q 246,42 262,42 L 402, 42 L 402, 260 L -2, 260 Z"
+                      fill="url(#glass-orange-flap)"
+                    />
+                    {/* Top Stepped Contour Stroke (Pure White Glass Rim) */}
+                    <path
+                      d="M -2, 0 L 205, 0 Q 220,0 228,14 L 238, 30 Q 246,42 262,42 L 402, 42"
+                      fill="none"
+                      stroke="#FFFFFF"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+
+                  {/* Flap Content */}
+                  <div className="absolute inset-0 px-6 sm:px-7 pb-6 sm:pb-7 pt-2.5 sm:pt-3 flex flex-col justify-between">
+                    {/* Top Tab Info */}
+                    <div className="max-w-[50%]">
+                      <div className="font-mono text-[11px] sm:text-xs font-bold text-[#0f172a] tracking-wider">
+                        TOKEN-STREAMING
+                      </div>
+                      <div className="font-mono text-[9px] sm:text-[10px] font-medium text-[#64748b] tracking-tight mt-0.5">
+                        SSE, WEBSOCKETS, TTFT
+                      </div>
+                    </div>
+
+                    {/* Middle Description - Full text without truncation */}
+                    <p className="text-xs sm:text-[13px] text-[#334155] leading-relaxed mt-2 sm:mt-2.5">
+                      Stream completions instantly with Server-Sent Events and
+                      bi-directional WebSockets. Minimize latency and keep
+                      conversational interfaces responsive.
+                    </p>
+
+                    {/* Bottom Row */}
+                    <div className="flex items-end justify-between pt-2">
+                      <span className="font-mono text-3xl sm:text-4xl font-black text-[#0f172a] tracking-tight">
+                        001
+                      </span>
+                      <span className="font-mono text-xs font-bold text-[#64748b] tracking-wider">
+                        &lt; 20MS TTFT
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Purple (002) */}
+              <div className="relative aspect-[4/4] sm:aspect-[4/3.8] rounded-[32px] border-[2.5px] border-white overflow-hidden flex flex-col justify-between bg-white/40 backdrop-blur-xl shadow-[0_15px_35px_-5px_rgba(168,85,247,0.14),0_8px_20px_-4px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.04)] hover:shadow-[0_25px_50px_-12px_rgba(168,85,247,0.25)] hover:-translate-y-1.5 transition-all duration-300 group">
+                {/* Atmospheric Glowing Mesh Background (Purple) */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#faf5ff] via-[#f3e8ff]/60 to-[#faf5ff] pointer-events-none">
+                  <div className="absolute -top-12 -right-8 w-72 h-72 rounded-full bg-gradient-to-br from-purple-500 via-violet-600 to-indigo-600 blur-2xl opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700" />
+                  <div className="absolute top-4 left-4 w-52 h-52 rounded-full bg-violet-300 blur-xl opacity-70 group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute bottom-6 right-8 w-48 h-48 rounded-full bg-purple-400/40 blur-2xl" />
+                  {/* Subtle Glass Diagonal Sheen */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-transparent pointer-events-none" />
+                </div>
+
+                {/* Top Spacer - Compact */}
+                <div className="relative z-0 h-6 sm:h-8" />
+
+                {/* Folder Flap with Glassmorphism & White Contour */}
+                <div className="relative z-10 w-full mt-auto backdrop-blur-md">
+                  <svg
+                    viewBox="0 0 400 255"
+                    preserveAspectRatio="none"
+                    className="w-full h-auto block filter drop-shadow-[0_-4px_16px_rgba(255,255,255,0.4)]"
+                  >
+                    <defs>
+                      <linearGradient
+                        id="glass-purple-flap"
+                        x1="0%"
+                        y1="0%"
+                        x2="0%"
+                        y2="100%"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#FFFFFF"
+                          stopOpacity="0.84"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#FFFFFF"
+                          stopOpacity="0.68"
+                        />
+                      </linearGradient>
+                    </defs>
+                    {/* Flap Fill (Frosted Glass Translucent) */}
+                    <path
+                      d="M -2, 0 L 205, 0 Q 220,0 228,14 L 238, 30 Q 246,42 262,42 L 402, 42 L 402, 260 L -2, 260 Z"
+                      fill="url(#glass-purple-flap)"
+                    />
+                    {/* Top Stepped Contour Stroke (Pure White Glass Rim) */}
+                    <path
+                      d="M -2, 0 L 205, 0 Q 220,0 228,14 L 238, 30 Q 246,42 262,42 L 402, 42"
+                      fill="none"
+                      stroke="#FFFFFF"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+
+                  {/* Flap Content */}
+                  <div className="absolute inset-0 px-6 sm:px-7 pb-6 sm:pb-7 pt-2.5 sm:pt-3 flex flex-col justify-between">
+                    {/* Top Tab Info */}
+                    <div className="max-w-[50%]">
+                      <div className="font-mono text-[11px] sm:text-xs font-bold text-[#0f172a] tracking-wider">
+                        CONTEXT-GRAPH
+                      </div>
+                      <div className="font-mono text-[9px] sm:text-[10px] font-medium text-[#64748b] tracking-tight mt-0.5">
+                        HYBRID SEARCH, VECTOR RAG
+                      </div>
+                    </div>
+
+                    {/* Middle Description - Full text without truncation */}
+                    <p className="text-xs sm:text-[13px] text-[#334155] leading-relaxed mt-2 sm:mt-2.5">
+                      Connect vector databases and knowledge bases with dense
+                      embeddings, BM25 hybrid search, and semantic caching for
+                      dynamic prompt context.
+                    </p>
+
+                    {/* Bottom Row */}
+                    <div className="flex items-end justify-between pt-2">
+                      <span className="font-mono text-3xl sm:text-4xl font-black text-[#0f172a] tracking-tight">
+                        002
+                      </span>
+                      <span className="font-mono text-xs font-bold text-[#64748b] tracking-wider">
+                        HYBRID RAG
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Pink (003) */}
+              <div className="relative aspect-[4/4] sm:aspect-[4/3.8] rounded-[32px] border-[2.5px] border-white overflow-hidden flex flex-col justify-between bg-white/40 backdrop-blur-xl shadow-[0_15px_35px_-5px_rgba(244,63,94,0.14),0_8px_20px_-4px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.04)] hover:shadow-[0_25px_50px_-12px_rgba(244,63,94,0.25)] hover:-translate-y-1.5 transition-all duration-300 group">
+                {/* Atmospheric Glowing Mesh Background (Pink) */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#fdf2f8] via-[#fce7f3]/60 to-[#fdf2f8] pointer-events-none">
+                  <div className="absolute -top-12 -right-8 w-72 h-72 rounded-full bg-gradient-to-br from-pink-500 via-rose-500 to-fuchsia-600 blur-2xl opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-700" />
+                  <div className="absolute top-4 left-4 w-52 h-52 rounded-full bg-rose-300 blur-xl opacity-70 group-hover:scale-105 transition-transform duration-700" />
+                  <div className="absolute bottom-6 right-8 w-48 h-48 rounded-full bg-pink-400/40 blur-2xl" />
+                  {/* Subtle Glass Diagonal Sheen */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-transparent pointer-events-none" />
+                </div>
+
+                {/* Top Spacer - Compact */}
+                <div className="relative z-0 h-6 sm:h-8" />
+
+                {/* Folder Flap with Glassmorphism & White Contour */}
+                <div className="relative z-10 w-full mt-auto backdrop-blur-md">
+                  <svg
+                    viewBox="0 0 400 255"
+                    preserveAspectRatio="none"
+                    className="w-full h-auto block filter drop-shadow-[0_-4px_16px_rgba(255,255,255,0.4)]"
+                  >
+                    <defs>
+                      <linearGradient
+                        id="glass-pink-flap"
+                        x1="0%"
+                        y1="0%"
+                        x2="0%"
+                        y2="100%"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#FFFFFF"
+                          stopOpacity="0.84"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#FFFFFF"
+                          stopOpacity="0.68"
+                        />
+                      </linearGradient>
+                    </defs>
+                    {/* Flap Fill (Frosted Glass Translucent) */}
+                    <path
+                      d="M -2, 0 L 205, 0 Q 220,0 228,14 L 238, 30 Q 246,42 262,42 L 402, 42 L 402, 260 L -2, 260 Z"
+                      fill="url(#glass-pink-flap)"
+                    />
+                    {/* Top Stepped Contour Stroke (Pure White Glass Rim) */}
+                    <path
+                      d="M -2, 0 L 205, 0 Q 220,0 228,14 L 238, 30 Q 246,42 262,42 L 402, 42"
+                      fill="none"
+                      stroke="#FFFFFF"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+
+                  {/* Flap Content */}
+                  <div className="absolute inset-0 px-6 sm:px-7 pb-6 sm:pb-7 pt-2.5 sm:pt-3 flex flex-col justify-between">
+                    {/* Top Tab Info */}
+                    <div className="max-w-[50%]">
+                      <div className="font-mono text-[11px] sm:text-xs font-bold text-[#0f172a] tracking-wider">
+                        SCHEMA-VALIDATOR
+                      </div>
+                      <div className="font-mono text-[9px] sm:text-[10px] font-medium text-[#64748b] tracking-tight mt-0.5">
+                        PYDANTIC V2, STRICT JSON
+                      </div>
+                    </div>
+
+                    {/* Middle Description - Full text without truncation */}
+                    <p className="text-xs sm:text-[13px] text-[#334155] leading-relaxed mt-2 sm:mt-2.5">
+                      Enforce strict JSON schemas using TypeScript types or
+                      Pydantic models. Reliably extract structured outputs and
+                      trigger tools with zero formatting errors.
+                    </p>
+
+                    {/* Bottom Row */}
+                    <div className="flex items-end justify-between pt-2">
+                      <span className="font-mono text-3xl sm:text-4xl font-black text-[#0f172a] tracking-tight">
+                        003
+                      </span>
+                      <span className="font-mono text-xs font-bold text-[#64748b] tracking-wider">
+                        100% STRICT
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+        </section>
 
-        </motion.div>
+        {/* =========================================================================
+            SECTION 3: OFFICIAL SDKS & FRAMEWORK INTEGRATIONS
+            ========================================================================= */}
+        <section id="sdks" className="section py-20 sm:py-28 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            {/* Header */}
+            <div className="max-w-3xl mb-12 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0f172a]">
+                Official SDKs
+              </h2>
+              <p className="mt-4 text-base sm:text-lg text-[#64748b] leading-relaxed">
+                Clean, fully typed libraries for your preferred languages and
+                runtimes.
+              </p>
+            </div>
 
-      </AnimatePresence>
+            {/* 4-Card Grid Content */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-7">
+              {/* Box 1 (Purple Theme): Python */}
+              <div className="group bg-white rounded-3xl sm:rounded-[32px] border border-gray-200/90 p-7 sm:p-8 shadow-sm hover:shadow-xl hover:border-purple-200 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between min-h-[320px]">
+                <div>
+                  {/* Icon & Heading Row */}
+                  <div className="flex items-center gap-7 mb-5">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center relative overflow-hidden shrink-0">
+                      <div className="absolute -left-1 -bottom-1 w-6 h-6 rounded-full bg-purple-600" />
+                      <div className="absolute right-1 top-1 w-4 h-4 rounded-full bg-purple-300" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[#0f172a] tracking-tight">
+                      Python
+                    </h3>
+                  </div>
 
-    </div>
+                  <p className="text-sm text-[#64748b] leading-relaxed">
+                    Native async client with streaming support, Pydantic type
+                    validation, and LangChain &amp; LlamaIndex integrations.
+                  </p>
+                </div>
 
-    {/* =====================================================
-        CONTROLS
-    ====================================================== */}
-    <div className="mt-6 flex items-center justify-between">
+                {/* Nested bg-gray-50 rounded block */}
+                <div className="mt-6 pt-3">
+                  <div className="bg-gray-50 border border-gray-200/80 rounded-xl px-3 py-2 font-mono text-xs text-[#0f172a] flex items-center justify-between">
+                    <span className="text-purple-700 font-semibold">$</span>
+                    <span className="truncate flex-1 ml-2">
+                      pip install rivinity
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-      <div className="flex items-center gap-2">
+              {/* Box 2 (Pink Theme): TypeScript & Next.js */}
+              <div className="group bg-white rounded-3xl sm:rounded-[32px] border border-gray-200/90 p-7 sm:p-8 shadow-sm hover:shadow-xl hover:border-pink-200 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between min-h-[320px]">
+                <div>
+                  {/* Icon & Heading Row */}
+                  <div className="flex items-center gap-7 mb-5">
+                    <div className="w-12 h-12 rounded-2xl bg-pink-50 border border-pink-100 flex items-center justify-center relative overflow-hidden shrink-0">
+                      <div className="w-5 h-5 rounded-full border-2 border-pink-500 absolute -top-0.5 -left-0.5" />
+                      <div className="w-5 h-5 rounded-full border-2 border-pink-400 absolute -bottom-0.5 -right-0.5" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[#0f172a] tracking-tight">
+                      TypeScript
+                    </h3>
+                  </div>
 
-        {WORKFLOW.map((item, index) => (
-          <button
-            key={item.number}
-            onClick={() => setActiveWorkflow(index)}
-            aria-label={`Go to ${item.title}`}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              activeWorkflow === index
-                ? "w-8 bg-orange-500"
-                : "w-1.5 bg-neutral-300 hover:bg-neutral-400"
-            }`}
-          />
-        ))}
+                  <p className="text-sm text-[#64748b] leading-relaxed">
+                    First-class TypeScript typings and zero dependencies. Works
+                    seamlessly in Node.js, Next.js, and edge workers.
+                  </p>
+                </div>
 
-      </div>
+                <div className="mt-6 pt-3">
+                  <div className="bg-gray-50 border border-gray-200/80 rounded-xl px-3 py-2 font-mono text-xs text-[#0f172a] flex items-center justify-between">
+                    <span className="text-pink-600 font-semibold">$</span>
+                    <span className="truncate flex-1 ml-2">
+                      npm i @rivinity/sdk
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-      <div className="flex items-center gap-2">
+              {/* Box 3 (Orange Theme): Go */}
+              <div className="group bg-white rounded-3xl sm:rounded-[32px] border border-gray-200/90 p-7 sm:p-8 shadow-sm hover:shadow-xl hover:border-orange-200 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between min-h-[320px]">
+                <div>
+                  {/* Icon & Heading Row */}
+                  <div className="flex items-center gap-7 mb-5">
+                    <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center relative overflow-hidden shrink-0">
+                      <div className="w-7 h-7 bg-[#FF6B00] rounded-tl-full absolute bottom-0 right-0" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[#0f172a] tracking-tight">
+                      Go
+                    </h3>
+                  </div>
 
-        <button
-          onClick={() =>
-            setActiveWorkflow(
-              activeWorkflow === 0
-                ? WORKFLOW.length - 1
-                : activeWorkflow - 1
-            )
-          }
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500 transition hover:border-neutral-300 hover:text-neutral-950"
-        >
-          ←
-        </button>
+                  <p className="text-sm text-[#64748b] leading-relaxed">
+                    High-performance client for Go backends with context
+                    propagation, streaming support, and connection reuse.
+                  </p>
+                </div>
 
-        <button
-          onClick={() =>
-            setActiveWorkflow(
-              activeWorkflow === WORKFLOW.length - 1
-                ? 0
-                : activeWorkflow + 1
-            )
-          }
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500 transition hover:border-neutral-300 hover:text-neutral-950"
-        >
-          →
-        </button>
+                <div className="mt-6 pt-3">
+                  <div className="bg-gray-50 border border-gray-200/80 rounded-xl px-3 py-2 font-mono text-xs text-[#0f172a] flex items-center justify-between">
+                    <span className="text-orange-600 font-semibold">$</span>
+                    <span className="truncate flex-1 ml-2">
+                      go get github.com/rivinity/rivinity-go
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-      </div>
+              {/* Box 4 (Blue/Slate Theme): CLI */}
+              <div className="group bg-white rounded-3xl sm:rounded-[32px] border border-gray-200/90 p-7 sm:p-8 shadow-sm hover:shadow-xl hover:border-blue-200 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between min-h-[320px]">
+                <div>
+                  {/* Icon & Heading Row */}
+                  <div className="flex items-center gap-7 mb-5">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center relative overflow-hidden shrink-0">
+                      <div className="w-6 h-6 bg-blue-600 rotate-45 rounded-sm" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[#0f172a] tracking-tight">
+                      Rivinity CLI
+                    </h3>
+                  </div>
 
-    </div>
+                  <p className="text-sm text-[#64748b] leading-relaxed">
+                    Run test completions, monitor token consumption, and manage
+                    project keys directly from the command line.
+                  </p>
+                </div>
 
-  </div>
-</section>
+                <div className="mt-6 pt-3">
+                  <div className="bg-gray-50 border border-gray-200/80 rounded-xl px-3 py-2 font-mono text-xs text-[#0f172a] flex items-center justify-between">
+                    <span className="text-blue-600 font-semibold">$</span>
+                    <span className="truncate flex-1 ml-2">
+                      brew install rivinity/cli
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    {/* =========================================================
-    FEATURES
-========================================================= */}
-<section className="relative overflow-hidden border-b border-neutral-200 bg-neutral-50">
-  <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+        {/* =========================================================================
+            SECTION 4: TELEMETRY, OBSERVABILITY & RATE LIMITS
+            ========================================================================= */}
+        <section id="telemetry" className="section py-20 sm:py-28 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            {/* Section Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
+              <div className="max-w-3xl">
+                <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0f172a]">
+                  Performance &amp; Observability
+                </h2>
+                <p className="mt-4 text-base sm:text-lg text-[#64748b] leading-relaxed">
+                  Transparent latency benchmarks, rate limit tiers, and
+                  distributed tracing support.
+                </p>
+              </div>
+            </div>
 
-    {/* =====================================================
-        HEADER
-    ====================================================== */}
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="max-w-3xl"
-    >
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-500">
-        Built for developers
-      </p>
+            {/* Pure White Comparison Table with Hairline Borders */}
+            <div className="border border-gray-200 rounded-2xl overflow-hidden shadow-xs bg-white">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-50/90 border-b border-gray-200 text-xs text-gray-600 uppercase tracking-wider">
+                      <th scope="col" className="py-4 px-6 font-semibold">
+                        Capability / Metric
+                      </th>
+                      <th scope="col" className="py-4 px-6 font-semibold">
+                        Specifications
+                      </th>
+                      <th scope="col" className="py-4 px-6 font-semibold">
+                        Integrations
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-4 px-6 font-semibold text-right"
+                      >
+                        SLA
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 text-sm">
+                    {/* Row 1: Inference Latency */}
+                    <tr className="hover:bg-gray-50/60 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="font-bold text-[#0f172a]">
+                          Inference Latency
+                        </div>
+                        <div className="text-xs text-[#64748b]">
+                          Time to First Token (TTFT)
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 font-mono text-xs text-[#0f172a]">
+                        <span className="text-emerald-700 font-semibold">
+                          p50: 12ms
+                        </span>{" "}
+                        · p95: 28ms · p99: 44ms
+                      </td>
+                      <td className="py-4 px-6 text-xs text-[#64748b]">
+                        Optimized for SSE &amp; HTTP/2 Streaming
+                      </td>
+                      <td className="py-4 px-6 text-right">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          Sub-20ms TTFT
+                        </span>
+                      </td>
+                    </tr>
 
-      <h2 className="mt-4 text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl">
-        Less infrastructure.
-        <br />
-        <span className="text-neutral-400">
-          More building.
-        </span>
-      </h2>
+                    {/* Row 2: Rate Limiting */}
+                    <tr className="hover:bg-gray-50/60 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="font-bold text-[#0f172a]">
+                          Rate Limits
+                        </div>
+                        <div className="text-xs text-[#64748b]">
+                          Request &amp; token throughput
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-xs text-[#475569]">
+                        Free: 60 RPM · Pro: 1,000 RPM · Enterprise: Custom
+                        quotas
+                      </td>
+                      <td className="py-4 px-6 text-xs text-[#64748b]">
+                        Automated concurrency management
+                      </td>
+                      <td className="py-4 px-6 text-right">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-orange-700 bg-orange-50 border border-orange-200 px-2.5 py-0.5 rounded-full">
+                          No cold starts
+                        </span>
+                      </td>
+                    </tr>
 
-      <p className="mt-5 max-w-2xl text-lg leading-8 text-neutral-600">
-        Focus on your product while Rivinity handles the complexity
-        underneath. Everything you need to build intelligent software,
-        without unnecessary infrastructure.
-      </p>
-    </motion.div>
+                    {/* Row 3: OpenTelemetry Tracing */}
+                    <tr className="hover:bg-gray-50/60 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="font-bold text-[#0f172a]">
+                          Observability
+                        </div>
+                        <div className="text-xs text-[#64748b]">
+                          Distributed traces &amp; metrics
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-xs text-[#475569]">
+                        OpenTelemetry (OTLP) exporters for traces, token counts,
+                        and tool calls
+                      </td>
+                      <td className="py-4 px-6 text-xs text-[#64748b]">
+                        Datadog · Langfuse · Arize Phoenix · New Relic
+                      </td>
+                      <td className="py-4 px-6 text-right">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-0.5 rounded-full">
+                          OpenTelemetry
+                        </span>
+                      </td>
+                    </tr>
 
-    {/* =====================================================
-        FEATURE AREA
-    ====================================================== */}
-    <div className="mt-14 grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
+                    {/* Row 4: Failover & Regions */}
+                    <tr className="hover:bg-gray-50/60 transition-colors">
+                      <td className="py-4 px-6">
+                        <div className="font-bold text-[#0f172a]">
+                          Global Availability
+                        </div>
+                        <div className="text-xs text-[#64748b]">
+                          Edge network &amp; multi-region failover
+                        </div>
+                      </td>
+                      <td className="py-4 px-6 text-xs text-[#475569]">
+                        Multi-region clusters with sub-second automated failover
+                      </td>
+                      <td className="py-4 px-6 text-xs text-[#64748b]">
+                        US-East · US-West · EU-Central · AP-South
+                      </td>
+                      <td className="py-4 px-6 text-right">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          99.99% Uptime
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
 
-      {/* ===================================================
-          LEFT STATEMENT
-      ==================================================== */}
-      <motion.div
-        initial={{ opacity: 0, x: -25 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 p-8"
-      >
+        {/* =========================================================================
+            SECTION 5: COOKBOOKS, CODE RECIPES & CHANGELOG FEED
+            ========================================================================= */}
+        <section id="cookbooks" className="section py-20 sm:py-28 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            {/* Section Header */}
+            <div className="max-w-3xl mb-12 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0f172a]">
+                Cookbooks &amp; Code Recipes
+              </h2>
+              <p className="mt-4 text-base sm:text-lg text-[#64748b] leading-relaxed">
+                Production-ready starter templates and multi-agent examples from our open-source repository.
+              </p>
+            </div>
 
-        {/* Orange glow */}
-        <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-orange-500/10 blur-3xl" />
+            {/* 3-Card Grid for Cookbooks */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+              {/* Recipe 1 */}
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col justify-between bg-white border border-slate-200/90 rounded-3xl p-7 sm:p-8 hover:border-purple-300 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 shadow-xs"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-3 mb-5">
+                    <span className="text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200/70 px-3 py-1 rounded-full">
+                      Agent Workflows
+                    </span>
+                    <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-purple-600 group-hover:border-purple-300 group-hover:bg-purple-50/50 transition-all shrink-0">
+                      <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </div>
+                  </div>
 
-        {/* Small grid */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-          }}
+                  <h3 className="text-lg sm:text-xl font-bold text-[#0f172a] group-hover:text-purple-600 transition-colors tracking-tight">
+                    Autonomous Support Agent with Tool Calling
+                  </h3>
+                  <p className="mt-2.5 text-sm text-[#64748b] leading-relaxed">
+                    Human-in-the-loop approvals, ticket database queries, and automatic conversational escalation.
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-[#94a3b8] font-mono">
+                  <span>Python · LangChain</span>
+                  <span className="text-purple-600 font-sans font-semibold group-hover:underline">
+                    View Recipe →
+                  </span>
+                </div>
+              </a>
+
+              {/* Recipe 2 */}
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col justify-between bg-white border border-slate-200/90 rounded-3xl p-7 sm:p-8 hover:border-orange-300 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 shadow-xs"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-3 mb-5">
+                    <span className="text-xs font-semibold text-orange-700 bg-orange-50 border border-orange-200/70 px-3 py-1 rounded-full">
+                      Structured Outputs
+                    </span>
+                    <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-orange-600 group-hover:border-orange-300 group-hover:bg-orange-50/50 transition-all shrink-0">
+                      <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </div>
+                  </div>
+
+                  <h3 className="text-lg sm:text-xl font-bold text-[#0f172a] group-hover:text-orange-600 transition-colors tracking-tight">
+                    Invoice &amp; Document Schema Extraction
+                  </h3>
+                  <p className="mt-2.5 text-sm text-[#64748b] leading-relaxed">
+                    Extract clean structured JSON from PDFs and tables with strict schema validation.
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-[#94a3b8] font-mono">
+                  <span>TypeScript · Zod</span>
+                  <span className="text-orange-600 font-sans font-semibold group-hover:underline">
+                    View Recipe →
+                  </span>
+                </div>
+              </a>
+
+              {/* Recipe 3 */}
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col justify-between bg-white border border-slate-200/90 rounded-3xl p-7 sm:p-8 hover:border-pink-300 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 shadow-xs"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-3 mb-5">
+                    <span className="text-xs font-semibold text-pink-700 bg-pink-50 border border-pink-200/70 px-3 py-1 rounded-full">
+                      Hybrid Search
+                    </span>
+                    <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center text-slate-400 group-hover:text-pink-600 group-hover:border-pink-300 group-hover:bg-pink-50/50 transition-all shrink-0">
+                      <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </div>
+                  </div>
+
+                  <h3 className="text-lg sm:text-xl font-bold text-[#0f172a] group-hover:text-pink-600 transition-colors tracking-tight">
+                    Multi-Modal Vector RAG Pipeline
+                  </h3>
+                  <p className="mt-2.5 text-sm text-[#64748b] leading-relaxed">
+                    Dense neural embeddings combined with BM25 keyword search and cross-encoder reranking.
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-[#94a3b8] font-mono">
+                  <span>Python · Vector RAG</span>
+                  <span className="text-pink-600 font-sans font-semibold group-hover:underline">
+                    View Recipe →
+                  </span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Unified FAQ Section */}
+        <FaqSection
+          title="Frequently Asked Questions"
+          subtitle="Everything you need to know about building with Rivinity APIs and SDKs."
+          items={[
+            {
+              question: "How fast is Rivinity's response streaming?",
+              answer:
+                "Our global edge network delivers streaming completions with a median time-to-first-token of 12ms and p95 under 30ms, keeping interactive applications fast and responsive.",
+            },
+            {
+              question: "Is Rivinity compatible with existing OpenAI SDK code?",
+              answer:
+                "Yes. Rivinity supports standard OpenAI client libraries. You can use your existing client by updating the baseURL to https://api.rivinity.ai/v1 and adding your Rivinity API key.",
+            },
+            {
+              question: "How does structured JSON output work?",
+              answer:
+                "We enforce schema constraints during token generation. The model is guaranteed to return valid JSON matching your TypeScript interface or Pydantic model without formatting errors.",
+            },
+            {
+              question: "Can I export traces to Datadog or Langfuse?",
+              answer:
+                "Yes. Rivinity exports standard OpenTelemetry (OTLP) traces including latency, token usage, and tool executions directly to Datadog, Langfuse, and other observability platforms.",
+            },
+            {
+              question: "What rate limits are available for production?",
+              answer:
+                "Free accounts start with 60 requests per minute. Pro and Enterprise plans provide higher throughput, concurrency pooling, and dedicated infrastructure.",
+            },
+          ]}
         />
 
-        <div className="relative flex h-full flex-col">
-
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-orange-400">
-            Rivinity platform
-          </span>
-
-          <div className="mt-auto pt-20">
-
-            <h3 className="text-2xl font-semibold leading-tight text-white">
-              Everything your
-              <br />
-              application needs.
-            </h3>
-
-            <p className="mt-4 max-w-sm text-sm leading-7 text-neutral-400">
-              Connect intelligence, infrastructure, security, and
-              developer tooling through one platform.
-            </p>
-
-            <div className="mt-8 flex items-center gap-3">
-
-              <div className="flex -space-x-1">
-                <span className="h-6 w-6 rounded-full border-2 border-neutral-950 bg-orange-500" />
-                <span className="h-6 w-6 rounded-full border-2 border-neutral-950 bg-orange-400" />
-                <span className="h-6 w-6 rounded-full border-2 border-neutral-950 bg-orange-300" />
-              </div>
-
-              <span className="font-mono text-[10px] text-neutral-500">
-                ONE DEVELOPER PLATFORM
-              </span>
-
-            </div>
-
-          </div>
-        </div>
-      </motion.div>
-
-      {/* ===================================================
-          FEATURE LIST
-      ==================================================== */}
-      <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-
-        <div className="border-b border-neutral-200 px-6 py-5">
-          <div className="flex items-center justify-between">
-
-            <div>
-              <p className="text-sm font-semibold text-neutral-950">
-                Platform capabilities
-              </p>
-
-              <p className="mt-1 text-xs text-neutral-500">
-                Designed around modern development workflows.
-              </p>
-            </div>
-
-            <span className="font-mono text-[10px] text-neutral-400">
-              {FEATURES.length.toString().padStart(2, "0")} ITEMS
-            </span>
-
-          </div>
-        </div>
-
-        <div className="divide-y divide-neutral-200">
-
-          {FEATURES.map((feature, index) => (
-            <motion.div
-              key={feature}
-              initial={{
-                opacity: 0,
-                x: 20,
-              }}
-              whileInView={{
-                opacity: 1,
-                x: 0,
-              }}
-              viewport={{
-                once: true,
-                amount: 0.2,
-              }}
-              transition={{
-                duration: 0.45,
-                delay: index * 0.07,
-              }}
-              className="group relative flex items-center gap-4 px-6 py-5 transition hover:bg-neutral-50"
-            >
-
-              {/* Hover indicator */}
-              <div className="absolute left-0 top-0 h-full w-0.5 origin-bottom scale-y-0 bg-orange-500 transition-transform duration-300 group-hover:scale-y-100" />
-
-              {/* Number */}
-              <span className="w-6 shrink-0 font-mono text-[10px] text-neutral-400 transition-colors group-hover:text-orange-500">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-
-              {/* Check */}
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-50">
-                <Check className="h-4 w-4 text-orange-500" />
-              </div>
-
-              {/* Text */}
-              <span className="flex-1 text-sm font-medium text-neutral-800 transition-transform duration-300 group-hover:translate-x-1">
-                {feature}
-              </span>
-
-              {/* Arrow */}
-              <ArrowRight className="h-4 w-4 text-neutral-300 transition-all duration-300 group-hover:translate-x-1 group-hover:text-orange-500" />
-
-            </motion.div>
-          ))}
-
-        </div>
-
-      </div>
-
-    </div>
-
-    {/* =====================================================
-        BOTTOM STRIP
-    ====================================================== */}
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-      className="mt-5 grid overflow-hidden rounded-2xl border border-neutral-200 bg-white sm:grid-cols-3"
-    >
-
-      <div className="border-b border-neutral-200 px-6 py-5 sm:border-b-0 sm:border-r">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-          Build
-        </p>
-
-        <p className="mt-2 text-sm font-semibold text-neutral-900">
-          Start with a simple API
-        </p>
-      </div>
-
-      <div className="border-b border-neutral-200 px-6 py-5 sm:border-b-0 sm:border-r">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-          Connect
-        </p>
-
-        <p className="mt-2 text-sm font-semibold text-neutral-900">
-          Add intelligence to your stack
-        </p>
-      </div>
-
-      <div className="px-6 py-5">
-        <p className="font-mono text-[10px] uppercase tracking-widest text-neutral-400">
-          Scale
-        </p>
-
-        <p className="mt-2 text-sm font-semibold text-neutral-900">
-          Move to production confidently
-        </p>
-      </div>
-
-    </motion.div>
-
-  </div>
-</section>
-     {/* =========================================================
-    SECURITY / PRODUCTION READY
-========================================================= */}
-<section className="relative overflow-hidden border-b border-neutral-200 bg-neutral-50">
-  <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
-
-    <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.15fr] lg:gap-20">
-
-      {/* =====================================================
-          LEFT — CONTENT
-      ====================================================== */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-500">
-          Production ready
-        </p>
-
-        <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl lg:text-5xl">
-          Build confidently.
-          <br />
-          <span className="text-neutral-400">
-            Ship securely.
-          </span>
-        </h2>
-
-        <p className="mt-6 max-w-xl text-lg leading-8 text-neutral-600">
-          Rivinity provides the security, reliability, and infrastructure
-          foundations your applications need to move from prototype to
-          production.
-        </p>
-
-        {/* Security points */}
-        <div className="mt-8 space-y-4">
-
-          {[
-            "Secure authentication and access controls",
-            "Production-ready infrastructure",
-            "Reliable systems built to scale",
-            "Designed for modern developer workflows",
-          ].map((item, index) => (
-            <motion.div
-              key={item}
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                duration: 0.4,
-                delay: index * 0.07,
-              }}
-              className="flex items-center gap-3"
-            >
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100">
-                <Check className="h-3.5 w-3.5 text-orange-500" />
-              </div>
-
-              <span className="text-sm font-medium text-neutral-800">
-                {item}
-              </span>
-            </motion.div>
-          ))}
-
-        </div>
-
-        <Link
-          href="/security"
-          className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-orange-500 transition hover:text-orange-600"
-        >
-          Explore security
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </Link>
-      </motion.div>
-
-      {/* =====================================================
-          RIGHT — INFRASTRUCTURE VISUAL
-      ====================================================== */}
-      <motion.div
-        initial={{ opacity: 0, x: 30 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
-        className="relative mx-auto w-full max-w-2xl"
-      >
-
-        {/* Glow */}
-        <div className="pointer-events-none absolute -inset-10 rounded-full bg-orange-500/5 blur-3xl" />
-
-        <div className="relative overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-xl">
-
-          {/* =================================================
-              HEADER
-          ================================================== */}
-          <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
-
-            <div className="flex items-center gap-3">
-
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50">
-                <Lock className="h-4 w-4 text-orange-500" />
-              </div>
-
-              <div>
-                <p className="text-sm font-semibold text-neutral-900">
-                  Rivinity infrastructure
-                </p>
-
-                <p className="font-mono text-[10px] text-neutral-400">
-                  production environment
-                </p>
-              </div>
-
-            </div>
-
-            <div className="flex items-center gap-2 rounded-full bg-green-50 px-3 py-1.5">
-
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-
-              <span className="font-mono text-[10px] font-medium text-green-600">
-                OPERATIONAL
-              </span>
-
-            </div>
-
-          </div>
-
-          {/* =================================================
-              SECURITY LAYERS
-          ================================================== */}
-          <div className="p-6 sm:p-8">
-
-            <div className="space-y-3">
-
-              {/* Authentication */}
-              <motion.div
-                whileHover={{ x: 4 }}
-                className="group flex items-center gap-4 rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition hover:border-orange-200 hover:bg-orange-50/40"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
-                  <Lock className="h-4 w-4 text-orange-500" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-3">
-
-                    <p className="text-sm font-semibold text-neutral-900">
-                      Authentication
-                    </p>
-
-                    <span className="font-mono text-[10px] text-green-600">
-                      ENABLED
-                    </span>
-
-                  </div>
-
-                  <p className="mt-1 text-xs text-neutral-500">
-                    Identity and access controls
-                  </p>
-                </div>
-              </motion.div>
-
-              {/* Infrastructure */}
-              <motion.div
-                whileHover={{ x: 4 }}
-                className="group flex items-center gap-4 rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition hover:border-orange-200 hover:bg-orange-50/40"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
-                  <Cloud className="h-4 w-4 text-orange-500" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-
-                  <div className="flex items-center justify-between gap-3">
-
-                    <p className="text-sm font-semibold text-neutral-900">
-                      Infrastructure
-                    </p>
-
-                    <span className="font-mono text-[10px] text-green-600">
-                      HEALTHY
-                    </span>
-
-                  </div>
-
-                  <p className="mt-1 text-xs text-neutral-500">
-                    Reliable production workloads
-                  </p>
-
-                </div>
-              </motion.div>
-
-              {/* Monitoring */}
-              <motion.div
-                whileHover={{ x: 4 }}
-                className="group flex items-center gap-4 rounded-xl border border-neutral-200 bg-neutral-50 p-4 transition hover:border-orange-200 hover:bg-orange-50/40"
-              >
-
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-sm">
-
-                  <div className="flex items-end gap-0.5">
-                    <span className="h-2 w-1 rounded-sm bg-orange-300" />
-                    <span className="h-4 w-1 rounded-sm bg-orange-400" />
-                    <span className="h-6 w-1 rounded-sm bg-orange-500" />
-                  </div>
-
-                </div>
-
-                <div className="min-w-0 flex-1">
-
-                  <div className="flex items-center justify-between gap-3">
-
-                    <p className="text-sm font-semibold text-neutral-900">
-                      Observability
-                    </p>
-
-                    <span className="font-mono text-[10px] text-green-600">
-                      MONITORING
-                    </span>
-
-                  </div>
-
-                  <p className="mt-1 text-xs text-neutral-500">
-                    Visibility across your workloads
-                  </p>
-
-                </div>
-
-              </motion.div>
-
-            </div>
-
-            {/* =================================================
-                STATUS FOOTER
-            ================================================== */}
-            <div className="mt-5 grid grid-cols-3 divide-x divide-neutral-200 rounded-xl border border-neutral-200 bg-white">
-
-              <div className="px-4 py-4">
-
-                <p className="font-mono text-[9px] uppercase tracking-wider text-neutral-400">
-                  Security
-                </p>
-
-                <p className="mt-1 text-sm font-semibold text-neutral-900">
-                  Protected
-                </p>
-
-              </div>
-
-              <div className="px-4 py-4">
-
-                <p className="font-mono text-[9px] uppercase tracking-wider text-neutral-400">
-                  Runtime
-                </p>
-
-                <p className="mt-1 text-sm font-semibold text-neutral-900">
-                  Healthy
-                </p>
-
-              </div>
-
-              <div className="px-4 py-4">
-
-                <p className="font-mono text-[9px] uppercase tracking-wider text-neutral-400">
-                  Status
-                </p>
-
-                <p className="mt-1 text-sm font-semibold text-green-600">
-                  Operational
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </motion.div>
-
-    </div>
-  </div>
-</section>
-    {/* =========================================================
-    DEVELOPER RESOURCES
-========================================================= */}
-<section className="border-b border-neutral-200 bg-white">
-  <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
-
-    {/* =====================================================
-        HEADER
-    ====================================================== */}
-    <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-
-      <div className="max-w-2xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-500">
-          Developer resources
-        </p>
-
-        <h2 className="mt-4 text-3xl font-semibold tracking-tight text-neutral-950 sm:text-4xl">
-          Everything you need
-          <br />
-          <span className="text-neutral-400">
-            to build with Rivinity.
-          </span>
-        </h2>
-
-        <p className="mt-5 max-w-xl text-lg leading-8 text-neutral-600">
-          Explore documentation, APIs, examples, SDKs, and guides
-          designed to help you move from your first request to production.
-        </p>
-      </div>
-
-      <Link
-        href="/docs"
-        className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-orange-500 transition hover:text-orange-600"
-      >
-        Explore documentation
-        <ArrowRight className="h-4 w-4" />
-      </Link>
-
-    </div>
-
-
-    {/* =====================================================
-        FEATURED DOCUMENTATION
-    ====================================================== */}
-    <div className="mt-12 grid gap-5 lg:grid-cols-[1.35fr_0.65fr]">
-
-      {/* MAIN RESOURCE */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="group relative overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 p-7 sm:p-9"
-      >
-
-        {/* subtle glow */}
-        <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-orange-500/10 blur-3xl" />
-
-        <div className="relative">
-
-          <div className="flex items-start justify-between">
-
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500/10">
-              <BookOpen className="h-5 w-5 text-orange-400" />
-            </div>
-
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-[10px] text-neutral-400">
-              START HERE
-            </span>
-
-          </div>
-
-          <h3 className="mt-8 text-2xl font-semibold text-white sm:text-3xl">
-            Documentation
-          </h3>
-
-          <p className="mt-4 max-w-lg text-sm leading-7 text-neutral-400 sm:text-base">
-            Learn how Rivinity works, make your first API request,
-            and understand the core concepts behind the platform.
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-2">
-
-            <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-neutral-400">
-              Quickstart
-            </span>
-
-            <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-neutral-400">
-              Concepts
-            </span>
-
-            <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-neutral-400">
-              API
-            </span>
-
-          </div>
-
-          <Link
-            href="/docs"
-            className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-orange-400"
-          >
-            Read the docs
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-
-        </div>
-      </motion.div>
-
-
-      {/* QUICK START */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="rounded-2xl border border-neutral-200 bg-neutral-50 p-7 sm:p-9"
-      >
-
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50">
-          <Terminal className="h-5 w-5 text-orange-500" />
-        </div>
-
-        <h3 className="mt-7 text-xl font-semibold text-neutral-950">
-          Quickstart
-        </h3>
-
-        <p className="mt-3 text-sm leading-7 text-neutral-600">
-          Make your first request and start building with Rivinity
-          in minutes.
-        </p>
-
-        {/* fake terminal */}
-        <div className="mt-6 overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950">
-
-          <div className="border-b border-neutral-800 px-4 py-2">
-            <span className="font-mono text-[10px] text-neutral-500">
-              terminal
-            </span>
-          </div>
-
-          <div className="overflow-x-auto p-4 font-mono text-xs leading-6">
-            <div>
-              <span className="text-orange-400">$</span>{" "}
-              <span className="text-neutral-300">
-                npm install @rivinity/sdk
-              </span>
-            </div>
-
-            <div className="mt-2 text-green-400">
-              ✓ installed successfully
-            </div>
-          </div>
-
-        </div>
-
-        <Link
-          href="/docs"
-          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-orange-500"
-        >
-          Get started
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-
-      </motion.div>
-
-    </div>
-
-
-    {/* =====================================================
-        RESOURCE GRID
-    ====================================================== */}
-    <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
-      {[
-        {
-          icon: Braces,
-          title: "API Reference",
-          description: "Explore endpoints, parameters and responses.",
-        },
-        {
-          icon: Code2,
-          title: "SDKs",
-          description: "Integrate Rivinity into your applications.",
-        },
-        {
-          icon: Layers,
-          title: "Examples",
-          description: "Explore practical implementation patterns.",
-        },
-        {
-          icon: BookOpen,
-          title: "Guides",
-          description: "Step-by-step guides for common workflows.",
-        },
-      ].map((resource, index) => {
-
-        const Icon = resource.icon;
-
-        return (
-          <motion.div
-            key={resource.title}
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.4,
-              delay: index * 0.06,
-            }}
-            className="group rounded-2xl border border-neutral-200 bg-white p-6 transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
-          >
-
-            <div className="flex items-start justify-between">
-
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50">
-                <Icon className="h-4 w-4 text-orange-500" />
-              </div>
-
-              <ArrowRight className="h-4 w-4 text-neutral-300 transition group-hover:translate-x-1 group-hover:text-orange-500" />
-
-            </div>
-
-            <h3 className="mt-6 font-semibold text-neutral-950">
-              {resource.title}
-            </h3>
-
-            <p className="mt-2 text-sm leading-6 text-neutral-600">
-              {resource.description}
-            </p>
-
-          </motion.div>
-        );
-      })}
-
-    </div>
-
-  </div>
-</section>
-      {/* Unified FAQ Section */}
-      <FaqSection
-        title="Questions, answered."
-        subtitle="Everything you need to know about building with Rivinity."
-        items={[
-          {
-            question: "What can I build with Rivinity?",
-            answer:
-              "Rivinity provides APIs and infrastructure for building intelligent applications, autonomous agents, and AI-powered workflows.",
-          },
-          {
-            question: "How do I get started?",
-            answer:
-              "Start by exploring the documentation and making your first API request. You can then connect Rivinity capabilities to your existing application.",
-          },
-          {
-            question: "Does Rivinity provide SDKs?",
-            answer:
-              "Rivinity is designed around developer-friendly APIs and SDKs that make it easier to integrate intelligent capabilities into modern applications.",
-          },
-          {
-            question: "Is Rivinity suitable for production?",
-            answer:
-              "Rivinity is designed with production workloads in mind, including authentication, access controls, reliable infrastructure, and scalable application development.",
-          },
-          {
-            question: "How does Rivinity handle security?",
-            answer:
-              "Security is considered throughout the developer experience, from authentication and access controls to infrastructure and deployment.",
-          },
-          {
-            question: "Where can I get help?",
-            answer:
-              "You can explore the documentation for technical guidance or contact the Rivinity team for additional support.",
-          },
-        ]}
-      />
-
-      {/* Unified CTA Section */}
-      <CtaSection
-        title="Start building autonomous software systems today"
-        description="Access our sub-50ms model gateway, persistent memory graphs, and unified SDKs in TypeScript and Python."
-        buttonText="Get API Keys"
-        buttonHref="/signup"
-        secondaryText="Explore Documentation"
-        secondaryHref="/docs"
-      />
+        {/* Unified CTA Section */}
+        <CtaSection
+          title="Start building with Rivinity today"
+          description="Get your API key in seconds and build streaming, structured AI applications with official SDKs for Python, TypeScript, and Go."
+          buttonText="Get API Keys"
+          buttonHref="/signup"
+          secondaryText="Read Documentation"
+          secondaryHref="/docs"
+        />
       </motion.main>
 
       <Footer />

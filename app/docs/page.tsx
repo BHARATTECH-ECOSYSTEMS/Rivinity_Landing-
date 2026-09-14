@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-
 import Link from "next/link";
-import Image from "next/image";
-import { useAuthModal } from "@/components/auth/auth-context";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import CtaSection from "@/components/sections/cta-section";
 import {
   Search,
@@ -101,14 +100,13 @@ const jsonResponse = `{
 }`;
 
 export default function DocumentationPage() {
-  const { openAuth } = useAuthModal();
   const [activeTab, setActiveTab] = useState("overview");
   const [langTab, setLangTab] = useState<"curl" | "node" | "python">("node");
   const [copied, setCopied] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const mainRef = useRef<HTMLElement>(null);
 
-  // Automatic Scroll Spy using IntersectionObserver
+  // Automatic Scroll Spy using IntersectionObserver on page scroll
   useEffect(() => {
     const mainEl = mainRef.current;
     if (!mainEl) return;
@@ -123,8 +121,8 @@ export default function DocumentationPage() {
         });
       },
       {
-        root: mainEl,
-        rootMargin: "-10% 0px -70% 0px",
+        root: null,
+        rootMargin: "-25% 0px -65% 0px",
         threshold: 0,
       }
     );
@@ -140,7 +138,9 @@ export default function DocumentationPage() {
     setActiveTab(id);
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      const yOffset = -110;
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
 
@@ -150,74 +150,45 @@ export default function DocumentationPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Filter navigation items based on search query
+  const filteredNavigation = docNavigation
+    .map((cat) => ({
+      ...cat,
+      items: cat.items.filter(
+        (item) =>
+          item.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          cat.category.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    }))
+    .filter((cat) => cat.items.length > 0);
+
   return (
-    <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased">
-      
+    <div className="min-h-screen bg-white text-[#0f172a] font-sans antialiased flex flex-col justify-between">
+      {/* Universal Site Header */}
+      <Header />
 
-      {/* Screen Height Container */}
-      <div className="h-screen flex flex-col overflow-hidden bg-[var(--color-bg-primary,#ffffff)]">
+      {/* Main Documentation Wrapper */}
+      <div className="flex-1 w-full pt-28 sm:pt-32 md:pt-36 pb-16">
+        <div className="container max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex gap-8 lg:gap-12 relative">
 
-        {/* PAGE-SPECIFIC HEADER NAVBAR */}
-        <header className="border-b border-slate-200 bg-white/95 backdrop-blur-md shrink-0 z-30 p-2">
-          <div className="container flex max-w-[1440px] items-center justify-between gap-4">
-
-            {/* Left: Custom Logo Section */}
-            <Link href="/" className="group flex items-center shrink-0">
-              <div className="transition-transform duration-300 group-hover:scale-105 py-3">
-                <Image
-                  src="/rivinity_logo.png"
-                  alt="Rivinity Logo"
-                  width={140}
-                  height={32}
-                  className="object-cover align-middle"
-                  priority
-                  sizes="100px"
-                />
-              </div>
-            </Link>
-
-            {/* Center: Search Bar */}
-            <div className="relative flex-1 max-w-md mx-4 hidden sm:block">
+          {/* 1. STICKY LEFT SIDEBAR */}
+          <aside className="sticky top-28 sm:top-32 self-start w-64 shrink-0 hidden lg:block pr-4 space-y-6 max-h-[calc(100vh-9rem)] overflow-y-auto border-r border-slate-200/80">
+            {/* Quick Search / Filter Input */}
+            <div className="relative">
               <Search
-                size={16}
+                size={14}
                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
               />
               <input
                 type="text"
-                placeholder="Search documentation..."
+                placeholder="Filter documentation..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-12 py-2 rounded-full bg-slate-100 text-xs font-medium text-[#0f172a] placeholder:text-slate-400 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:bg-white border border-transparent focus-visible:border-[#FF6B00] transition-all"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 text-xs font-medium text-[#0f172a] placeholder:text-slate-400 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] border border-slate-200 focus-visible:border-[#FF6B00] transition-all"
               />
-              <button
-                type="button"
-                className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center bg-white border border-gray-200 p-1.5 rounded-full text-gray-500 shadow-xs hover:text-[#FF6B00] hover:border-[#FF6B00] active:scale-95 transition-all cursor-pointer"
-              >
-                <ArrowRight className="size-3.5" />
-              </button>
             </div>
 
-            {/* Right: CTA Button */}
-            <div className="flex items-center gap-3 shrink-0 text-white">
-              <button
-                type="button"
-                onClick={() => openAuth("signup")}
-                className="inline-flex items-center justify-center gap-1.5 min-h-[44px] rounded-full bg-[#FF6B00] px-5 py-2 text-xs font-semibold shadow-xs hover:bg-[#FF6B00]/90 active:scale-95 transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
-              >
-                Start Building
-                <ChevronRight size={14} />
-              </button>
-            </div>
-
-          </div>
-        </header>
-
-        {/* Split Screen Area */}
-        <div className="flex-1 container max-w-[1440px] flex overflow-hidden py-6 gap-8">
-
-          {/* 1. FIXED LEFT SIDEBAR (NON-SCROLLABLE) */}
-          <aside className="w-64 shrink-0 hidden lg:block pr-3 space-y-6 border-r border-slate-200/80">
-            {docNavigation.map((cat) => (
+            {filteredNavigation.map((cat) => (
               <div key={cat.category}>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-2 mb-2">
                   {cat.category}
@@ -229,10 +200,11 @@ export default function DocumentationPage() {
                       <button
                         key={item.id}
                         onClick={() => scrollToSection(item.id)}
-                        className={`w-full flex items-center justify-between min-h-[38px] px-3.5 py-2 rounded-xl text-xs font-semibold transition cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] ${isActive
-                          ? "bg-[#FF6B00] text-white shadow-xs"
-                          : "text-slate-600 hover:bg-slate-50 hover:text-[#0f172a]"
-                          }`}
+                        className={`w-full flex items-center justify-between min-h-[38px] px-3.5 py-2 rounded-xl text-xs font-semibold transition cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] ${
+                          isActive
+                            ? "bg-[#FF6B00] text-white shadow-xs"
+                            : "text-slate-600 hover:bg-slate-50 hover:text-[#0f172a]"
+                        }`}
                       >
                         <span>{item.label}</span>
                         <ChevronRight
@@ -247,11 +219,11 @@ export default function DocumentationPage() {
             ))}
           </aside>
 
-          {/* 2. SCROLLABLE RIGHT CONTENT AREA */}
-          <main ref={mainRef} className="flex-1 overflow-y-auto pr-2 space-y-16 pb-20">
+          {/* 2. MAIN CONTENT AREA */}
+          <main ref={mainRef} className="flex-1 min-w-0 space-y-16 pb-12">
 
             {/* 1. Overview */}
-            <div id="overview" className="space-y-4 scroll-mt-6">
+            <div id="overview" className="space-y-4 scroll-mt-32">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-[#FF6B00] bg-[#FF6B00]/10 px-2.5 py-1 rounded-md border border-[#FF6B00]/20">
                   01
@@ -268,7 +240,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 2. Quickstart */}
-            <div id="quickstart" className="space-y-6 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="quickstart" className="space-y-6 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-[#FF6B00] bg-[#FF6B00]/10 px-2.5 py-1 rounded-md border border-[#FF6B00]/20">
                   02
@@ -318,7 +290,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 3. Authentication */}
-            <div id="authentication" className="space-y-4 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="authentication" className="space-y-4 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-[#FF6B00] bg-[#FF6B00]/10 px-2.5 py-1 rounded-md border border-[#FF6B00]/20">
                   AUTH
@@ -341,7 +313,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 4. Errors & Rate Limits */}
-            <div id="errors" className="space-y-4 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="errors" className="space-y-4 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
                   LIMITS
@@ -358,7 +330,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 5. Execute Agent */}
-            <div id="run-agent" className="space-y-6 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="run-agent" className="space-y-6 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
                   POST
@@ -412,7 +384,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 6. Get Execution State */}
-            <div id="agent-status" className="space-y-4 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="agent-status" className="space-y-4 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
                   GET
@@ -429,7 +401,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 7. Tool Call Definitions */}
-            <div id="tools" className="space-y-4 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="tools" className="space-y-4 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">
                   SCHEMA
@@ -446,7 +418,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 8. List Models */}
-            <div id="models-list" className="space-y-4 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="models-list" className="space-y-4 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
                   GET
@@ -463,7 +435,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 9. Generate Embeddings */}
-            <div id="embeddings" className="space-y-4 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="embeddings" className="space-y-4 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
                   POST
@@ -480,7 +452,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 10. TypeScript SDK */}
-            <div id="typescript-sdk" className="space-y-4 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="typescript-sdk" className="space-y-4 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">
                   SDK
@@ -497,7 +469,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* 11. Python SDK */}
-            <div id="python-sdk" className="space-y-4 scroll-mt-6 pt-8 border-t border-slate-200">
+            <div id="python-sdk" className="space-y-4 scroll-mt-32 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">
                   SDK
@@ -512,21 +484,12 @@ export default function DocumentationPage() {
                 pip install rivinity
               </div>
             </div>
-
-            {/* Support Footer CTA */}
-            <CtaSection
-              title="Ready to launch your first intelligent agent?"
-              description="Follow our 5-minute quickstart guide to authenticate, define custom tool sets, and orchestrate production workflows."
-              buttonText="Start Quickstart Guide"
-              buttonHref="#quickstart"
-              secondaryText="Browse SDK References"
-              secondaryHref="#typescript-sdk"
-              className="py-8 sm:py-12"
-            />
-
           </main>
         </div>
       </div>
+
+      {/* Universal Site Footer */}
+      <Footer />
     </div>
   );
 }

@@ -92,6 +92,7 @@ const navItems: NavItem[] = [
         href: "/products/cloud",
         icon: Cloud,
         description: "Managed infra for your agents",
+        badge: "Coming soon",
       },
       {
         label: "Supernova",
@@ -215,23 +216,23 @@ function PlatformDropdownPanel({
   onNavigate: () => void;
 }) {
   return (
-    <div className="w-[560px] p-3.5 bg-white" style={{ backgroundColor: "#ffffff" }}>
+    <div className="w-[670px] p-5 sm:p-6 bg-white" style={{ backgroundColor: "#ffffff" }}>
       {/* Featured / Core Products Header & Grid */}
-      <div className="mb-2.5">
-        <div className="px-2.5 pb-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+      <div className="mb-1">
+        <div className="px-2.5 pb-2.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
           Core Products
         </div>
-        <div className="grid grid-cols-3 gap-0.5">
+        <div className="grid grid-cols-3 gap-x-4 gap-y-1.5">
           {featured.map((product) => (
             <Link
               key={product.label}
               href={product.href}
               onClick={onNavigate}
-              className="group flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium text-neutral-800 hover:text-black hover:bg-neutral-100/80 transition-colors"
+              className="group flex items-center justify-between rounded-lg px-2.5 py-2 text-[13px] font-medium text-neutral-800 hover:text-black hover:bg-neutral-100/70 transition-colors"
             >
-              <span>{product.label}</span>
+              <span className="truncate">{product.label}</span>
               {product.badge && (
-                <span className="text-[9px] uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-neutral-100 text-neutral-600 font-medium">
+                <span className="shrink-0 ml-2 text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 font-semibold border border-neutral-200/60">
                   {product.badge}
                 </span>
               )}
@@ -241,13 +242,13 @@ function PlatformDropdownPanel({
       </div>
 
       {/* Subtle Divider */}
-      <div className="h-px bg-neutral-100 my-2 mx-1" />
+      <div className="h-px bg-neutral-100 my-4 mx-1" />
 
       {/* Categorized list */}
-      <div className="grid grid-cols-5 gap-1 pt-0.5">
+      <div className="grid grid-cols-5 gap-3 pt-0.5">
         {categories.map((category) => (
           <div key={category.label} className="flex flex-col">
-            <h4 className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+            <h4 className="px-2 pb-1 text-[11px] font-bold uppercase tracking-wider text-neutral-900">
               {category.label}
             </h4>
             {category.items.length > 0 ? (
@@ -257,7 +258,7 @@ function PlatformDropdownPanel({
                     <Link
                       href={link.href}
                       onClick={onNavigate}
-                      className="block rounded-md px-2 py-1 text-[12px] font-medium text-neutral-700 hover:text-black hover:bg-neutral-100/80 transition-colors"
+                      className="block rounded-md px-2 py-1 text-[13px] font-normal text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100/60 transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -621,7 +622,7 @@ function MobileAccordion({
                 {item.categories.map((category) =>
                   category.items.length > 0 ? (
                     <div key={category.label} className="space-y-1">
-                      <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+                      <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-neutral-900">
                         {category.label}
                       </span>
                       {category.items.map((link) => (

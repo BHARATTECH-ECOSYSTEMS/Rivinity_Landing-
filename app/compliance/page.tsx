@@ -14,6 +14,8 @@ import {
   Eye,
   Cpu,
   Check,
+  ArrowRight,
+  ArrowUpRight,
 } from "lucide-react";
 
 /* ============================================================
@@ -182,21 +184,13 @@ const FAQS = [
 
 function PrivacyTabs() {
   const [activeTab, setActiveTab] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveTab((prev) => (prev + 1) % TABS.length);
-    }, 4500);
-    return () => clearInterval(interval);
-  }, []);
-
   const active = TABS[activeTab];
 
   return (
     <div className="rounded-2xl sm:rounded-3xl border border-[#E5E7EB] bg-white overflow-hidden shadow-xs">
       {/* TAB HEADERS */}
-      <div className="border-b border-[#E5E7EB] bg-[#F7F7F8] overflow-x-auto">
-        <div className="flex w-full min-w-max">
+      <div className="border-b border-[#E5E7EB] bg-[#F7F7F8]">
+        <div className="flex overflow-x-auto lg:grid lg:grid-cols-6 divide-x divide-[#E5E7EB] min-w-full">
           {TABS.map((tab, index) => {
             const isSelected = activeTab === index;
             return (
@@ -204,20 +198,23 @@ function PrivacyTabs() {
                 key={tab.title}
                 type="button"
                 onClick={() => setActiveTab(index)}
-                className={`relative flex-1 whitespace-nowrap px-4 py-3.5 sm:px-6 sm:py-4 text-center text-xs font-bold transition-all cursor-pointer ${
+                className={`relative flex-1 min-w-[160px] lg:min-w-0 px-3 sm:px-4 py-3.5 sm:py-4 text-center text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
                   isSelected
-                    ? "text-[#FF6B00] bg-white"
-                    : "text-[#6B7280] hover:text-[#1A1A1A]"
+                    ? "bg-white text-[#0f172a] font-bold"
+                    : "bg-[#F7F7F8] text-[#64748b] hover:text-[#0f172a] hover:bg-slate-100/60 font-medium"
                 }`}
               >
-                <span className="mr-1.5 font-mono opacity-60">{tab.short}</span>
-                {tab.title}
+                <span
+                  className={`font-mono text-[11px] ${
+                    isSelected ? "text-[#FF6B00] font-bold" : "text-[#94a3b8]"
+                  }`}
+                >
+                  {tab.short}
+                </span>
+                <span>{tab.title}</span>
 
                 {isSelected && (
-                  <motion.div
-                    layoutId="privacy-tab-indicator"
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#FF6B00]"
-                  />
+                  <span className="absolute -bottom-[1px] left-0 right-0 h-[2.5px] bg-[#FF6B00] z-10" />
                 )}
               </button>
             );
@@ -250,15 +247,24 @@ function PrivacyTabs() {
                 {active.description}
               </p>
 
-              <div className="text-white">
-                 <Link
-                href="/privacy"
-                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1A1A1A] px-5 py-2.5 text-xs font-boldshadow-xs hover:bg-neutral-800 active:scale-95 transition-all"
-              >
-                Read Privacy Policy &rarr;
-              </Link>
+              <div>
+                <Link
+                  href="/privacy"
+                  style={{ color: "#ffffff" }}
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#0f172a] hover:bg-slate-800 px-6 py-2.5 text-xs font-semibold !text-white text-white shadow-xs hover:-translate-y-0.5 active:scale-95 transition-all group cursor-pointer"
+                >
+                  <span
+                    className="!text-white text-white font-semibold"
+                    style={{ color: "#ffffff" }}
+                  >
+                    Read Privacy Policy
+                  </span>
+                  <ArrowUpRight
+                    className="w-3.5 h-3.5 !text-white text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
+                    style={{ color: "#ffffff", stroke: "#ffffff" }}
+                  />
+                </Link>
               </div>
-             
             </div>
 
             {/* RIGHT CHECKLIST */}
@@ -310,30 +316,50 @@ export default function SecurityPage() {
         className="w-full pt-28 sm:pt-32 md:pt-36 pb-16"
       >
         {/* Hero Section */}
-        <section className="section border-b border-slate-200 pb-12 sm:pb-20">
+        <section className="section-sm pb-12 sm:pb-20">
           <div className="container">
             <div className="max-w-4xl">
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#0f172a] leading-[1.18] sm:leading-[1.15]">
-                Building Trust Through <span className="text-[#FF6B00]">Verifiable Security</span>
+                Building Trust Through Verifiable Security
               </h1>
               <p className="mt-4 sm:mt-6 max-w-2xl text-sm sm:text-base lg:text-lg text-[#64748b] leading-relaxed">
-                Rivinity is committed to protecting customer data, enforcing strict zero-training privacy guarantees, and maintaining bank-grade security standards across every engine tier.
+                Rivinity is committed to protecting customer data, enforcing
+                strict zero-training privacy guarantees, and maintaining
+                bank-grade security standards across every engine tier.
               </p>
 
               <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-                <div className="text-white flex flex-col">
-                  <a
-                    href="#privacy"
-                    className="rounded-full bg-[#0f172a] px-6 py-3 min-h-[44px] flex items-center justify-center text-center text-sm font-semibold shadow-xs hover:bg-slate-800 active:scale-95 transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
+                <a
+                  href="#privacy"
+                  style={{ color: "#ffffff" }}
+                  className="w-full sm:w-auto min-h-[44px] px-8 py-3.5 rounded-full bg-[#0f172a] hover:bg-slate-800 !text-white text-white text-sm font-semibold tracking-wide shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
+                >
+                  <span
+                    className="!text-white text-white font-semibold"
+                    style={{ color: "#ffffff" }}
                   >
-                    View Privacy Framework &darr;
-                  </a>
-                </div>
+                    View Privacy Framework
+                  </span>
+                  <ArrowUpRight
+                    className="w-4 h-4 !text-white text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
+                    style={{ color: "#ffffff", stroke: "#ffffff" }}
+                  />
+                </a>
                 <Link
                   href="/contact"
-                  className="rounded-full border border-slate-200 bg-white px-6 py-3 min-h-[44px] flex items-center justify-center text-center text-sm font-semibold text-slate-800 hover:border-slate-300 hover:bg-slate-50 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00]"
+                  style={{ color: "#1e293b" }}
+                  className="w-full sm:w-auto min-h-[44px] px-7 py-3.5 rounded-full border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 !text-slate-800 text-slate-800 text-sm font-semibold tracking-wide shadow-xs hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
                 >
-                  Contact Security Team
+                  <span
+                    className="!text-slate-800 text-slate-800 font-semibold"
+                    style={{ color: "#1e293b" }}
+                  >
+                    Contact Security Team
+                  </span>
+                  <ArrowUpRight
+                    className="w-4 h-4 !text-slate-500 text-slate-500 group-hover:text-slate-800 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0"
+                    style={{ color: "#64748b", stroke: "#64748b" }}
+                  />
                 </Link>
               </div>
             </div>
@@ -341,16 +367,31 @@ export default function SecurityPage() {
         </section>
 
         {/* Highlight Metrics Bar */}
-        <section className="section border-b border-[#E5E7EB] bg-[#F7F7F8]">
-          <div className="container mx-auto px-4 sm:px-6">
+        <section className="section-sm">
+          <div className="container bg-gray-50 rounded-2xl mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-[#E5E7EB]">
               {[
-                { title: "Security First", desc: "SOC 2 Type II certified architecture" },
-                { title: "Privacy Guarantee", desc: "Zero data training on customer inputs" },
-                { title: "Responsible AI", desc: "Human-in-the-loop oversight model" },
-                { title: "Governance", desc: "Granular SAML/SSO & RBAC controls" },
+                {
+                  title: "Security First",
+                  desc: "SOC 2 Type II certified architecture",
+                },
+                {
+                  title: "Privacy Guarantee",
+                  desc: "Zero data training on customer inputs",
+                },
+                {
+                  title: "Responsible AI",
+                  desc: "Human-in-the-loop oversight model",
+                },
+                {
+                  title: "Governance",
+                  desc: "Granular SAML/SSO & RBAC controls",
+                },
               ].map((item, idx) => (
-                <div key={idx} className="p-5 sm:p-8 sm:first:pl-0 sm:last:pr-0">
+                <div
+                  key={idx}
+                  className="p-5 sm:p-8 sm:first:pl-0 sm:last:pr-0"
+                >
                   <div className="text-base sm:text-lg font-extrabold text-[#1A1A1A]">
                     {item.title}
                   </div>
@@ -364,14 +405,15 @@ export default function SecurityPage() {
         </section>
 
         {/* Our Approach Section */}
-        <section className="section border-b border-[#E5E7EB] py-12 sm:py-20 lg:py-24">
+        <section className="section-sm py-12 sm:py-20 lg:py-24">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="mb-8 sm:mb-12 max-w-2xl">
               <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1A1A1A]">
                 Trust Built Through Continuous Commitment
               </h2>
               <p className="mt-3 text-xs sm:text-sm lg:text-base text-[#6B7280] leading-relaxed">
-                Compliance is an ongoing engineering standard. Here is how we embed safety directly into the Rivinity pipeline.
+                Compliance is an ongoing engineering standard. Here is how we
+                embed safety directly into the Rivinity pipeline.
               </p>
             </div>
 
@@ -385,9 +427,6 @@ export default function SecurityPage() {
                   >
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <div className="w-10 h-10 rounded-2xl bg-[#FF6B00]/10 text-[#FF6B00] flex items-center justify-center shrink-0 group-hover:bg-[#FF6B00] group-hover:text-white transition-colors">
-                          <IconComp size={20} />
-                        </div>
                         <span className="font-mono text-xs font-bold text-[#6B7280]">
                           {item.number}
                         </span>
@@ -408,14 +447,15 @@ export default function SecurityPage() {
         </section>
 
         {/* Privacy Tabs Section */}
-        <section id="privacy" className="section border-b border-[#E5E7EB] bg-[#F7F7F8] py-12 sm:py-20 lg:py-24">
+        <section id="privacy" className="section py-12 sm:py-20 lg:py-24">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="mb-8 sm:mb-12 max-w-2xl">
               <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1A1A1A]">
                 Privacy Engine Architecture
               </h2>
               <p className="mt-3 text-xs sm:text-sm lg:text-base text-[#6B7280] leading-relaxed">
-                Explore our six-part data governance model built to ensure transparency and complete user sovereignty.
+                Explore our six-part data governance model built to ensure
+                transparency and complete user sovereignty.
               </p>
             </div>
 
@@ -424,7 +464,7 @@ export default function SecurityPage() {
         </section>
 
         {/* Responsible AI Slider */}
-        <section className="section border-b border-[#E5E7EB] py-12 sm:py-20 lg:py-24">
+        <section className="section-sm py-12 sm:py-20 lg:py-24">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="mb-8 sm:mb-12 max-w-2xl">
               <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1A1A1A]">
@@ -446,7 +486,7 @@ export default function SecurityPage() {
                     type="button"
                     onClick={() =>
                       setActiveAIPrinciple((curr) =>
-                        curr === 0 ? AI_PRINCIPLES.length - 1 : curr - 1
+                        curr === 0 ? AI_PRINCIPLES.length - 1 : curr - 1,
                       )
                     }
                     className="w-9 h-9 rounded-xl border border-[#E5E7EB] bg-white flex items-center justify-center text-[#1A1A1A] hover:border-[#FF6B00] transition-colors cursor-pointer"
@@ -458,7 +498,7 @@ export default function SecurityPage() {
                     type="button"
                     onClick={() =>
                       setActiveAIPrinciple((curr) =>
-                        curr === AI_PRINCIPLES.length - 1 ? 0 : curr + 1
+                        curr === AI_PRINCIPLES.length - 1 ? 0 : curr + 1,
                       )
                     }
                     className="w-9 h-9 rounded-xl border border-[#E5E7EB] bg-white flex items-center justify-center text-[#1A1A1A] hover:border-[#FF6B00] transition-colors cursor-pointer"

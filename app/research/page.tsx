@@ -191,64 +191,50 @@ export default function ResearchPage() {
 
               {/* Key Metrics Bar: 4-column data grid with Option 2 #ff8b28 to white gradient & grid */}
               <div className="relative w-full grid grid-cols-2 md:grid-cols-4 border border-[#ff8b28]/20 rounded-2xl overflow-hidden divide-y md:divide-y-0 md:divide-x divide-gray-200 text-center shadow-xs bg-gradient-to-b from-[#ff8b28]/10 via-[#ff8b28]/[0.02] to-white">
-                {/* Option 2 Grid Pattern Overlay across whole box */}
-                <div
-                  className="absolute inset-0 pointer-events-none opacity-35"
-                  style={{
-                    backgroundImage: `
-                      linear-gradient(to right, rgba(255, 139, 40, 0.4) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(255, 139, 40, 0.4) 1px, transparent 1px)
-                    `,
-                    backgroundSize: "24px 24px",
-                    maskImage: "radial-gradient(ellipse at center, black 40%, transparent 100%)",
-                    WebkitMaskImage: "radial-gradient(ellipse at center, black 40%, transparent 100%)",
-                  }}
-                />
-
                 <div className="relative z-1 p-6 sm:p-7 flex flex-col items-center justify-center">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-gray-950 font-mono tracking-tight mb-1">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-gray-950   tracking-tight mb-1">
                     14
                   </span>
                   <span className="text-xs text-gray-600 font-medium">
                     Peer-Reviewed Publications
                   </span>
-                  <span className="text-[11px] text-gray-400 font-mono mt-0.5">
+                  <span className="text-[11px] text-gray-400   mt-0.5">
                     NeurIPS, ICML, ICLR
                   </span>
                 </div>
 
                 <div className="relative z-1 p-6 sm:p-7 flex flex-col items-center justify-center">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-gray-950 font-mono tracking-tight mb-1">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-gray-950   tracking-tight mb-1">
                     18.4M
                   </span>
                   <span className="text-xs text-gray-600 font-medium">
                     Checkpoint Downloads
                   </span>
-                  <span className="text-[11px] text-gray-400 font-mono mt-0.5">
+                  <span className="text-[11px] text-gray-400   mt-0.5">
                     Hugging Face Hub
                   </span>
                 </div>
 
                 <div className="relative z-1 p-6 sm:p-7 flex flex-col items-center justify-center">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-gray-950 font-mono tracking-tight mb-1">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-gray-950   tracking-tight mb-1">
                     100%
                   </span>
                   <span className="text-xs text-gray-600 font-medium">
                     Open-Weight &amp; Deterministic
                   </span>
-                  <span className="text-[11px] text-gray-400 font-mono mt-0.5">
+                  <span className="text-[11px] text-gray-400   mt-0.5">
                     Public Evals &amp; Code
                   </span>
                 </div>
 
                 <div className="relative z-1 p-6 sm:p-7 flex flex-col items-center justify-center">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-gray-950 font-mono tracking-tight mb-1">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-gray-950   tracking-tight mb-1">
                     $2.5M
                   </span>
                   <span className="text-xs text-gray-600 font-medium">
                     Compute Grants Awarded
                   </span>
-                  <span className="text-[11px] text-gray-400 font-mono mt-0.5">
+                  <span className="text-[11px] text-gray-400   mt-0.5">
                     Academic Collaborators
                   </span>
                 </div>
@@ -306,13 +292,10 @@ export default function ResearchPage() {
                 />
 
                 <div className="relative z-1">
-                  <div className="inline-block bg-gray-100 border border-gray-200 px-2.5 py-1 text-xs text-gray-700 font-mono rounded mb-4">
-                    NEURIPS 2025 // ORAL PRESENTATION
-                  </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-950 tracking-tight mb-2">
                     Sub-Quadratic Latency in Speculative Agent Drafting
                   </h3>
-                  <p className="font-mono text-xs text-gray-500 mb-3">
+                  <p className="text-xs text-gray-500 mb-3">
                     Dr. E. Vance, S. Chen, M. Thorne, D. Miller • Nov 2025
                   </p>
                   <p className="text-sm text-gray-600 leading-relaxed mb-6 max-w-lg">
@@ -348,7 +331,7 @@ export default function ResearchPage() {
                     onClick={() =>
                       handleCopyBibtex(PUBLICATIONS[0].bibtex, "featured-1")
                     }
-                    className="inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-950 cursor-pointer font-mono"
+                    className="inline-flex items-center rounded-2xl p-2 gap-1.5 text-xs text-gray-600 hover:text-gray-950 cursor-pointer  "
                   >
                     {copiedId === "featured-1" ? (
                       <Check className="w-3.5 h-3.5 text-gray-950" />
@@ -397,13 +380,10 @@ export default function ResearchPage() {
                 />
 
                 <div className="relative z-1">
-                  <div className="inline-block bg-gray-100 border border-gray-200 px-2.5 py-1 text-xs text-gray-700 font-mono rounded mb-4">
-                    ICLR 2026 // SPOTLIGHT
-                  </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-950 tracking-tight mb-2">
                     Mechanistic Interpretability in Deterministic State Loops
                   </h3>
-                  <p className="font-mono text-xs text-gray-500 mb-3">
+                  <p className="text-xs text-gray-500 mb-3">
                     K. Tanaka, J. Reynolds, A. Chen • Jan 2026
                   </p>
                   <p className="text-sm text-gray-600 leading-relaxed mb-6 max-w-lg">
@@ -439,7 +419,7 @@ export default function ResearchPage() {
                     onClick={() =>
                       handleCopyBibtex(PUBLICATIONS[1].bibtex, "featured-2")
                     }
-                    className="inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-950 cursor-pointer font-mono"
+                    className="inline-flex items-center gap-1.5 rounded-2xl p-2 text-xs text-gray-600 hover:text-gray-950 cursor-pointer  "
                   >
                     {copiedId === "featured-2" ? (
                       <Check className="w-3.5 h-3.5 text-gray-950" />
@@ -485,7 +465,7 @@ export default function ResearchPage() {
                       <span className="text-sm font-semibold text-gray-950">
                         {paper.tag}
                       </span>
-                      <span className="text-xs text-gray-500 font-mono">
+                      <span className="text-xs text-gray-500  ">
                         {paper.published}
                       </span>
                     </div>
@@ -505,7 +485,7 @@ export default function ResearchPage() {
                             {paper.description}
                           </p>
 
-                          <div className="mt-3 flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs font-mono text-gray-500">
+                          <div className="mt-3 flex flex-wrap items-center gap-2.5 sm:gap-3 text-xs   text-gray-500">
                             <span>{paper.authors}</span>
                             <span className="text-gray-300">•</span>
                             <span className="text-gray-500">{paper.venue}</span>
@@ -614,194 +594,43 @@ export default function ResearchPage() {
                     </h3>
                   </div>
 
-                  {/* Technical Graphic Container with Orange & White Gradient Shape */}
-                  <div
-                    className="relative w-full h-44 sm:h-48 rounded-4xl bg-white border border-gray-200/80 flex items-center justify-center overflow-hidden mb-5"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(#9ca3af 1px, transparent 1px)",
-                      backgroundSize: "8px 8px",
-                    }}
-                  >
-                    {/* Soft ambient orange/white fluid glow */}
-                    <div className="absolute w-36 h-36 rounded-full bg-gradient-to-br from-orange-400/30 via-orange-200/20 to-transparent blur-xl pointer-events-none" />
-
-                    {/* 4 Corner Crop Marks */}
-                    <div className="absolute top-2.5 left-2.5 w-3 h-3 border-t-1.5 border-l-1.5 border-gray-900" />
-                    <div className="absolute top-2.5 right-2.5 w-3 h-3 border-t-1.5 border-r-1.5 border-gray-900" />
-                    <div className="absolute bottom-2.5 left-2.5 w-3 h-3 border-b-1.5 border-l-1.5 border-gray-900" />
-                    <div className="absolute bottom-2.5 right-2.5 w-3 h-3 border-b-1.5 border-r-1.5 border-gray-900" />
-
-                    {/* Shape 1: Nested tangent circles with Orange & White Gradient */}
+                  {/* Technical Graphic Container with Image 2 Shape 1 (Orange) */}
+                  <div className="relative w-full h-44 sm:h-48 rounded-4xl bg-white border border-gray-200/80 flex items-center justify-center overflow-hidden mb-5">
+                    {/* Orange Shape 1: 4 Circles Cluster on Squircle */}
                     <svg
-                      viewBox="0 0 200 200"
-                      className="relative z-1 w-32 h-32 sm:w-36 sm:h-36"
+                      viewBox="0 0 160 160"
+                      className="relative z-1 w-28 h-28 sm:w-32 sm:h-32 drop-shadow-sm select-none"
                       fill="none"
+                      aria-hidden="true"
                     >
                       <defs>
                         <linearGradient
-                          id="orangeGrad1"
+                          id="orangeTileGrad"
                           x1="0%"
                           y1="0%"
-                          x2="0%"
+                          x2="100%"
                           y2="100%"
                         >
-                          <stop
-                            offset="0%"
-                            stopColor="#FF6B00"
-                            stopOpacity="0.3"
-                          />
-                          <stop
-                            offset="60%"
-                            stopColor="#FF8A3D"
-                            stopOpacity="0.15"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FFFFFF"
-                            stopOpacity="0.8"
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="orangeGrad2"
-                          x1="0%"
-                          y1="0%"
-                          x2="0%"
-                          y2="100%"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor="#FF8A3D"
-                            stopOpacity="0.35"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FFFFFF"
-                            stopOpacity="0.75"
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="orangeGrad3"
-                          x1="0%"
-                          y1="0%"
-                          x2="0%"
-                          y2="100%"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor="#FB923C"
-                            stopOpacity="0.45"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FFFFFF"
-                            stopOpacity="0.7"
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="orangeGrad4"
-                          x1="0%"
-                          y1="0%"
-                          x2="0%"
-                          y2="100%"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor="#EA580C"
-                            stopOpacity="0.55"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FFF7ED"
-                            stopOpacity="0.9"
-                          />
+                          <stop offset="0%" stopColor="#FB923C" />
+                          <stop offset="100%" stopColor="#EA580C" />
                         </linearGradient>
                       </defs>
 
-                      <circle
-                        cx="100"
-                        cy="116"
-                        r="64"
-                        stroke="#EA580C"
-                        strokeWidth="1.3"
-                        fill="url(#orangeGrad1)"
+                      {/* Squircle Tile */}
+                      <rect
+                        x="16"
+                        y="16"
+                        width="128"
+                        height="128"
+                        rx="32"
+                        fill="url(#orangeTileGrad)"
                       />
-                      <circle
-                        cx="100"
-                        cy="132"
-                        r="48"
-                        stroke="#EA580C"
-                        strokeWidth="1.3"
-                        fill="url(#orangeGrad2)"
-                      />
-                      <circle
-                        cx="100"
-                        cy="148"
-                        r="32"
-                        stroke="#EA580C"
-                        strokeWidth="1.3"
-                        fill="url(#orangeGrad3)"
-                      />
-                      <circle
-                        cx="100"
-                        cy="164"
-                        r="16"
-                        stroke="#C2410C"
-                        strokeWidth="1.4"
-                        fill="url(#orangeGrad4)"
-                      />
-                      {/* Minus 1 */}
-                      <line
-                        x1="94"
-                        y1="68"
-                        x2="106"
-                        y2="68"
-                        stroke="#EA580C"
-                        strokeWidth="1.5"
-                      />
-                      {/* Plus 1 */}
-                      <line
-                        x1="94"
-                        y1="100"
-                        x2="106"
-                        y2="100"
-                        stroke="#EA580C"
-                        strokeWidth="1.5"
-                      />
-                      <line
-                        x1="100"
-                        y1="94"
-                        x2="100"
-                        y2="106"
-                        stroke="#EA580C"
-                        strokeWidth="1.5"
-                      />
-                      {/* Minus 2 */}
-                      <line
-                        x1="94"
-                        y1="132"
-                        x2="106"
-                        y2="132"
-                        stroke="#EA580C"
-                        strokeWidth="1.5"
-                      />
-                      {/* Plus 2 */}
-                      <line
-                        x1="94"
-                        y1="164"
-                        x2="106"
-                        y2="164"
-                        stroke="#C2410C"
-                        strokeWidth="1.5"
-                      />
-                      <line
-                        x1="100"
-                        y1="158"
-                        x2="100"
-                        y2="170"
-                        stroke="#C2410C"
-                        strokeWidth="1.5"
-                      />
+
+                      {/* 4 Circles in 2x2 Cluster */}
+                      <circle cx="61" cy="61" r="19" fill="#0f172a" />
+                      <circle cx="99" cy="61" r="19" fill="#0f172a" />
+                      <circle cx="61" cy="99" r="19" fill="#0f172a" />
+                      <circle cx="99" cy="99" r="19" fill="#0f172a" />
                     </svg>
                   </div>
 
@@ -832,198 +661,58 @@ export default function ResearchPage() {
                     </h3>
                   </div>
 
-                  {/* Technical Graphic Container with Purple & White Gradient Shape */}
-                  <div
-                    className="relative w-full h-44 sm:h-48 rounded-4xl bg-white border border-gray-200/80 flex items-center justify-center overflow-hidden mb-5"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(#9ca3af 1px, transparent 1px)",
-                      backgroundSize: "8px 8px",
-                    }}
-                  >
-                    {/* Soft ambient purple/white fluid glow */}
-                    <div className="absolute w-36 h-36 rounded-full bg-gradient-to-br from-purple-400/30 via-purple-200/20 to-transparent blur-xl pointer-events-none" />
-
-                    {/* 4 Corner Crop Marks */}
-                    <div className="absolute top-2.5 left-2.5 w-3 h-3 border-t-1.5 border-l-1.5 border-gray-900" />
-                    <div className="absolute top-2.5 right-2.5 w-3 h-3 border-t-1.5 border-r-1.5 border-gray-900" />
-                    <div className="absolute bottom-2.5 left-2.5 w-3 h-3 border-b-1.5 border-l-1.5 border-gray-900" />
-                    <div className="absolute bottom-2.5 right-2.5 w-3 h-3 border-b-1.5 border-r-1.5 border-gray-900" />
-
-                    {/* Shape 2: Wireframe Pyramid with Purple & White Gradient */}
+                  {/* Technical Graphic Container with Image 2 Shape 2 (Purple) */}
+                  <div className="relative w-full h-44 sm:h-48 rounded-4xl bg-white border border-gray-200/80 flex items-center justify-center overflow-hidden mb-5">
+                    {/* Purple Shape 2: Clover Cross on Squircle */}
                     <svg
-                      viewBox="0 0 200 200"
-                      className="relative z-1 w-32 h-32 sm:w-36 sm:h-36"
+                      viewBox="0 0 160 160"
+                      className="relative z-1 w-28 h-28 sm:w-32 sm:h-32 drop-shadow-sm select-none"
                       fill="none"
+                      aria-hidden="true"
                     >
                       <defs>
                         <linearGradient
-                          id="purpleFacetLeft"
+                          id="purpleTileGrad"
                           x1="0%"
                           y1="0%"
                           x2="100%"
                           y2="100%"
                         >
-                          <stop
-                            offset="0%"
-                            stopColor="#A855F7"
-                            stopOpacity="0.35"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FFFFFF"
-                            stopOpacity="0.6"
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="purpleFacetRight"
-                          x1="100%"
-                          y1="0%"
-                          x2="0%"
-                          y2="100%"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor="#7E22CE"
-                            stopOpacity="0.35"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FAF5FF"
-                            stopOpacity="0.75"
-                          />
+                          <stop offset="0%" stopColor="#C084FC" />
+                          <stop offset="100%" stopColor="#7E22CE" />
                         </linearGradient>
                       </defs>
 
-                      {/* Facet fills */}
-                      <polygon
-                        points="100,28 24,172 100,140"
-                        fill="url(#purpleFacetLeft)"
-                      />
-                      <polygon
-                        points="100,28 176,172 100,140"
-                        fill="url(#purpleFacetRight)"
-                      />
-
-                      {/* Outer Triangle */}
-                      <polygon
-                        points="100,28 24,172 176,172"
-                        stroke="#7E22CE"
-                        strokeWidth="1.3"
-                        strokeLinejoin="round"
-                      />
-                      {/* Central Spine */}
-                      <line
-                        x1="100"
-                        y1="28"
-                        x2="100"
-                        y2="140"
-                        stroke="#7E22CE"
-                        strokeWidth="1.3"
-                      />
-                      {/* Center bottom vertex to corners */}
-                      <line
-                        x1="100"
-                        y1="140"
-                        x2="24"
-                        y2="172"
-                        stroke="#7E22CE"
-                        strokeWidth="1.3"
-                      />
-                      <line
-                        x1="100"
-                        y1="140"
-                        x2="176"
-                        y2="172"
-                        stroke="#7E22CE"
-                        strokeWidth="1.3"
+                      {/* Squircle Tile */}
+                      <rect
+                        x="16"
+                        y="16"
+                        width="128"
+                        height="128"
+                        rx="32"
+                        fill="url(#purpleTileGrad)"
                       />
 
-                      {/* Horizontal contour ribs */}
-                      <line
-                        x1="85.2"
-                        y1="56"
-                        x2="114.8"
-                        y2="56"
-                        stroke="#9333EA"
-                        strokeWidth="1.1"
-                      />
-                      <line
-                        x1="70.5"
-                        y1="84"
-                        x2="129.5"
-                        y2="84"
-                        stroke="#9333EA"
-                        strokeWidth="1.1"
-                      />
-                      <line
-                        x1="55.7"
-                        y1="112"
-                        x2="144.3"
-                        y2="112"
-                        stroke="#9333EA"
-                        strokeWidth="1.1"
-                      />
-                      <line
-                        x1="40.9"
-                        y1="140"
-                        x2="159.1"
-                        y2="140"
-                        stroke="#9333EA"
-                        strokeWidth="1.1"
-                      />
+                      {/* Clover Cross Silhouette (Dark) */}
+                      <g fill="#0f172a">
+                        <circle cx="80" cy="54" r="16.5" />
+                        <circle cx="80" cy="106" r="16.5" />
+                        <circle cx="54" cy="80" r="16.5" />
+                        <circle cx="106" cy="80" r="16.5" />
+                        <rect x="73.5" y="54" width="13" height="52" rx="3" />
+                        <rect x="54" y="73.5" width="52" height="13" rx="3" />
+                        <circle cx="80" cy="80" r="12" />
+                      </g>
 
-                      {/* Radiating facet lines from bottom-left corner */}
-                      <line
-                        x1="24"
-                        y1="172"
-                        x2="100"
-                        y2="56"
-                        stroke="#A855F7"
-                        strokeWidth="1"
-                      />
-                      <line
-                        x1="24"
-                        y1="172"
-                        x2="100"
-                        y2="84"
-                        stroke="#A855F7"
-                        strokeWidth="1"
-                      />
-                      <line
-                        x1="24"
-                        y1="172"
-                        x2="100"
-                        y2="112"
-                        stroke="#A855F7"
-                        strokeWidth="1"
-                      />
-
-                      {/* Radiating facet lines from bottom-right corner */}
-                      <line
-                        x1="176"
-                        y1="172"
-                        x2="100"
-                        y2="56"
-                        stroke="#A855F7"
-                        strokeWidth="1"
-                      />
-                      <line
-                        x1="176"
-                        y1="172"
-                        x2="100"
-                        y2="84"
-                        stroke="#A855F7"
-                        strokeWidth="1"
-                      />
-                      <line
-                        x1="176"
-                        y1="172"
-                        x2="100"
-                        y2="112"
-                        stroke="#A855F7"
-                        strokeWidth="1"
-                      />
+                      {/* Inner White Cross Line and Bulb Terminals */}
+                      <g stroke="#FFFFFF" strokeWidth="2.75" strokeLinecap="round">
+                        <line x1="80" y1="55" x2="80" y2="105" />
+                        <line x1="55" y1="80" x2="105" y2="80" />
+                      </g>
+                      <circle cx="80" cy="55" r="4.5" fill="#FFFFFF" />
+                      <circle cx="80" cy="105" r="4.5" fill="#FFFFFF" />
+                      <circle cx="55" cy="80" r="4.5" fill="#FFFFFF" />
+                      <circle cx="105" cy="80" r="4.5" fill="#FFFFFF" />
                     </svg>
                   </div>
 
@@ -1054,151 +743,58 @@ export default function ResearchPage() {
                     </h3>
                   </div>
 
-                  {/* Technical Graphic Container with Pink & White Gradient Shape */}
-                  <div
-                    className="relative w-full h-44 sm:h-48 rounded-4xl bg-white border border-gray-200/80 flex items-center justify-center overflow-hidden mb-5"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(#9ca3af 1px, transparent 1px)",
-                      backgroundSize: "8px 8px",
-                    }}
-                  >
-                    {/* Soft ambient pink/white fluid glow */}
-                    <div className="absolute w-36 h-36 rounded-full bg-gradient-to-br from-pink-400/30 via-pink-200/20 to-transparent blur-xl pointer-events-none" />
-
-                    {/* 4 Corner Crop Marks */}
-                    <div className="absolute top-2.5 left-2.5 w-3 h-3 border-t-1.5 border-l-1.5 border-gray-900" />
-                    <div className="absolute top-2.5 right-2.5 w-3 h-3 border-t-1.5 border-r-1.5 border-gray-900" />
-                    <div className="absolute bottom-2.5 left-2.5 w-3 h-3 border-b-1.5 border-l-1.5 border-gray-900" />
-                    <div className="absolute bottom-2.5 right-2.5 w-3 h-3 border-b-1.5 border-r-1.5 border-gray-900" />
-
-                    {/* Shape 3: Venn Diagram with Pink & White Gradient */}
+                  {/* Technical Graphic Container with Image 2 Shape 3 (Pink) */}
+                  <div className="relative w-full h-44 sm:h-48 rounded-4xl bg-white border border-gray-200/80 flex items-center justify-center overflow-hidden mb-5">
+                    {/* Pink Shape 3: 4 Petals in Square on Squircle */}
                     <svg
-                      viewBox="0 0 200 200"
-                      className="relative z-1 w-32 h-32 sm:w-36 sm:h-36"
+                      viewBox="0 0 160 160"
+                      className="relative z-1 w-28 h-28 sm:w-32 sm:h-32 drop-shadow-sm select-none"
                       fill="none"
+                      aria-hidden="true"
                     >
                       <defs>
                         <linearGradient
-                          id="pinkGradTop"
+                          id="pinkTileGrad"
                           x1="0%"
                           y1="0%"
                           x2="100%"
                           y2="100%"
                         >
-                          <stop
-                            offset="0%"
-                            stopColor="#EC4899"
-                            stopOpacity="0.35"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FFFFFF"
-                            stopOpacity="0.75"
-                          />
+                          <stop offset="0%" stopColor="#F472B6" />
+                          <stop offset="100%" stopColor="#DB2777" />
                         </linearGradient>
-                        <linearGradient
-                          id="pinkGradLeft"
-                          x1="0%"
-                          y1="100%"
-                          x2="100%"
-                          y2="0%"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor="#DB2777"
-                            stopOpacity="0.3"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FFFFFF"
-                            stopOpacity="0.75"
-                          />
-                        </linearGradient>
-                        <linearGradient
-                          id="pinkGradRight"
-                          x1="100%"
-                          y1="100%"
-                          x2="0%"
-                          y2="0%"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor="#F43F5E"
-                            stopOpacity="0.3"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#FFFFFF"
-                            stopOpacity="0.75"
-                          />
-                        </linearGradient>
-                        <pattern
-                          id="researchVennHatchPink"
-                          width="5"
-                          height="5"
-                          patternTransform="rotate(45 0 0)"
-                          patternUnits="userSpaceOnUse"
-                        >
-                          <line
-                            x1="0"
-                            y1="0"
-                            x2="0"
-                            y2="5"
-                            stroke="#BE185D"
-                            strokeWidth="1.3"
-                          />
-                        </pattern>
-                        <clipPath id="circleTopClipPink">
-                          <circle cx="100" cy="74" r="42" />
-                        </clipPath>
-                        <clipPath id="circleLeftClipPink">
-                          <circle cx="76" cy="122" r="42" />
-                        </clipPath>
-                        <clipPath id="circleRightClipPink">
-                          <circle cx="124" cy="122" r="42" />
-                        </clipPath>
                       </defs>
 
-                      {/* 3 Intersecting Circles with Pink-to-White fills */}
-                      <circle
-                        cx="100"
-                        cy="74"
-                        r="42"
-                        stroke="#DB2777"
-                        strokeWidth="1.3"
-                        fill="url(#pinkGradTop)"
-                      />
-                      <circle
-                        cx="76"
-                        cy="122"
-                        r="42"
-                        stroke="#DB2777"
-                        strokeWidth="1.3"
-                        fill="url(#pinkGradLeft)"
-                      />
-                      <circle
-                        cx="124"
-                        cy="122"
-                        r="42"
-                        stroke="#DB2777"
-                        strokeWidth="1.3"
-                        fill="url(#pinkGradRight)"
+                      {/* Squircle Tile */}
+                      <rect
+                        x="16"
+                        y="16"
+                        width="128"
+                        height="128"
+                        rx="32"
+                        fill="url(#pinkTileGrad)"
                       />
 
-                      {/* Hatched central tri-intersection */}
-                      <g clipPath="url(#circleTopClipPink)">
-                        <g clipPath="url(#circleLeftClipPink)">
-                          <g clipPath="url(#circleRightClipPink)">
-                            <rect
-                              x="0"
-                              y="0"
-                              width="200"
-                              height="200"
-                              fill="url(#researchVennHatchPink)"
-                            />
-                          </g>
-                        </g>
+                      {/* Dark Inner Square */}
+                      <rect
+                        x="38"
+                        y="38"
+                        width="84"
+                        height="84"
+                        rx="6"
+                        fill="#0f172a"
+                      />
+
+                      {/* 4 Pink Pointed Oval Petals */}
+                      <g fill="url(#pinkTileGrad)">
+                        {/* Top Petal */}
+                        <path d="M 80 80 C 69 66 69 48 80 38 C 91 48 91 66 80 80 Z" />
+                        {/* Bottom Petal */}
+                        <path d="M 80 80 C 69 94 69 112 80 122 C 91 112 91 94 80 80 Z" />
+                        {/* Left Petal */}
+                        <path d="M 80 80 C 66 69 48 69 38 80 C 48 91 66 91 80 80 Z" />
+                        {/* Right Petal */}
+                        <path d="M 80 80 C 94 69 112 69 122 80 C 112 91 94 91 80 80 Z" />
                       </g>
                     </svg>
                   </div>

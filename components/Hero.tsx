@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { GlassAssistant, type AssistantState } from "./GlassAssistant";
+import dynamic from "next/dynamic";
+import type { AssistantState } from "./GlassAssistant";
+
+const GlassAssistant = dynamic(
+  () => import("./GlassAssistant").then((mod) => mod.GlassAssistant),
+  { ssr: false }
+);
 import {
   AnimatePresence,
   motion,

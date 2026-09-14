@@ -132,7 +132,7 @@ export default function ApiStatusPage() {
         </section>
 
         {/* Overall Status Banner */}
-        <section className="section py-8 sm:py-12 bg-slate-50 border-b border-slate-200">
+        <section className="section-sm py-8 sm:py-12">
           <div className="container">
             <div className="rounded-2xl sm:rounded-3xl border border-emerald-200 bg-white p-5 sm:p-8 shadow-xs max-w-5xl mx-auto">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -173,7 +173,7 @@ export default function ApiStatusPage() {
         </section>
 
         {/* Scheduled Maintenance */}
-        <section className="section py-8 sm:py-12 border-b border-[#E5E7EB]">
+        <section className="section-sm py-8 sm:py-12">
           <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
             <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-[#E5E7EB] bg-white shadow-xs">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] px-5 sm:px-8 py-4 bg-[#F7F7F8]">
@@ -247,7 +247,7 @@ export default function ApiStatusPage() {
         </section>
 
         {/* Uptime Reliability Section */}
-        <section className="section py-12 sm:py-20 bg-[#F7F7F8] border-y border-[#E5E7EB]">
+        <section className="section-sm py-12 sm:py-20">
           <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
             <div className="mb-8">
               <h2 className="mt-2 text-2xl sm:text-4xl font-extrabold text-[#1A1A1A]">
@@ -267,7 +267,7 @@ export default function ApiStatusPage() {
         </section>
 
         {/* Incident History Section */}
-        <section className="section py-12 sm:py-20 bg-white border-b border-[#E5E7EB]">
+        <section className="section py-12 sm:py-20 bg-white">
           <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
             <div className="mb-8 flex items-end justify-between">
               <div>

@@ -1,46 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import {
-  ArrowUpRight,
-  Shield,
-  ShieldAlert,
-  Cpu,
-  Server,
-  Radio,
-  FileText,
-  CheckCircle2,
-  Lock,
-  Landmark,
-  Send,
-  MapPin,
-  Eye,
-  Zap,
-  Database,
-  Terminal,
-  ChevronRight,
-} from "lucide-react";
+import { ArrowUpRight, Lock } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import CtaSection from "@/components/sections/cta-section";
 
 export default function GovernmentPage() {
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    name: "",
-    agency: "Ministry of Defence (MoD)",
-    clearance: "Secret",
-    environment: "Air-gapped On-Premises",
-    procurementTrack: "GeM Portal (Direct)",
-    notes: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormSubmitted(true);
-  };
 
   return (
     <div className="min-h-screen bg-white text-slate-900 selection:bg-orange-500/20 selection:text-orange-900">
@@ -482,7 +449,7 @@ export default function GovernmentPage() {
         {/* =========================================================================
             SECTION 4: PROCUREMENT & ACQUISITION CHANNELS (IMAGE 2 STEP STYLE)
             ========================================================================= */}
-        <section id="procurement" className="section py-20 sm:py-28 bg-gray-50 border-y border-gray-200/80">
+        <section id="procurement" className="section py-20 sm:py-28 bg-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="mb-10 sm:mb-14 max-w-2xl">
               <h2 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#111827]">
@@ -493,86 +460,151 @@ export default function GovernmentPage() {
               </p>
             </div>
 
-            {/* 3 Structured Boxes combining Image 1 Black Bottom & Image 2 Technical Metadata */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-2">
-              {/* Box 1: GeM Portal */}
-              <div className="flex flex-col justify-between bg-white rounded-2xl sm:rounded-3xl border border-gray-200/90 shadow-xs p-6 sm:p-8 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+            {/* 3 Structured Boxes using Image 2 curved corner notch design with gray-50 boxes and orange, purple, and pink circular buttons */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              {/* Card 1: GeM Portal (Orange) */}
+              <div className="relative bg-gray-50 rounded-[32px] border border-gray-200 p-7 sm:p-8 pb-16 flex flex-col justify-between min-h-[360px] group transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden">
                 <div>
-                  <div className="flex items-center justify-between font-mono text-xs text-gray-500 pb-3 mb-4 border-b border-gray-200">
-                    <span className="font-semibold text-orange-600">CHANNEL 01</span>
-                    <span className="font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded">DIRECT GeM</span>
+                  {/* Top-left Icon */}
+                  <div className="w-13 h-13 rounded-2xl bg-orange-100/90 text-orange-600 flex items-center justify-center mb-6">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
+                      <circle cx="12" cy="12" r="3" />
+                      <circle cx="19" cy="6" r="2.5" />
+                      <circle cx="5" cy="6" r="2.5" />
+                      <circle cx="6" cy="18" r="2.5" />
+                      <circle cx="18" cy="18" r="2.5" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.2 10.2L6.8 7.8M13.8 10.2l3.4-2.4M10.2 13.8l-3.4 2.4M13.8 13.8l3.4 2.4" />
+                    </svg>
                   </div>
 
-                  <h3 className="text-xl font-bold text-[#111827]">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#111827] tracking-tight leading-snug">
                     Government e-Marketplace (GeM)
                   </h3>
 
-                  <p className="mt-3 text-sm text-[#4b5563] leading-relaxed">
+                  <p className="mt-4 text-sm text-[#4b5563] leading-relaxed">
                     Direct contracting and catalog item procurement on GeM 5.0 for Central Ministries, State Governments, and Armed Forces field headquarters under pre-negotiated rate cards.
                   </p>
+                </div>
 
-                  <div className="mt-6 space-y-2">
-                    <div className="text-xs font-mono bg-gray-50 p-2.5 rounded-lg border border-gray-200 text-gray-700">
-                      <span className="text-gray-500">Seller Category:</span> AI Platform &amp; Software
-                    </div>
-                    <div className="text-xs font-mono bg-gray-50 p-2.5 rounded-lg border border-gray-200 text-gray-700">
-                      <span className="text-gray-500">Compliance:</span> GFR 2017 Rule 149
-                    </div>
-                  </div>
+                {/* Corner cutout notch */}
+                <svg className="absolute bottom-0 right-0 w-[104px] h-[104px] pointer-events-none" viewBox="0 0 104 104" fill="none">
+                  <path
+                    d="M 104 0 C 104 18 92 30 74 30 C 42 30 30 42 30 74 C 30 92 18 104 0 104 L 104 104 Z"
+                    fill="#FFFFFF"
+                  />
+                  <path
+                    d="M 104 0 C 104 18 92 30 74 30 C 42 30 30 42 30 74 C 30 92 18 104 0 104"
+                    stroke="#E5E7EB"
+                    strokeWidth="1.5"
+                    fill="none"
+                  />
+                </svg>
+
+                {/* Orange Circular Button */}
+                <div className="absolute bottom-3 right-3 z-10">
+                  <a
+                    href="#intake"
+                    className="w-14 h-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-500/25 hover:scale-105 active:scale-95 transition-all duration-200 group-hover:rotate-12"
+                    aria-label="Procure via GeM"
+                  >
+                    <ArrowUpRight className="w-6 h-6" strokeWidth={2.5} />
+                  </a>
                 </div>
               </div>
 
-              {/* Box 2: iDEX & DIO */}
-              <div className="flex flex-col justify-between bg-white rounded-2xl sm:rounded-3xl border border-gray-200/90 shadow-xs p-6 sm:p-8 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              {/* Card 2: iDEX (Purple) */}
+              <div className="relative bg-gray-50 rounded-[32px] border border-gray-200 p-7 sm:p-8 pb-16 flex flex-col justify-between min-h-[360px] group transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden">
                 <div>
-                  <div className="flex items-center justify-between font-mono text-xs text-gray-500 pb-3 mb-4 border-b border-gray-200">
-                    <span className="font-semibold text-pink-600">CHANNEL 02</span>
-                    <span className="font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded">R&amp;D GRANT</span>
+                  {/* Top-left Icon */}
+                  <div className="w-13 h-13 rounded-2xl bg-purple-100/90 text-purple-600 flex items-center justify-center mb-6">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
+                      <circle cx="12" cy="12" r="2" fill="currentColor" />
+                      <ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(30 12 12)" />
+                      <ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(90 12 12)" />
+                      <ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(150 12 12)" />
+                    </svg>
                   </div>
 
-                  <h3 className="text-xl font-bold text-[#111827]">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#111827] tracking-tight leading-snug">
                     Innovations for Defence Excellence (iDEX)
                   </h3>
 
-                  <p className="mt-3 text-sm text-[#4b5563] leading-relaxed">
+                  <p className="mt-4 text-sm text-[#4b5563] leading-relaxed">
                     Participation in Defence India Startup Challenges (DISC) and Open Challenges under the Defence Innovation Organisation (DIO) for co-funded advanced prototype developments.
                   </p>
+                </div>
 
-                  <div className="mt-6 space-y-2">
-                    <div className="text-xs font-mono bg-gray-50 p-2.5 rounded-lg border border-gray-200 text-gray-700">
-                      <span className="text-gray-500">Program:</span> DISC &amp; Prime Challenges
-                    </div>
-                    <div className="text-xs font-mono bg-gray-50 p-2.5 rounded-lg border border-gray-200 text-gray-700">
-                      <span className="text-gray-500">Ministry:</span> Department of Defence Production
-                    </div>
-                  </div>
+                {/* Corner cutout notch */}
+                <svg className="absolute bottom-0 right-0 w-[104px] h-[104px] pointer-events-none" viewBox="0 0 104 104" fill="none">
+                  <path
+                    d="M 104 0 C 104 18 92 30 74 30 C 42 30 30 42 30 74 C 30 92 18 104 0 104 L 104 104 Z"
+                    fill="#FFFFFF"
+                  />
+                  <path
+                    d="M 104 0 C 104 18 92 30 74 30 C 42 30 30 42 30 74 C 30 92 18 104 0 104"
+                    stroke="#E5E7EB"
+                    strokeWidth="1.5"
+                    fill="none"
+                  />
+                </svg>
+
+                {/* Purple Circular Button */}
+                <div className="absolute bottom-3 right-3 z-10">
+                  <a
+                    href="#intake"
+                    className="w-14 h-14 rounded-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center shadow-lg shadow-purple-600/25 hover:scale-105 active:scale-95 transition-all duration-200 group-hover:rotate-12"
+                    aria-label="Procure via iDEX"
+                  >
+                    <ArrowUpRight className="w-6 h-6" strokeWidth={2.5} />
+                  </a>
                 </div>
               </div>
 
-              {/* Box 3: DRDO TDF & DPSU Alliances */}
-              <div className="flex flex-col justify-between bg-white rounded-2xl sm:rounded-3xl border border-gray-200/90 shadow-xs p-6 sm:p-8 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              {/* Card 3: DRDO & DPSU Alliances (Pink) */}
+              <div className="relative bg-gray-50 rounded-[32px] border border-gray-200 p-7 sm:p-8 pb-16 flex flex-col justify-between min-h-[360px] group transition-all duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden">
                 <div>
-                  <div className="flex items-center justify-between font-mono text-xs text-gray-500 pb-3 mb-4 border-b border-gray-200">
-                    <span className="font-semibold text-purple-600">CHANNEL 03</span>
-                    <span className="font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded">STRATEGIC DPSU</span>
+                  {/* Top-left Icon */}
+                  <div className="w-13 h-13 rounded-2xl bg-pink-100/90 text-pink-600 flex items-center justify-center mb-6">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 6l3-3m0 0h-3m3 0v3" />
+                    </svg>
                   </div>
 
-                  <h3 className="text-xl font-bold text-[#111827]">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#111827] tracking-tight leading-snug">
                     DRDO &amp; DPSU Strategic Alliances
                   </h3>
 
-                  <p className="mt-3 text-sm text-[#4b5563] leading-relaxed">
+                  <p className="mt-4 text-sm text-[#4b5563] leading-relaxed">
                     Joint system integration partnerships through DRDO&apos;s Technology Development Fund (TDF) and native subsystem embedding with Indian DPSUs (BEL, HAL, BDL, MDL).
                   </p>
+                </div>
 
-                  <div className="mt-6 space-y-2">
-                    <div className="text-xs font-mono bg-gray-50 p-2.5 rounded-lg border border-gray-200 text-gray-700">
-                      <span className="text-gray-500">Framework:</span> DRDO TDF / ToT Protocols
-                    </div>
-                    <div className="text-xs font-mono bg-gray-50 p-2.5 rounded-lg border border-gray-200 text-gray-700">
-                      <span className="text-gray-500">Partners:</span> BEL, HAL, BDL Ecosystem
-                    </div>
-                  </div>
+                {/* Corner cutout notch */}
+                <svg className="absolute bottom-0 right-0 w-[104px] h-[104px] pointer-events-none" viewBox="0 0 104 104" fill="none">
+                  <path
+                    d="M 104 0 C 104 18 92 30 74 30 C 42 30 30 42 30 74 C 30 92 18 104 0 104 L 104 104 Z"
+                    fill="#FFFFFF"
+                  />
+                  <path
+                    d="M 104 0 C 104 18 92 30 74 30 C 42 30 30 42 30 74 C 30 92 18 104 0 104"
+                    stroke="#E5E7EB"
+                    strokeWidth="1.5"
+                    fill="none"
+                  />
+                </svg>
+
+                {/* Pink Circular Button */}
+                <div className="absolute bottom-3 right-3 z-10">
+                  <a
+                    href="#intake"
+                    className="w-14 h-14 rounded-full bg-pink-500 hover:bg-pink-600 text-white flex items-center justify-center shadow-lg shadow-pink-500/25 hover:scale-105 active:scale-95 transition-all duration-200 group-hover:rotate-12"
+                    aria-label="Procure via DRDO and DPSUs"
+                  >
+                    <ArrowUpRight className="w-6 h-6" strokeWidth={2.5} />
+                  </a>
                 </div>
               </div>
             </div>
@@ -580,241 +612,87 @@ export default function GovernmentPage() {
         </section>
 
         {/* =========================================================================
-            SECTION 5: HIGH-ASSURANCE PROCUREMENT INTAKE
+            SECTION 5: HIGH-ASSURANCE PROCUREMENT PROTOCOL (STREAMLINED & CLUTTER-FREE)
             ========================================================================= */}
-        <section id="intake" className="section py-20 sm:py-28">
+        <section id="intake" className="section py-20 sm:py-28 bg-gray-50/70 border-t border-gray-200/80">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-              {/* Left Column: Protocol Instructions */}
-              <div className="lg:col-span-5">
-                <h2 className="mt-4 text-2xl sm:text-3xl font-bold tracking-tight text-[#111827]">
-                  High-Assurance Procurement Protocol
-                </h2>
+            {/* Section Header */}
+            <div className="max-w-3xl mb-12 sm:mb-16">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-mono font-medium mb-4">
+                <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Strict Security Protocol</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#111827]">
+                High-Assurance Procurement Protocol
+              </h2>
+              <p className="mt-4 text-sm sm:text-base text-[#4b5563] leading-relaxed">
+                We maintain strict vetting protocols for air-gapped demonstrations, benchmark evaluations, and physical node inspections at our secured New Delhi facilities or on-site customer enclaves.
+              </p>
+            </div>
 
-                <p className="mt-3 text-sm sm:text-base text-[#4b5563] leading-relaxed">
-                  We maintain strict vetting protocols for air-gapped demonstrations, benchmark evaluations, and physical node inspections at our secured New Delhi facilities or on-site customer enclaves.
-                </p>
-
-                {/* 4 Protocol Steps (Using Image 2 Step Design) */}
-                <div className="mt-8 space-y-4">
-                  <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
-                    <div className="flex items-center justify-between font-mono text-xs text-gray-500 mb-1.5">
-                      <span className="font-semibold text-[#111827]">PHASE 01</span>
-                      <span className="text-orange-600 font-semibold">VERIFICATION</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-[#111827]">Institutional Identity Vetting</h4>
-                    <p className="mt-1 text-xs text-[#4b5563] leading-relaxed">
-                      Submission verified against official `@nic.in`, `@gov.in`, or armed forces domains with statutory authorized officer verification.
-                    </p>
+            {/* 4 Protocol Steps Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Step 1 */}
+              <div className="flex flex-col justify-between bg-white rounded-2xl border border-gray-200/90 p-6 sm:p-7 shadow-xs hover:border-gray-300 hover:shadow-md transition-all duration-200">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs text-gray-500 pb-3 mb-4 border-b border-gray-100">
+                    <span className="font-semibold text-[#111827]">PHASE 01</span>
+                    <span className="text-orange-600 font-semibold">VERIFICATION</span>
                   </div>
-
-                  <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
-                    <div className="flex items-center justify-between font-mono text-xs text-gray-500 mb-1.5">
-                      <span className="font-semibold text-[#111827]">PHASE 02</span>
-                      <span className="text-pink-600 font-semibold">LEGAL &amp; NDA</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-[#111827]">Security NDA &amp; Scope Formalization</h4>
-                    <p className="mt-1 text-xs text-[#4b5563] leading-relaxed">
-                      Execution of bilateral defense non-disclosure agreement protecting sovereign intellectual property and test datasets.
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
-                    <div className="flex items-center justify-between font-mono text-xs text-gray-500 mb-1.5">
-                      <span className="font-semibold text-[#111827]">PHASE 03</span>
-                      <span className="text-purple-600 font-semibold">ISOLATED POC</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-[#111827]">Air-Gapped Sandbox Demonstration</h4>
-                    <p className="mt-1 text-xs text-[#4b5563] leading-relaxed">
-                      Deployment of standalone evaluation node inside your air-gapped facility or sovereign cloud test tenant.
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
-                    <div className="flex items-center justify-between font-mono text-xs text-gray-500 mb-1.5">
-                      <span className="font-semibold text-[#111827]">PHASE 04</span>
-                      <span className="text-emerald-600 font-semibold">HANDOVER</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-[#111827]">Delivery &amp; Source Escrow</h4>
-                    <p className="mt-1 text-xs text-[#4b5563] leading-relaxed">
-                      Full model weight packaging, offline deployment images, and statutory source code escrow under Indian jurisdiction.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex items-center gap-2 text-xs font-mono text-gray-500">
-                  <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                  <span>Sovereign Briefing Center: New Delhi, India</span>
+                  <h3 className="text-base font-bold text-[#111827]">
+                    Institutional Identity Vetting
+                  </h3>
+                  <p className="mt-3 text-xs sm:text-sm text-[#4b5563] leading-relaxed">
+                    Submission verified against official `@nic.in`, `@gov.in`, or armed forces domains with statutory authorized officer verification.
+                  </p>
                 </div>
               </div>
 
-              {/* Right Column: Secure Procurement Intake Form (Clean Monochrome UI) */}
-              <div className="lg:col-span-7">
-                <div className="rounded-2xl sm:rounded-3xl border border-gray-200/90 shadow-xs bg-white p-6 sm:p-10">
-                  {formSubmitted ? (
-                    <div className="py-12 text-center">
-                      <div className="mx-auto w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 mb-4">
-                        <CheckCircle2 className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900">Procurement Dossier Initiated</h3>
-                      <p className="mt-2 text-sm text-gray-600 max-w-md mx-auto">
-                        Your request has been routed to our Sovereign &amp; Defence Architecture liaison desk. An Indian National Security Cleared representative will initiate contact via verified channels within 12 business hours.
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setFormSubmitted(false)}
-                        className="mt-6 inline-flex items-center text-xs font-mono font-semibold text-gray-900 hover:text-orange-600 underline"
-                      >
-                        Submit Another Request
-                      </button>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                      <div className="border-b border-gray-100 pb-4">
-                        <h3 className="text-lg font-bold text-gray-900">
-                          Classified Demonstration &amp; Acquisition Intake
-                        </h3>
-                        <p className="mt-1 text-xs text-gray-500">
-                          Restricted to verified Government of India, Tri-Services, MHA, and DPSU authorized personnel.
-                        </p>
-                      </div>
+              {/* Step 2 */}
+              <div className="flex flex-col justify-between bg-white rounded-2xl border border-gray-200/90 p-6 sm:p-7 shadow-xs hover:border-gray-300 hover:shadow-md transition-all duration-200">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs text-gray-500 pb-3 mb-4 border-b border-gray-100">
+                    <span className="font-semibold text-[#111827]">PHASE 02</span>
+                    <span className="text-pink-600 font-semibold">LEGAL &amp; NDA</span>
+                  </div>
+                  <h3 className="text-base font-bold text-[#111827]">
+                    Security NDA &amp; Scope Formalization
+                  </h3>
+                  <p className="mt-3 text-xs sm:text-sm text-[#4b5563] leading-relaxed">
+                    Execution of bilateral defense non-disclosure agreement protecting sovereign intellectual property and test datasets.
+                  </p>
+                </div>
+              </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {/* Official Email */}
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wider mb-1.5">
-                            Official Email <span className="text-orange-600">*</span>
-                          </label>
-                          <input
-                            type="email"
-                            required
-                            placeholder="officer@nic.in / @mod.gov.in"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            className="w-full rounded-lg border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-gray-900"
-                          />
-                        </div>
+              {/* Step 3 */}
+              <div className="flex flex-col justify-between bg-white rounded-2xl border border-gray-200/90 p-6 sm:p-7 shadow-xs hover:border-gray-300 hover:shadow-md transition-all duration-200">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs text-gray-500 pb-3 mb-4 border-b border-gray-100">
+                    <span className="font-semibold text-[#111827]">PHASE 03</span>
+                    <span className="text-purple-600 font-semibold">ISOLATED POC</span>
+                  </div>
+                  <h3 className="text-base font-bold text-[#111827]">
+                    Air-Gapped Sandbox Demonstration
+                  </h3>
+                  <p className="mt-3 text-xs sm:text-sm text-[#4b5563] leading-relaxed">
+                    Deployment of standalone evaluation node inside your air-gapped facility or sovereign cloud test tenant.
+                  </p>
+                </div>
+              </div>
 
-                        {/* Officer Name & Rank */}
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wider mb-1.5">
-                            Full Name &amp; Rank / Designation <span className="text-orange-600">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            placeholder="e.g. Col. / Director / Scientist-G"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="w-full rounded-lg border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-gray-900"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {/* Ministry / Agency */}
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wider mb-1.5">
-                            Ministry / Agency Affiliation
-                          </label>
-                          <select
-                            value={formData.agency}
-                            onChange={(e) => setFormData({ ...formData, agency: e.target.value })}
-                            className="w-full rounded-lg border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm text-gray-900 focus:border-gray-900 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-gray-900"
-                          >
-                            <option value="Ministry of Defence (MoD)">Ministry of Defence (MoD)</option>
-                            <option value="Ministry of Home Affairs (MHA)">Ministry of Home Affairs (MHA)</option>
-                            <option value="Indian Army / Navy / Air Force">Indian Army / Navy / Air Force</option>
-                            <option value="CAPFs (CRPF, BSF, ITBP, CISF)">CAPFs (CRPF, BSF, ITBP, CISF)</option>
-                            <option value="Defence PSU (BEL, HAL, BDL)">Defence PSU (BEL, HAL, BDL)</option>
-                            <option value="DRDO / National Lab">DRDO / National Laboratory</option>
-                            <option value="MeitY / NIC / State IT Dept">MeitY / NIC / State IT Department</option>
-                          </select>
-                        </div>
-
-                        {/* Clearance Level */}
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wider mb-1.5">
-                            Target Clearance Level
-                          </label>
-                          <select
-                            value={formData.clearance}
-                            onChange={(e) => setFormData({ ...formData, clearance: e.target.value })}
-                            className="w-full rounded-lg border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm text-gray-900 focus:border-gray-900 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-gray-900"
-                          >
-                            <option value="Restricted / Official">Restricted / Official Use</option>
-                            <option value="Confidential">Confidential</option>
-                            <option value="Secret">Secret</option>
-                            <option value="Top Secret / Air-Gapped">Top Secret / Air-Gapped</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {/* Deployment Environment */}
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wider mb-1.5">
-                            Deployment Architecture
-                          </label>
-                          <select
-                            value={formData.environment}
-                            onChange={(e) => setFormData({ ...formData, environment: e.target.value })}
-                            className="w-full rounded-lg border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm text-gray-900 focus:border-gray-900 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-gray-900"
-                          >
-                            <option value="Air-gapped On-Premises">Air-gapped On-Premises Facility</option>
-                            <option value="MeitY Sovereign Cloud">MeitY Empanelled Sovereign Cloud</option>
-                            <option value="Tactical Edge / Rugged Hardware">Tactical Edge / Rugged MIL-SPEC Hardware</option>
-                            <option value="Naval / Mobile Command Node">Naval / Mobile Command Vehicle</option>
-                          </select>
-                        </div>
-
-                        {/* Target Procurement Track */}
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wider mb-1.5">
-                            Preferred Acquisition Route
-                          </label>
-                          <select
-                            value={formData.procurementTrack}
-                            onChange={(e) => setFormData({ ...formData, procurementTrack: e.target.value })}
-                            className="w-full rounded-lg border border-gray-300 bg-gray-50/50 px-3.5 py-2.5 text-sm text-gray-900 focus:border-gray-900 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-gray-900"
-                          >
-                            <option value="GeM Portal (Direct)">GeM 5.0 Portal Direct Contract</option>
-                            <option value="iDEX / DISC Challenge">iDEX / DIO Innovation Challenge</option>
-                            <option value="DRDO TDF Joint Program">DRDO Technology Development Fund</option>
-                            <option value="Direct Institutional RFP / Tender">Direct Institutional RFP / Tender</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Mission Scope / Requirements */}
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-800 uppercase tracking-wider mb-1.5">
-                          Mission Scope &amp; Operational Requirements <span className="text-gray-400 font-normal normal-case">(optional)</span>
-                        </label>
-                        <textarea
-                          rows={3}
-                          placeholder="Brief operational overview, estimated edge nodes, sensor integration specifics..."
-                          value={formData.notes}
-                          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                          className="w-full rounded-lg border border-gray-300 bg-gray-50/50 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-gray-900 resize-none"
-                        />
-                      </div>
-
-                      {/* Submit Button */}
-                      <button
-                        type="submit"
-                        className="w-full rounded-xl bg-[#0f172a] hover:bg-slate-800 text-white text-sm font-semibold py-3.5 px-6 shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0f172a]"
-                      >
-                        <span>Submit Sovereign AI Procurement Request</span>
-                        <ArrowUpRight className="w-4 h-4 text-white" />
-                      </button>
-
-                      <div className="pt-2 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
-                        <Lock className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Protected by Hardware HSM • Air-Gapped Escalation Line</span>
-                      </div>
-                    </form>
-                  )}
+              {/* Step 4 */}
+              <div className="flex flex-col justify-between bg-white rounded-2xl border border-gray-200/90 p-6 sm:p-7 shadow-xs hover:border-gray-300 hover:shadow-md transition-all duration-200">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-xs text-gray-500 pb-3 mb-4 border-b border-gray-100">
+                    <span className="font-semibold text-[#111827]">PHASE 04</span>
+                    <span className="text-emerald-600 font-semibold">HANDOVER</span>
+                  </div>
+                  <h3 className="text-base font-bold text-[#111827]">
+                    Delivery &amp; Source Escrow
+                  </h3>
+                  <p className="mt-3 text-xs sm:text-sm text-[#4b5563] leading-relaxed">
+                    Full model weight packaging, offline deployment images, and statutory source code escrow under Indian jurisdiction.
+                  </p>
                 </div>
               </div>
             </div>
@@ -828,7 +706,7 @@ export default function GovernmentPage() {
           title="Deploy Sovereign Defence AI for National Security"
           description="Schedule a classified mission briefing with our Indian National Security Cleared architecture team at New Delhi HQ or at your command enclave."
           buttonText="Schedule Mission Briefing"
-          buttonHref="#intake"
+          buttonHref="/contact"
           secondaryText="Explore Sovereign Compliance"
           secondaryHref="#compliance"
         />
