@@ -124,7 +124,6 @@ All pages are located under the `app/` directory:
 | `/apireference` | `app/apireference/page.tsx` | Developer API reference and client endpoints |
 | `/blog` | `app/blog/page.tsx` | Engineering blog with custom procedural wireframe graphics and brand `#ff8b28` accents |
 | `/careers` | `app/careers/page.tsx` | Career opportunities, interactive principles, and role application flow |
-| `/certificate` | `app/certificate/page.tsx` | Certification verification portal |
 | `/changelog` | `app/changelog/page.tsx` | Product changelog and chronological release notes |
 | `/compliance` | `app/compliance/page.tsx` | Regulatory, HIPAA, GDPR, and enterprise compliance certifications |
 | `/contact` | `app/contact/page.tsx` | Contact, support inquiries, and sales consultation |
@@ -133,18 +132,14 @@ All pages are located under the `app/` directory:
 | `/docs` | `app/docs/page.tsx` | Comprehensive product documentation and integration guides |
 | `/education` | `app/education/page.tsx` | Higher education solutions, campus AI labs, and academic grants |
 | `/enterprise` | `app/enterprise/page.tsx` | Enterprise-grade AI solutions, dedicated infrastructure, and SLA tiers |
-| `/governance` | `app/governance/page.tsx` | AI governance, ethical guardrails, and transparency frameworks |
 | `/government` | `app/government/page.tsx` | Sovereign AI, air-gapped deployments, and public sector compliance |
-| `/integration` | `app/integration/page.tsx` | Ecosystem connectors and third-party workflow integrations |
 | `/login` | `app/login/page.tsx` | Standalone sign-in page with atmospheric background |
-| `/papers` | `app/papers/page.tsx` | Peer-reviewed research papers and technical whitepapers |
 | `/pricing` | `app/pricing/page.tsx` | Subscription tiers, billing calculator, and feature comparison matrix |
 | `/privacy` | `app/privacy/page.tsx` | Privacy policy and data handling practices |
 | `/research` | `app/research/page.tsx` | AI research mission, technical grid blueprint cards, and publication archive |
 | `/security` | `app/security/page.tsx` | Security architecture and trust center |
 | `/signup` | `app/signup/page.tsx` | Standalone registration page with unified auth context |
 | `/status` | `app/status/page.tsx` | Real-time platform status, incident history, and uptime metrics |
-| `/team` | `app/team/page.tsx` | Team members and leadership directory |
 | `/terms` | `app/terms/page.tsx` | Terms of service and usage policies |
 | `404` | `app/not-found.tsx` | Custom 404 Not Found error page |
 
@@ -159,6 +154,7 @@ All pages are located under the `app/` directory:
 - **Glassmorphic Team Architecture & Geometric Grids**: [app/about/page.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/about/page.tsx) features full-box glassmorphism cards (`backdrop-blur-md bg-white/75 border-white/60 shadow-xl`), procedural pixel tile geometry with dual-tone gradients (orange/white, purple/white, pink/white), and refined dark-grey hover interactions on team social links.
 - **Organic Geometric Half-Shapes**: [app/compliance/page.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/compliance/page.tsx) integrates 4 organic vector half-shapes (Orange Cross, Pink Rosette, Blue Concave Star Donut, Purple Clover) anchored in the top-right corner of each approach principle card with interactive hover zoom effects.
 - **Optimized Documentation Sidebar**: [app/docs/page.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/docs/page.tsx) provides a clean, fixed-width documentation drawer with unified button heights, left-aligned chevrons, right-aligned badges, and an unobtrusive 6px custom scrollbar.
+- **Sovereign AI & Government Architecture**: [app/government/page.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/government/page.tsx) integrates dedicated sovereign intelligence for national security, Tri-Services, and Paramilitary forces, strictly aligned with DAP 2020 Make in India mandates and DPDP Act / CERT-In data compliance.
 - **Enhanced Header Navigation**: [components/layout/header.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/layout/header.tsx) features an expanded Platform mega menu with Core Products (including coming soon badges for Rivinity Cloud and Supernova), categorized solution columns (`BUILD`, `AUTOMATE`, `CREATE`, `UNDERSTAND`, `GOVERN`) with bold visual hierarchy, and smooth accordion controls on mobile.
 - **Unified CTA Button System**: Standardized primary conversion buttons across all sub-pages (API Reference, Security, Compliance, Developer) with high-contrast pill styling, hover micro-interactions, and angled directional arrows.
 - **Procedural Geometric Illustration System**: Dynamic, zero-raster geometric shapes and atmospheric accents across Security, Blog, and Research sections.

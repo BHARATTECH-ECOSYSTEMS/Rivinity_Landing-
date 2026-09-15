@@ -88,7 +88,7 @@ const navItems: NavItem[] = [
         description: "Extend Rivinity with plugins",
       },
       {
-        label: "Rivinity Cloud",
+        label: "RivinityCloud",
         href: "/products/cloud",
         icon: Cloud,
         description: "Managed infra for your agents",
@@ -115,7 +115,7 @@ const navItems: NavItem[] = [
         label: "Automate",
         items: [
           { label: "Publish", href: "/products/deployments" },
-          { label: "Integrations", href: "/integration" },
+          { label: "Integrations", href: "/docs" },
         ],
       },
       {
