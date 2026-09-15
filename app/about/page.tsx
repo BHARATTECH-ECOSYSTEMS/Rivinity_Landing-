@@ -210,6 +210,153 @@ interface EditorialBlock {
   body: string;
   bullets: string[];
   reverse?: boolean;
+  gradient: string;
+  patternType: "pattern1" | "pattern2" | "pattern3";
+}
+
+function GeometricTilePattern({
+  type,
+}: {
+  type: "pattern1" | "pattern2" | "pattern3";
+}) {
+  if (type === "pattern1") {
+    // 7x7 Star Mandala (13 squares matching reference)
+    const step = 28;
+    const size = 22;
+    const offset = 13;
+    const squares = [
+      [3, 3], // center
+      [2, 2],
+      [1, 1], // diagonal top-left
+      [4, 2],
+      [5, 1], // diagonal top-right
+      [2, 4],
+      [1, 5], // diagonal bottom-left
+      [4, 4],
+      [5, 5], // diagonal bottom-right
+      [3, 0], // top
+      [3, 6], // bottom
+      [0, 3], // left
+      [6, 3], // right
+    ];
+    return (
+      <svg
+        viewBox="0 0 220 220"
+        className="w-36 h-36 sm:w-48 sm:h-48 drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+        fill="none"
+      >
+        {squares.map(([col, row], idx) => (
+          <rect
+            key={idx}
+            x={offset + col * step}
+            y={offset + row * step}
+            width={size}
+            height={size}
+            rx={1}
+            fill="#0f172a"
+          />
+        ))}
+      </svg>
+    );
+  }
+
+  if (type === "pattern2") {
+    // 7x7 Diamond Mandala (17 squares matching reference)
+    const step = 28;
+    const size = 22;
+    const offset = 13;
+    const squares = [
+      [3, 3], // center
+      [3, 1],
+      [2, 2],
+      [1, 3],
+      [2, 4],
+      [3, 5],
+      [4, 4],
+      [5, 3],
+      [4, 2], // diamond ring
+      [1, 1],
+      [5, 1],
+      [1, 5],
+      [5, 5], // 4 corners
+      [3, 0],
+      [3, 6],
+      [0, 3],
+      [6, 3], // outer cardinal points
+    ];
+    return (
+      <svg
+        viewBox="0 0 220 220"
+        className="w-36 h-36 sm:w-48 sm:h-48 drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+        fill="none"
+      >
+        {squares.map(([col, row], idx) => (
+          <rect
+            key={idx}
+            x={offset + col * step}
+            y={offset + row * step}
+            width={size}
+            height={size}
+            rx={1}
+            fill="#0f172a"
+          />
+        ))}
+      </svg>
+    );
+  }
+
+  // pattern3: 8x8 Hollow Octagon Emblem (24 squares matching reference)
+  const step = 25;
+  const size = 20;
+  const offset = 18;
+  const squares = [
+    // 4 Cardinal pairs
+    [3, 1],
+    [4, 1],
+    [3, 6],
+    [4, 6],
+    [1, 3],
+    [1, 4],
+    [6, 3],
+    [6, 4],
+    // 4 Stepped corners
+    [1, 1],
+    [2, 1],
+    [1, 2],
+    [5, 1],
+    [6, 1],
+    [6, 2],
+    [1, 5],
+    [1, 6],
+    [2, 6],
+    [6, 5],
+    [6, 6],
+    [5, 6],
+    // 4 Inner diagonal corners
+    [2, 2],
+    [5, 2],
+    [2, 5],
+    [5, 5],
+  ];
+  return (
+    <svg
+      viewBox="0 0 220 220"
+      className="w-36 h-36 sm:w-48 sm:h-48 drop-shadow-sm transition-transform duration-300 group-hover:scale-105"
+      fill="none"
+    >
+      {squares.map(([col, row], idx) => (
+        <rect
+          key={idx}
+          x={offset + col * step}
+          y={offset + row * step}
+          width={size}
+          height={size}
+          rx={1}
+          fill="#0f172a"
+        />
+      ))}
+    </svg>
+  );
 }
 
 const editorialBlocks: EditorialBlock[] = [
@@ -221,6 +368,8 @@ const editorialBlocks: EditorialBlock[] = [
       "An AI Agent that handles complex infrastructure and architecture automatically",
     ],
     reverse: false,
+    gradient: "linear-gradient(135deg, #FF6B00 0%, #FFA25E 44%, #FFFFFF 100%)",
+    patternType: "pattern1",
   },
   {
     eyebrow: "What inspires us",
@@ -230,6 +379,8 @@ const editorialBlocks: EditorialBlock[] = [
       "Complex ideas become live production apps through conversation",
     ],
     reverse: true,
+    gradient: "linear-gradient(135deg, #8B5CF6 0%, #B89CFA 44%, #FFFFFF 100%)",
+    patternType: "pattern2",
   },
   {
     eyebrow: "What drives us",
@@ -239,6 +390,8 @@ const editorialBlocks: EditorialBlock[] = [
       "Democratizing advanced AI infrastructure for everyone",
     ],
     reverse: false,
+    gradient: "linear-gradient(135deg, #EC4899 0%, #F472B6 44%, #FFFFFF 100%)",
+    patternType: "pattern3",
   },
 ];
 
@@ -269,7 +422,9 @@ export default function AboutPage() {
               Empowering the next generation of software creators
             </h1>
             <p className="mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              We believe software creation should be accessible to everyone. Our mission is to make turning an idea into production software as intuitive as writing a sentence.
+              We believe software creation should be accessible to everyone. Our
+              mission is to make turning an idea into production software as
+              intuitive as writing a sentence.
             </p>
           </div>
         </section>
@@ -284,19 +439,35 @@ export default function AboutPage() {
                 key={block.eyebrow}
                 className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
               >
-                {/* Visual Graphic with Badge */}
+                {/* Visual Graphic with Badge & Gradient Pattern (Glassmorphism Effect) */}
                 <div
-                  className={`w-full aspect-[16/10] rounded-[24px] sm:rounded-[28px] bg-[#f4efe9] border border-black/[0.04] flex items-center justify-center p-6 shadow-2xs ${
+                  className={`group relative w-full aspect-[16/10] rounded-[26px] sm:rounded-[30px] border border-white/60 flex items-center justify-center p-5 sm:p-7 shadow-[0_14px_36px_-10px_rgba(0,0,0,0.07),inset_0_1px_2px_rgba(255,255,255,0.85)] overflow-hidden transition-all duration-300 hover:shadow-[0_20px_45px_-8px_rgba(0,0,0,0.12)] ${
                     block.reverse ? "lg:order-2" : "lg:order-1"
                   }`}
+                  style={{ background: block.gradient }}
                 >
-                  <div className="bg-white rounded-full px-6 py-2.5 shadow-sm text-slate-800 text-xs sm:text-sm font-semibold border border-black/5">
+                  {/* Ambient glowing radial highlights for glass depth */}
+                  <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-white/35 blur-2xl pointer-events-none" />
+                  <div className="absolute -bottom-10 -right-10 w-44 h-44 rounded-full bg-white/40 blur-2xl pointer-events-none" />
+
+                  {/* Specular gloss sheen overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/25 via-transparent to-black/[0.02] pointer-events-none" />
+
+                  {/* Floating Frosted Glass Center Plate */}
+                  <div className="relative z-10 px-6 py-5 sm:px-8 sm:py-6 rounded-2xl sm:rounded-3xl bg-white/40 backdrop-blur-xl border border-white/80 shadow-[0_12px_32px_-6px_rgba(0,0,0,0.08),inset_0_1.5px_1.5px_rgba(255,255,255,0.95)] flex items-center justify-center transition-all duration-300 group-hover:scale-[1.03] group-hover:bg-white/50 group-hover:shadow-[0_16px_36px_-4px_rgba(0,0,0,0.12)]">
+                    <GeometricTilePattern type={block.patternType} />
+                  </div>
+
+                  {/* Glassmorphic Pill Badge at Bottom Center */}
+                  <div className="absolute bottom-3.5 sm:bottom-4 left-1/2 -translate-x-1/2 z-20 bg-white/85 backdrop-blur-xl rounded-full px-4 sm:px-5 py-1.5 sm:py-2 shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,1)] text-slate-800 text-xs sm:text-sm font-semibold border border-white/80 whitespace-nowrap">
                     {block.eyebrow}
                   </div>
                 </div>
 
                 {/* Content Text */}
-                <div className={`px-2 ${block.reverse ? "lg:order-1" : "lg:order-2"}`}>
+                <div
+                  className={`px-2 ${block.reverse ? "lg:order-1" : "lg:order-2"}`}
+                >
                   <h3 className="text-xl font-bold text-slate-700 mb-2">
                     {block.eyebrow}
                   </h3>
@@ -325,7 +496,9 @@ export default function AboutPage() {
               </h2>
 
               <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                We are a distributed team of systems architects, AI researchers, and product designers pushing the boundaries of autonomous runtime environments and cryptographic AI safety.
+                We are a distributed team of systems architects, AI researchers,
+                and product designers pushing the boundaries of autonomous
+                runtime environments and cryptographic AI safety.
               </p>
             </div>
 
@@ -354,19 +527,12 @@ export default function AboutPage() {
                           >
                             {member.initials}
                           </div>
-
-                          {/* Active Status Beacon */}
-                          <span className="absolute bottom-0 right-0 flex h-3.5 w-3.5">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white" />
-                          </span>
                         </div>
                       </div>
 
                       {/* Floating Platform / Badge Pill (Bottom Right) */}
                       <div className="absolute -bottom-3 right-3 sm:right-3.5 z-10">
                         <div className="inline-flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-xs border border-slate-200 px-3 py-1 text-[11px] font-semibold text-slate-900 shadow-2xs">
-                          <span className={`h-1.5 w-1.5 rounded-full ${member.badgeDot}`} />
                           <span>{member.badge}</span>
                         </div>
                       </div>
@@ -380,7 +546,9 @@ export default function AboutPage() {
                         </h3>
                       </div>
 
-                      <p className={`text-xs font-semibold ${member.roleColor} mt-0.5 mb-2`}>
+                      <p
+                        className={`text-xs font-semibold ${member.roleColor} mt-0.5 mb-2`}
+                      >
                         {member.role}
                       </p>
 
@@ -411,7 +579,7 @@ export default function AboutPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`${member.name}'s LinkedIn`}
-                          className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:border-[#FF6B00] hover:bg-[#FF6B00] hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-2xs"
+                          className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100 hover:border-slate-300 transition-all flex items-center justify-center cursor-pointer shadow-2xs"
                         >
                           <svg
                             className="w-3.5 h-3.5 fill-current"
@@ -428,7 +596,7 @@ export default function AboutPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`${member.name}'s X (Twitter)`}
-                          className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:border-slate-900 hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-2xs"
+                          className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100 hover:border-slate-300 transition-all flex items-center justify-center cursor-pointer shadow-2xs"
                         >
                           <svg
                             className="w-3.5 h-3.5 fill-current"
@@ -445,7 +613,7 @@ export default function AboutPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`${member.name}'s GitHub`}
-                          className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:border-slate-900 hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center cursor-pointer shadow-2xs"
+                          className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100 hover:border-slate-300 transition-all flex items-center justify-center cursor-pointer shadow-2xs"
                         >
                           <svg
                             className="w-3.5 h-3.5 fill-current"

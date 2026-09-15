@@ -17,8 +17,8 @@ const LOGO_GRADIENT_ID = "rivinity-supernova-gradient";
 const LOGO_GRADIENT_STOPS = [
   { offset: "0%", color: "#EA580C" }, // little dark orange (top-left)
   { offset: "35%", color: "#FF6B00" }, // rich vibrant brand orange
-  { offset: "70%", color: "#FF8C33" }, // warm orange
-  { offset: "100%", color: "#FDB06C" }, // clearly visible light orange (bottom-right)
+  { offset: "70%", color: "#FF8A3D" }, // warm orange
+  { offset: "100%", color: "#FFA866" }, // clean light orange (bottom-right)
 ];
 
 const RAW_PATHS: { d: string; tx: number; ty: number }[] = [
@@ -79,18 +79,28 @@ interface CosmicDust {
 }
 
 // Color palette mapping based on relative position or angle
-function getRivinityColor(angle: number): { hex: string; glow: string } {
+function getRivinityColor(
+  angle: number,
+  isInner?: boolean,
+): { hex: string; glow: string } {
   const normalized = ((angle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
   const frac = normalized / (Math.PI * 2);
 
-  if (frac < 0.3) {
-    return { hex: "#EA580C", glow: "rgba(234, 88, 12, 0.75)" }; // Dark Orange
-  } else if (frac < 0.6) {
+  if (isInner) {
+    // Inner particles: clean light orange tones (strictly no yellow)
+    return frac < 0.5
+      ? { hex: "#FF944D", glow: "rgba(255, 148, 77, 0.75)" }
+      : { hex: "#FFA866", glow: "rgba(255, 168, 102, 0.8)" };
+  }
+
+  if (frac < 0.28) {
+    return { hex: "#EA580C", glow: "rgba(234, 88, 12, 0.7)" }; // Dark Orange
+  } else if (frac < 0.58) {
     return { hex: "#FF6B00", glow: "rgba(255, 107, 0, 0.75)" }; // Vibrant Brand Orange
-  } else if (frac < 0.85) {
-    return { hex: "#FF8C33", glow: "rgba(255, 140, 51, 0.8)" }; // Warm Orange
+  } else if (frac < 0.82) {
+    return { hex: "#FF8A3D", glow: "rgba(255, 138, 61, 0.8)" }; // Warm Orange
   } else {
-    return { hex: "#FDB06C", glow: "rgba(253, 176, 108, 0.85)" }; // Visible Light Orange
+    return { hex: "#FFA866", glow: "rgba(255, 168, 102, 0.85)" }; // Light Orange
   }
 }
 
@@ -251,7 +261,7 @@ export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
       const blastAngle = targetAngle + (Math.random() - 0.5) * 0.9;
       const blastSpeed = 0.8 + Math.random() * 0.8;
 
-      const colors = getRivinityColor(targetAngle);
+      const colors = getRivinityColor(targetAngle, isInner);
 
       return {
         targetX,
@@ -292,7 +302,7 @@ export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
         angle,
         speed: (Math.random() - 0.5) * 0.003,
         size: 0.8 + Math.random() * 1.6,
-        color: i % 2 === 0 ? "#FF6B00" : i % 3 === 0 ? "#EA580C" : "#FDB06C",
+        color: i % 2 === 0 ? "#FF6B00" : i % 3 === 0 ? "#EA580C" : "#FFA866",
         alpha: 0.2 + Math.random() * 0.5,
         pulsePhase: Math.random() * Math.PI * 2,
       });
@@ -368,19 +378,19 @@ export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
         const flashIntensity = 1 - (p - 0.22) / 0.23;
         nebulaGrad.addColorStop(
           0,
-          `rgba(255, 255, 255, ${0.45 * flashIntensity})`,
+          `rgba(255, 255, 255, ${0.35 * flashIntensity})`,
         );
         nebulaGrad.addColorStop(
           0.2,
-          `rgba(253, 136, 31, ${0.26 * flashIntensity})`,
+          `rgba(255, 148, 77, ${0.25 * flashIntensity})`,
         );
         nebulaGrad.addColorStop(
           0.5,
-          `rgba(245, 169, 208, ${0.16 * flashIntensity})`,
+          `rgba(245, 169, 208, ${0.14 * flashIntensity})`,
         );
         nebulaGrad.addColorStop(
           0.75,
-          `rgba(139, 92, 246, ${0.08 * flashIntensity})`,
+          `rgba(139, 92, 246, ${0.07 * flashIntensity})`,
         );
         nebulaGrad.addColorStop(1, "rgba(139, 92, 246, 0)");
       } else if (p >= 0.65) {
@@ -389,7 +399,7 @@ export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
         const pulse = 1 + Math.sin(time * 0.002) * 0.03;
         nebulaGrad.addColorStop(
           0,
-          `rgba(253, 136, 31, ${0.07 * settleOp * pulse})`,
+          `rgba(255, 148, 77, ${0.07 * settleOp * pulse})`,
         );
         nebulaGrad.addColorStop(
           0.35,
@@ -402,7 +412,7 @@ export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
         const coreIntensity = p / 0.22;
         nebulaGrad.addColorStop(
           0,
-          `rgba(253, 136, 31, ${0.2 + coreIntensity * 0.4})`,
+          `rgba(255, 148, 77, ${0.2 + coreIntensity * 0.35})`,
         );
         nebulaGrad.addColorStop(
           0.4,
@@ -428,10 +438,10 @@ export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
         const flashRadius = blastT * 420;
         const flashAlpha = Math.max(0, 1 - blastT * 1.2);
 
-        // Expanding supersonic shockwave ring 1
+        // Expanding supersonic shockwave ring 1 (light orange)
         ctx.beginPath();
         ctx.arc(CENTER_X, CENTER_Y, flashRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(253, 136, 31, ${flashAlpha * 0.9})`;
+        ctx.strokeStyle = `rgba(255, 148, 77, ${flashAlpha * 0.9})`;
         ctx.lineWidth = Math.max(1, 14 * (1 - blastT));
         ctx.stroke();
 
@@ -495,7 +505,7 @@ export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
           if (sw.alpha > 0.01) {
             ctx.beginPath();
             ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(253, 136, 31, ${sw.alpha * 0.6})`;
+            ctx.strokeStyle = `rgba(255, 148, 77, ${sw.alpha * 0.6})`;
             ctx.lineWidth = Math.max(1, 4 * sw.alpha);
             ctx.stroke();
           }
@@ -529,6 +539,7 @@ export const RivinitySupernovaCanvas: React.FC<SupernovaCanvasProps> = ({
       // LAYER 4: Supernova Particles (Fades out completely once proper logo is made)
       // -----------------------------------------------------------------
       if (particleAlpha > 0.005) {
+        ctx.globalCompositeOperation = "source-over"; // Reset to source-over so overlapping particles keep their light orange color without turning yellow
         const particles = particlesRef.current;
 
         for (let i = 0; i < particles.length; i++) {

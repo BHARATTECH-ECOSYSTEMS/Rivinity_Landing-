@@ -53,6 +53,72 @@ const APPROACH = [
   },
 ];
 
+const APPROACH_SHAPES = [
+  // 01: Orange Rounded Cross (Top-Right in Image 2)
+  function OrangeCrossShape() {
+    return (
+      <svg viewBox="0 0 100 100" className="w-full h-full" fill="#EB8752">
+        <path d="M 37 14 C 37 6 43 0 50 0 C 57 0 63 6 63 14 L 63 29 C 63 33 67 37 71 37 L 86 37 C 94 37 100 43 100 50 C 100 57 94 63 86 63 L 71 63 C 67 63 63 67 63 71 L 63 86 C 63 94 57 100 50 100 C 43 100 37 94 37 86 L 37 71 C 37 67 33 63 29 63 L 14 63 C 6 63 0 57 0 50 C 0 43 6 37 14 37 L 29 37 C 33 37 37 33 37 29 Z" />
+      </svg>
+    );
+  },
+  // 02: Pink Scalloped Rosette (Bottom-Right in Image 2)
+  function PinkRosetteShape() {
+    return (
+      <svg viewBox="0 0 100 100" className="w-full h-full" fill="#E092C9">
+        <circle cx="50" cy="50" r="35" />
+        <circle cx="84" cy="50" r="11" />
+        <circle cx="79.4" cy="67" r="11" />
+        <circle cx="67" cy="79.4" r="11" />
+        <circle cx="50" cy="84" r="11" />
+        <circle cx="33" cy="79.4" r="11" />
+        <circle cx="20.6" cy="67" r="11" />
+        <circle cx="16" cy="50" r="11" />
+        <circle cx="20.6" cy="33" r="11" />
+        <circle cx="33" cy="20.6" r="11" />
+        <circle cx="50" cy="16" r="11" />
+        <circle cx="67" cy="20.6" r="11" />
+        <circle cx="79.4" cy="33" r="11" />
+      </svg>
+    );
+  },
+  // 03: Blue 4-Lobed Circle with Concave Star Hole (Bottom-Left in Image 2)
+  function BlueStarDonutShape() {
+    return (
+      <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+        <defs>
+          <mask id="compliance-star-hole">
+            <rect width="100" height="100" fill="white" />
+            <path
+              d="M 50 36 Q 50 50 36 50 Q 50 50 50 64 Q 50 50 64 50 Q 50 50 50 36 Z"
+              fill="black"
+            />
+          </mask>
+        </defs>
+        <g mask="url(#compliance-star-hole)" fill="#7BA5CF">
+          <circle cx="37" cy="37" r="27" />
+          <circle cx="63" cy="37" r="27" />
+          <circle cx="63" cy="63" r="27" />
+          <circle cx="37" cy="63" r="27" />
+          <rect x="36" y="36" width="28" height="28" />
+        </g>
+      </svg>
+    );
+  },
+  // 04: Purple 4-Petal Clover (Top-Left in Image 2)
+  function PurpleCloverShape() {
+    return (
+      <svg viewBox="0 0 100 100" className="w-full h-full" fill="#C795D6">
+        <circle cx="50" cy="27" r="20" />
+        <circle cx="50" cy="73" r="20" />
+        <circle cx="27" cy="50" r="20" />
+        <circle cx="73" cy="50" r="20" />
+        <rect x="30" y="30" width="40" height="40" rx="10" />
+      </svg>
+    );
+  },
+];
+
 const TABS = [
   {
     title: "Data Minimization",
@@ -418,14 +484,22 @@ export default function SecurityPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              {APPROACH.map((item) => {
-                const IconComp = item.icon;
+              {APPROACH.map((item, idx) => {
+                const ShapeComponent = APPROACH_SHAPES[idx % APPROACH_SHAPES.length];
                 return (
                   <div
                     key={item.number}
-                    className="group bg-white border border-[#E5E7EB] rounded-2xl sm:rounded-3xl p-6 shadow-xs hover:border-[#FF6B00]/40 transition-all hover:-translate-y-0.5 flex flex-col justify-between"
+                    className="group relative overflow-hidden bg-white border border-[#E5E7EB] rounded-2xl sm:rounded-3xl p-6 shadow-xs hover:border-[#FF6B00]/40 transition-all hover:-translate-y-0.5 flex flex-col justify-between"
                   >
-                    <div>
+                    {/* Top Right Corner Half Shape */}
+                    <div
+                      className="absolute -top-7 -right-7 sm:-top-8 sm:-right-8 w-20 h-20 sm:w-24 sm:h-24 pointer-events-none select-none transition-transform duration-300 group-hover:scale-110"
+                      aria-hidden="true"
+                    >
+                      <ShapeComponent />
+                    </div>
+
+                    <div className="relative z-10">
                       <div className="flex items-center justify-between mb-4">
                         <span className="font-mono text-xs font-bold text-[#6B7280]">
                           {item.number}

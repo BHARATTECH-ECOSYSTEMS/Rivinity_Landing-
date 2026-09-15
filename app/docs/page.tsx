@@ -172,51 +172,55 @@ export default function DocumentationPage() {
         <div className="container max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex gap-8 lg:gap-12 relative">
 
           {/* 1. STICKY LEFT SIDEBAR */}
-          <aside className="sticky top-28 sm:top-32 self-start w-64 shrink-0 hidden lg:block pr-4 space-y-6 max-h-[calc(100vh-9rem)] overflow-y-auto border-r border-slate-200/80">
-            {/* Quick Search / Filter Input */}
-            <div className="relative">
-              <Search
-                size={14}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-              />
-              <input
-                type="text"
-                placeholder="Filter documentation..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 text-xs font-medium text-[#0f172a] placeholder:text-slate-400 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] border border-slate-200 focus-visible:border-[#FF6B00] transition-all"
-              />
-            </div>
-
-            {filteredNavigation.map((cat) => (
-              <div key={cat.category}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-2 mb-2">
-                  {cat.category}
-                </p>
-                <nav className="space-y-1">
-                  {cat.items.map((item) => {
-                    const isActive = activeTab === item.id;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => scrollToSection(item.id)}
-                        className={`w-full flex items-center justify-between min-h-[38px] px-3.5 py-2 rounded-xl text-xs font-semibold transition cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] ${
-                          isActive
-                            ? "bg-[#FF6B00] text-white shadow-xs"
-                            : "text-slate-600 hover:bg-slate-50 hover:text-[#0f172a]"
-                        }`}
-                      >
-                        <span>{item.label}</span>
-                        <ChevronRight
-                          size={12}
-                          className={isActive ? "text-white" : "text-slate-400"}
-                        />
-                      </button>
-                    );
-                  })}
-                </nav>
+          <aside className="sticky top-28 sm:top-32 self-start w-[270px] shrink-0 hidden lg:block border-r border-slate-200/80 pb-8">
+            <div className="pr-3.5 space-y-3.5 max-h-[calc(100vh-9.5rem)] overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-200 hover:[&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent">
+              {/* Quick Search / Filter Input */}
+              <div className="relative mb-2">
+                <Search
+                  size={14}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                />
+                <input
+                  type="text"
+                  placeholder="Filter documentation..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-9 pl-8.5 pr-3 text-xs font-medium rounded-lg bg-slate-50/80 text-[#0f172a] placeholder:text-slate-400 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] border border-slate-200/90 focus-visible:border-[#FF6B00] transition-all"
+                />
               </div>
-            ))}
+
+              {filteredNavigation.map((cat) => (
+                <div key={cat.category} className="space-y-1">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-2.5 py-0.5">
+                    {cat.category}
+                  </p>
+                  <nav className="space-y-0.5">
+                    {cat.items.map((item) => {
+                      const isActive = activeTab === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => scrollToSection(item.id)}
+                          className={`w-full flex items-center justify-between h-[34px] px-2.5 rounded-lg text-xs font-medium transition cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] ${
+                            isActive
+                              ? "bg-[#FF6B00] text-white font-semibold shadow-xs"
+                              : "text-slate-600 hover:bg-slate-100/70 hover:text-[#0f172a]"
+                          }`}
+                        >
+                          <span className="truncate">{item.label}</span>
+                          <ChevronRight
+                            size={12}
+                            className={`shrink-0 ml-1.5 transition-transform ${
+                              isActive ? "text-white" : "text-slate-400"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </nav>
+                </div>
+              ))}
+            </div>
           </aside>
 
           {/* 2. MAIN CONTENT AREA */}

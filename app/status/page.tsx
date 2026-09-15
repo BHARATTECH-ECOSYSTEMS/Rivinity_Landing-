@@ -316,7 +316,7 @@ function ServiceRow({
       }`}
     >
       <div className="flex items-center gap-4">
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-[#F7F7F8] border border-[#E5E7EB] text-[#1A1A1A] mb-6">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-[#F7F7F8] border border-[#E5E7EB] text-[#1A1A1A] mb-10">
           {service.icon}
         </div>
 
@@ -408,7 +408,7 @@ function IncidentCard({
     <div className="rounded-2xl border border-[#E5E7EB] bg-[#F7F7F8] p-5 sm:p-6 shadow-xs">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4">
-          <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-2xl bg-white border border-[#E5E7EB] mt-4">
+          <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white border border-[#E5E7EB] mt-5">
             <AlertCircle className="size-4 text-[#FF6B00]" />
           </div>
 
