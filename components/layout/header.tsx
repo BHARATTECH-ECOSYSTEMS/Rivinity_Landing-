@@ -473,15 +473,13 @@ export default function Header() {
           >
             <span>Sign in</span>
           </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            type="button"
-            onClick={() => openAuth("signup")}
-            className="relative inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-[#FF5A1F] to-[#FF7A45] hover:from-[#E54D15] hover:to-[#FF5A1F] shadow-[0_2px_10px_rgba(255,90,31,0.28)] hover:shadow-[0_4px_16px_rgba(255,90,31,0.4)] active:scale-95 transition-all duration-200 cursor-pointer"
+          <Link
+            href="/dashboard"
+            style={{ color: "#ffffff" }}
+            className="relative inline-flex items-center justify-center px-5 py-2 text-sm font-semibold !text-white text-white rounded-full bg-gradient-to-r from-[#FF5A1F] to-[#FF7A45] hover:from-[#E54D15] hover:to-[#FF5A1F] shadow-[0_2px_10px_rgba(255,90,31,0.28)] hover:shadow-[0_4px_16px_rgba(255,90,31,0.4)] active:scale-95 transition-all duration-200 cursor-pointer select-none"
           >
-            Get Started
-          </motion.button>
+            <span className="!text-white text-white" style={{ color: "#ffffff" }}>Get Started</span>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -545,16 +543,14 @@ export default function Header() {
                 >
                   Sign in
                 </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    openAuth("signup");
-                  }}
-                  className="rounded-full bg-[#FF5A1F] hover:bg-[#E54D15] px-4 py-2.5 text-center text-xs font-semibold text-white shadow-md transition-all active:scale-95 cursor-pointer"
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileOpen(false)}
+                  style={{ color: "#ffffff" }}
+                  className="rounded-full bg-[#FF5A1F] hover:bg-[#E54D15] px-4 py-2.5 text-center text-xs font-semibold !text-white text-white shadow-md transition-all active:scale-95 cursor-pointer block"
                 >
-                  Get Started
-                </button>
+                  <span className="!text-white text-white" style={{ color: "#ffffff" }}>Get Started</span>
+                </Link>
               </div>
             </div>
           </motion.div>

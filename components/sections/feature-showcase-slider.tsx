@@ -20,6 +20,8 @@ import {
   Puzzle,
   ChevronDown,
   Copy,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import {
   motion,
@@ -703,10 +705,12 @@ const FEATURE_ACCENTS: Record<
 
 export function FeatureShowcaseSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const [mobileStep, setMobileStep] = useState(0);
   const [cardWidth, setCardWidth] = useState(325);
-  const [gap, setGap] = useState(24);
+  const [gap, setGap] = useState(36);
 
   useEffect(() => {
     setMounted(true);
@@ -714,13 +718,13 @@ export function FeatureShowcaseSlider() {
       if (typeof window !== "undefined") {
         if (window.innerWidth < 640) {
           setCardWidth(290);
-          setGap(16);
+          setGap(24);
         } else if (window.innerWidth < 1024) {
           setCardWidth(310);
-          setGap(20);
+          setGap(30);
         } else {
           setCardWidth(325);
-          setGap(24);
+          setGap(36);
         }
       }
     };
@@ -768,94 +772,242 @@ export function FeatureShowcaseSlider() {
     });
   };
 
+  // Mobile scroll handler to update active slide dot
+  const handleMobileScroll = () => {
+    if (!mobileScrollRef.current) return;
+    const el = mobileScrollRef.current;
+    const scrollLeft = el.scrollLeft;
+    const itemWidth = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 16
+      : 300;
+    const newIdx = Math.round(scrollLeft / itemWidth);
+    if (newIdx !== mobileStep && newIdx >= 0 && newIdx < SKELETON_FEATURES.length) {
+      setMobileStep(newIdx);
+    }
+  };
+
+  const scrollMobileTo = (index: number) => {
+    if (!mobileScrollRef.current) return;
+    const el = mobileScrollRef.current;
+    const targetCard = el.children[index] as HTMLElement;
+    if (targetCard) {
+      targetCard.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      setMobileStep(index);
+    }
+  };
+
   return (
-    <section
-      ref={containerRef}
-      className="relative w-full bg-[#fafbfc] border-b border-slate-100"
-      style={{ height: "300vh" }}
-      id="capabilities"
-    >
-      {/* Sticky Viewport Stage */}
-      <div className="sticky top-0 h-screen min-h-[580px] max-h-[1080px] w-full flex flex-col justify-center py-8 sm:py-12 md:py-14 overflow-hidden select-none">
-        {/* 1. Header Area */}
-        <div className="text-center max-w-3xl mx-auto px-4 shrink-0">
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 leading-tight">
+    <div id="capabilities" className="relative w-full">
+      {/* ==============================================================
+          MOBILE EXPERIENCE (< md): Native touch snap carousel
+          - No vertical scroll-trap
+          - Full header visibility
+          - Natural horizontal swipe with snap-to-card
+          - Prev / Next & dot pagination controls
+          ============================================================== */}
+      <div className="block md:hidden w-full bg-[#fafbfc] py-10 px-4 border-b border-slate-100">
+        {/* Mobile Header */}
+        <div className="text-center max-w-sm mx-auto mb-6">
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-950 leading-tight">
             One platform. Every intelligent capability.
           </h2>
-          <p className="mt-2.5 text-xs sm:text-sm md:text-base text-slate-600 max-w-xl mx-auto font-normal">
+          <p className="mt-2 text-xs text-slate-600 leading-relaxed font-normal">
             From autonomous multi-agent studios to generative video, neural audio labs, and
             full-stack website builders.
           </p>
         </div>
 
-        {/* 2. Sliding Cards Track */}
-        <div className="relative w-full z-10 overflow-hidden my-auto py-3 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
-          <div
-            className="flex items-center w-max"
-            style={{
-              paddingLeft: mounted ? `calc(50vw - ${cardWidth / 2}px)` : "1.5rem",
-              paddingRight: mounted ? `calc(50vw - ${cardWidth / 2}px)` : "1.5rem",
-            }}
-          >
-            <motion.div
-              style={{ x: xTranslate }}
-              className="flex items-center will-change-transform"
-            >
-              {SKELETON_FEATURES.map((feature, idx) => {
-                const Icon = feature.icon;
-                const isCurrent = activeStep === idx;
-                const accent = FEATURE_ACCENTS[feature.id] || {
-                  ring: "ring-2 ring-indigo-400/40",
-                  border: "border-indigo-300",
-                  glow: "shadow-lg",
-                  badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
-                  text: "text-indigo-600",
-                };
+        {/* Mobile Swipe Track */}
+        <div
+          ref={mobileScrollRef}
+          onScroll={handleMobileScroll}
+          className="flex items-center gap-6 overflow-x-auto snap-x snap-mandatory py-3 px-3 scrollbar-none touch-pan-x"
+          style={{
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          {SKELETON_FEATURES.map((feature, idx) => {
+            const Icon = feature.icon;
+            const isCurrent = mobileStep === idx;
+            const accent = FEATURE_ACCENTS[feature.id] || {
+              ring: "ring-2 ring-indigo-400/40",
+              border: "border-indigo-300",
+              glow: "shadow-lg",
+              badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
+              text: "text-indigo-600",
+            };
 
-                return (
-                  <div
-                    key={feature.id}
-                    onClick={() => scrollToStep(idx)}
-                    style={{
-                      width: `${cardWidth}px`,
-                      height: "405px",
-                      marginRight: idx === SKELETON_FEATURES.length - 1 ? 0 : `${gap}px`,
-                    }}
-                    className={`shrink-0 flex flex-col justify-between will-change-transform rounded-3xl bg-white p-5 cursor-pointer transition-all duration-300 ${
-                      isCurrent
-                        ? `${accent.border} ${accent.ring} ${accent.glow} scale-[1.03] z-20`
-                        : "border border-slate-200/85 shadow-xs opacity-75 hover:opacity-100 hover:scale-[1.01] hover:border-slate-300 hover:shadow-md z-10"
-                    }`}
-                  >
-                    {/* CARD TOP: Header with Icon + Title + Subtitle */}
-                    <div className="w-full text-left space-y-2">
-                      <div className="flex items-center gap-2.5">
-                        <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${feature.iconBg} ${feature.iconColor}`}
-                        >
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <h3 className="text-[16px] font-bold text-slate-950 tracking-tight leading-none">
-                          {feature.title}
-                        </h3>
+            return (
+              <div
+                key={feature.id}
+                onClick={() => scrollMobileTo(idx)}
+                className={`snap-center shrink-0 w-[84vw] max-w-[315px] h-[395px] flex flex-col justify-between rounded-3xl bg-white p-5 transition-all duration-300 ${
+                  isCurrent
+                    ? `${accent.border} ${accent.ring} ${accent.glow} shadow-md`
+                    : "border border-slate-200/85 shadow-xs opacity-95"
+                }`}
+              >
+                {/* CARD TOP: Header with Icon + Title + Subtitle */}
+                <div className="w-full text-left space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${feature.iconBg} ${feature.iconColor}`}
+                      >
+                        <Icon className="w-4 h-4" />
                       </div>
-                      <p className="text-[12px] sm:text-[12.5px] text-slate-500 font-normal leading-relaxed line-clamp-2 min-h-[38px]">
-                        {feature.subtitle}
-                      </p>
+                      <h3 className="text-[15px] font-bold text-slate-950 tracking-tight leading-none">
+                        {feature.title}
+                      </h3>
                     </div>
-
-                    {/* CARD BOTTOM: Wireframe / Skeleton Mockup Container */}
-                    <div className="relative w-full h-[250px] rounded-2xl overflow-hidden flex flex-col mt-3">
-                      {feature.preview}
-                    </div>
+                    <span className="text-[10px] font-mono font-medium text-slate-400">
+                      {String(idx + 1).padStart(2, "0")}/
+                      {String(SKELETON_FEATURES.length).padStart(2, "0")}
+                    </span>
                   </div>
-                );
-              })}
-            </motion.div>
+                  <p className="text-[11.5px] text-slate-500 font-normal leading-relaxed line-clamp-2 min-h-[34px]">
+                    {feature.subtitle}
+                  </p>
+                </div>
+
+                {/* CARD BOTTOM: Wireframe / Skeleton Mockup Container */}
+                <div className="relative w-full h-[245px] rounded-2xl overflow-hidden flex flex-col mt-2">
+                  {feature.preview}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Mobile Navigation Controls & Dots */}
+        <div className="mt-4 flex items-center justify-between max-w-[315px] mx-auto px-2">
+          <button
+            onClick={() => scrollMobileTo(Math.max(0, mobileStep - 1))}
+            disabled={mobileStep === 0}
+            aria-label="Previous capability"
+            className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 active:scale-95 transition-all shadow-2xs"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {/* Pagination Indicators */}
+          <div className="flex items-center gap-1.5">
+            {SKELETON_FEATURES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => scrollMobileTo(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`transition-all duration-300 rounded-full ${
+                  mobileStep === i
+                    ? "w-5 h-1.5 bg-orange-500"
+                    : "w-1.5 h-1.5 bg-slate-200 hover:bg-slate-300"
+                }`}
+              />
+            ))}
           </div>
+
+          <button
+            onClick={() => scrollMobileTo(Math.min(SKELETON_FEATURES.length - 1, mobileStep + 1))}
+            disabled={mobileStep === SKELETON_FEATURES.length - 1}
+            aria-label="Next capability"
+            className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 active:scale-95 transition-all shadow-2xs"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
-    </section>
+
+      {/* ==============================================================
+          DESKTOP EXPERIENCE (>= md): Cinematic Sticky Scroll Track
+          ============================================================== */}
+      <section
+        ref={containerRef}
+        className="hidden md:block relative w-full bg-[#fafbfc] border-b border-slate-100"
+        style={{ height: "300vh" }}
+      >
+        {/* Sticky Viewport Stage */}
+        <div className="sticky top-0 h-[100dvh] min-h-[580px] max-h-[1080px] w-full flex flex-col justify-center py-8 sm:py-12 md:py-14 overflow-hidden select-none">
+          {/* 1. Header Area */}
+          <div className="text-center max-w-3xl mx-auto px-4 shrink-0">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 leading-tight">
+              One platform. Every intelligent capability.
+            </h2>
+            <p className="mt-2.5 text-xs sm:text-sm md:text-base text-slate-600 max-w-xl mx-auto font-normal">
+              From autonomous multi-agent studios to generative video, neural audio labs, and
+              full-stack website builders.
+            </p>
+          </div>
+
+          {/* 2. Sliding Cards Track */}
+          <div className="relative w-full z-10 overflow-hidden my-auto py-3 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+            <div
+              className="flex items-center w-max"
+              style={{
+                paddingLeft: mounted ? `calc(50vw - ${cardWidth / 2}px)` : "1.5rem",
+                paddingRight: mounted ? `calc(50vw - ${cardWidth / 2}px)` : "1.5rem",
+              }}
+            >
+              <motion.div
+                style={{ x: xTranslate }}
+                className="flex items-center will-change-transform"
+              >
+                {SKELETON_FEATURES.map((feature, idx) => {
+                  const Icon = feature.icon;
+                  const isCurrent = activeStep === idx;
+                  const accent = FEATURE_ACCENTS[feature.id] || {
+                    ring: "ring-2 ring-indigo-400/40",
+                    border: "border-indigo-300",
+                    glow: "shadow-lg",
+                    badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
+                    text: "text-indigo-600",
+                  };
+
+                  return (
+                    <div
+                      key={feature.id}
+                      onClick={() => scrollToStep(idx)}
+                      style={{
+                        width: `${cardWidth}px`,
+                        height: "405px",
+                        marginRight: idx === SKELETON_FEATURES.length - 1 ? 0 : `${gap}px`,
+                      }}
+                      className={`shrink-0 flex flex-col justify-between will-change-transform rounded-3xl bg-white p-5 cursor-pointer transition-all duration-300 ${
+                        isCurrent
+                          ? `${accent.border} ${accent.ring} ${accent.glow} scale-[1.03] z-20`
+                          : "border border-slate-200/85 shadow-xs opacity-75 hover:opacity-100 hover:scale-[1.01] hover:border-slate-300 hover:shadow-md z-10"
+                      }`}
+                    >
+                      {/* CARD TOP: Header with Icon + Title + Subtitle */}
+                      <div className="w-full text-left space-y-2">
+                        <div className="flex items-center gap-2.5">
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${feature.iconBg} ${feature.iconColor}`}
+                          >
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <h3 className="text-[16px] font-bold text-slate-950 tracking-tight leading-none">
+                            {feature.title}
+                          </h3>
+                        </div>
+                        <p className="text-[12px] sm:text-[12.5px] text-slate-500 font-normal leading-relaxed line-clamp-2 min-h-[38px]">
+                          {feature.subtitle}
+                        </p>
+                      </div>
+
+                      {/* CARD BOTTOM: Wireframe / Skeleton Mockup Container */}
+                      <div className="relative w-full h-[250px] rounded-2xl overflow-hidden flex flex-col mt-3">
+                        {feature.preview}
+                      </div>
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
 

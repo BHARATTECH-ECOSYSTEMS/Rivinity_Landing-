@@ -14,12 +14,13 @@ export type Mode = "login" | "signup";
 export interface AuthModalProps {
   isOpen?: boolean;
   onClose?: () => void;
+  onSuccess?: (user?: { name?: string; email?: string }) => void;
   defaultMode?: Mode;
   isPage?: boolean;
 }
 
 /* ─── Security helpers ─── */
-const sanitize = (s: string, max = 128) => s.replace(/[<>&\"';`{}\\[\]$]/g, "").trim().slice(0, max);
+const sanitize = (s: string, max = 128) => s.replace(/[<>&\"';`{}\\[\]$]/g, "").slice(0, max);
 const emailOk = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) && e.length <= 254;
 
 /* ─── Rate limiter (simple ref-based) ─── */
@@ -91,7 +92,7 @@ const SOCIALS = [
 /* ================================================================
    MAIN MODAL
 ================================================================ */
-export default function AuthModal({ isOpen = true, onClose, defaultMode = "login", isPage = false }: AuthModalProps) {
+export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMode = "login", isPage = false }: AuthModalProps) {
   const [mode, setMode] = useState<Mode>(defaultMode);
   const [busy, setBusy] = useState(false);
   const [slide, setSlide] = useState(false);
@@ -238,7 +239,17 @@ export default function AuthModal({ isOpen = true, onClose, defaultMode = "login
       >
         <div className={`flex h-full w-full items-center px-5 py-5 sm:px-8 sm:py-8 ${isLogin ? "md:pl-10 md:pr-14 lg:pl-12 lg:pr-16" : "md:pl-16 md:pr-10 lg:pl-20 lg:pr-12"}`}>
           <div className={`w-full max-w-[420px] mx-auto md:mx-0 md:transition-all md:duration-300 ${slide ? "md:opacity-0 md:-translate-x-5" : "opacity-100 translate-x-0"}`}>
-            <FormContent mode={mode} busy={busy} setBusy={setBusy} onSwitch={() => switchMode(isLogin ? "signup" : "login")} honeyRef={honeyRef} checkRate={checkRate} />
+            <FormContent
+              mode={mode}
+              busy={busy}
+              setBusy={setBusy}
+              onSwitch={() => switchMode(isLogin ? "signup" : "login")}
+              honeyRef={honeyRef}
+              checkRate={checkRate}
+              onSuccess={onSuccess}
+              onClose={onClose}
+              isPage={isPage}
+            />
           </div>
         </div>
       </div>
@@ -271,9 +282,26 @@ export default function AuthModal({ isOpen = true, onClose, defaultMode = "login
 /* ================================================================
    FORM CONTENT (login + signup in one place)
 ================================================================ */
-function FormContent({ mode, busy, setBusy, onSwitch, honeyRef, checkRate }: {
-  mode: Mode; busy: boolean; setBusy: (v: boolean) => void; onSwitch: () => void;
-  honeyRef: React.RefObject<HTMLInputElement | null>; checkRate: () => { ok: boolean; wait: number };
+function FormContent({
+  mode,
+  busy,
+  setBusy,
+  onSwitch,
+  honeyRef,
+  checkRate,
+  onSuccess,
+  onClose,
+  isPage,
+}: {
+  mode: Mode;
+  busy: boolean;
+  setBusy: (v: boolean) => void;
+  onSwitch: () => void;
+  honeyRef: React.RefObject<HTMLInputElement | null>;
+  checkRate: () => { ok: boolean; wait: number };
+  onSuccess?: (user?: { name?: string; email?: string }) => void;
+  onClose?: () => void;
+  isPage?: boolean;
 }) {
   const isLogin = mode === "login";
   const [showPwd, setShowPwd] = useState(false);
@@ -289,11 +317,11 @@ function FormContent({ mode, busy, setBusy, onSwitch, honeyRef, checkRate }: {
   const validate = (): boolean => {
     const e: Record<string, string> = {};
     if (!isLogin) {
-      if (!sanitize(name)) e.name = "Name is required";
-      else if (name.length < 2) e.name = "Too short";
+      if (!name.trim()) e.name = "Name is required";
+      else if (name.trim().length < 2) e.name = "Too short";
     }
     if (!email.trim()) e.email = "Email is required";
-    else if (!emailOk(email)) e.email = "Invalid email";
+    else if (!emailOk(email.trim())) e.email = "Invalid email";
     if (!pwd) e.password = "Password is required";
     else if (pwd.length < (isLogin ? 6 : 8)) e.password = `Min ${isLogin ? 6 : 8} chars`;
     setErr(e);
@@ -310,8 +338,13 @@ function FormContent({ mode, busy, setBusy, onSwitch, honeyRef, checkRate }: {
 
     setLoading(true); setBusy(true);
     try {
-      await new Promise((r) => setTimeout(r, 1200)); // TODO: replace with API
-      // onSuccess -> close modal or redirect
+      await new Promise((r) => setTimeout(r, 600));
+      onSuccess?.({ name: name.trim(), email: email.trim() });
+      if (isPage) {
+        window.location.href = "/dashboard";
+      } else {
+        onClose?.();
+      }
     } catch {
       setErr({ general: isLogin ? "Invalid credentials." : "Signup failed. Try again." });
     } finally {
@@ -332,6 +365,14 @@ function FormContent({ mode, busy, setBusy, onSwitch, honeyRef, checkRate }: {
             key={id}
             type="button"
             disabled={busy || loading}
+            onClick={() => {
+              onSuccess?.({ name: `${name} User`, email: `user@${id}.com` });
+              if (isPage) {
+                window.location.href = "/dashboard";
+              } else {
+                onClose?.();
+              }
+            }}
             aria-label={`Continue with ${name}`}
             className="inline-flex h-10 sm:h-11 w-full items-center justify-center rounded-xl border border-neutral-200/90 bg-[#FAFAFA] text-neutral-800 shadow-2xs transition-all hover:bg-white hover:border-neutral-300 hover:shadow-xs active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/30 disabled:opacity-50 cursor-pointer"
           >

@@ -768,8 +768,8 @@ export function PoweredByRivinity() {
       className="relative w-full h-[125vh] sm:h-[145vh] md:h-[175vh] lg:h-[195vh] bg-white border-b border-gray-100/60"
       id="powered-by-rivinity"
     >
-      {/* Sticky Fullscreen Stage - Naturally positioned without unwanted top/bottom voids */}
-      <div className="sticky top-0 h-dvh min-h-[480px] w-full flex flex-col items-center justify-between pt-10 pb-5 sm:pt-14 sm:pb-7 md:pt-18 md:pb-8 px-4 sm:px-6">
+      {/* Sticky Fullscreen Stage - Naturally positioned with top clearance below fixed header */}
+      <div className="sticky top-0 h-dvh min-h-[480px] w-full flex flex-col items-center justify-between pt-20 pb-5 sm:pt-22 sm:pb-7 md:pt-24 md:pb-8 px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto space-y-1.5 sm:space-y-2 shrink-0">
           <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight">

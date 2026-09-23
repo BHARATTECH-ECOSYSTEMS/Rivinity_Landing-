@@ -171,14 +171,14 @@ export function Hero() {
           transition={{ duration: 0.5, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
           className="mt-8 flex flex-wrap items-center justify-center gap-3.5"
         >
-          <button
-            type="button"
-            onClick={() => openAuth("signup")}
-            className="group inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-[#0f172a] text-white text-sm font-semibold hover:bg-[#1e293b] shadow-[0_4px_16px_rgba(15,23,42,0.14)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.22)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+          <Link
+            href="/dashboard"
+            style={{ color: "#ffffff" }}
+            className="group inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-[#0f172a] !text-white text-white text-sm font-semibold hover:bg-[#1e293b] shadow-[0_4px_16px_rgba(15,23,42,0.14)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.22)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
           >
-            <span>Start Building</span>
-            <ArrowUpRight className="w-4 h-4 text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </button>
+            <span className="!text-white text-white font-semibold" style={{ color: "#ffffff" }}>Start Building</span>
+            <ArrowUpRight className="w-4 h-4 !text-white text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" style={{ color: "#ffffff", stroke: "#ffffff" }} />
+          </Link>
           <Link
             href="/docs"
             className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-white/95 hover:bg-white text-slate-800 text-sm font-medium border border-slate-200 shadow-xs hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"

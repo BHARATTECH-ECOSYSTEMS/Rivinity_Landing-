@@ -213,8 +213,10 @@ const STEPS: StepItem[] = [
 export function HowItWorks() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [mobileStep, setMobileStep] = useState(0);
   const [cardWidth, setCardWidth] = useState(380);
   const [mounted, setMounted] = useState(false);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -267,124 +269,254 @@ export function HowItWorks() {
     });
   };
 
+  // Mobile scroll handler to update active step pill
+  const handleMobileScroll = () => {
+    if (!mobileScrollRef.current) return;
+    const el = mobileScrollRef.current;
+    const scrollLeft = el.scrollLeft;
+    const itemWidth = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 16
+      : 300;
+    const newIdx = Math.round(scrollLeft / itemWidth);
+    if (newIdx !== mobileStep && newIdx >= 0 && newIdx < STEPS.length) {
+      setMobileStep(newIdx);
+    }
+  };
+
+  const scrollMobileTo = (index: number) => {
+    if (!mobileScrollRef.current) return;
+    const el = mobileScrollRef.current;
+    const targetCard = el.children[index] as HTMLElement;
+    if (targetCard) {
+      targetCard.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      setMobileStep(index);
+    }
+  };
+
   return (
-    <div
-      ref={containerRef}
-      className="section-sm relative w-full h-[150vh] sm:h-[180vh] md:h-[220vh] lg:h-[260vh] bg-white"
-    >
-      {/* Sticky Viewport Container - Naturally distributed without top/bottom dead zones */}
-      <div className="sticky top-0 h-[100dvh] w-full flex flex-col justify-between pt-8 pb-5 sm:pt-12 sm:pb-7 md:pt-16 md:pb-10 overflow-hidden">
-        {/* Section Header */}
-        <div className="container relative z-10 text-center flex flex-col items-center shrink-0">
-          <div className="max-w-2xl sm:max-w-3xl flex flex-col items-center">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#0f172a] leading-tight">
-              From code to production in 3 simple steps
-            </h2>
-          </div>
+    <div id="how-it-works" className="relative w-full">
+      {/* ==============================================================
+          MOBILE EXPERIENCE (< md): Native touch snap carousel
+          - Zero header overlap: generous clearance so fixed navbar never touches title
+          - Natural section height without 150vh vertical scroll-trap
+          - Native horizontal touch swipe with snap-to-center
+          - Synchronized step buttons: Connect | Configure | Deploy
+          ============================================================== */}
+      <div className="block md:hidden w-full bg-white pt-14 pb-12 px-4 border-b border-slate-100">
+        {/* Header with sufficient clearance below fixed navbar */}
+        <div className="text-center max-w-sm mx-auto mb-6">
+          <h2 className="text-2xl font-extrabold tracking-tight text-[#0f172a] leading-tight">
+            From code to production in 3 simple steps
+          </h2>
+          <p className="mt-2 text-xs text-slate-500 font-normal">
+            Everything you need to orchestrate models and ship AI workflows.
+          </p>
         </div>
 
-        {/* Horizontally Sliding Cards Track */}
-        <div className="relative w-full z-10 overflow-visible my-auto py-2">
-          <div
-            className="flex items-stretch w-max"
-            style={{
-              paddingLeft: mounted ? `calc(50vw - ${cardWidth / 2}px)` : "1rem",
-              paddingRight: mounted
-                ? `calc(50vw - ${cardWidth / 2}px)`
-                : "1rem",
-            }}
-          >
-            <motion.div
-              style={{ x: xTranslate }}
-              className="flex items-stretch gap-4 sm:gap-6 md:gap-8 transition-transform duration-75"
-            >
-              {STEPS.map((step, idx) => {
-                const Icon = step.icon;
-                const isCurrent = activeStep === idx;
+        {/* Mobile Swipe Track */}
+        <div
+          ref={mobileScrollRef}
+          onScroll={handleMobileScroll}
+          className="flex items-center gap-4 overflow-x-auto snap-x snap-mandatory py-3 px-3 scrollbar-none touch-pan-x"
+          style={{
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          {STEPS.map((step, idx) => {
+            const Icon = step.icon;
+            const isCurrent = mobileStep === idx;
 
-                return (
-                  <div
-                    key={step.number}
-                    onClick={() => scrollToStep(idx)}
-                    style={{ width: `${cardWidth}px` }}
-                    className={cn(
-                      "group relative overflow-hidden rounded-2xl sm:rounded-3xl flex flex-col justify-between transition-all duration-300 ease-out cursor-pointer select-none shrink-0 bg-white border border-gray-200/90",
-                      isCurrent
-                        ? "shadow-[0_20px_50px_-15px_rgba(0,0,0,0.10)] scale-[1.02] sm:scale-[1.03] hover:scale-[1.05] sm:hover:scale-[1.06] hover:shadow-[0_25px_65px_-12px_rgba(0,0,0,0.14)]"
-                        : "shadow-[0_8px_25px_rgba(0,0,0,0.03)] opacity-90 hover:opacity-100 scale-95 hover:scale-[1.01] sm:hover:scale-[1.02] hover:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.08)]",
-                    )}
-                  >
-                    {/* Top Visual Area (Pixelated Gradient Mosaic) */}
-                    <div className="w-full h-44 sm:h-48 relative overflow-hidden border-b border-gray-100">
-                      <PixelMosaicVisual
-                        palette={step.palette}
-                        label={step.label}
-                        isHovered={isCurrent}
-                        focalX={step.focalX}
-                        focalY={step.focalY}
-                      />
+            return (
+              <div
+                key={step.number}
+                onClick={() => scrollMobileTo(idx)}
+                className={cn(
+                  "snap-center shrink-0 w-[84vw] max-w-[315px] h-[395px] rounded-3xl bg-white border flex flex-col justify-between overflow-hidden transition-all duration-300",
+                  isCurrent
+                    ? "border-slate-300 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.12)] scale-[1.01]"
+                    : "border-gray-200/90 shadow-xs opacity-90",
+                )}
+              >
+                {/* Top Visual Area (Pixelated Gradient Mosaic) */}
+                <div className="w-full h-44 relative overflow-hidden border-b border-gray-100">
+                  <PixelMosaicVisual
+                    palette={step.palette}
+                    label={step.label}
+                    isHovered={isCurrent}
+                    focalX={step.focalX}
+                    focalY={step.focalY}
+                  />
 
-                      {/* Top Floating Control: Icon */}
-                      <div className="absolute top-3 left-3.5 z-10 pointer-events-none">
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/90 backdrop-blur-xs border border-white/80 flex items-center justify-center text-gray-900 shadow-2xs">
-                          <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom Content Area */}
-                    <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 bg-white space-y-2">
-                      <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#0f172a] tracking-tight leading-snug">
-                        {step.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm md:text-base text-slate-600 font-normal leading-relaxed">
-                        {step.description}
-                      </p>
+                  {/* Top Floating Control: Icon */}
+                  <div className="absolute top-3 left-3.5 z-10 pointer-events-none">
+                    <div className="w-9 h-9 rounded-xl bg-white/90 backdrop-blur-xs border border-white/80 flex items-center justify-center text-gray-900 shadow-2xs">
+                      <Icon className="w-4 h-4" />
                     </div>
                   </div>
-                );
-              })}
-            </motion.div>
-          </div>
+
+                  {/* Top Step Number Pill */}
+                  <div className="absolute top-3 right-3.5 z-10 pointer-events-none">
+                    <div className="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-xs text-white text-[10px] font-mono font-medium">
+                      {step.number}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Content Area */}
+                <div className="p-5 flex flex-col justify-between flex-1 bg-white space-y-2">
+                  <h3 className="text-lg font-bold text-[#0f172a] tracking-tight leading-snug">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Bottom Timeline & Step Pills - Centered Track */}
-        <div className="container relative z-10 flex flex-col items-center shrink-0">
-          <div className="relative w-full max-w-sm sm:max-w-xl md:max-w-2xl mx-auto pt-2 pb-2">
-            {/* Horizontal Continuous Track Line */}
-            <div className="absolute top-1/2 left-0 right-0 h-[2px] -translate-y-1/2 bg-slate-200 rounded-full" />
+        {/* Step Buttons (Connect, Configure, Deploy) */}
+        <div className="mt-5 flex items-center justify-center gap-2 max-w-[325px] mx-auto">
+          {STEPS.map((step, idx) => {
+            const isCurrent = mobileStep === idx;
+            return (
+              <button
+                key={step.title}
+                type="button"
+                onClick={() => scrollMobileTo(idx)}
+                className={cn(
+                  "flex-1 min-h-[42px] px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 active:scale-95 text-center truncate",
+                  isCurrent
+                    ? "bg-[#0f172a] text-white shadow-md scale-105"
+                    : "bg-white text-slate-700 border border-slate-200 shadow-2xs hover:border-slate-300",
+                )}
+              >
+                {step.title}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-            {/* Animated Active Track Fill */}
-            <motion.div
-              style={{ width: trackProgress }}
-              className="absolute top-1/2 left-0 h-[2px] -translate-y-1/2 bg-[#0f172a] rounded-full z-0"
-            />
+      {/* ==============================================================
+          DESKTOP EXPERIENCE (>= md): Cinematic Sticky Scroll Track
+          - pt-24 provides ample clearance below the fixed navbar
+          ============================================================== */}
+      <section
+        ref={containerRef}
+        className="hidden md:block section-sm relative w-full h-[220vh] lg:h-[260vh] bg-white"
+      >
+        {/* Sticky Viewport Container with pt-24 clearance */}
+        <div className="sticky top-0 h-[100dvh] w-full flex flex-col justify-between pt-24 pb-8 md:pt-28 md:pb-12 overflow-hidden">
+          {/* Section Header */}
+          <div className="container relative z-10 text-center flex flex-col items-center shrink-0">
+            <div className="max-w-2xl sm:max-w-3xl flex flex-col items-center">
+              <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-[#0f172a] leading-tight">
+                From code to production in 3 simple steps
+              </h2>
+            </div>
+          </div>
 
-            {/* Step Pills */}
-            <div className="relative z-10 flex items-center justify-between w-full">
-              {STEPS.map((step, idx) => {
-                const isCurrent = activeStep === idx;
+          {/* Horizontally Sliding Cards Track */}
+          <div className="relative w-full z-10 overflow-visible my-auto py-2">
+            <div
+              className="flex items-stretch w-max"
+              style={{
+                paddingLeft: mounted ? `calc(50vw - ${cardWidth / 2}px)` : "1rem",
+                paddingRight: mounted
+                  ? `calc(50vw - ${cardWidth / 2}px)`
+                  : "1rem",
+              }}
+            >
+              <motion.div
+                style={{ x: xTranslate }}
+                className="flex items-stretch gap-6 md:gap-8 transition-transform duration-75"
+              >
+                {STEPS.map((step, idx) => {
+                  const Icon = step.icon;
+                  const isCurrent = activeStep === idx;
 
-                return (
-                  <button
-                    key={step.title}
-                    type="button"
-                    onClick={() => scrollToStep(idx)}
-                    className={cn(
-                      "flex items-center justify-center min-h-[44px] px-4 sm:px-6 md:px-7 py-2 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2",
-                      isCurrent
-                        ? "bg-[#0f172a] text-white shadow-xl scale-110"
-                        : "bg-white text-slate-700 border border-slate-200 shadow-xs hover:border-slate-400 hover:text-slate-900 hover:scale-105",
-                    )}
-                  >
-                    {step.title}
-                  </button>
-                );
-              })}
+                  return (
+                    <div
+                      key={step.number}
+                      onClick={() => scrollToStep(idx)}
+                      style={{ width: `${cardWidth}px` }}
+                      className={cn(
+                        "group relative overflow-hidden rounded-2xl sm:rounded-3xl flex flex-col justify-between transition-all duration-300 ease-out cursor-pointer select-none shrink-0 bg-white border border-gray-200/90",
+                        isCurrent
+                          ? "shadow-[0_20px_50px_-15px_rgba(0,0,0,0.10)] scale-[1.02] sm:scale-[1.03] hover:scale-[1.05] sm:hover:scale-[1.06] hover:shadow-[0_25px_65px_-12px_rgba(0,0,0,0.14)]"
+                          : "shadow-[0_8px_25px_rgba(0,0,0,0.03)] opacity-90 hover:opacity-100 scale-95 hover:scale-[1.01] sm:hover:scale-[1.02] hover:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.08)]",
+                      )}
+                    >
+                      {/* Top Visual Area (Pixelated Gradient Mosaic) */}
+                      <div className="w-full h-44 sm:h-48 relative overflow-hidden border-b border-gray-100">
+                        <PixelMosaicVisual
+                          palette={step.palette}
+                          label={step.label}
+                          isHovered={isCurrent}
+                          focalX={step.focalX}
+                          focalY={step.focalY}
+                        />
+
+                        {/* Top Floating Control: Icon */}
+                        <div className="absolute top-3 left-3.5 z-10 pointer-events-none">
+                          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/90 backdrop-blur-xs border border-white/80 flex items-center justify-center text-gray-900 shadow-2xs">
+                            <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom Content Area */}
+                      <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 bg-white space-y-2">
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-[#0f172a] tracking-tight leading-snug">
+                          {step.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm md:text-base text-slate-600 font-normal leading-relaxed">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Bottom Timeline & Step Pills */}
+          <div className="container relative z-10 flex flex-col items-center shrink-0">
+            <div className="relative w-full max-w-sm sm:max-w-xl md:max-w-2xl mx-auto pt-2 pb-2">
+              <div className="absolute top-1/2 left-0 right-0 h-[2px] -translate-y-1/2 bg-slate-200 rounded-full" />
+              <motion.div
+                style={{ width: trackProgress }}
+                className="absolute top-1/2 left-0 h-[2px] -translate-y-1/2 bg-[#0f172a] rounded-full z-0"
+              />
+              <div className="relative z-10 flex items-center justify-between w-full">
+                {STEPS.map((step, idx) => {
+                  const isCurrent = activeStep === idx;
+
+                  return (
+                    <button
+                      key={step.title}
+                      type="button"
+                      onClick={() => scrollToStep(idx)}
+                      className={cn(
+                        "flex items-center justify-center min-h-[44px] px-4 sm:px-6 md:px-7 py-2 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2",
+                        isCurrent
+                          ? "bg-[#0f172a] text-white shadow-xl scale-110"
+                          : "bg-white text-slate-700 border border-slate-200 shadow-xs hover:border-slate-400 hover:text-slate-900 hover:scale-105",
+                      )}
+                    >
+                      {step.title}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
