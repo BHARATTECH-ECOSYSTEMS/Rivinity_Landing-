@@ -205,27 +205,75 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
         <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
       </div>
 
-      {/* Marketing — Login (White Glassmorphism Card on Photo) */}
-      <div className={`hidden md:flex absolute inset-y-0 right-0 z-10 w-[48%] items-center justify-end px-8 lg:px-12 transition-all duration-300 ${isLogin ? "opacity-100 translate-x-0" : "pointer-events-none opacity-0 translate-x-4"}`}>
-        <div className="w-full max-w-[330px] p-7 rounded-[26px] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)]">
-          <h2 className="text-[34px] font-semibold leading-[1.16] tracking-[-0.03em] text-[#0A0A0C]">
+      {/* Marketing — Login (White Glassmorphism Card & Botanical ASCII Art on Photo) */}
+      <div
+        className={`hidden md:flex flex-col absolute inset-y-0 right-0 z-10 w-[48%] justify-between items-end px-7 lg:px-10 pt-14 pb-7 lg:pb-8 transition-all duration-300 ${
+          isLogin ? "opacity-100 translate-x-0" : "pointer-events-none opacity-0 translate-x-4"
+        }`}
+      >
+        {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
+        <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none">
+          <div className="relative w-[185px] h-[170px] lg:w-[200px] lg:h-[185px] flex items-center justify-center">
+            {/* Subtle soft white luminous halo for contrast */}
+            <div className="absolute inset-0 bg-white/50 rounded-full blur-xl scale-95" />
+            <img
+              src="/images/auth-flower.png"
+              alt="Botanical ASCII art"
+              className="relative w-full h-full object-contain select-none opacity-90 transition-transform duration-700 hover:scale-105"
+              draggable={false}
+            />
+          </div>
+        </div>
+
+        {/* Bottom Text Box */}
+        <div className="w-full max-w-[340px] p-6 lg:p-7 rounded-[26px] bg-white/85 backdrop-blur-xl border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)] shrink-0">
+          <h2 className="text-[30px] lg:text-[32px] font-semibold leading-[1.16] tracking-[-0.03em] text-[#0A0A0C]">
             Welcome<br />
-            <span className="inline-block text-[34px] font-normal italic leading-[1.16] text-[#0A0A0C]" style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.05em" }}>back.</span>
+            <span
+              className="inline-block text-[30px] lg:text-[32px] font-normal italic leading-[1.16] text-[#0A0A0C]"
+              style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.05em" }}
+            >
+              back.
+            </span>
           </h2>
-          <p className="mt-3.5 text-[14px] font-medium leading-[1.6] text-neutral-700">
+          <p className="mt-3 text-[13.5px] lg:text-[14px] font-medium leading-[1.6] text-neutral-700">
             Your projects, your work and your people are exactly where you left them.
           </p>
         </div>
       </div>
 
-      {/* Marketing — Signup (White Glassmorphism Card on Photo) */}
-      <div className={`hidden md:flex absolute inset-y-0 left-0 z-10 w-[48%] items-center px-8 lg:px-12 transition-all duration-300 ${isLogin ? "pointer-events-none opacity-0 -translate-x-4" : "opacity-100 translate-x-0"}`}>
-        <div className="w-full max-w-[330px] p-7 rounded-[26px] bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)]">
-          <h2 className="text-[34px] font-semibold leading-[1.16] tracking-[-0.03em] text-[#0A0A0C]">
+      {/* Marketing — Signup (White Glassmorphism Card & Botanical ASCII Art on Photo) */}
+      <div
+        className={`hidden md:flex flex-col absolute inset-y-0 left-0 z-10 w-[48%] justify-between items-start px-7 lg:px-10 pt-14 pb-7 lg:pb-8 transition-all duration-300 ${
+          isLogin ? "pointer-events-none opacity-0 -translate-x-4" : "opacity-100 translate-x-0"
+        }`}
+      >
+        {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
+        <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none">
+          <div className="relative w-[185px] h-[170px] lg:w-[200px] lg:h-[185px] flex items-center justify-center">
+            {/* Subtle soft white luminous halo for contrast */}
+            <div className="absolute inset-0 bg-white/50 rounded-full blur-xl scale-95" />
+            <img
+              src="/images/auth-flower.png"
+              alt="Botanical ASCII art"
+              className="relative w-full h-full object-contain select-none opacity-90 transition-transform duration-700 hover:scale-105"
+              draggable={false}
+            />
+          </div>
+        </div>
+
+        {/* Bottom Text Box */}
+        <div className="w-full max-w-[340px] p-6 lg:p-7 rounded-[26px] bg-white/85 backdrop-blur-xl border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)] shrink-0">
+          <h2 className="text-[30px] lg:text-[32px] font-semibold leading-[1.16] tracking-[-0.03em] text-[#0A0A0C]">
             Start your<br />
-            <span className="inline-block text-[34px] font-normal italic leading-[1.16] text-[#0A0A0C]" style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.1em", paddingRight: "0.1em" }}>journey.</span>
+            <span
+              className="inline-block text-[30px] lg:text-[32px] font-normal italic leading-[1.16] text-[#0A0A0C]"
+              style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.1em", paddingRight: "0.1em" }}
+            >
+              journey.
+            </span>
           </h2>
-          <p className="mt-3.5 text-[14px] font-medium leading-[1.6] text-neutral-700">
+          <p className="mt-3 text-[13.5px] lg:text-[14px] font-medium leading-[1.6] text-neutral-700">
             One account for your projects, your ideas and everything you build with Rivinity.
           </p>
         </div>
