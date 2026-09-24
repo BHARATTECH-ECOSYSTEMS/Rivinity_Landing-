@@ -120,7 +120,7 @@ const productItems: NavItem[] = [
     id: "rivinity-lm",
     label: "RivinityLM",
     icon: GraduationCap,
-    path: "/rivinity-lm",
+    path: "/rivinitylm",
   },
   {
     id: "image-enhancer",
@@ -166,7 +166,7 @@ function findActiveId(pathname: string): string {
   if (pathname.startsWith("/marketplace")) return "marketplace";
   if (pathname === "/analytics") return "analytics";
   if (pathname === "/history") return "history";
-  if (pathname === "/rivinity-lm") return "rivinity-lm";
+  if (pathname === "/rivinity-lm" || pathname === "/rivinitylm") return "rivinity-lm";
   if (pathname === "/image-enhancer") return "image-enhancer";
   if (pathname === "/audio-lab") return "audio-lab";
   if (pathname === "/app-builder" || pathname === "/appbuilder") return "app-builder";
