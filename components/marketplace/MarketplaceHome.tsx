@@ -543,39 +543,6 @@ export const MarketplaceHome: React.FC = () => {
                 <span className="h-2 w-2 rounded-full bg-[#FF5500]" />
               )}
             </button>
-
-            {/* Notifications */}
-            <button
-              type="button"
-              className="relative flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray-200/80 bg-white shadow-xs transition-all hover:bg-gray-50 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
-            >
-              <Bell className="h-4.5 w-4.5 text-[#1C1C1C] dark:text-zinc-200" strokeWidth={1.9} />
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[#FF5500] ring-2 ring-white dark:ring-zinc-900" />
-            </button>
-
-            {/* Theme */}
-            <button
-              type="button"
-              className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-gray-200/80 bg-white shadow-xs transition-all hover:bg-gray-50 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
-            >
-              <Moon className="h-4.5 w-4.5 text-[#1C1C1C] dark:text-zinc-200" strokeWidth={1.9} />
-            </button>
-
-            {/* User Profile */}
-            <div className="flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full border border-gray-200/80 bg-white pl-1.5 pr-2.5 shadow-xs transition-colors hover:bg-gray-50/80 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800 sm:pr-3.5">
-              <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-[#FF5500] text-[11px] sm:text-[12px] font-bold text-white shadow-xs">
-                {USER.initials}
-              </div>
-              <div className="hidden text-left leading-tight md:block">
-                <p className="text-[12.5px] font-semibold tracking-tight text-[#1C1C1C] dark:text-white">
-                  {USER.name}
-                </p>
-                <p className="text-[10.5px] font-normal text-gray-500 dark:text-gray-400">
-                  {USER.plan}
-                </p>
-              </div>
-              <ChevronDown className="hidden h-3.5 w-3.5 shrink-0 text-[#1C1C1C] dark:text-zinc-200 md:block" strokeWidth={2} />
-            </div>
           </div>
         </header>
 
