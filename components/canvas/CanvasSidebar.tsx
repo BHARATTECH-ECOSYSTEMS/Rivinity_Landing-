@@ -173,7 +173,7 @@ function findActiveId(pathname: string): string {
   if (pathname === "/history") return "history";
   if (pathname === "/rivinity-lm" || pathname === "/rivinitylm") return "rivinity-lm";
   if (pathname === "/image-enhancer" || pathname === "/imageenhancer") return "image-enhancer";
-  if (pathname === "/audio-lab") return "audio-lab";
+  if (pathname === "/audio-lab" || pathname === "/audiolab") return "audio-lab";
   if (pathname === "/app-builder" || pathname === "/appbuilder") return "app-builder";
   if (pathname === "/prompt-to-video") return "prompt-to-video";
   if (pathname === "/team") return "team";
