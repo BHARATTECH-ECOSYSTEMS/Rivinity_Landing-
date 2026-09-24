@@ -205,7 +205,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
       >
         {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
         <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none">
-          <div className="relative w-[175px] h-[160px] lg:w-[195px] lg:h-[180px] flex items-center justify-center">
+          <div className="relative w-[230px] h-[210px] lg:w-[260px] lg:h-[235px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
@@ -240,7 +240,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
       >
         {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
         <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none">
-          <div className="relative w-[175px] h-[160px] lg:w-[195px] lg:h-[180px] flex items-center justify-center">
+          <div className="relative w-[230px] h-[210px] lg:w-[260px] lg:h-[235px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
