@@ -29,7 +29,6 @@ import {
   ChevronRight,
   HelpCircle,
   LogOut,
-  Search,
   X,
 } from "lucide-react";
 
@@ -199,9 +198,17 @@ const CanvasSidebar = ({
   const [productsOpen, setProductsOpen] = useState(true);
   const [workspaceOpen, setWorkspaceOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [localSearchQuery, setLocalSearchQuery] = useState("");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isSettledCollapsed, setIsSettledCollapsed] = useState(!isOpen);
+
+  useEffect(() => {
+    if (!isOpen) {
+      const timer = setTimeout(() => setIsSettledCollapsed(true), 300);
+      return () => clearTimeout(timer);
+    } else {
+      setIsSettledCollapsed(false);
+    }
+  }, [isOpen]);
 
   const { logout, user, isAuthenticated, openAuth } = useAuthModal();
   const displayName = isAuthenticated && user?.name ? user.name : (isAuthenticated ? USER.name : "Guest User");
@@ -334,16 +341,9 @@ const CanvasSidebar = ({
     </div>
   );
 
-  const query = localSearchQuery.trim().toLowerCase();
-  const visibleMenuItems = query
-    ? menuItems.filter((i) => i.label.toLowerCase().includes(query))
-    : menuItems;
-  const visibleProductItems = query
-    ? productItems.filter((i) => i.label.toLowerCase().includes(query))
-    : productItems;
-  const visibleWorkspaceItems = query
-    ? workspaceItems.filter((i) => i.label.toLowerCase().includes(query))
-    : workspaceItems;
+  const visibleMenuItems = menuItems;
+  const visibleProductItems = productItems;
+  const visibleWorkspaceItems = workspaceItems;
 
   const handleActionToggle = () => {
     if (onToggle) {
@@ -421,7 +421,9 @@ const CanvasSidebar = ({
   return (
     <>
       <aside
-        className={`sticky top-0 h-screen h-[100dvh] max-h-[100dvh] flex flex-col shrink-0 bg-white dark:bg-[#0d0d0d] border-r border-[#e2e8f0] dark:border-white/[0.08] select-none transition-all duration-300 z-30 max-w-[85vw] md:max-w-none ${
+        className={`sticky top-0 h-screen h-[100dvh] max-h-[100dvh] flex flex-col shrink-0 bg-white dark:bg-[#0d0d0d] border-r border-[#e2e8f0] dark:border-white/[0.08] select-none z-30 max-w-[85vw] md:max-w-none transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[width] ${
+          isSettledCollapsed ? "overflow-visible" : "overflow-hidden"
+        } ${
           isOpen ? "w-[260px]" : "w-[68px]"
         }`}
         style={{
@@ -432,22 +434,22 @@ const CanvasSidebar = ({
             : "68px",
         }}
       >
-        {!isOpen ? (
-          /* COLLAPSED STATE */
+        <div className={`relative w-full h-full ${isSettledCollapsed ? "overflow-visible" : "overflow-hidden"}`}>
+          {/* COLLAPSED STATE */}
           <div
             onClick={(e) => {
-              // Clicking anywhere on small left bar makes left panel bigger
-              if (
-                collapsedMenuContainerRef.current?.contains(e.target as Node)
-              ) {
+              if (collapsedMenuContainerRef.current?.contains(e.target as Node)) {
                 return;
               }
               handleActionToggle();
             }}
-            className="flex flex-col items-center justify-between h-full w-full py-3.5 px-2 cursor-pointer"
+            className={`absolute inset-y-0 left-0 w-[68px] flex flex-col items-center justify-between py-3.5 px-2 cursor-pointer transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              isOpen
+                ? "opacity-0 pointer-events-none -translate-x-2"
+                : "opacity-100 pointer-events-auto translate-x-0"
+            } ${isSettledCollapsed ? "overflow-visible" : "overflow-hidden"}`}
           >
             <div className="flex flex-col items-center gap-2.5 w-full">
-              {/* Logo / Expand Toggle (Swaps to PanelLeft icon on hover like ChatGPT) */}
               {/* Logo / Expand Toggle */}
               <button
                 type="button"
@@ -471,7 +473,7 @@ const CanvasSidebar = ({
                 </span>
               </button>
 
-              {/* Primary Navigation Icons (Clicking anywhere expands sidebar) */}
+              {/* Primary Navigation Icons */}
               <div className="flex flex-col items-center gap-1.5 w-full">
                 {menuItems.map((item) => {
                   const Icon = item.icon;
@@ -528,12 +530,18 @@ const CanvasSidebar = ({
               {userMenuOpen && renderUserDropdownMenu(true)}
             </div>
           </div>
-        ) : (
-          /* EXPANDED STATE (Matching Image 3) */
-          <div className="flex flex-col justify-between h-full w-full">
+
+          {/* EXPANDED STATE */}
+          <div
+            className={`absolute inset-y-0 left-0 w-[260px] flex flex-col justify-between h-full transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              isOpen
+                ? "opacity-100 pointer-events-auto translate-x-0"
+                : "opacity-0 pointer-events-none -translate-x-2"
+            }`}
+          >
             {/* Scrollable upper content */}
             <div className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3.5 pb-2 [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-700 [&::-webkit-scrollbar-thumb]:rounded-full">
-              {/* Top Header: Logo on left, Search & Toggle on right (Matching ChatGPT layout) */}
+              {/* Top Header: Logo on left, Collapse Toggle on right (Search removed) */}
               <div className="flex items-center justify-between w-full h-9 mb-3 px-1">
                 <div
                   onClick={handleLogoClick}
@@ -558,25 +566,8 @@ const CanvasSidebar = ({
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     type="button"
-                    onClick={() => {
-                      setSearchOpen((prev) => !prev);
-                      if (searchOpen) setLocalSearchQuery("");
-                    }}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer border-0 ${
-                      searchOpen
-                        ? "bg-slate-100 text-slate-900"
-                        : "bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                    }`}
-                    aria-label="Search"
-                    title="Search"
-                  >
-                    <Search className="w-4.5 h-4.5" />
-                  </button>
-
-                  <button
-                    type="button"
                     onClick={handleActionToggle}
-                    className="w-8 h-8 rounded-full flex items-center justify-center bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer border-0"
+                    className="w-8 h-8 rounded-full flex items-center justify-center bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors cursor-pointer border-0 shrink-0"
                     aria-label="Collapse sidebar"
                     title="Collapse sidebar"
                   >
@@ -585,44 +576,18 @@ const CanvasSidebar = ({
                 </div>
               </div>
 
-              {/* Collapsible Search Input */}
-              {searchOpen && (
-                <div className="relative mb-3 px-1">
-                  <Search className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <input
-                    type="text"
-                    value={localSearchQuery}
-                    onChange={(e) => setLocalSearchQuery(e.target.value)}
-                    placeholder="Search..."
-                    autoFocus
-                    className="w-full h-8 pl-8 pr-7 text-[13px] bg-slate-100 dark:bg-zinc-800/80 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 border border-transparent focus:border-slate-300 dark:focus:border-zinc-600 focus:outline-hidden transition-colors"
-                  />
-                  {localSearchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setLocalSearchQuery("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-0.5"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-              )}
-
               {/* Primary Navigation List */}
-              {visibleMenuItems.length > 0 && (
-                <nav className="flex flex-col gap-1 w-full">
-                  {visibleMenuItems.map(renderSectionItem)}
-                </nav>
-              )}
+              <nav className="flex flex-col gap-1 w-full">
+                {visibleMenuItems.map(renderSectionItem)}
+              </nav>
 
-              {/* PRODUCTS Section (Matching Image 3) */}
+              {/* PRODUCTS Section */}
               {visibleProductItems.length > 0 && (
                 <div className="mt-3 pt-1">
                   <button
                     type="button"
                     onClick={() => setProductsOpen((v) => !v)}
-                    className="w-full flex items-center justify-between px-2.5 py-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider hover:text-slate-800 transition-colors cursor-pointer bg-transparent border-0"
+                    className="w-full flex items-center justify-between px-2.5 py-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider hover:text-slate-800 dark:hover:text-zinc-200 transition-colors cursor-pointer bg-transparent border-0"
                   >
                     <span>PRODUCTS</span>
                     <ChevronDown
@@ -639,13 +604,13 @@ const CanvasSidebar = ({
                 </div>
               )}
 
-              {/* WORKSPACE Section (Collapsible Dropdown) */}
+              {/* WORKSPACE Section */}
               {visibleWorkspaceItems.length > 0 && (
                 <div className="mt-3 pt-1">
                   <button
                     type="button"
                     onClick={() => setWorkspaceOpen((v) => !v)}
-                    className="w-full flex items-center justify-between px-2.5 py-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider hover:text-slate-800 transition-colors cursor-pointer bg-transparent border-0"
+                    className="w-full flex items-center justify-between px-2.5 py-1 text-[11px] font-bold text-slate-500 uppercase tracking-wider hover:text-slate-800 dark:hover:text-zinc-200 transition-colors cursor-pointer bg-transparent border-0"
                   >
                     <span>WORKSPACE</span>
                     <ChevronDown
@@ -661,16 +626,6 @@ const CanvasSidebar = ({
                   )}
                 </div>
               )}
-
-              {/* Empty Search State */}
-              {query &&
-                visibleMenuItems.length === 0 &&
-                visibleProductItems.length === 0 &&
-                visibleWorkspaceItems.length === 0 && (
-                  <div className="py-8 text-center text-xs text-slate-400 dark:text-zinc-500">
-                    No matching items found
-                  </div>
-                )}
             </div>
 
             {/* Bottom Profile Bar */}
@@ -705,7 +660,7 @@ const CanvasSidebar = ({
               </button>
             </div>
           </div>
-        )}
+        </div>
       </aside>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />

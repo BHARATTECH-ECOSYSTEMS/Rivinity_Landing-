@@ -106,7 +106,7 @@ const Index = () => {
 
         {/* Sidebar wrapper */}
         <div
-          className={`fixed inset-y-0 left-0 z-50 h-full shrink-0 transition-all duration-300 ease-in-out md:static ${
+          className={`fixed inset-y-0 left-0 z-50 h-full shrink-0 transition-[width,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[width,transform] md:static ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
           }`}
           style={{ width: `${sidebarWidth}px` }}
@@ -115,7 +115,6 @@ const Index = () => {
             open={sidebarOpen}
             onToggle={() => setSidebarOpen((value) => !value)}
             onCollapse={() => setSidebarOpen(false)}
-            searchQuery={searchQuery}
           />
         </div>
 
