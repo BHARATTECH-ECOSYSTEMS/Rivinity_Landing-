@@ -138,7 +138,7 @@ const productItems: NavItem[] = [
     id: "app-builder",
     label: "App Builder",
     icon: Layers,
-    path: "/app-builder",
+    path: "/appbuilder",
   },
   {
     id: "prompt-to-video",
@@ -169,7 +169,7 @@ function findActiveId(pathname: string): string {
   if (pathname === "/rivinity-lm") return "rivinity-lm";
   if (pathname === "/image-enhancer") return "image-enhancer";
   if (pathname === "/audio-lab") return "audio-lab";
-  if (pathname === "/app-builder") return "app-builder";
+  if (pathname === "/app-builder" || pathname === "/appbuilder") return "app-builder";
   if (pathname === "/prompt-to-video") return "prompt-to-video";
   if (pathname === "/team") return "team";
   return "";

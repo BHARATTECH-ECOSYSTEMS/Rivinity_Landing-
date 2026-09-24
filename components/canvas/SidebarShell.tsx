@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, ReactNode } from "react";
 import CanvasSidebar from "./CanvasSidebar";
 import { PanelLeft } from "lucide-react";
