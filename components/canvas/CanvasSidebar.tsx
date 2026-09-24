@@ -84,12 +84,6 @@ const menuItems: NavItem[] = [
     path: "/app",
   },
   {
-    id: "agents",
-    label: "Agents",
-    icon: Bot,
-    path: "/agent-playground",
-  },
-  {
     id: "knowledge-base",
     label: "Knowledge Base",
     icon: Box,
@@ -116,6 +110,12 @@ const menuItems: NavItem[] = [
 ];
 
 const productItems: NavItem[] = [
+  {
+    id: "agents",
+    label: "Agents Playground",
+    icon: Bot,
+    path: "/agent-playground",
+  },
   {
     id: "rivinity-lm",
     label: "RivinityLM",
@@ -160,7 +160,12 @@ const workspaceItems: NavItem[] = [
 function findActiveId(pathname: string): string {
   if (pathname === "/" || pathname === "/dashboard") return "dashboard";
   if (pathname === "/app" || pathname.startsWith("/chat")) return "chat";
-  if (pathname === "/agent-playground" || pathname === "/agents")
+  if (
+    pathname === "/agent-playground" ||
+    pathname === "/agents" ||
+    pathname === "/agents-playground" ||
+    pathname === "/agentplayground"
+  )
     return "agents";
   if (pathname === "/knowledge-base" || pathname === "/knowledgebase") return "knowledge-base";
   if (pathname.startsWith("/marketplace")) return "marketplace";
