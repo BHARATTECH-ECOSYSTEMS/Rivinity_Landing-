@@ -199,13 +199,13 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
 
       {/* Marketing — Login (White Card & Botanical ASCII Art on Clean Backdrop) */}
       <div
-        className={`hidden md:flex flex-col absolute inset-y-0 right-0 z-10 w-[48%] justify-between items-end px-7 lg:px-10 pt-16 pb-7 lg:pb-8 transition-all duration-300 ${
+        className={`hidden md:flex flex-col absolute inset-y-0 right-0 z-10 w-[48%] justify-between items-end px-8 lg:px-11 pt-12 pb-6 lg:pb-7 transition-all duration-300 ${
           isLogin ? "opacity-100 translate-x-0" : "pointer-events-none opacity-0 translate-x-4"
         }`}
       >
         {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
-        <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none">
-          <div className="relative w-[230px] h-[210px] lg:w-[260px] lg:h-[235px] flex items-center justify-center">
+        <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none my-auto">
+          <div className="relative w-[215px] h-[195px] lg:w-[240px] lg:h-[220px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
@@ -215,18 +215,12 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
           </div>
         </div>
 
-        {/* Bottom Text Box */}
-        <div className="w-full max-w-[280px] p-4.5 sm:p-5 rounded-[20px] bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_10px_30px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,1)] shrink-0">
-          <h2 className="!m-0 text-[23px] font-semibold !leading-[1.14] tracking-[-0.03em] text-[#0A0A0C]">
-            Welcome<br />
-            <span
-              className="inline-block text-[23px] font-normal italic leading-[1.14] text-[#0A0A0C]"
-              style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.05em" }}
-            >
-              back.
-            </span>
+        {/* Bottom Text Box with Glassmorphism Effect */}
+        <div className="w-full max-w-[325px] p-5 sm:p-5.5 rounded-[22px] bg-white/65 backdrop-blur-2xl backdrop-saturate-150 border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,1)] shrink-0 mt-auto">
+          <h2 className="!m-0 text-[26px] font-bold !leading-[1.15] tracking-[-0.03em] text-[#0A0A0C]">
+            Welcome back.
           </h2>
-          <p className="!m-0 mt-2 text-[12.5px] font-medium leading-[1.5] text-neutral-600">
+          <p className="!m-0 mt-2 text-[13px] font-medium leading-[1.5] text-neutral-600">
             Your projects, your work and your people are exactly where you left them.
           </p>
         </div>
@@ -234,13 +228,13 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
 
       {/* Marketing — Signup (White Card & Botanical ASCII Art on Clean Backdrop) */}
       <div
-        className={`hidden md:flex flex-col absolute inset-y-0 left-0 z-10 w-[48%] justify-between items-start px-7 lg:px-10 pt-16 pb-7 lg:pb-8 transition-all duration-300 ${
+        className={`hidden md:flex flex-col absolute inset-y-0 left-0 z-10 w-[48%] justify-between items-start px-8 lg:px-11 pt-12 pb-6 lg:pb-7 transition-all duration-300 ${
           isLogin ? "pointer-events-none opacity-0 -translate-x-4" : "opacity-100 translate-x-0"
         }`}
       >
         {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
-        <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none">
-          <div className="relative w-[230px] h-[210px] lg:w-[260px] lg:h-[235px] flex items-center justify-center">
+        <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none my-auto">
+          <div className="relative w-[215px] h-[195px] lg:w-[240px] lg:h-[220px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
@@ -250,18 +244,12 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
           </div>
         </div>
 
-        {/* Bottom Text Box */}
-        <div className="w-full max-w-[280px] p-4.5 sm:p-5 rounded-[20px] bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_10px_30px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,1)] shrink-0">
-          <h2 className="!m-0 text-[23px] font-semibold !leading-[1.14] tracking-[-0.03em] text-[#0A0A0C]">
-            Start your<br />
-            <span
-              className="inline-block text-[23px] font-normal italic leading-[1.14] text-[#0A0A0C]"
-              style={{ fontFamily: "var(--font-fraunces),Georgia,serif", paddingLeft: "0.08em", paddingRight: "0.08em" }}
-            >
-              journey.
-            </span>
+        {/* Bottom Text Box with Glassmorphism Effect */}
+        <div className="w-full max-w-[340px] p-5 sm:p-5.5 rounded-[22px] bg-white/65 backdrop-blur-2xl backdrop-saturate-150 border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,1)] shrink-0 mt-auto">
+          <h2 className="!m-0 text-[26px] font-bold !leading-[1.15] tracking-[-0.03em] text-[#0A0A0C]">
+            Start your journey.
           </h2>
-          <p className="!m-0 mt-2 text-[12.5px] font-medium leading-[1.5] text-neutral-600">
+          <p className="!m-0 mt-2 text-[13px] font-medium leading-[1.5] text-neutral-600">
             One account for your projects, your ideas and everything you build with Rivinity.
           </p>
         </div>
