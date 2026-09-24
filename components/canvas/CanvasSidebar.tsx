@@ -162,7 +162,7 @@ function findActiveId(pathname: string): string {
   if (pathname === "/app" || pathname.startsWith("/chat")) return "chat";
   if (pathname === "/agent-playground" || pathname === "/agents")
     return "agents";
-  if (pathname === "/knowledge-base") return "knowledge-base";
+  if (pathname === "/knowledge-base" || pathname === "/knowledgebase") return "knowledge-base";
   if (pathname.startsWith("/marketplace")) return "marketplace";
   if (pathname === "/analytics") return "analytics";
   if (pathname === "/history") return "history";
