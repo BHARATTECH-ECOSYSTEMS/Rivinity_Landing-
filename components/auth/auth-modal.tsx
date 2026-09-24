@@ -151,11 +151,11 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
     >
       {/* Top Header Bar for Mobile & Desktop */}
       <div className="flex items-center justify-between px-5 pt-5 sm:px-6 sm:pt-6 md:px-0 md:pt-0">
-        {/* Logo with White Glassmorphism Effect */}
+        {/* Logo with Clean Glassmorphism Effect */}
         <div className="md:absolute md:left-8 md:top-7 md:z-30">
           <Link
             href="/"
-            className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/80 backdrop-blur-xl border border-white/90 shadow-[0_8px_30px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)] group hover:bg-white/95 transition-all"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] group hover:bg-white transition-all"
           >
             <Image
               src="/logo.png"
@@ -174,7 +174,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
           <Link
             href="/"
             aria-label="Back to home"
-            className="md:absolute md:right-6 md:top-6 md:z-50 flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-full bg-white/85 hover:bg-white text-[#0A0A0C] backdrop-blur-xl border border-white/90 transition shadow-[0_4px_20px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,1)] cursor-pointer"
+            className="md:absolute md:right-6 md:top-6 md:z-50 flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-full bg-white/95 hover:bg-white text-[#0A0A0C] backdrop-blur-xl border border-slate-200/80 transition shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer"
           >
             ← Back to Home
           </Link>
@@ -183,50 +183,40 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
             ref={closeRef}
             onClick={onClose}
             aria-label="Close"
-            className="md:absolute md:right-6 md:top-6 md:z-50 flex h-9 w-9 items-center justify-center rounded-full text-[#0A0A0C] hover:bg-white/95 bg-white/80 backdrop-blur-xl border border-white/90 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/40 cursor-pointer transition shadow-[0_4px_20px_rgba(0,0,0,0.06),inset_0_1px_1px_rgba(255,255,255,1)]"
+            className="md:absolute md:right-6 md:top-6 md:z-50 flex h-9 w-9 items-center justify-center rounded-full text-[#0A0A0C] hover:bg-white bg-white/95 backdrop-blur-xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/40 cursor-pointer transition shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
           >
             <Close />
           </button>
         )}
       </div>
 
-      {/* Ambient Background with Cloud Image (Desktop Only) */}
-      <div className="hidden md:block absolute inset-0 overflow-hidden bg-[#0A0A0C] pointer-events-none rounded-[20px] sm:rounded-[26px]">
-        {/* Auth Background Image */}
-        <Image
-          src="/images/auth-clouds.png"
-          alt="Auth Background"
-          fill
-          sizes="(max-width: 1024px) 100vw, 850px"
-          className="object-cover"
-          priority
-        />
-        {/* Soft atmospheric overlay */}
-        <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
+      {/* Clean Ambient Background (Desktop Only - Old photo removed so ASCII flower is crisp & visible) */}
+      <div className="hidden md:block absolute inset-0 overflow-hidden bg-[#F6F7F9] pointer-events-none rounded-[20px] sm:rounded-[26px]">
+        {/* Soft subtle warmth glow highlights */}
+        <div className="absolute -top-[15%] -left-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-br from-orange-100/35 via-amber-50/20 to-transparent blur-3xl" />
+        <div className="absolute -bottom-[15%] -right-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-tl from-slate-200/35 to-transparent blur-3xl" />
       </div>
 
-      {/* Marketing — Login (White Glassmorphism Card & Botanical ASCII Art on Photo) */}
+      {/* Marketing — Login (White Card & Botanical ASCII Art on Clean Backdrop) */}
       <div
-        className={`hidden md:flex flex-col absolute inset-y-0 right-0 z-10 w-[48%] justify-between items-end px-7 lg:px-10 pt-14 pb-7 lg:pb-8 transition-all duration-300 ${
+        className={`hidden md:flex flex-col absolute inset-y-0 right-0 z-10 w-[48%] justify-between items-end px-7 lg:px-10 pt-16 pb-7 lg:pb-8 transition-all duration-300 ${
           isLogin ? "opacity-100 translate-x-0" : "pointer-events-none opacity-0 translate-x-4"
         }`}
       >
         {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
         <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none">
-          <div className="relative w-[185px] h-[170px] lg:w-[200px] lg:h-[185px] flex items-center justify-center">
-            {/* Subtle soft white luminous halo for contrast */}
-            <div className="absolute inset-0 bg-white/50 rounded-full blur-xl scale-95" />
+          <div className="relative w-[215px] h-[195px] lg:w-[245px] lg:h-[225px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
-              className="relative w-full h-full object-contain select-none opacity-90 transition-transform duration-700 hover:scale-105"
+              className="relative w-full h-full object-contain select-none opacity-95 transition-transform duration-700 hover:scale-105"
               draggable={false}
             />
           </div>
         </div>
 
         {/* Bottom Text Box */}
-        <div className="w-full max-w-[340px] p-6 lg:p-7 rounded-[26px] bg-white/85 backdrop-blur-xl border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)] shrink-0">
+        <div className="w-full max-w-[340px] p-6 lg:p-7 rounded-[26px] bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_16px_40px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,1)] shrink-0">
           <h2 className="text-[30px] lg:text-[32px] font-semibold leading-[1.16] tracking-[-0.03em] text-[#0A0A0C]">
             Welcome<br />
             <span
@@ -242,28 +232,26 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
         </div>
       </div>
 
-      {/* Marketing — Signup (White Glassmorphism Card & Botanical ASCII Art on Photo) */}
+      {/* Marketing — Signup (White Card & Botanical ASCII Art on Clean Backdrop) */}
       <div
-        className={`hidden md:flex flex-col absolute inset-y-0 left-0 z-10 w-[48%] justify-between items-start px-7 lg:px-10 pt-14 pb-7 lg:pb-8 transition-all duration-300 ${
+        className={`hidden md:flex flex-col absolute inset-y-0 left-0 z-10 w-[48%] justify-between items-start px-7 lg:px-10 pt-16 pb-7 lg:pb-8 transition-all duration-300 ${
           isLogin ? "pointer-events-none opacity-0 -translate-x-4" : "opacity-100 translate-x-0"
         }`}
       >
         {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
         <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none">
-          <div className="relative w-[185px] h-[170px] lg:w-[200px] lg:h-[185px] flex items-center justify-center">
-            {/* Subtle soft white luminous halo for contrast */}
-            <div className="absolute inset-0 bg-white/50 rounded-full blur-xl scale-95" />
+          <div className="relative w-[215px] h-[195px] lg:w-[245px] lg:h-[225px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
-              className="relative w-full h-full object-contain select-none opacity-90 transition-transform duration-700 hover:scale-105"
+              className="relative w-full h-full object-contain select-none opacity-95 transition-transform duration-700 hover:scale-105"
               draggable={false}
             />
           </div>
         </div>
 
         {/* Bottom Text Box */}
-        <div className="w-full max-w-[340px] p-6 lg:p-7 rounded-[26px] bg-white/85 backdrop-blur-xl border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,1)] shrink-0">
+        <div className="w-full max-w-[340px] p-6 lg:p-7 rounded-[26px] bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_16px_40px_rgba(0,0,0,0.05),inset_0_1px_1px_rgba(255,255,255,1)] shrink-0">
           <h2 className="text-[30px] lg:text-[32px] font-semibold leading-[1.16] tracking-[-0.03em] text-[#0A0A0C]">
             Start your<br />
             <span
