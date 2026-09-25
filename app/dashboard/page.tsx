@@ -998,7 +998,7 @@ const DashboardContent = () => {
             </div>
 
             {/* 10 Small Square Glassmorphic Boxes (5 per row on desktop) */}
-            <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4">
+            <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4 max-w-5xl">
               {CREATIVE_TOOLS.map((tool) => {
                 const Icon = tool.icon;
                 return (
@@ -1011,19 +1011,19 @@ const DashboardContent = () => {
                       backgroundColor: tool.bg,
                       borderColor: tool.border,
                     }}
-                    className="relative aspect-square overflow-hidden rounded-[18px] sm:rounded-[22px] p-3.5 sm:p-4 lg:p-4.5 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
+                    className="relative aspect-square overflow-hidden rounded-[20px] sm:rounded-[24px] p-3.5 sm:p-4 lg:p-4.5 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
                   >
                     {/* Glass inner gradient reflection */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[18px] sm:rounded-[22px]" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[20px] sm:rounded-[24px]" />
 
-                    {/* Top: Tool Name / Words */}
-                    <div className="relative z-10 text-[12.5px] sm:text-[13.5px] lg:text-[14px] font-bold text-slate-900 tracking-tight leading-snug font-display line-clamp-2">
+                    {/* Top: Tool Name / Words (Bigger bold font) */}
+                    <div className="relative z-10 text-[14.5px] sm:text-[15.5px] lg:text-[16.5px] font-bold text-slate-900 tracking-tight leading-snug font-display">
                       {tool.title}
                     </div>
 
                     {/* Bottom: Solid Glyph Logo */}
                     <div className="relative z-10 mt-auto pt-2 flex items-end">
-                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-7.5 lg:h-7.5 text-slate-900 transition-transform duration-300 group-hover:scale-110" />
+                      <Icon className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-slate-900 transition-transform duration-300 group-hover:scale-110" />
                     </div>
                   </motion.div>
                 );
