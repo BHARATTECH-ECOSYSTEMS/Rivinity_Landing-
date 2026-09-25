@@ -359,55 +359,55 @@ const WORKING_FOLDERS: WorkingCategoryFolder[] = [
     id: "Chat",
     title: "Chat",
     icon: MessageSquare,
-    svgFill: "#0284c7", // Sky blue
-    bgFront: "bg-gradient-to-br from-sky-500/90 via-sky-600/95 to-blue-700/95",
-    border: "border-sky-300/40",
-    shadow: "shadow-[0_8px_20px_rgba(2,132,199,0.30)]",
+    svgFill: "rgba(255, 145, 86, 0.95)", // Pastel light orange
+    bgFront: "bg-gradient-to-b from-[#FFA87D] via-[#FF8E52] to-[#FF7535]",
+    border: "border-white/70",
+    shadow: "shadow-[0_8px_24px_rgba(255,117,53,0.25)]",
   },
   {
     id: "App",
     title: "App",
     icon: Layout,
-    svgFill: "#059669", // Emerald green
-    bgFront: "bg-gradient-to-br from-emerald-500/90 via-emerald-600/95 to-teal-700/95",
-    border: "border-emerald-300/40",
-    shadow: "shadow-[0_8px_20px_rgba(5,150,105,0.30)]",
+    svgFill: "rgba(247, 115, 158, 0.95)", // Pastel light pink
+    bgFront: "bg-gradient-to-b from-[#FB8CB3] via-[#F76497] to-[#F14681]",
+    border: "border-white/70",
+    shadow: "shadow-[0_8px_24px_rgba(241,70,129,0.25)]",
   },
   {
     id: "Audio",
     title: "Audio",
     icon: Mic,
-    svgFill: "#7c3aed", // Purple
-    bgFront: "bg-gradient-to-br from-purple-500/90 via-purple-600/95 to-indigo-700/95",
-    border: "border-purple-300/40",
-    shadow: "shadow-[0_8px_20px_rgba(124,58,237,0.30)]",
+    svgFill: "rgba(139, 92, 246, 0.95)", // Pastel light purple
+    bgFront: "bg-gradient-to-b from-[#A78BFA] via-[#8B5CF6] to-[#7C3AED]",
+    border: "border-white/70",
+    shadow: "shadow-[0_8px_24px_rgba(124,58,237,0.25)]",
   },
   {
     id: "Image",
     title: "Image",
     icon: ImageIcon,
-    svgFill: "#db2777", // Pink / Rose
-    bgFront: "bg-gradient-to-br from-pink-500/90 via-pink-600/95 to-rose-700/95",
-    border: "border-pink-300/40",
-    shadow: "shadow-[0_8px_20px_rgba(219,39,119,0.30)]",
+    svgFill: "rgba(52, 211, 153, 0.95)", // Pastel light green
+    bgFront: "bg-gradient-to-b from-[#6EE7B7] via-[#34D399] to-[#10B981]",
+    border: "border-white/70",
+    shadow: "shadow-[0_8px_24px_rgba(16,185,129,0.25)]",
   },
   {
     id: "Video",
     title: "Video",
     icon: Film,
-    svgFill: "#ea580c", // Vibrant orange
-    bgFront: "bg-gradient-to-br from-orange-500/90 via-orange-600/95 to-amber-700/95",
-    border: "border-orange-300/40",
-    shadow: "shadow-[0_8px_20px_rgba(234,88,12,0.30)]",
+    svgFill: "rgba(59, 130, 246, 0.95)", // Pastel light blue
+    bgFront: "bg-gradient-to-b from-[#70BAFF] via-[#3B82F6] to-[#2563EB]",
+    border: "border-white/70",
+    shadow: "shadow-[0_8px_24px_rgba(37,99,235,0.25)]",
   },
   {
     id: "Doc",
     title: "Doc",
     icon: FileText,
-    svgFill: "#d97706", // Amber / Gold
-    bgFront: "bg-gradient-to-br from-amber-500/90 via-amber-600/95 to-yellow-700/95",
-    border: "border-amber-300/40",
-    shadow: "shadow-[0_8px_20px_rgba(217,119,6,0.30)]",
+    svgFill: "rgba(251, 191, 36, 0.95)", // Pastel light yellow
+    bgFront: "bg-gradient-to-b from-[#FDE68A] via-[#FBBF24] to-[#F59E0B]",
+    border: "border-white/70",
+    shadow: "shadow-[0_8px_24px_rgba(245,158,11,0.25)]",
   },
 ];
 
@@ -1173,7 +1173,7 @@ const DashboardContent = () => {
                         <motion.div
                           initial={{ opacity: 0, y: 3 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="mt-1 text-[7.5px] sm:text-[8.5px] font-extrabold text-center text-[#FF6B00] uppercase tracking-wider"
+                          className="mt-1 text-[7.5px] sm:text-[8.5px] font-extrabold text-center text-slate-600 uppercase tracking-wider"
                         >
                           ACTIVE
                         </motion.div>
@@ -1184,7 +1184,7 @@ const DashboardContent = () => {
                     <div
                       className={`relative z-[3] mt-[16px] sm:mt-[18px] w-full flex-1 rounded-lg sm:rounded-xl p-2.5 sm:p-3 flex flex-col justify-between backdrop-blur-xl ${folder.bgFront} ${folder.border} ${folder.shadow} ${
                         isSelected
-                          ? "ring-2 ring-offset-2 ring-[#FF6B00] shadow-lg -translate-y-0.5"
+                          ? "shadow-xl -translate-y-1"
                           : "hover:-translate-y-0.5"
                       } transition-all duration-300 text-white overflow-hidden`}
                     >
@@ -1264,19 +1264,19 @@ const DashboardContent = () => {
                           let badgeStyle = "bg-[#f1f5f9] text-[#64748b]";
                           if (item.type === "Chat")
                             badgeStyle =
-                              "bg-sky-50 text-sky-700 border border-sky-200";
+                              "bg-orange-50 text-orange-700 border border-orange-200";
                           if (item.type === "App")
                             badgeStyle =
-                              "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                              "bg-pink-50 text-pink-700 border border-pink-200";
                           if (item.type === "Audio")
                             badgeStyle =
                               "bg-purple-50 text-purple-700 border border-purple-200";
                           if (item.type === "Image")
                             badgeStyle =
-                              "bg-pink-50 text-pink-700 border border-pink-200";
+                              "bg-emerald-50 text-emerald-700 border border-emerald-200";
                           if (item.type === "Video")
                             badgeStyle =
-                              "bg-orange-50 text-orange-700 border border-orange-200";
+                              "bg-sky-50 text-sky-700 border border-sky-200";
                           if (item.type === "Doc")
                             badgeStyle =
                               "bg-amber-50 text-amber-700 border border-amber-200";
