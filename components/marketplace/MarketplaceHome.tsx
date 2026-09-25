@@ -604,16 +604,21 @@ export const MarketplaceHome: React.FC = () => {
 
   const toggleLike = (item: MarketplaceItemType, e: React.MouseEvent) => {
     e.stopPropagation();
-    setLikedIds((prev) =>
-      prev.includes(item.id)
-        ? prev.filter((i) => i !== item.id)
-        : [...prev, item.id],
-    );
-    setCartItems((prev) =>
-      prev.some((c) => c.id === item.id)
-        ? prev.filter((c) => c.id !== item.id)
-        : [...prev, item],
-    );
+    const isCurrentlySaved = cartItems.some((c) => c.id === item.id);
+    if (isCurrentlySaved) {
+      setLikedIds((prev) => prev.filter((i) => i !== item.id));
+      setCartItems((prev) => prev.filter((c) => c.id !== item.id));
+    } else {
+      setLikedIds((prev) => (prev.includes(item.id) ? prev : [...prev, item.id]));
+      setCartItems((prev) =>
+        prev.some((c) => c.id === item.id) ? prev : [...prev, item],
+      );
+    }
+  };
+
+  const handleRemoveSaved = (id: string) => {
+    setCartItems((prev) => prev.filter((c) => c.id !== id));
+    setLikedIds((prev) => prev.filter((itemKey) => itemKey !== id));
   };
 
   const getFilteredItems = (rawItems: MarketplaceItemType[]) => {
@@ -1026,7 +1031,7 @@ export const MarketplaceHome: React.FC = () => {
   };
 
   const renderAssetCard = (item: MarketplaceItemType) => {
-    const isLiked = likedIds.includes(item.id);
+    const isLiked = cartItems.some((c) => c.id === item.id);
     const categoryLabel = getCategoryLabel(item);
     const theme = ASSET_THEMES[categoryLabel] || ASSET_THEMES.Agent;
     const CategoryIcon = theme.badgeIcon;
@@ -1616,9 +1621,7 @@ export const MarketplaceHome: React.FC = () => {
           isOpen={isCartOpen}
           items={cartItems}
           onClose={() => setIsCartOpen(false)}
-          onRemove={(id) =>
-            setCartItems((prev) => prev.filter((c) => c.id !== id))
-          }
+          onRemove={handleRemoveSaved}
           onCheckout={(item) => {
             setIsCartOpen(false);
             setCheckoutItem(item);
