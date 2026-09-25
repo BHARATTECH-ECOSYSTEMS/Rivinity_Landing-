@@ -18,6 +18,7 @@ import {
   BrainCircuit,
   Database,
   Wrench,
+  ArrowRight,
 } from "lucide-react";
 
 import SidebarShell from "@/components/canvas/SidebarShell";
@@ -430,6 +431,132 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
       updatedAt: "1 week ago",
     },
   },
+  {
+    id: "sonar-deep-search",
+    name: "Sonar Search 70B",
+    category: "AI / ML Models",
+    badge: "model",
+    tagline: "Live web-grounded reasoning model with citation tracking.",
+    description:
+      "High throughput inference model optimized for real-time factuality checks, live search synthesis, and tabular analysis.",
+    rating: 4.8,
+    runs: "14.2k",
+    price: "Free",
+    tier: "Free",
+    author: { name: "Rivinity Search" },
+    capabilities: ["Live Web Grounding", "Fast Inference", "Multi-hop Search"],
+    specs: {
+      framework: "vLLM / TensorRT",
+      license: "Open Commercial",
+      version: "v2.5.0",
+      updatedAt: "3 days ago",
+    },
+  },
+  {
+    id: "vision-ocr-pro",
+    name: "OmniDoc OCR Vision",
+    category: "AI / ML Models",
+    badge: "model",
+    tagline: "Multi-page visual document parser & table structurer.",
+    description:
+      "Converts scanned invoices, handwritten notes, and technical schematics into pristine Markdown, LaTeX, and JSON.",
+    rating: 4.9,
+    runs: "9.8k",
+    price: "$59",
+    tier: "Paid",
+    author: { name: "VisionWorks" },
+    capabilities: ["Handwriting Support", "Markdown Output", "LaTeX Equations"],
+    specs: {
+      framework: "PyTorch / ONNX",
+      license: "Commercial",
+      version: "v3.2.1",
+      updatedAt: "5 days ago",
+    },
+  },
+  {
+    id: "finance-sec-qa",
+    name: "FinSEC Corpus 2M",
+    category: "Datasets",
+    badge: "dataset",
+    tagline: "Quarterly earnings transcripts & 10-K audit tables.",
+    description:
+      "Standardized 2M financial QA pairs aligned with balance sheets, cashflow reports, and analyst guidance transcripts.",
+    rating: 4.9,
+    runs: "5.7k",
+    price: "$79",
+    tier: "Paid",
+    author: { name: "FinData Labs" },
+    capabilities: ["Audited Pairs", "SEC 10-K Mapped", "Table Summaries"],
+    specs: {
+      framework: "Parquet / S3",
+      license: "Financial Commercial",
+      version: "v2.1.0",
+      updatedAt: "4 days ago",
+    },
+  },
+  {
+    id: "align-preference-rlhf",
+    name: "RLHF Preference Ultra",
+    category: "Datasets",
+    badge: "dataset",
+    tagline: "Human-evaluated multi-turn pairwise alignment dataset.",
+    description:
+      "Over 400,000 paired model outputs rated for helpfulness, accuracy, and refusal benchmarks with granular rationale tags.",
+    rating: 4.8,
+    runs: "24.1k",
+    price: "Free",
+    tier: "Free",
+    author: { name: "OpenAlign" },
+    capabilities: ["Pairwise Ratings", "Safety Tags", "DPO Ready"],
+    specs: {
+      framework: "HuggingFace Datasets",
+      license: "Apache 2.0",
+      version: "v1.8.0",
+      updatedAt: "1 week ago",
+    },
+  },
+  {
+    id: "sentinel-devops-agent",
+    name: "DevOps Sentinel Agent",
+    category: "Agents",
+    badge: "agent",
+    tagline: "Autonomous Kubernetes incident triage & log root-cause.",
+    description:
+      "Monitors telemetry alerts, isolates failing pods, correlates distributed trace spans, and drafts zero-downtime hotfix PRs.",
+    rating: 4.9,
+    runs: "3.9k",
+    price: "$49",
+    tier: "Paid",
+    author: { name: "SentryOps" },
+    capabilities: ["K8s Diagnostic", "Trace Correlation", "Automated PRs"],
+    specs: {
+      framework: "LangGraph / Go",
+      license: "Commercial Seat",
+      version: "v2.4.0",
+      updatedAt: "2 days ago",
+    },
+  },
+  {
+    id: "guardrail-firewall",
+    name: "PromptGuard Firewall",
+    category: "AI Tools",
+    badge: "tool",
+    tagline: "Real-time prompt injection shield & PII scrubber.",
+    description:
+      "Ultra-low latency streaming proxy that intercepts jailbreak attempts, adversarial suffixes, and sensitive credential leaks.",
+    rating: 4.8,
+    runs: "16.4k",
+    price: "$29",
+    tier: "Paid",
+    author: { name: "Shield AI" },
+    capabilities: ["Sub-5ms Latency", "Jailbreak Neutralizer", "PII Redaction"],
+    specs: {
+      framework: "Rust / WebAssembly",
+      license: "Commercial License",
+      version: "v3.4.0",
+      updatedAt: "3 days ago",
+    },
+  },
 ];
 
 export const MarketplaceHome: React.FC = () => {
@@ -448,6 +575,15 @@ export const MarketplaceHome: React.FC = () => {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [likedIds, setLikedIds] = useState<string[]>([]);
+
+  // Category "See all" Modal State
+  const [viewingCategoryModal, setViewingCategoryModal] = useState<{
+    title: string;
+    items: MarketplaceItemType[];
+    categoryKey?: string;
+  } | null>(null);
+  const [modalSearchQuery, setModalSearchQuery] = useState("");
+  const [modalPricingFilter, setModalPricingFilter] = useState<"All" | "Free" | "Paid">("All");
 
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedPricing, setSelectedPricing] = useState<string[]>([]);
@@ -1001,21 +1137,48 @@ export const MarketplaceHome: React.FC = () => {
   const renderSection = (
     title: string,
     sectionItems: MarketplaceItemType[],
+    allCategoryItems: MarketplaceItemType[],
     icon?: React.ReactNode,
+    categoryKey?: string,
   ) => {
     if (sectionItems.length === 0) return null;
 
+    // Show up to 4 items in the preview grid on home
+    const displayItems = sectionItems.slice(0, 4);
+
     return (
       <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          {icon}
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate tracking-tight">
-            {title}
-          </h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {icon}
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate tracking-tight">
+              {title}
+            </h2>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400">
+              {sectionItems.length}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setViewingCategoryModal({
+                title,
+                items: allCategoryItems.length > 0 ? allCategoryItems : sectionItems,
+                categoryKey,
+              });
+              setModalSearchQuery("");
+              setModalPricingFilter("All");
+            }}
+            className="flex items-center gap-1.5 text-xs font-bold text-[#FF6B00] hover:text-[#e05e00] transition-colors py-1.5 px-3 rounded-xl hover:bg-orange-50 dark:hover:bg-orange-950/30 cursor-pointer group/see"
+          >
+            <span>See all</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/see:translate-x-0.5" />
+          </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {sectionItems.map(renderAssetCard)}
+          {displayItems.map(renderAssetCard)}
         </div>
       </div>
     );
@@ -1034,6 +1197,33 @@ export const MarketplaceHome: React.FC = () => {
   const toolItems = getFilteredItems(
     items.filter((i) => i.category === "AI Tools"),
   );
+
+  // Filtered items inside the "See all" category modal
+  const modalFilteredItems = viewingCategoryModal
+    ? viewingCategoryModal.items.filter((item) => {
+        const matchesSearch =
+          !modalSearchQuery ||
+          item.name.toLowerCase().includes(modalSearchQuery.toLowerCase()) ||
+          item.tagline.toLowerCase().includes(modalSearchQuery.toLowerCase()) ||
+          item.description.toLowerCase().includes(modalSearchQuery.toLowerCase()) ||
+          item.author.name.toLowerCase().includes(modalSearchQuery.toLowerCase());
+        const matchesPricing =
+          modalPricingFilter === "All" ||
+          (modalPricingFilter === "Free" && item.price === "Free") ||
+          (modalPricingFilter === "Paid" && item.price !== "Free");
+        return matchesSearch && matchesPricing;
+      })
+    : [];
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && viewingCategoryModal) {
+        setViewingCategoryModal(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [viewingCategoryModal]);
 
   return (
     <SidebarShell>
@@ -1216,35 +1406,212 @@ export const MarketplaceHome: React.FC = () => {
             </div>
 
             {/* 1. Trending Assets This Week */}
-            {renderSection("Trending Assets This Week", trendingItems)}
+            {trendingItems.length > 0 &&
+              renderSection(
+                "Trending Assets This Week",
+                trendingItems,
+                items.filter((i) => i.isTrending),
+                <TrendingUp className="w-4 h-4 text-[#FF6B00]" />,
+                "trending"
+              )}
 
             {/* 2. Datasets */}
             {datasetItems.length > 0 && (
               <div className="pt-4">
-                {renderSection("Datasets", datasetItems)}
+                {renderSection(
+                  "Datasets",
+                  datasetItems,
+                  items.filter(
+                    (i) =>
+                      i.category === "Datasets" ||
+                      i.badge?.toLowerCase() === "dataset",
+                  ),
+                  <Database className="w-4 h-4 text-[#059669]" />,
+                  "Datasets"
+                )}
               </div>
             )}
 
             {/* 3. AI / ML Models */}
             {modelItems.length > 0 && (
               <div className="pt-4">
-                {renderSection("AI / ML Models", modelItems)}
+                {renderSection(
+                  "AI / ML Models",
+                  modelItems,
+                  items.filter(
+                    (i) =>
+                      i.category === "AI / ML Models" ||
+                      i.badge?.toLowerCase() === "model",
+                  ),
+                  <BrainCircuit className="w-4 h-4 text-[#0284C7]" />,
+                  "Models"
+                )}
               </div>
             )}
 
             {/* 4. Agents */}
             {agentItems.length > 0 && (
-              <div className="pt-4">{renderSection("Agents", agentItems)}</div>
+              <div className="pt-4">
+                {renderSection(
+                  "Agents",
+                  agentItems,
+                  items.filter(
+                    (i) =>
+                      i.category === "Agents" ||
+                      i.badge?.toLowerCase() === "agent",
+                  ),
+                  <Sparkles className="w-4 h-4 text-[#7C3AED]" />,
+                  "Agents"
+                )}
+              </div>
             )}
 
             {/* 5. AI Tools */}
             {toolItems.length > 0 && (
-              <div className="pt-4">{renderSection("AI Tools", toolItems)}</div>
+              <div className="pt-4">
+                {renderSection(
+                  "AI Tools",
+                  toolItems,
+                  items.filter(
+                    (i) =>
+                      i.category === "AI Tools" ||
+                      i.badge?.toLowerCase() === "tool",
+                  ),
+                  <Wrench className="w-4 h-4 text-[#D97706]" />,
+                  "Tools"
+                )}
+              </div>
             )}
           </div>
         </main>
 
+        {/* SEE ALL CATEGORY POPUP MODAL */}
+        {viewingCategoryModal && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={() => setViewingCategoryModal(null)}
+          >
+            <div
+              className="relative flex flex-col w-full max-w-6xl max-h-[90vh] bg-white dark:bg-[#131317] rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-5 border-b border-slate-100 dark:border-zinc-800/80 bg-slate-50/70 dark:bg-zinc-900/40">
+                <div className="flex items-center gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                        {viewingCategoryModal.title}
+                      </h2>
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#FF6B00]/10 text-[#FF6B00]">
+                        {viewingCategoryModal.items.length} Total
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
+                      Explore all verified {viewingCategoryModal.title.toLowerCase()} available on the platform
+                    </p>
+                  </div>
+                </div>
 
+                {/* Filter and Search inside Modal */}
+                <div className="flex items-center gap-2.5">
+                  {/* Search inside modal */}
+                  <div className="relative flex items-center h-9 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/90 dark:border-zinc-800 px-3 gap-2 w-48 sm:w-60 focus-within:border-[#FF6B00] transition-all shadow-2xs">
+                    <Search className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 shrink-0" />
+                    <input
+                      type="text"
+                      value={modalSearchQuery}
+                      onChange={(e) => setModalSearchQuery(e.target.value)}
+                      placeholder={`Search ${viewingCategoryModal.title.toLowerCase()}...`}
+                      className="w-full bg-transparent border-none outline-none text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500"
+                    />
+                    {modalSearchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setModalSearchQuery("")}
+                        className="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Pricing Toggle Chips */}
+                  <div className="flex items-center p-0.5 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200/70 dark:border-zinc-800 text-[11px] font-semibold">
+                    {(["All", "Free", "Paid"] as const).map((tier) => (
+                      <button
+                        key={tier}
+                        type="button"
+                        onClick={() => setModalPricingFilter(tier)}
+                        className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+                          modalPricingFilter === tier
+                            ? "bg-white dark:bg-zinc-800 text-slate-900 dark:text-white shadow-2xs font-bold"
+                            : "text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white"
+                        }`}
+                      >
+                        {tier}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Close Modal Button */}
+                  <button
+                    type="button"
+                    onClick={() => setViewingCategoryModal(null)}
+                    className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center justify-center cursor-pointer shrink-0 ml-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body / Cards Grid */}
+              <div className="flex-1 overflow-y-auto p-6 [scrollbar-width:thin]">
+                {modalFilteredItems.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {modalFilteredItems.map(renderAssetCard)}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center mb-3">
+                      <Search className="w-5 h-5 text-slate-400 dark:text-zinc-500" />
+                    </div>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                      No matching assets found
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 max-w-sm mt-1">
+                      No {viewingCategoryModal.title.toLowerCase()} match your current search or filter.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setModalSearchQuery("");
+                        setModalPricingFilter("All");
+                      }}
+                      className="mt-3.5 px-3 py-1.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors cursor-pointer"
+                    >
+                      Clear search & filters
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="px-6 py-3.5 border-t border-slate-100 dark:border-zinc-800/80 bg-slate-50/70 dark:bg-zinc-900/40 flex items-center justify-between text-xs text-slate-500 dark:text-zinc-400">
+                <span>
+                  Showing {modalFilteredItems.length} of {viewingCategoryModal.items.length} assets
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setViewingCategoryModal(null)}
+                  className="px-4 py-1.5 rounded-xl bg-slate-200 dark:bg-zinc-800 hover:bg-slate-300 dark:hover:bg-zinc-700 text-slate-800 dark:text-zinc-200 font-semibold transition-colors cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* DETAIL POPUP MODAL */}
         <MarketplaceItem
