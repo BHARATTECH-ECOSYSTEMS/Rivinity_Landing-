@@ -331,10 +331,10 @@ const PixelMosaic = ({
     const seedNum = Math.abs(hash);
 
     const cols = 12;
-    const rows = 8;
+    const rows = 6;
     // Focal center offset (slightly to left and up, matching Image 3)
-    const centerX = 4.2 + ((seedNum % 7) - 3) * 0.22;
-    const centerY = 3.5 + (((seedNum >> 3) % 5) - 2) * 0.22;
+    const centerX = 4.5 + ((seedNum % 7) - 3) * 0.22;
+    const centerY = 2.6 + (((seedNum >> 3) % 5) - 2) * 0.18;
 
     const items: { x: number; y: number; color: string }[] = [];
 
@@ -352,13 +352,13 @@ const PixelMosaic = ({
         const effectiveDist = Math.max(0, dist + jitter);
 
         let colorIndex = 0;
-        if (effectiveDist < 1.15) colorIndex = 0; // Pure white luminous center
-        else if (effectiveDist < 1.95) colorIndex = 1;
-        else if (effectiveDist < 2.95) colorIndex = 2;
-        else if (effectiveDist < 3.95) colorIndex = 3;
-        else if (effectiveDist < 5.0) colorIndex = 4;
-        else if (effectiveDist < 6.2) colorIndex = 5;
-        else if (effectiveDist < 7.4) colorIndex = 6;
+        if (effectiveDist < 1.1) colorIndex = 0; // Pure white luminous center
+        else if (effectiveDist < 1.8) colorIndex = 1;
+        else if (effectiveDist < 2.7) colorIndex = 2;
+        else if (effectiveDist < 3.7) colorIndex = 3;
+        else if (effectiveDist < 4.8) colorIndex = 4;
+        else if (effectiveDist < 5.9) colorIndex = 5;
+        else if (effectiveDist < 7.0) colorIndex = 6;
         else colorIndex = 7;
 
         colorIndex = Math.min(palette.length - 1, Math.max(0, colorIndex));
@@ -375,7 +375,7 @@ const PixelMosaic = ({
   return (
     <div className="w-full h-full relative overflow-hidden select-none">
       <svg
-        viewBox="0 0 120 80"
+        viewBox="0 0 120 60"
         preserveAspectRatio="xMidYMid slice"
         className="w-full h-full scale-[1.03] transform-gpu transition-transform duration-500 group-hover:scale-105"
         shapeRendering="crispEdges"
@@ -694,10 +694,10 @@ const KnowledgeBase = () => {
                           setSelectedId(s.id);
                           setInspectorOpen(true);
                         }}
-                        className={`group relative text-left rounded-[26px] sm:rounded-[28px] border p-3.5 sm:p-4 cursor-pointer transition-all duration-300 ${theme.cardBg} ${theme.cardBorder} shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.6)] flex flex-col justify-between`}
+                        className="group relative text-left rounded-[22px] sm:rounded-[24px] border border-slate-200/80 dark:border-white/10 p-3.5 sm:p-4 cursor-pointer transition-all duration-300 bg-white dark:bg-[#121216] shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:border-slate-300 dark:hover:border-zinc-700 hover:shadow-[0_12px_28px_-6px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_12px_28px_-6px_rgba(0,0,0,0.5)] flex flex-col justify-between"
                       >
-                        {/* TOP INSET CONTAINER (Image 1 top box housing Image 3 pixel mosaic) */}
-                        <div className="w-full h-40 sm:h-44 rounded-[18px] sm:rounded-[20px] overflow-hidden relative shadow-inner border border-black/5 dark:border-white/10 bg-black/5 dark:bg-black/35">
+                        {/* TOP INSET CONTAINER (Shorter height with Image 3 pixel mosaic) */}
+                        <div className="w-full h-24 sm:h-28 rounded-[15px] sm:rounded-[17px] overflow-hidden relative shadow-inner border border-black/5 dark:border-white/10 bg-black/5 dark:bg-black/35">
                           <PixelMosaic category={s.category} seed={s.id} />
 
                           {/* Top Right: Installed Active Badge */}
@@ -711,37 +711,24 @@ const KnowledgeBase = () => {
                           )}
                         </div>
 
-                        {/* BOTTOM CONTENT AREA (Image 1 style) */}
-                        <div className="pt-3.5 pb-1 px-0.5 flex flex-col justify-between flex-1">
+                        {/* BOTTOM CONTENT AREA (Clean white card style without icon and chevron) */}
+                        <div className="pt-3 pb-0.5 px-0.5 flex flex-col justify-between flex-1">
                           <div>
-                            {/* Icon + Title Header (Image 1 style) */}
-                            <div className="flex items-center gap-2.5">
-                              {/* Circular icon outline like Image 1 */}
-                              <div
-                                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center shrink-0 shadow-2xs ${theme.iconBg} ${theme.iconBorder}`}
-                              >
-                                <CategoryIcon
-                                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${theme.iconColor}`}
-                                />
-                              </div>
+                            {/* Title (Bold uppercase, no icon, no arrow) */}
+                            <h3 className="text-[13.5px] sm:text-[14.5px] font-black uppercase tracking-wide leading-snug text-slate-900 dark:!text-white line-clamp-2">
+                              {s.name}
+                            </h3>
 
-                              <h3 className="text-[13px] sm:text-[14px] font-black uppercase tracking-wide leading-snug text-slate-900 dark:!text-white line-clamp-2 flex-1">
-                                {s.name}
-                              </h3>
-
-                              <ChevronRight className="w-4 h-4 text-slate-400 dark:text-zinc-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
-                            </div>
-
-                            {/* Description (Spans full width under icon and title) */}
-                            <p className="text-[12px] sm:text-[12.5px] font-normal leading-relaxed mt-2.5 line-clamp-2 min-h-[38px] text-slate-700/90 dark:!text-zinc-300">
+                            {/* Description */}
+                            <p className="text-[12px] sm:text-[12.5px] font-normal leading-relaxed mt-2 line-clamp-2 min-h-[36px] text-slate-600 dark:!text-zinc-400">
                               {s.summary}
                             </p>
                           </div>
 
                           {/* Footer Action Bar */}
-                          <div className="mt-4 pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-between">
+                          <div className="mt-3.5 pt-3 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between">
                             <span
-                              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${theme.badgeBg} ${theme.badgeText}`}
+                              className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${theme.badgeBg} ${theme.badgeText}`}
                             >
                               {s.category}
                             </span>
