@@ -223,7 +223,7 @@ const KnowledgeBase = () => {
                   {/* Quick Minimal Stats */}
                   <div className="flex items-center gap-3 shrink-0">
                     <div className="px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 shadow-2xs text-left">
-                      <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
+                      <div className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-semibold">
                         Installed
                       </div>
                       <div className="text-sm font-bold text-slate-800 dark:text-zinc-100">
@@ -232,7 +232,7 @@ const KnowledgeBase = () => {
                     </div>
 
                     <div className="px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 shadow-2xs text-left">
-                      <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
+                      <div className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-semibold">
                         Catalog
                       </div>
                       <div className="text-sm font-bold text-slate-800 dark:text-zinc-100">
@@ -268,7 +268,7 @@ const KnowledgeBase = () => {
                   )}
 
                   <div className="flex items-center pl-2.5 border-l border-slate-200 dark:border-zinc-800 select-none">
-                    <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400 font-medium">
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-medium">
                       {filtered.length}{" "}
                       {filtered.length === 1 ? "skill" : "skills"}
                     </span>
@@ -316,7 +316,7 @@ const KnowledgeBase = () => {
                           <span>{f}</span>
 
                           <span
-                            className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                            className={`text-[10px] px-1.5 py-0.2 rounded-full font-medium ${
                               active
                                 ? "bg-white/20 text-white font-semibold"
                                 : "text-slate-400 dark:text-zinc-500"
@@ -364,7 +364,7 @@ const KnowledgeBase = () => {
                           <div>
                             {/* Card Topline: Minimal Orange Category Badge */}
                             <div className="flex items-center justify-between gap-2 mb-2.5">
-                              <span className="inline-flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-orange-50/80 dark:bg-orange-950/40 text-[#FF6B00] dark:text-orange-400 border border-orange-200/60 dark:border-orange-900/40 font-mono">
+                              <span className="inline-flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-orange-50/80 dark:bg-orange-950/40 text-[#FF6B00] dark:text-orange-400 border border-orange-200/60 dark:border-orange-900/40">
                                 <CategoryIcon className="w-3 h-3 text-[#FF6B00] dark:text-orange-400 shrink-0" />
                                 {s.category}
                               </span>
@@ -483,17 +483,15 @@ const KnowledgeBase = () => {
                   className="relative w-full max-w-lg max-h-[85vh] bg-white dark:bg-[#111115] border border-slate-200 dark:border-zinc-800 shadow-2xl rounded-2xl flex flex-col z-10 overflow-hidden"
                 >
                   {/* Modal Header */}
-                  <div className="p-4 border-b border-slate-100 dark:border-zinc-800/80 flex justify-between items-center bg-slate-50/80 dark:bg-[#16161a]">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#FF6B00]" />
-                      <span className="text-xs font-mono font-semibold text-slate-600 dark:text-zinc-300">
-                        Skill Inspector
-                      </span>
-                    </div>
+                  <div className="px-5 py-4 border-b border-slate-100 dark:border-zinc-800/80 flex justify-between items-center bg-slate-50/80 dark:bg-[#16161a]">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-zinc-200">
+                      Skill Inspector
+                    </span>
 
                     <button
                       onClick={() => setInspectorOpen(false)}
-                      className="p-1 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/60 transition-colors cursor-pointer"
+                      aria-label="Close"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -534,6 +532,10 @@ const SkillInspectorContent = ({
   const [copied, setCopied] = useState(false);
   const CategoryIcon = CATEGORY_ICONS[skill.category] || Sparkles;
 
+  const cleanBody = useMemo(() => {
+    return skill.body.replace(/^---\n[\s\S]*?\n---\n*/, "").trim();
+  }, [skill.body]);
+
   const handleCopy = () => {
     navigator.clipboard.writeText(skill.body);
     setCopied(true);
@@ -545,17 +547,17 @@ const SkillInspectorContent = ({
       {/* Detail header */}
       <div className="p-5 border-b border-slate-100 dark:border-zinc-800/80 bg-white dark:bg-[#111115]">
         <div className="flex items-center justify-between gap-2 mb-2">
-          <span className="inline-flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/40 text-[#FF6B00] dark:text-orange-400 border border-orange-200/60 dark:border-orange-900/40 font-mono">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/40 text-[#FF6B00] dark:text-orange-400 border border-orange-200/60 dark:border-orange-900/40">
             <CategoryIcon className="w-3 h-3 text-[#FF6B00] dark:text-orange-400 shrink-0" />
             {skill.category}
           </span>
         </div>
 
-        <h2 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           {skill.name}
         </h2>
 
-        <p className="text-xs sm:text-[12.5px] text-slate-500 dark:text-zinc-400 mt-1.5 leading-relaxed font-normal">
+        <p className="text-xs sm:text-[13px] text-slate-500 dark:text-zinc-400 mt-2 leading-relaxed font-normal">
           {skill.summary}
         </p>
 
@@ -582,7 +584,7 @@ const SkillInspectorContent = ({
 
       {/* Markdown Body Viewer */}
       <div className="p-5 bg-white dark:bg-[#111115]">
-        <div className="flex items-center justify-between mb-2 text-[10.5px] font-mono uppercase tracking-wider text-slate-400">
+        <div className="flex items-center justify-between mb-2.5 text-xs text-slate-500">
           <span className="flex items-center gap-1.5 text-slate-600 dark:text-zinc-300 font-semibold">
             <BookOpen className="w-3.5 h-3.5 text-[#FF6B00]" />
             SKILL.md Instructions
@@ -590,7 +592,7 @@ const SkillInspectorContent = ({
 
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 text-[10px] text-[#FF6B00] hover:underline cursor-pointer font-mono font-medium"
+            className="flex items-center gap-1 text-xs text-[#FF6B00] hover:text-[#e05e00] transition-colors cursor-pointer font-medium"
           >
             {copied ? (
               <>
@@ -606,8 +608,8 @@ const SkillInspectorContent = ({
           </button>
         </div>
 
-        <div className="rounded-xl border border-slate-200/90 dark:border-zinc-800 bg-slate-50/80 dark:bg-[#18181C] p-3.5 font-mono text-[11.5px] leading-relaxed text-slate-800 dark:text-slate-200">
-          <ChatMarkdown content={skill.body} />
+        <div className="rounded-xl border border-slate-200/80 dark:border-zinc-800/80 bg-slate-50/60 dark:bg-[#16161a] p-4 text-[13px] leading-relaxed text-slate-700 dark:text-zinc-300">
+          <ChatMarkdown content={cleanBody} />
         </div>
       </div>
     </div>

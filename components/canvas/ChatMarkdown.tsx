@@ -43,10 +43,10 @@ export default function ChatMarkdown({ content }: { content: string }) {
         rehypePlugins={[[rehypeHighlight, { detect: true, ignoreMissing: true }]]}
         urlTransform={safeUrl}
         components={{
-          h1: (p) => <div className="text-[20px] font-semibold tracking-tight mt-5 mb-2.5" {...p} />,
-          h2: (p) => <div className="text-[17px] font-semibold tracking-tight mt-5 mb-2" {...p} />,
-          h3: (p) => <div className="text-[15px] font-semibold mt-4 mb-1.5" {...p} />,
-          h4: (p) => <div className="text-[14px] font-semibold mt-3 mb-1" {...p} />,
+          h1: (p) => <div className="text-[20px] font-semibold tracking-tight mt-5 mb-2.5 first:mt-0" {...p} />,
+          h2: (p) => <div className="text-[17px] font-semibold tracking-tight mt-5 mb-2 first:mt-0" {...p} />,
+          h3: (p) => <div className="text-[15px] font-semibold mt-4 mb-1.5 first:mt-0" {...p} />,
+          h4: (p) => <div className="text-[14px] font-semibold mt-3 mb-1 first:mt-0" {...p} />,
           p: (p) => <div className="my-2.5 first:mt-0 last:mb-0" {...p} />,
           strong: (p) => <strong className="font-semibold text-foreground" {...p} />,
           em: (p) => <em className="italic" {...p} />,
