@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
+import { useSidebarState } from "@/components/canvas/useSidebarState";
 import ChatMarkdown from "@/components/canvas/ChatMarkdown";
 import {
   Search,
@@ -85,7 +86,7 @@ const cardVariants: Variants = {
 };
 
 const KnowledgeBase = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
   const [filter, setFilter] = useState<Filter>("All");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string>(SKILLS[0]?.id);

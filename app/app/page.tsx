@@ -15,10 +15,11 @@ import { toast } from "sonner";
 
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
 import CanvasMain from "@/components/canvas/CanvasMain";
+import { useSidebarState } from "@/components/canvas/useSidebarState";
 import { USER } from "@/lib/profile";
 
 const Index = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false); // Default closed on mobile, sidebar component handles desktop layout state
+  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [isChatActive, setIsChatActive] = useState(false);

@@ -5,16 +5,17 @@ import CanvasSidebar from "@/components/canvas/CanvasSidebar";
 import AudioLabMain from "@/components/audio-lab/AudioLabMain";
 import AudioLabRightPanel from "@/components/audio-lab/AudioLabRightPanel";
 import { PanelLeft } from "lucide-react";
+import { useSidebarState } from "@/components/canvas/useSidebarState";
 
 const AudioLab = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
   const [activeFeature, setActiveFeature] = useState<string>("text-to-speech");
 
   return (
     <div className="h-screen flex overflow-hidden">
       <CanvasSidebar
         open={sidebarOpen}
-        onToggle={() => setSidebarOpen((prev) => !prev)}
+        onToggle={toggleSidebar}
         onCollapse={() => setSidebarOpen(false)}
       />
 
@@ -28,8 +29,12 @@ const AudioLab = () => {
             <PanelLeft className="w-4 h-4" />
           </button>
         )}
+
         <div className="flex-1 flex min-h-0">
-          <AudioLabMain activeFeature={activeFeature} onFeatureChange={setActiveFeature} />
+          <AudioLabMain
+            activeFeature={activeFeature}
+            onFeatureChange={setActiveFeature}
+          />
           <AudioLabRightPanel activeFeature={activeFeature} />
         </div>
       </div>

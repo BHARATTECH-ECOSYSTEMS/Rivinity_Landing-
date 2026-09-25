@@ -1,35 +1,28 @@
 "use client";
 
-import { useState, useEffect, ReactNode } from "react";
+import { useEffect, ReactNode } from "react";
 import CanvasSidebar from "./CanvasSidebar";
 import { PanelLeft } from "lucide-react";
+import { useSidebarState } from "./useSidebarState";
 
 interface SidebarShellProps {
   children: ReactNode;
 }
 
 const SidebarShell = ({ children }: SidebarShellProps) => {
-  // Automatically open by default on desktop (>=768px), closed by default on mobile (<768px)
-  const [sidebarOpen, setSidebarOpen] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.innerWidth >= 768;
-    }
-    return true;
-  });
+  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
 
   // Track window resize to ensure proper state across screen size changes
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setSidebarOpen(false);
-      } else {
-        setSidebarOpen(true);
       }
     };
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [setSidebarOpen]);
 
   return (
     <div className="h-screen w-full flex overflow-hidden relative">
@@ -55,7 +48,7 @@ const SidebarShell = ({ children }: SidebarShellProps) => {
       >
         <CanvasSidebar
           open={sidebarOpen}
-          onToggle={() => setSidebarOpen((prev) => !prev)}
+          onToggle={toggleSidebar}
           onCollapse={() => setSidebarOpen(false)}
         />
       </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
+import { useSidebarState } from "@/components/canvas/useSidebarState";
 import {
   motion,
   AnimatePresence,
@@ -337,13 +338,7 @@ const TrafficVeracityGauge = () => {
 ========================================================= */
 
 const Analytics = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setSidebarOpen(window.innerWidth >= 768);
-    }
-  }, []);
+  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
 
   const [dateRange, setDateRange] = useState("10 Feb - 21 Nov 2026");
   const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);

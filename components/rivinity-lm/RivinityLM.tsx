@@ -4,16 +4,17 @@ import { useState } from "react";
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
 import RivinityLMMain from "@/components/rivinity-lm/RivinityLMMain";
 import { PanelLeft } from "lucide-react";
+import { useSidebarState } from "@/components/canvas/useSidebarState";
 
 const RivinityLM = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
   const [activeFeature, setActiveFeature] = useState<string>("landing");
 
   return (
     <div className="h-screen flex overflow-hidden">
       <CanvasSidebar
         open={sidebarOpen}
-        onToggle={() => setSidebarOpen((prev) => !prev)}
+        onToggle={toggleSidebar}
         onCollapse={() => setSidebarOpen(false)}
       />
       <div className="flex-1 flex flex-col min-w-0 relative">
@@ -26,9 +27,11 @@ const RivinityLM = () => {
             <PanelLeft className="w-4 h-4" />
           </button>
         )}
-        <div className="flex-1 flex min-h-0">
-          <RivinityLMMain activeFeature={activeFeature} onFeatureChange={setActiveFeature} />
-        </div>
+
+        <RivinityLMMain
+          activeFeature={activeFeature}
+          onFeatureChange={setActiveFeature}
+        />
       </div>
     </div>
   );

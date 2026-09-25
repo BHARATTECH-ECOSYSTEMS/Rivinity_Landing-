@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
+import { useSidebarState } from "@/components/canvas/useSidebarState";
 
 import {
   MessageSquare,
@@ -216,12 +217,7 @@ const historyCategories = [
 ];
 
 const HistoryPage = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.innerWidth >= 768;
-    }
-    return true;
-  });
+  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("All");
   const [query, setQuery] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
