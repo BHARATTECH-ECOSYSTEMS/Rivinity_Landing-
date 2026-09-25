@@ -533,11 +533,15 @@ const SkillInspectorContent = ({
   const CategoryIcon = CATEGORY_ICONS[skill.category] || Sparkles;
 
   const cleanBody = useMemo(() => {
-    return skill.body.replace(/^---\n[\s\S]*?\n---\n*/, "").trim();
+    return skill.body
+      .replace(/^---\n[\s\S]*?\n---\n*/, "")
+      .replace(/>\s*Installed by[^\n]*\n*/gi, "")
+      .trim();
   }, [skill.body]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(skill.body);
+    const textToCopy = skill.body.replace(/>\s*Installed by[^\n]*\n*/gi, "").trim();
+    navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -583,32 +587,36 @@ const SkillInspectorContent = ({
       </div>
 
       {/* Markdown Body Viewer */}
-      <div className="p-5 bg-white dark:bg-[#111115]">
-        <div className="flex items-center justify-between mb-2.5 text-xs text-slate-500">
-          <span className="flex items-center gap-1.5 text-slate-600 dark:text-zinc-300 font-semibold">
+      <div className="p-5 sm:p-6 bg-white dark:bg-[#111115]">
+        <div className="flex items-center justify-between mb-3 text-xs text-slate-500">
+          <span className="flex items-center gap-1.5 text-slate-700 dark:text-zinc-200 font-semibold text-xs">
             <BookOpen className="w-3.5 h-3.5 text-[#FF6B00]" />
             SKILL.md Instructions
           </span>
 
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 text-xs text-[#FF6B00] hover:text-[#e05e00] transition-colors cursor-pointer font-medium"
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer shadow-2xs ${
+              copied
+                ? "bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400"
+                : "bg-white dark:bg-zinc-800/90 border border-slate-200 dark:border-zinc-700/80 text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-zinc-700/80 hover:border-slate-300 dark:hover:border-zinc-600 active:scale-95"
+            }`}
           >
             {copied ? (
               <>
-                <CheckCheck className="w-3 h-3 text-emerald-500" />
-                <span className="text-emerald-500">Copied</span>
+                <CheckCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Copied</span>
               </>
             ) : (
               <>
-                <Copy className="w-3 h-3" />
+                <Copy className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-400" />
                 <span>Copy</span>
               </>
             )}
           </button>
         </div>
 
-        <div className="rounded-xl border border-slate-200/80 dark:border-zinc-800/80 bg-slate-50/60 dark:bg-[#16161a] p-4 text-[13px] leading-relaxed text-slate-700 dark:text-zinc-300">
+        <div className="rounded-2xl border border-slate-200/90 dark:border-zinc-800/90 bg-slate-50/70 dark:bg-zinc-900/40 p-4.5 sm:p-5 text-[13px] leading-relaxed text-slate-700 dark:text-zinc-300 shadow-2xs">
           <ChatMarkdown content={cleanBody} />
         </div>
       </div>

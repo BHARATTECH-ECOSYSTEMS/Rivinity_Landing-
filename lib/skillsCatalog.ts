@@ -89,8 +89,6 @@ export const SKILLS: Skill[] = seed.map((s) => ({
     "## Outputs",
     "",
     `- A structured artifact ready to hand off, aligned with the tags: ${s.tags.join(", ")}.`,
-    "",
-    `> Installed by ${s.usage.toLocaleString()} teams · last updated ${s.updated}.`,
   ].join("\n"),
 }));
 
