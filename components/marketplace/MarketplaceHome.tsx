@@ -10,11 +10,7 @@ import {
   SlidersHorizontal,
   Star,
   Heart,
-  SendHorizontal,
-  Bot,
-  BrainCircuit,
-  Database,
-  Wrench,
+  ArrowUpRight,
   TrendingUp,
   Sparkles,
   Plus,
@@ -325,14 +321,12 @@ export const MarketplaceHome: React.FC = () => {
     });
   };
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'Agents': return <Bot className="w-4 h-4 text-[#FF6B00]" />;
-      case 'AI / ML Models': return <BrainCircuit className="w-4 h-4 text-[#FF6B00]" />;
-      case 'Datasets': return <Database className="w-4 h-4 text-[#FF6B00]" />;
-      case 'AI Tools': return <Wrench className="w-4 h-4 text-[#FF6B00]" />;
-      default: return <Sparkles className="w-4 h-4 text-[#FF6B00]" />;
-    }
+  const getCategoryLabel = (item: MarketplaceItemType) => {
+    if (item.category === 'AI / ML Models' || item.badge?.toLowerCase() === 'model') return 'Model';
+    if (item.category === 'Datasets' || item.badge?.toLowerCase() === 'dataset') return 'Dataset';
+    if (item.category === 'Agents' || item.badge?.toLowerCase() === 'agent') return 'Agent';
+    if (item.category === 'AI Tools' || item.badge?.toLowerCase() === 'tool') return 'Tool';
+    return item.badge || item.category || 'Asset';
   };
 
   const renderAssetCard = (item: MarketplaceItemType) => {
@@ -351,41 +345,22 @@ export const MarketplaceHome: React.FC = () => {
         className="group relative bg-white dark:bg-[#131317] border border-slate-200/80 dark:border-zinc-800 hover:border-slate-400 dark:hover:border-zinc-600 rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/40 flex flex-col justify-between"
       >
         <div>
-          {/* Top Asset Preview / Graphic Header */}
-          <div className="relative h-24 w-full rounded-xl overflow-hidden bg-gradient-to-br from-slate-50 via-slate-100/70 to-orange-50/30 dark:from-zinc-800/80 dark:via-zinc-850 dark:to-orange-950/20 border border-slate-200/60 dark:border-zinc-800/80 p-3 flex flex-col justify-between">
-            {/* Top Row: Category Icon & Badges */}
-            <div className="flex items-center justify-between w-full z-10">
-              <div className="w-8 h-8 rounded-lg bg-white dark:bg-zinc-800 shadow-2xs border border-slate-200/80 dark:border-zinc-700/80 flex items-center justify-center group-hover:scale-105 group-hover:border-[#FF6B00]/40 transition-transform">
-                {getCategoryIcon(item.category)}
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/95 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200/80 dark:border-zinc-700 shadow-2xs uppercase tracking-wider">
-                  {item.badge}
-                </span>
-                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shadow-2xs ${
-                  item.tier === 'Free'
-                    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/40'
-                    : 'bg-black dark:bg-white text-white dark:text-black border border-transparent'
-                }`}>
-                  {item.price}
-                </span>
-              </div>
-            </div>
-
-            {/* Bottom Row inside banner: Framework & Version */}
-            <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-zinc-400 z-10">
-              <span className="font-medium truncate max-w-[170px] bg-white/90 dark:bg-zinc-800/90 backdrop-blur-xs px-2 py-0.5 rounded-md border border-slate-200/60 dark:border-zinc-700/60">
-                {item.specs.framework}
-              </span>
-              <span className="text-[10px] font-medium opacity-75">
-                {item.specs.version}
-              </span>
-            </div>
+          {/* Top Row: Category in Orange text (no icon) & Price */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#FF6B00] tracking-wide">
+              {getCategoryLabel(item)}
+            </span>
+            <span className={`px-2 py-0.5 rounded-md text-[10.5px] font-bold shadow-2xs ${
+              item.tier === 'Free'
+                ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/40'
+                : 'bg-black dark:bg-white text-white dark:text-black border border-transparent'
+            }`}>
+              {item.price}
+            </span>
           </div>
 
           {/* Title & Description */}
-          <div className="mt-3.5">
+          <div className="mt-3">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF6B00] transition-colors line-clamp-1 tracking-tight">
               {item.name}
             </h3>
@@ -394,16 +369,7 @@ export const MarketplaceHome: React.FC = () => {
             </p>
           </div>
 
-          {/* Capabilities Pill */}
-          {item.capabilities[0] && (
-            <div className="mt-2.5">
-              <span className="inline-block text-[10.5px] font-medium px-2 py-0.5 rounded-md bg-slate-50 dark:bg-zinc-800/60 text-slate-600 dark:text-zinc-400 border border-slate-200/60 dark:border-zinc-800 truncate max-w-full">
-                {item.capabilities[0]}
-              </span>
-            </div>
-          )}
-
-          {/* Metadata Row: Clean Org Badge (NO HUMAN PHOTO) & Rating */}
+          {/* Metadata Row: Clean Org Badge & Rating */}
           <div className="mt-3.5 pt-3 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-xs">
             {/* Publisher: Clean Initials Badge */}
             <div className="flex items-center gap-1.5 min-w-0" title={item.author.name}>
@@ -431,10 +397,10 @@ export const MarketplaceHome: React.FC = () => {
               e.stopPropagation();
               setSelectedAsset(item);
             }}
-            className="flex-1 h-8 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-semibold rounded-xl transition-all shadow-2xs flex items-center justify-center gap-1.5 active:scale-98 cursor-pointer"
+            className="group/btn flex-1 h-8 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-semibold rounded-xl transition-all shadow-2xs flex items-center justify-center gap-1.5 active:scale-98 cursor-pointer"
           >
-            <SendHorizontal className="w-3 h-3 rotate-45" /> 
-            Inspect
+            <span>Inspect</span>
+            <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
           </button>
 
           <button
@@ -567,7 +533,6 @@ export const MarketplaceHome: React.FC = () => {
               'Trending Assets This Week',
               'The most downloaded datasets and models across the ecosystem.',
               trendingItems,
-              <TrendingUp className="w-4 h-4 text-[#FF6B00]" />
             )}
 
             {/* 2. Datasets */}
