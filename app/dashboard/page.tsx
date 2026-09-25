@@ -1070,8 +1070,8 @@ const DashboardContent = () => {
                       {tool.title}
                     </div>
 
-                    {/* Bottom: Solid Glyph Logo on Bottom Right Side */}
-                    <div className="relative z-10 mt-auto pt-2 flex items-end justify-end">
+                    {/* Bottom: Solid Black Glyph Logo on Bottom Left Side */}
+                    <div className="relative z-10 mt-auto pt-2 flex items-end justify-start">
                       <Icon className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 lg:w-8 lg:h-8 text-slate-900 transition-transform duration-300 group-hover:scale-105" />
                     </div>
                   </motion.div>
