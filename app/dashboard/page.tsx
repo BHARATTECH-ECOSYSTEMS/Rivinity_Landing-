@@ -38,6 +38,8 @@ import {
   Copy,
   Share2,
   FolderClosed,
+  Bot,
+  Clapperboard,
   type LucideIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -745,34 +747,34 @@ const DashboardContent = () => {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {[
                         {
+                          icon: Bot,
+                          label: "Agents Playground",
+                          desc: "Multi-agent systems & simulations",
+                        },
+                        {
+                          icon: GraduationCap,
+                          label: "RivinityLM",
+                          desc: "Frontier reasoning & intelligence",
+                        },
+                        {
                           icon: Sparkles,
-                          label: "Brainstorming",
-                          desc: "Explore concepts & ideas",
+                          label: "Image Enhancer",
+                          desc: "Super-resolution, relighting & polish",
                         },
                         {
-                          icon: Code,
-                          label: "Code Assistant",
-                          desc: "Debug, refactor, generate",
-                        },
-                        {
-                          icon: FileText,
-                          label: "Doc Synthesizer",
-                          desc: "Summarize & extract insights",
-                        },
-                        {
-                          icon: Globe,
-                          label: "Deep Search",
-                          desc: "Live web synthesis",
+                          icon: AudioWaveform,
+                          label: "Audio Lab",
+                          desc: "Voice synthesis & stem mastering",
                         },
                         {
                           icon: Layers,
-                          label: "Multi-Model",
-                          desc: "Compare frontier models",
+                          label: "App Builder",
+                          desc: "Full-stack code & app scaffolding",
                         },
                         {
-                          icon: Wand2,
-                          label: "Creative Studio",
-                          desc: "Transform styles & tones",
+                          icon: Clapperboard,
+                          label: "Prompt to Video",
+                          desc: "Cinematic scenes & video generation",
                         },
                       ].map((tool) => (
                         <button
