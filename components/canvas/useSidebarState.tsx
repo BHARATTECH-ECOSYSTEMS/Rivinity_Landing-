@@ -23,27 +23,25 @@ const SidebarContext = createContext<SidebarContextType | null>(null);
 let globalSidebarState: boolean | null = null;
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
-  const [sidebarOpen, setSidebarOpenState] = useState<boolean>(() => {
-    // If we already have a cached state on client, use it synchronously
-    if (globalSidebarState !== null) {
-      return globalSidebarState;
-    }
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
-        if (saved !== null) {
-          const val = saved === "true";
-          globalSidebarState = val;
-          return val;
-        }
-        if (window.innerWidth < 768) {
-          globalSidebarState = false;
-          return false;
-        }
-      } catch {}
-    }
-    return true;
-  });
+  // Always initialize uniformly on initial render to match SSR and prevent hydration mismatches
+  const [sidebarOpen, setSidebarOpenState] = useState<boolean>(true);
+
+  // Sync from localStorage / screen width once on client mount (post-hydration)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
+      if (saved !== null) {
+        const val = saved === "true";
+        globalSidebarState = val;
+        setSidebarOpenState(val);
+      } else if (window.innerWidth < 768) {
+        globalSidebarState = false;
+        setSidebarOpenState(false);
+      } else if (globalSidebarState !== null) {
+        setSidebarOpenState(globalSidebarState);
+      }
+    } catch {}
+  }, []);
 
   // Sync to localStorage and global cache whenever state changes
   useEffect(() => {

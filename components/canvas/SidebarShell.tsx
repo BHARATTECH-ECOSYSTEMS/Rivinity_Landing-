@@ -20,7 +20,7 @@ const SidebarShell = ({ children }: SidebarShellProps) => {
   return (
     <div className="h-screen w-full flex overflow-hidden relative">
       {/* Mobile Backdrop Overlay */}
-      {sidebarOpen && (
+      {mounted && sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs md:hidden"
@@ -51,7 +51,7 @@ const SidebarShell = ({ children }: SidebarShellProps) => {
         <button
           onClick={() => setSidebarOpen(true)}
           className={`absolute top-3 left-3 z-30 w-8 h-8 rounded-full glass border border-glass shadow-float items-center justify-center text-muted-foreground/60 hover:text-foreground/80 hover:shadow-glow-accent transition-all duration-200 cursor-pointer ${
-            sidebarOpen ? "hidden" : "flex md:hidden"
+            mounted && !sidebarOpen ? "flex md:hidden" : "hidden"
           }`}
           aria-label="Open sidebar"
         >
