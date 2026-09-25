@@ -339,8 +339,6 @@ const TrafficVeracityGauge = () => {
 ========================================================= */
 
 const Analytics = () => {
-  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
-
   const [dateRange, setDateRange] = useState("10 Feb - 21 Nov 2026");
   const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);
 

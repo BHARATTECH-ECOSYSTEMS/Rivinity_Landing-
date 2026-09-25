@@ -218,7 +218,6 @@ const historyCategories = [
 ];
 
 const HistoryPage = () => {
-  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("All");
   const [query, setQuery] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);

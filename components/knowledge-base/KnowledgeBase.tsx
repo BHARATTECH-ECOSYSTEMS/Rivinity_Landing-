@@ -87,7 +87,6 @@ const cardVariants: Variants = {
 };
 
 const KnowledgeBase = () => {
-  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
   const [filter, setFilter] = useState<Filter>("All");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string>(SKILLS[0]?.id);
@@ -187,18 +186,6 @@ const KnowledgeBase = () => {
                 transition={{ duration: 0.3 }}
                 className="mb-6 space-y-2.5"
               >
-                <div className="flex items-center justify-between gap-3">
-                  {/* Mobile Sidebar Toggle Button */}
-                  <button
-                    type="button"
-                    onClick={() => setSidebarOpen((prev) => !prev)}
-                    className="md:hidden flex items-center justify-center h-8 w-8 rounded-lg bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 shadow-2xs cursor-pointer"
-                    aria-label="Toggle sidebar"
-                  >
-                    <PanelLeft className="h-4 w-4" strokeWidth={2} />
-                  </button>
-                </div>
-
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pt-1">
                   <div>
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
