@@ -35,7 +35,6 @@ export const MarketplaceUpload: React.FC<UploadModalProps> = ({ isOpen, onClose,
       price: tier === 'Free' ? 'Free' : '$19',
       author: {
         name: 'You',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80'
       },
       capabilities: ['Custom Workflow', 'Direct API Invocation'],
       specs: {
@@ -121,7 +120,7 @@ export const MarketplaceUpload: React.FC<UploadModalProps> = ({ isOpen, onClose,
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-[#FF5500] hover:bg-[#e04b00] font-semibold text-white rounded-xl shadow-sm shadow-[#FF5500]/25 transition-all cursor-pointer active:scale-98"
+              className="px-5 py-2 bg-[#FF6B00] hover:bg-[#e04b00] font-semibold text-white rounded-xl shadow-sm shadow-[#FF6B00]/25 transition-all cursor-pointer active:scale-98"
             >
               Publish Asset
             </button>

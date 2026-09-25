@@ -66,7 +66,7 @@ export const MarketplaceCheckout: React.FC<CheckoutProps> = ({ item, isOpen, onC
             <button
               onClick={handlePay}
               disabled={loading}
-              className="w-full py-2.5 bg-[#FF5500] hover:bg-[#e04b00] rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 shadow-sm shadow-[#FF5500]/25 transition-all cursor-pointer"
+              className="w-full py-2.5 bg-[#FF6B00] hover:bg-[#e04b00] rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 shadow-sm shadow-[#FF6B00]/25 transition-all cursor-pointer"
             >
               {loading ? (
                 <span>Configuring instance...</span>

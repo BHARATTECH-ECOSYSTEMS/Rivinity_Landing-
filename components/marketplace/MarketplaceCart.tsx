@@ -45,7 +45,7 @@ export const MarketplaceCart: React.FC<CartProps> = ({
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => onCheckout(it)}
-                      className="px-3 py-1.5 bg-[#FF5500] hover:bg-[#e04b00] text-white text-[11px] font-semibold rounded-lg shadow-2xs cursor-pointer transition-colors"
+                      className="px-3 py-1.5 bg-[#FF6B00] hover:bg-[#e04b00] text-white text-[11px] font-semibold rounded-lg shadow-2xs cursor-pointer transition-colors"
                     >
                       Deploy
                     </button>

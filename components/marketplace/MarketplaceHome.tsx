@@ -45,7 +45,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '21.3k',
     price: 'Free',
     tier: 'Free',
-    author: { name: 'Rivinity Audio', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80' },
+    author: { name: 'Rivinity Audio' },
     capabilities: ['Dynamic Noise Reduction', 'Real-time WebSocket Streaming', 'Multilingual 50+'],
     specs: { framework: 'Whisper / PyTorch', license: 'MIT License', version: 'v2.4.0', updatedAt: '2 days ago' },
     isTrending: true
@@ -61,7 +61,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '12.5k',
     price: 'Free',
     tier: 'Free',
-    author: { name: 'NexusData', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80' },
+    author: { name: 'NexusData' },
     capabilities: ['8.5M Annotated Rows', 'Cross-Lingual Vectors', 'Emotion Multi-label'],
     specs: { framework: 'Parquet / Arrow', license: 'CC-BY-4.0', version: 'v3.1.0', updatedAt: '1 week ago' },
     isTrending: true
@@ -77,7 +77,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '4.8k',
     price: '$29',
     tier: 'Paid',
-    author: { name: 'Canvas AI', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80' },
+    author: { name: 'Canvas AI' },
     capabilities: ['Tailwind Code Synthesis', 'Interactive Preview', 'State Wiring'],
     specs: { framework: 'LangChain / Claude-3.5', license: 'Commercial Standard', version: 'v1.2.0', updatedAt: '3 days ago' },
     isTrending: true
@@ -93,7 +93,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '9.2k',
     price: '$19',
     tier: 'Paid',
-    author: { name: 'Aegis Labs', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80' },
+    author: { name: 'Aegis Labs' },
     capabilities: ['Toxicity Probing', 'Hallucination Boundary Checks', 'CI/CD Webhooks'],
     specs: { framework: 'Python / FastAPI', license: 'Apache 2.0', version: 'v3.0.1', updatedAt: '5 days ago' },
     isTrending: true
@@ -111,7 +111,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '7.4k',
     price: '$49',
     tier: 'Paid',
-    author: { name: 'Helix Science', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80' },
+    author: { name: 'Helix Science' },
     capabilities: ['500,000 Verified QAs', 'ICD-10 Mapped', 'Peer-Reviewed'],
     specs: { framework: 'JSON Lines / Parquet', license: 'ODC-BY', version: 'v2.0.0', updatedAt: '2 weeks ago' }
   },
@@ -126,7 +126,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '18.9k',
     price: 'Free',
     tier: 'Free',
-    author: { name: 'OpenCode Lab', avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=80' },
+    author: { name: 'OpenCode Lab' },
     capabilities: ['18 Languages Covered', 'Exec Test Suites Included', 'Clean Deduped'],
     specs: { framework: 'HuggingFace Datasets', license: 'MIT License', version: 'v1.4.2', updatedAt: '3 days ago' }
   },
@@ -141,7 +141,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '3.1k',
     price: '$89',
     tier: 'Premium',
-    author: { name: 'Vidhi Data', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80' },
+    author: { name: 'Vidhi Data' },
     capabilities: ['Judicial Headnotes', 'Statutory Cross-References', 'Bilingual EN/HI'],
     specs: { framework: 'Postgres / Parquet', license: 'Commercial Non-Exclusive', version: 'v4.1.0', updatedAt: '1 month ago' }
   },
@@ -156,7 +156,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '8.7k',
     price: 'Free',
     tier: 'Free',
-    author: { name: 'VisionWorks', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80' },
+    author: { name: 'VisionWorks' },
     capabilities: ['Bounding Boxes', 'Spatial Reasoning', '4K High Res'],
     specs: { framework: 'WebDataset / Arrow', license: 'CC-BY-SA-4.0', version: 'v2.2.0', updatedAt: '1 week ago' }
   },
@@ -173,7 +173,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '6.1k',
     price: '$69',
     tier: 'Paid',
-    author: { name: 'Rivinity Foundry', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80' },
+    author: { name: 'Rivinity Foundry' },
     capabilities: ['Unit Test Synthesis', 'Fill-in-the-middle', '32k Context'],
     specs: { framework: 'vLLM / Transformers', license: 'Commercial SaaS', version: 'v3.0.0', updatedAt: '1 week ago' }
   },
@@ -188,7 +188,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '38.1k',
     price: 'Free',
     tier: 'Free',
-    author: { name: 'Rivinity Core', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80' },
+    author: { name: 'Rivinity Core' },
     capabilities: ['1024 Dimensions', 'MTEB Leaderboard Top 5', 'Cosine Matched'],
     specs: { framework: 'HuggingFace / PyTorch', license: 'Apache 2.0', version: 'v2.1.0', updatedAt: '6 days ago' }
   },
@@ -203,7 +203,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '15.7k',
     price: '$45',
     tier: 'Paid',
-    author: { name: 'AudioStream', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80' },
+    author: { name: 'AudioStream' },
     capabilities: ['Realtime Streaming', 'Emotive Inflection', 'Zero-shot Cloning'],
     specs: { framework: 'ONNX / WebAssembly', license: 'Commercial', version: 'v1.3.0', updatedAt: '2 weeks ago' }
   },
@@ -220,7 +220,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '1.8k',
     price: '$24',
     tier: 'Paid',
-    author: { name: 'Nexus Agents', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=80' },
+    author: { name: 'Nexus Agents' },
     capabilities: ['Autonomous Web Scraping', 'Graph Reasoning', 'Source Citations'],
     specs: { framework: 'LangGraph / Llama-3', license: 'Commercial Per-Seat', version: 'v1.6.4', updatedAt: 'Yesterday' }
   },
@@ -235,7 +235,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '4.2k',
     price: '$35',
     tier: 'Paid',
-    author: { name: 'Quill AI', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80' },
+    author: { name: 'Quill AI' },
     capabilities: ['Multi-agent Coordination', 'SEO Keyword Clustering', 'Variant Generator'],
     specs: { framework: 'CrewAI / GPT-4o', license: 'Commercial License', version: 'v2.0.1', updatedAt: '4 days ago' }
   },
@@ -252,7 +252,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '11.2k',
     price: '$15',
     tier: 'Premium',
-    author: { name: 'DataPrism', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80' },
+    author: { name: 'DataPrism' },
     capabilities: ['Text-to-SQL', 'Self-Healing Schema', 'Warehouse Sandboxing'],
     specs: { framework: 'DuckDB / LangChain', license: 'Commercial License', version: 'v2.1.2', updatedAt: '1 week ago' }
   },
@@ -267,7 +267,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '8.4k',
     price: 'Free',
     tier: 'Free',
-    author: { name: 'Nexus Tools', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80' },
+    author: { name: 'Nexus Tools' },
     capabilities: ['3D UMAP Visualizer', 'Recall Diagnostic', 'Live Re-ranking'],
     specs: { framework: 'Three.js / WebGL', license: 'MIT License', version: 'v3.1.2', updatedAt: '4 days ago' }
   },
@@ -282,7 +282,7 @@ const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
     runs: '5.2k',
     price: '$39',
     tier: 'Paid',
-    author: { name: 'TestMatrix', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80' },
+    author: { name: 'TestMatrix' },
     capabilities: ['Hallucination Score', 'Automated Regression', 'CI/CD Webhook'],
     specs: { framework: 'Docker / PyTest', license: 'Commercial', version: 'v1.9.0', updatedAt: '1 week ago' }
   }
@@ -346,81 +346,126 @@ export const MarketplaceHome: React.FC = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'Agents': return <Bot className="w-5 h-5 text-[#FF5500]" />;
-      case 'AI / ML Models': return <BrainCircuit className="w-5 h-5 text-[#FF5500]" />;
-      case 'Datasets': return <Database className="w-5 h-5 text-[#FF5500]" />;
-      case 'AI Tools': return <Wrench className="w-5 h-5 text-[#FF5500]" />;
-      default: return <Sparkles className="w-5 h-5 text-[#FF5500]" />;
+      case 'Agents': return <Bot className="w-4 h-4 text-[#FF6B00]" />;
+      case 'AI / ML Models': return <BrainCircuit className="w-4 h-4 text-[#FF6B00]" />;
+      case 'Datasets': return <Database className="w-4 h-4 text-[#FF6B00]" />;
+      case 'AI Tools': return <Wrench className="w-4 h-4 text-[#FF6B00]" />;
+      default: return <Sparkles className="w-4 h-4 text-[#FF6B00]" />;
     }
   };
 
-  const renderDribbbleCard = (item: MarketplaceItemType) => {
+  const renderAssetCard = (item: MarketplaceItemType) => {
     const isLiked = likedIds.includes(item.id);
+    const orgInitials = item.author.name
+      .split(' ')
+      .map((w) => w[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+
     return (
       <div
         key={item.id}
         onClick={() => setSelectedAsset(item)}
-        className="group relative bg-[#fcfcfd] dark:bg-zinc-900 border border-slate-200/90 dark:border-white/10 hover:border-[#FF5500]/40 rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-[#FF5500]/5 flex flex-col justify-between"
+        className="group relative bg-white dark:bg-[#131317] border border-slate-200/80 dark:border-zinc-800 hover:border-slate-400 dark:hover:border-zinc-600 rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/40 flex flex-col justify-between"
       >
         <div>
-          {/* Top Graphic Banner */}
-          <div className="relative h-28 w-full rounded-xl overflow-hidden bg-gradient-to-br from-orange-50/70 via-slate-100/60 to-slate-200/40 dark:from-zinc-800 dark:via-zinc-900 dark:to-zinc-800 border border-slate-200/50 dark:border-white/5 flex items-center justify-center p-3">
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#FF5500_1.2px,transparent_1.2px)] [background-size:10px_10px]" />
+          {/* Top Asset Preview / Graphic Header */}
+          <div className="relative h-24 w-full rounded-xl overflow-hidden bg-gradient-to-br from-slate-50 via-slate-100/70 to-orange-50/30 dark:from-zinc-800/80 dark:via-zinc-850 dark:to-orange-950/20 border border-slate-200/60 dark:border-zinc-800/80 p-3 flex flex-col justify-between">
+            {/* Top Row: Category Icon & Badges */}
+            <div className="flex items-center justify-between w-full z-10">
+              <div className="w-8 h-8 rounded-lg bg-white dark:bg-zinc-800 shadow-2xs border border-slate-200/80 dark:border-zinc-700/80 flex items-center justify-center group-hover:scale-105 group-hover:border-[#FF6B00]/40 transition-transform">
+                {getCategoryIcon(item.category)}
+              </div>
 
-            <div className="absolute left-3 bottom-2.5 w-10 h-10 rounded-full bg-white dark:bg-zinc-800 shadow-sm border border-orange-100 dark:border-white/10 flex items-center justify-center group-hover:scale-105 transition-transform">
-              {getCategoryIcon(item.category)}
+              <div className="flex items-center gap-1.5">
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/95 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200/80 dark:border-zinc-700 shadow-2xs uppercase tracking-wider">
+                  {item.badge}
+                </span>
+                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shadow-2xs ${
+                  item.tier === 'Free'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/40'
+                    : 'bg-black dark:bg-white text-white dark:text-black border border-transparent'
+                }`}>
+                  {item.price}
+                </span>
+              </div>
             </div>
 
-            <span className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/95 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 border border-slate-200 dark:border-white/10 shadow-2xs">
-              {item.badge}
-            </span>
+            {/* Bottom Row inside banner: Framework & Version */}
+            <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-zinc-400 z-10">
+              <span className="font-medium truncate max-w-[170px] bg-white/90 dark:bg-zinc-800/90 backdrop-blur-xs px-2 py-0.5 rounded-md border border-slate-200/60 dark:border-zinc-700/60">
+                {item.specs.framework}
+              </span>
+              <span className="text-[10px] font-medium opacity-75">
+                {item.specs.version}
+              </span>
+            </div>
           </div>
 
+          {/* Title & Description */}
           <div className="mt-3.5">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF5500] transition-colors line-clamp-1">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF6B00] transition-colors line-clamp-1 tracking-tight">
               {item.name}
             </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed h-8">
+            <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed min-h-[32px]">
               {item.tagline}
             </p>
           </div>
 
-          <div className="mt-3 space-y-1.5 text-xs">
-            <div className="flex items-center gap-1 font-medium text-slate-700 dark:text-zinc-300">
-              <Star className="w-3.5 h-3.5 fill-[#FF5500] text-[#FF5500]" />
-              <span>{item.rating}</span>
-              <span className="text-slate-400 dark:text-zinc-500 font-normal">({item.runs})</span>
+          {/* Capabilities Pill */}
+          {item.capabilities[0] && (
+            <div className="mt-2.5">
+              <span className="inline-block text-[10.5px] font-medium px-2 py-0.5 rounded-md bg-slate-50 dark:bg-zinc-800/60 text-slate-600 dark:text-zinc-400 border border-slate-200/60 dark:border-zinc-800 truncate max-w-full">
+                {item.capabilities[0]}
+              </span>
+            </div>
+          )}
+
+          {/* Metadata Row: Clean Org Badge (NO HUMAN PHOTO) & Rating */}
+          <div className="mt-3.5 pt-3 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-xs">
+            {/* Publisher: Clean Initials Badge */}
+            <div className="flex items-center gap-1.5 min-w-0" title={item.author.name}>
+              <div className="w-5 h-5 rounded-md bg-slate-100 dark:bg-zinc-800 border border-slate-200/90 dark:border-zinc-700 flex items-center justify-center text-[9px] font-bold text-slate-700 dark:text-zinc-300 shrink-0">
+                {orgInitials}
+              </div>
+              <span className="text-xs text-slate-600 dark:text-zinc-400 font-medium truncate max-w-[100px]">
+                {item.author.name}
+              </span>
             </div>
 
-            <div className="flex items-center gap-2 pt-0.5">
-              <img 
-                src={item.author.avatar} 
-                alt={item.author.name}
-                className="w-5 h-5 rounded-full object-cover border border-slate-200 dark:border-white/10" 
-              />
-              <span className="text-xs text-slate-600 dark:text-zinc-400 font-medium truncate">{item.author.name}</span>
+            {/* Rating & Runs */}
+            <div className="flex items-center gap-1 font-semibold text-slate-700 dark:text-zinc-300 shrink-0">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              <span>{item.rating}</span>
+              <span className="text-slate-400 dark:text-zinc-500 font-normal text-[11px]">({item.runs})</span>
             </div>
           </div>
         </div>
 
-        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-white/5 flex items-center gap-2">
+        {/* Action Row */}
+        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800/80 flex items-center gap-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
               setSelectedAsset(item);
             }}
-            className="flex-1 py-1.5 bg-white dark:bg-zinc-800 hover:bg-[#FF5500] hover:text-white dark:hover:bg-[#FF5500] text-slate-800 dark:text-zinc-200 text-xs font-semibold rounded-xl border border-slate-200 dark:border-white/10 hover:border-[#FF5500] transition-all duration-200 flex items-center justify-center gap-1.5 shadow-2xs group/btn active:scale-98 cursor-pointer"
+            className="flex-1 h-8 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-semibold rounded-xl transition-all shadow-2xs flex items-center justify-center gap-1.5 active:scale-98 cursor-pointer"
           >
-            <SendHorizontal className="w-3 h-3 rotate-45 group-hover/btn:translate-x-0.5 transition-transform" /> 
+            <SendHorizontal className="w-3 h-3 rotate-45" /> 
             Inspect
           </button>
 
           <button
             onClick={(e) => toggleLike(item, e)}
-            className="p-1.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-zinc-800 hover:bg-orange-50/50 text-slate-400 hover:text-[#FF5500] transition-colors shadow-2xs cursor-pointer"
+            className={`h-8 w-8 rounded-xl border transition-colors shadow-2xs flex items-center justify-center cursor-pointer ${
+              isLiked
+                ? "border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/30 text-rose-500"
+                : "border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-800 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-400 hover:text-rose-500"
+            }`}
             title={isLiked ? "Saved to assets" : "Save asset"}
           >
-            <Heart className={`w-3.5 h-3.5 ${isLiked ? 'fill-[#FF5500] text-[#FF5500]' : ''}`} />
+            <Heart className={`w-3.5 h-3.5 ${isLiked ? 'fill-rose-500 text-rose-500' : ''}`} />
           </button>
         </div>
       </div>
@@ -450,7 +495,7 @@ export const MarketplaceHome: React.FC = () => {
           {hasMore && (
             <button
               onClick={() => toggleSection(sectionKey)}
-              className="text-xs font-bold text-[#FF5500] hover:text-[#e04b00] px-3 py-1.5 rounded-xl hover:bg-orange-50 dark:hover:bg-zinc-800 transition-colors shrink-0 cursor-pointer"
+              className="text-xs font-bold text-[#FF6B00] hover:text-[#e05e00] px-3 py-1.5 rounded-xl hover:bg-orange-50 dark:hover:bg-zinc-800 transition-colors shrink-0 cursor-pointer"
             >
               {isExpanded ? 'Show Less' : `See All (${total})`}
             </button>
@@ -458,7 +503,7 @@ export const MarketplaceHome: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {visibleItems.map(renderDribbbleCard)}
+          {visibleItems.map(renderAssetCard)}
         </div>
       </div>
     );
@@ -472,34 +517,28 @@ export const MarketplaceHome: React.FC = () => {
 
   return (
     <SidebarShell>
-      <div className="relative flex min-w-0 flex-1 flex-col h-full overflow-y-auto bg-[#FAF9F7] dark:bg-zinc-950 [scrollbar-width:thin]">
+      <div className="relative flex min-w-0 flex-1 flex-col h-full overflow-y-auto bg-[#F8F9FA] dark:bg-[#0C0C0E] [scrollbar-width:thin]">
         {/* Rivinity Global Header */}
         <header className="relative flex h-16 shrink-0 items-center justify-between gap-3 bg-transparent px-4 sm:h-20 sm:px-8 border-b border-border/40 select-none">
           <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
-            <div className="w-full max-w-[420px] items-center flex">
-              <div
-                className={`relative flex items-center transition-all duration-300 ease-out ${
-                  searchQuery ? "w-[340px]" : "w-11 sm:w-64 hover:w-[340px] focus-within:w-[340px]"
-                }`}
-              >
-                <Search className="pointer-events-none absolute left-3.5 z-10 h-4.5 w-4.5 text-[#1C1C1C] dark:text-zinc-200" strokeWidth={2} />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Search marketplace, agents, models..."
-                  className="h-10 w-full cursor-pointer rounded-full border border-transparent bg-transparent pl-10 pr-9 text-[13px] text-[#1C1C1C] outline-none placeholder:text-gray-400 hover:border-black/10 focus:cursor-text focus:border-[#FF5500]/40 focus:bg-white focus:ring-2 focus:ring-[#FF5500]/10 dark:text-white dark:hover:border-white/10 dark:focus:border-[#FF5500]/40 dark:focus:bg-zinc-900"
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-2.5 z-10 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-black/5 dark:hover:bg-white/10"
-                  >
-                    <X className="h-4 w-4 text-[#1C1C1C] dark:text-zinc-200" strokeWidth={2} />
-                  </button>
-                )}
-              </div>
+            <div className="relative flex items-center w-full max-w-sm sm:max-w-md h-10 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/90 dark:border-zinc-800 px-3.5 gap-2.5 focus-within:border-[#FF6B00]/70 focus-within:ring-2 focus-within:ring-[#FF6B00]/10 transition-all shadow-2xs">
+              <Search className="h-4 w-4 text-slate-400 dark:text-zinc-500 shrink-0" strokeWidth={2} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search marketplace, agents, models..."
+                className="h-full w-full bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-[13px] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -509,7 +548,7 @@ export const MarketplaceHome: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsUploadOpen(true)}
-              className="flex h-10 items-center gap-1.5 rounded-full bg-[#FF5500] hover:bg-[#e04b00] text-white px-3.5 shadow-sm shadow-[#FF5500]/25 transition-all text-xs font-semibold cursor-pointer active:scale-95"
+              className="flex h-10 items-center gap-1.5 rounded-xl bg-[#FF6B00] hover:bg-[#e05e00] text-white px-3.5 shadow-sm shadow-[#FF6B00]/25 transition-all text-xs font-semibold cursor-pointer active:scale-95"
             >
               <Plus className="w-4 h-4" />
               <span className="hidden md:inline">Publish Asset</span>
@@ -519,13 +558,13 @@ export const MarketplaceHome: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsCartOpen(true)}
-              className="flex h-10 items-center gap-1.5 rounded-full border border-gray-200/80 dark:border-white/10 bg-white dark:bg-zinc-900 px-3 shadow-xs transition-all hover:border-[#FF5500]/40 hover:bg-orange-50/20 text-xs font-semibold text-slate-700 dark:text-zinc-200 cursor-pointer"
+              className="flex h-10 items-center gap-1.5 rounded-xl border border-slate-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 shadow-2xs transition-all hover:border-[#FF6B00]/40 hover:bg-orange-50/20 text-xs font-semibold text-slate-700 dark:text-zinc-200 cursor-pointer"
               title="Saved items"
             >
               <Bookmark className="w-4 h-4 text-slate-600 dark:text-zinc-300" />
               <span className="hidden sm:inline">Saved</span>
               {cartItems.length > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full bg-[#FF5500] text-white text-[10px] font-bold">
+                <span className="px-1.5 py-0.2 rounded-full bg-[#FF6B00] text-white text-[10px] font-bold">
                   {cartItems.length}
                 </span>
               )}
@@ -535,12 +574,12 @@ export const MarketplaceHome: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsFilterOpen(true)}
-              className="flex h-10 items-center gap-1.5 rounded-full border border-gray-200/80 dark:border-white/10 bg-white dark:bg-zinc-900 px-3 shadow-xs transition-all hover:border-[#FF5500]/30 hover:bg-orange-50/20 text-xs font-semibold text-slate-700 dark:text-zinc-200 cursor-pointer"
+              className="flex h-10 items-center gap-1.5 rounded-xl border border-slate-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 shadow-2xs transition-all hover:border-[#FF6B00]/30 hover:bg-orange-50/20 text-xs font-semibold text-slate-700 dark:text-zinc-200 cursor-pointer"
             >
               <SlidersHorizontal className="h-4 w-4 text-slate-600 dark:text-zinc-300" />
               <span className="hidden sm:inline">Filters</span>
               {(selectedTypes.length > 0 || selectedPricing.length > 0) && (
-                <span className="h-2 w-2 rounded-full bg-[#FF5500]" />
+                <span className="h-2 w-2 rounded-full bg-[#FF6B00]" />
               )}
             </button>
           </div>
@@ -548,7 +587,7 @@ export const MarketplaceHome: React.FC = () => {
 
         {/* Marketplace Content Sections inside Container */}
         <main className="flex-1 p-3.5 sm:p-6 lg:p-8 flex justify-center">
-          <div className="w-full max-w-[1360px] bg-white dark:bg-zinc-900/60 rounded-3xl border border-slate-200/90 dark:border-white/10 shadow-xs p-4 sm:p-8 space-y-8">
+          <div className="w-full max-w-[1360px] bg-white dark:bg-[#111115] rounded-3xl border border-slate-200/80 dark:border-zinc-800/80 shadow-xs p-4 sm:p-8 space-y-8">
             
             {/* Category Filter Pills Bar */}
             <div className="pb-4 border-b border-slate-100 dark:border-white/10">
@@ -564,7 +603,7 @@ export const MarketplaceHome: React.FC = () => {
               'The most downloaded datasets and models across the ecosystem.',
               trendingItems,
               'trending',
-              <TrendingUp className="w-4 h-4 text-[#FF5500]" />
+              <TrendingUp className="w-4 h-4 text-[#FF6B00]" />
             )}
 
             {/* 2. Datasets */}
@@ -611,7 +650,7 @@ export const MarketplaceHome: React.FC = () => {
             <div className="pt-8 border-t border-slate-200/80 dark:border-white/10 space-y-5">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <Server className="w-4 h-4 text-[#FF5500]" />
+                  <Server className="w-4 h-4 text-[#FF6B00]" />
                   <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                     Serverless Gateway &amp; Compute Cluster
                   </h2>
@@ -635,7 +674,7 @@ export const MarketplaceHome: React.FC = () => {
               <div className="space-y-6">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
                   <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
-                    <SlidersHorizontal className="w-4 h-4 text-[#FF5500]" /> Filter Assets
+                    <SlidersHorizontal className="w-4 h-4 text-[#FF6B00]" /> Filter Assets
                   </h3>
                   <button 
                     onClick={() => setIsFilterOpen(false)}
@@ -649,7 +688,7 @@ export const MarketplaceHome: React.FC = () => {
                 <div className="space-y-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Category</span>
                   {['Datasets', 'AI / ML Models', 'Agents', 'AI Tools'].map((cat) => (
-                    <label key={cat} className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-zinc-300 cursor-pointer hover:text-[#FF5500] transition-colors">
+                    <label key={cat} className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-zinc-300 cursor-pointer hover:text-[#FF6B00] transition-colors">
                       <input
                         type="checkbox"
                         checked={selectedTypes.includes(cat)}
@@ -657,7 +696,7 @@ export const MarketplaceHome: React.FC = () => {
                           if (e.target.checked) setSelectedTypes([...selectedTypes, cat]);
                           else setSelectedTypes(selectedTypes.filter(t => t !== cat));
                         }}
-                        className="rounded border-slate-300 text-[#FF5500] focus:ring-[#FF5500]"
+                        className="rounded border-slate-300 text-[#FF6B00] focus:ring-[#FF6B00]"
                       />
                       <span>{cat}</span>
                     </label>
@@ -668,7 +707,7 @@ export const MarketplaceHome: React.FC = () => {
                 <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-white/10">
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">Pricing Tier</span>
                   {['Free', 'Paid'].map((tier) => (
-                    <label key={tier} className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-zinc-300 cursor-pointer hover:text-[#FF5500] transition-colors">
+                    <label key={tier} className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-zinc-300 cursor-pointer hover:text-[#FF6B00] transition-colors">
                       <input
                         type="checkbox"
                         checked={selectedPricing.includes(tier)}
@@ -676,7 +715,7 @@ export const MarketplaceHome: React.FC = () => {
                           if (e.target.checked) setSelectedPricing([...selectedPricing, tier]);
                           else setSelectedPricing(selectedPricing.filter(t => t !== tier));
                         }}
-                        className="rounded border-slate-300 text-[#FF5500] focus:ring-[#FF5500]"
+                        className="rounded border-slate-300 text-[#FF6B00] focus:ring-[#FF6B00]"
                       />
                       <span>{tier} Assets</span>
                     </label>
@@ -697,7 +736,7 @@ export const MarketplaceHome: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setIsFilterOpen(false)}
-                  className="flex-1 py-2 text-xs font-semibold text-white bg-[#FF5500] hover:bg-[#e04b00] rounded-xl shadow-sm shadow-[#FF5500]/25 transition-all active:scale-98 cursor-pointer"
+                  className="flex-1 py-2 text-xs font-semibold text-white bg-[#FF6B00] hover:bg-[#e05e00] rounded-xl shadow-sm shadow-[#FF6B00]/25 transition-all active:scale-98 cursor-pointer"
                 >
                   Apply
                 </button>

@@ -31,7 +31,7 @@ export const MarketplaceCategory: React.FC<MarketplaceCategoryProps> = ({
             onClick={() => onSelectCategory(cat.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 border cursor-pointer ${
               isActive
-                ? 'bg-[#FF5500] text-white border-[#FF5500] shadow-sm shadow-[#FF5500]/25'
+                ? 'bg-[#FF6B00] text-white border-[#FF6B00] shadow-sm shadow-[#FF6B00]/25'
                 : 'bg-slate-50 dark:bg-zinc-800/80 text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white border-slate-200/80 dark:border-zinc-700/60 hover:bg-white dark:hover:bg-zinc-800 shadow-2xs'
             }`}
           >

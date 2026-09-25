@@ -24,7 +24,7 @@ export interface MarketplaceItemType {
   tier: string;
   author: {
     name: string;
-    avatar: string;
+    avatar?: string;
   };
   capabilities: string[];
   specs: {
@@ -87,15 +87,15 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
           </div>
 
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-orange-100 flex items-center justify-center font-bold text-[#FF5500]">
-              <Layers className="w-6 h-6 text-[#FF5500]" />
+            <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-orange-100 flex items-center justify-center font-bold text-[#FF6B00]">
+              <Layers className="w-6 h-6 text-[#FF6B00]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white text-slate-700 border border-slate-200">
                   {item.category}
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#FF5500] text-white">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#FF6B00] text-white">
                   {item.badge}
                 </span>
               </div>
@@ -109,7 +109,7 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
           <button
             onClick={() => setActiveTab('overview')}
             className={`py-3 border-b-2 transition-colors ${
-              activeTab === 'overview' ? 'border-[#FF5500] text-[#FF5500]' : 'border-transparent text-slate-400 hover:text-slate-700'
+              activeTab === 'overview' ? 'border-[#FF6B00] text-[#FF6B00]' : 'border-transparent text-slate-400 hover:text-slate-700'
             }`}
           >
             Overview
@@ -117,7 +117,7 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
           <button
             onClick={() => setActiveTab('api')}
             className={`py-3 border-b-2 transition-colors ${
-              activeTab === 'api' ? 'border-[#FF5500] text-[#FF5500]' : 'border-transparent text-slate-400 hover:text-slate-700'
+              activeTab === 'api' ? 'border-[#FF6B00] text-[#FF6B00]' : 'border-transparent text-slate-400 hover:text-slate-700'
             }`}
           >
             API Snippet
@@ -125,7 +125,7 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
           <button
             onClick={() => setActiveTab('specs')}
             className={`py-3 border-b-2 transition-colors ${
-              activeTab === 'specs' ? 'border-[#FF5500] text-[#FF5500]' : 'border-transparent text-slate-400 hover:text-slate-700'
+              activeTab === 'specs' ? 'border-[#FF6B00] text-[#FF6B00]' : 'border-transparent text-slate-400 hover:text-slate-700'
             }`}
           >
             Specifications
@@ -146,7 +146,7 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
                 <div>
                   <span className="text-[11px] text-slate-400">Rating</span>
                   <div className="font-bold text-slate-800 flex items-center justify-center gap-1 mt-0.5">
-                    <Star className="w-3.5 h-3.5 fill-[#FF5500] text-[#FF5500]" /> {item.rating}
+                    <Star className="w-3.5 h-3.5 fill-[#FF6B00] text-[#FF6B00]" /> {item.rating}
                   </div>
                 </div>
                 <div className="border-x border-slate-200">
@@ -160,19 +160,17 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
               </div>
 
               {/* Author Row */}
-              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200/60">
+              <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-zinc-800/60 rounded-xl border border-slate-200/60 dark:border-zinc-700/60">
                 <div className="flex items-center gap-2.5">
-                  <img 
-                    src={item.author.avatar} 
-                    alt={item.author.name}
-                    className="w-8 h-8 rounded-full object-cover border border-slate-200" 
-                  />
+                  <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-zinc-700 border border-slate-300 dark:border-zinc-600 flex items-center justify-center font-bold text-xs text-slate-700 dark:text-zinc-200 shrink-0">
+                    {item.author.name.slice(0, 2).toUpperCase()}
+                  </div>
                   <div>
-                    <span className="text-[11px] text-slate-400 block">Creator</span>
-                    <span className="font-bold text-slate-800 text-xs">{item.author.name}</span>
+                    <span className="text-[11px] text-slate-400 block">Publisher</span>
+                    <span className="font-bold text-slate-800 dark:text-zinc-200 text-xs">{item.author.name}</span>
                   </div>
                 </div>
-                <span className="text-[11px] font-semibold text-[#FF5500] bg-orange-50 px-2.5 py-0.5 rounded-full border border-orange-200/80">
+                <span className="text-[11px] font-semibold text-[#FF6B00] dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40 px-2.5 py-0.5 rounded-full border border-orange-200/80 dark:border-orange-900/40">
                   Verified Artifact
                 </span>
               </div>
@@ -183,7 +181,7 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
                 <div className="space-y-1.5">
                   {item.capabilities.map((cap, i) => (
                     <div key={i} className="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-700">
-                      <CheckCircle2 className="w-4 h-4 text-[#FF5500] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-[#FF6B00] shrink-0" />
                       <span>{cap}</span>
                     </div>
                   ))}
@@ -198,7 +196,7 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
                 <span className="text-xs font-semibold text-slate-700">Terminal Command</span>
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-1 text-xs text-[#FF5500] hover:text-[#e04b00] font-semibold"
+                  className="flex items-center gap-1 text-xs text-[#FF6B00] hover:text-[#e04b00] font-semibold"
                 >
                   {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   {copied ? 'Copied' : 'Copy'}
@@ -240,7 +238,7 @@ export const MarketplaceItem: React.FC<ModalProps> = ({ item, isOpen, onClose, o
                 if (onDeploy) onDeploy(item);
                 else onClose();
               }}
-              className="px-5 py-2 text-xs font-bold text-white bg-[#FF5500] hover:bg-[#e04b00] rounded-xl flex items-center gap-1.5 shadow-sm shadow-[#FF5500]/25 transition-all active:scale-98 cursor-pointer"
+              className="px-5 py-2 text-xs font-bold text-white bg-[#FF6B00] hover:bg-[#e04b00] rounded-xl flex items-center gap-1.5 shadow-sm shadow-[#FF6B00]/25 transition-all active:scale-98 cursor-pointer"
             >
               <SendHorizontal className="w-3.5 h-3.5 rotate-45" /> Deploy Asset
             </button>
