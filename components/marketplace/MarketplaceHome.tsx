@@ -15,6 +15,9 @@ import {
   Sparkles,
   Plus,
   Bookmark,
+  BrainCircuit,
+  Database,
+  Wrench,
 } from "lucide-react";
 
 import SidebarShell from "@/components/canvas/SidebarShell";
@@ -504,6 +507,374 @@ export const MarketplaceHome: React.FC = () => {
     });
   };
 
+  /* Category Shapes & Patterns for Card Headers */
+  const AgentPattern: React.FC = () => (
+    <svg
+      viewBox="0 0 320 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 select-none pointer-events-none"
+    >
+      <defs>
+        <linearGradient id="agentGrad1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#8B5CF6" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#C4B5FD" stopOpacity="0.1" />
+        </linearGradient>
+        <linearGradient id="agentCoreGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#A78BFA" stopOpacity="0.5" />
+        </linearGradient>
+      </defs>
+
+      {/* Concentric orbit rings */}
+      <circle cx="160" cy="60" r="54" stroke="#8B5CF6" strokeWidth="1" strokeDasharray="4 4" strokeOpacity="0.3" />
+      <circle cx="160" cy="60" r="38" stroke="#7C3AED" strokeWidth="1.2" strokeOpacity="0.35" />
+      <circle cx="160" cy="60" r="22" stroke="#8B5CF6" strokeWidth="1" strokeDasharray="3 3" strokeOpacity="0.45" />
+
+      {/* Interconnecting synaptic pathways */}
+      <path d="M 60 40 Q 110 20, 160 60" stroke="#A78BFA" strokeWidth="1.2" strokeDasharray="3 3" strokeOpacity="0.5" />
+      <path d="M 160 60 Q 210 100, 260 80" stroke="#A78BFA" strokeWidth="1.2" strokeDasharray="3 3" strokeOpacity="0.5" />
+      <path d="M 80 90 Q 120 75, 160 60" stroke="#C4B5FD" strokeWidth="1.2" strokeOpacity="0.4" />
+      <path d="M 160 60 Q 200 45, 240 30" stroke="#C4B5FD" strokeWidth="1.2" strokeOpacity="0.4" />
+
+      {/* Left satellite agent node network */}
+      <circle cx="60" cy="40" r="14" fill="url(#agentGrad1)" stroke="#8B5CF6" strokeWidth="1" strokeOpacity="0.4" />
+      <circle cx="60" cy="40" r="4" fill="#7C3AED" fillOpacity="0.75" />
+      <circle cx="80" cy="90" r="9" fill="url(#agentGrad1)" stroke="#8B5CF6" strokeWidth="1" strokeOpacity="0.3" />
+      <circle cx="80" cy="90" r="3" fill="#8B5CF6" fillOpacity="0.65" />
+
+      {/* Center Core Agent Node */}
+      <circle cx="160" cy="60" r="16" fill="url(#agentCoreGrad)" />
+      <circle cx="160" cy="60" r="7" fill="#FFFFFF" fillOpacity="0.95" />
+      {/* 4-point decision spark in center */}
+      <path d="M 160 49 L 162 58 L 171 60 L 162 62 L 160 71 L 158 62 L 149 60 L 158 58 Z" fill="#7C3AED" />
+
+      {/* Right satellite agent node network */}
+      <circle cx="260" cy="80" r="13" fill="url(#agentGrad1)" stroke="#8B5CF6" strokeWidth="1" strokeOpacity="0.4" />
+      <circle cx="260" cy="80" r="4" fill="#7C3AED" fillOpacity="0.75" />
+      <circle cx="240" cy="30" r="10" fill="url(#agentGrad1)" stroke="#8B5CF6" strokeWidth="1" strokeOpacity="0.3" />
+      <circle cx="240" cy="30" r="3" fill="#8B5CF6" fillOpacity="0.65" />
+
+      {/* Floating agent decision diamonds */}
+      <polygon points="120,30 126,36 120,42 114,36" fill="#8B5CF6" fillOpacity="0.35" />
+      <polygon points="200,90 206,96 200,102 194,96" fill="#7C3AED" fillOpacity="0.35" />
+      <polygon points="290,35 294,39 290,43 286,39" fill="#A78BFA" fillOpacity="0.45" />
+      <polygon points="30,75 34,79 30,83 26,79" fill="#C4B5FD" fillOpacity="0.5" />
+    </svg>
+  );
+
+  const ModelPattern: React.FC = () => (
+    <svg
+      viewBox="0 0 320 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 select-none pointer-events-none"
+    >
+      <defs>
+        <linearGradient id="modelSlab1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#0284C7" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.2" />
+        </linearGradient>
+        <linearGradient id="modelSlab2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#BAE6FD" stopOpacity="0.15" />
+        </linearGradient>
+        <linearGradient id="modelWaveGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#0284C7" stopOpacity="0.15" />
+          <stop offset="50%" stopColor="#0284C7" stopOpacity="0.75" />
+          <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.15" />
+        </linearGradient>
+      </defs>
+
+      {/* Multi-head attention sine waves */}
+      <path
+        d="M 10 70 C 60 20, 100 110, 160 50 C 220 -10, 260 90, 310 40"
+        stroke="url(#modelWaveGrad)"
+        strokeWidth="2"
+        fill="none"
+      />
+      <path
+        d="M 10 50 C 70 100, 110 10, 160 70 C 210 130, 270 20, 310 80"
+        stroke="#38BDF8"
+        strokeWidth="1.2"
+        strokeDasharray="4 4"
+        strokeOpacity="0.4"
+        fill="none"
+      />
+
+      {/* Stacked isometric 3D tensor slabs */}
+      {/* Bottom Slab */}
+      <polygon points="160,82 205,62 160,42 115,62" fill="url(#modelSlab1)" stroke="#0284C7" strokeWidth="1" strokeOpacity="0.4" />
+      <polygon points="115,62 160,82 160,90 115,70" fill="#0284C7" fillOpacity="0.3" />
+      <polygon points="160,82 205,62 205,70 160,90" fill="#0369A1" fillOpacity="0.4" />
+
+      {/* Middle Slab */}
+      <polygon points="160,62 205,42 160,22 115,42" fill="url(#modelSlab2)" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.5" />
+      <polygon points="115,42 160,62 160,68 115,48" fill="#0284C7" fillOpacity="0.25" />
+      <polygon points="160,62 205,42 205,48 160,68" fill="#0369A1" fillOpacity="0.35" />
+
+      {/* Neural Layer Input Nodes (Left) */}
+      <circle cx="50" cy="35" r="4.5" fill="#0284C7" fillOpacity="0.75" />
+      <circle cx="50" cy="60" r="4.5" fill="#0284C7" fillOpacity="0.75" />
+      <circle cx="50" cy="85" r="4.5" fill="#0284C7" fillOpacity="0.75" />
+      <circle cx="80" cy="48" r="3.5" fill="#38BDF8" fillOpacity="0.65" />
+      <circle cx="80" cy="72" r="3.5" fill="#38BDF8" fillOpacity="0.65" />
+      <line x1="50" y1="35" x2="80" y2="48" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="50" y1="60" x2="80" y2="48" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="50" y1="60" x2="80" y2="72" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="50" y1="85" x2="80" y2="72" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="80" y1="48" x2="115" y2="42" stroke="#38BDF8" strokeWidth="1" strokeDasharray="2 2" strokeOpacity="0.4" />
+      <line x1="80" y1="72" x2="115" y2="62" stroke="#38BDF8" strokeWidth="1" strokeDasharray="2 2" strokeOpacity="0.4" />
+
+      {/* Neural Layer Output (Right) */}
+      <circle cx="240" cy="48" r="3.5" fill="#38BDF8" fillOpacity="0.65" />
+      <circle cx="240" cy="72" r="3.5" fill="#38BDF8" fillOpacity="0.65" />
+      <circle cx="270" cy="35" r="4.5" fill="#0284C7" fillOpacity="0.75" />
+      <circle cx="270" cy="60" r="4.5" fill="#0284C7" fillOpacity="0.75" />
+      <circle cx="270" cy="85" r="4.5" fill="#0284C7" fillOpacity="0.75" />
+      <line x1="205" y1="42" x2="240" y2="48" stroke="#38BDF8" strokeWidth="1" strokeDasharray="2 2" strokeOpacity="0.4" />
+      <line x1="205" y1="62" x2="240" y2="72" stroke="#38BDF8" strokeWidth="1" strokeDasharray="2 2" strokeOpacity="0.4" />
+      <line x1="240" y1="48" x2="270" y2="35" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="240" y1="48" x2="270" y2="60" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="240" y1="72" x2="270" y2="60" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="240" y1="72" x2="270" y2="85" stroke="#38BDF8" strokeWidth="1" strokeOpacity="0.3" />
+
+      {/* Floating Coordinate grid cross */}
+      <path d="M 155 18 L 165 18 M 160 13 L 160 23" stroke="#0284C7" strokeWidth="1.2" strokeOpacity="0.6" />
+    </svg>
+  );
+
+  const DatasetPattern: React.FC = () => (
+    <svg
+      viewBox="0 0 320 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 select-none pointer-events-none"
+    >
+      <defs>
+        <linearGradient id="diskGrad1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#10B981" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#059669" stopOpacity="0.6" />
+        </linearGradient>
+        <linearGradient id="barGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0%" stopColor="#059669" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#34D399" stopOpacity="0.15" />
+        </linearGradient>
+      </defs>
+
+      {/* Left: Stacked 3D Database Storage Cylinders */}
+      <g transform="translate(60, 24)">
+        {/* Bottom Cylinder */}
+        <path d="M 0 46 C 0 54 32 54 32 46 L 32 56 C 32 64 0 64 0 56 Z" fill="url(#diskGrad1)" stroke="#059669" strokeWidth="1" strokeOpacity="0.4" />
+        <ellipse cx="16" cy="46" rx="16" ry="8" fill="#A7F3D0" fillOpacity="0.4" stroke="#059669" strokeWidth="1" strokeOpacity="0.4" />
+
+        {/* Middle Cylinder */}
+        <path d="M 0 26 C 0 34 32 34 32 26 L 32 36 C 32 44 0 44 0 36 Z" fill="url(#diskGrad1)" stroke="#059669" strokeWidth="1" strokeOpacity="0.4" />
+        <ellipse cx="16" cy="26" rx="16" ry="8" fill="#A7F3D0" fillOpacity="0.5" stroke="#059669" strokeWidth="1" strokeOpacity="0.4" />
+
+        {/* Top Cylinder */}
+        <path d="M 0 6 C 0 14 32 14 32 6 L 32 16 C 32 24 0 24 0 16 Z" fill="url(#diskGrad1)" stroke="#059669" strokeWidth="1" strokeOpacity="0.4" />
+        <ellipse cx="16" cy="6" rx="16" ry="8" fill="#6EE7B7" fillOpacity="0.6" stroke="#059669" strokeWidth="1" strokeOpacity="0.5" />
+      </g>
+
+      {/* Center: Columnar Distribution Histogram Bars (Parquet / Arrow) */}
+      <g transform="translate(132, 20)">
+        <rect x="0" y="38" width="8" height="38" rx="3" fill="url(#barGrad)" stroke="#10B981" strokeWidth="1" strokeOpacity="0.4" />
+        <rect x="14" y="20" width="8" height="56" rx="3" fill="url(#barGrad)" stroke="#10B981" strokeWidth="1" strokeOpacity="0.4" />
+        <rect x="28" y="8" width="8" height="68" rx="3" fill="url(#barGrad)" stroke="#059669" strokeWidth="1" strokeOpacity="0.6" />
+        <rect x="42" y="28" width="8" height="48" rx="3" fill="url(#barGrad)" stroke="#10B981" strokeWidth="1" strokeOpacity="0.4" />
+        <rect x="56" y="44" width="8" height="32" rx="3" fill="url(#barGrad)" stroke="#10B981" strokeWidth="1" strokeOpacity="0.4" />
+        {/* Baseline */}
+        <line x1="-8" y1="76" x2="72" y2="76" stroke="#059669" strokeWidth="1.2" strokeOpacity="0.4" />
+      </g>
+
+      {/* Right: Dot-Matrix Cluster Grid & Data Brackets */}
+      <g transform="translate(230, 30)">
+        {/* Bracket Left */}
+        <path d="M -6 6 L -14 6 L -14 46 L -6 46" stroke="#059669" strokeWidth="1.5" strokeOpacity="0.5" fill="none" />
+        {/* 3x3 Dot Matrix */}
+        <circle cx="2" cy="14" r="2.5" fill="#059669" fillOpacity="0.7" />
+        <circle cx="16" cy="14" r="2.5" fill="#10B981" fillOpacity="0.5" />
+        <circle cx="30" cy="14" r="2.5" fill="#34D399" fillOpacity="0.4" />
+        <circle cx="2" cy="26" r="2.5" fill="#10B981" fillOpacity="0.6" />
+        <circle cx="16" cy="26" r="3" fill="#059669" fillOpacity="0.8" />
+        <circle cx="30" cy="26" r="2.5" fill="#10B981" fillOpacity="0.6" />
+        <circle cx="2" cy="38" r="2.5" fill="#34D399" fillOpacity="0.4" />
+        <circle cx="16" cy="38" r="2.5" fill="#10B981" fillOpacity="0.5" />
+        <circle cx="30" cy="38" r="2.5" fill="#059669" fillOpacity="0.7" />
+        {/* Bracket Right */}
+        <path d="M 38 6 L 46 6 L 46 46 L 38 46" stroke="#059669" strokeWidth="1.5" strokeOpacity="0.5" fill="none" />
+      </g>
+
+      {/* Connecting binary marks */}
+      <path d="M 96 48 H 124" stroke="#10B981" strokeWidth="1" strokeDasharray="3 3" strokeOpacity="0.5" />
+      <path d="M 204 48 H 222" stroke="#10B981" strokeWidth="1" strokeDasharray="3 3" strokeOpacity="0.5" />
+    </svg>
+  );
+
+  const ToolPattern: React.FC = () => (
+    <svg
+      viewBox="0 0 320 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 select-none pointer-events-none"
+    >
+      <defs>
+        <linearGradient id="gearGrad1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#FDE68A" stopOpacity="0.2" />
+        </linearGradient>
+        <linearGradient id="toolGrad2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#D97706" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="#FBBF24" stopOpacity="0.4" />
+        </linearGradient>
+      </defs>
+
+      {/* Center-Left: Precision Geometric Cog Gear */}
+      <g transform="translate(100, 60)">
+        {/* Gear teeth ring */}
+        <circle cx="0" cy="0" r="26" fill="url(#gearGrad1)" stroke="#D97706" strokeWidth="1.2" strokeOpacity="0.5" />
+        {/* 8 Gear Teeth */}
+        <rect x="-4" y="-32" width="8" height="8" rx="1.5" fill="#F59E0B" fillOpacity="0.6" stroke="#D97706" strokeWidth="0.8" />
+        <rect x="-4" y="24" width="8" height="8" rx="1.5" fill="#F59E0B" fillOpacity="0.6" stroke="#D97706" strokeWidth="0.8" />
+        <rect x="-32" y="-4" width="8" height="8" rx="1.5" fill="#F59E0B" fillOpacity="0.6" stroke="#D97706" strokeWidth="0.8" />
+        <rect x="24" y="-4" width="8" height="8" rx="1.5" fill="#F59E0B" fillOpacity="0.6" stroke="#D97706" strokeWidth="0.8" />
+        <rect x="-22" y="-22" width="7" height="7" rx="1.5" transform="rotate(45 -18 -18)" fill="#F59E0B" fillOpacity="0.6" stroke="#D97706" strokeWidth="0.8" />
+        <rect x="15" y="15" width="7" height="7" rx="1.5" transform="rotate(45 18 18)" fill="#F59E0B" fillOpacity="0.6" stroke="#D97706" strokeWidth="0.8" />
+        <rect x="15" y="-22" width="7" height="7" rx="1.5" transform="rotate(45 18 -18)" fill="#F59E0B" fillOpacity="0.6" stroke="#D97706" strokeWidth="0.8" />
+        <rect x="-22" y="15" width="7" height="7" rx="1.5" transform="rotate(45 -18 18)" fill="#F59E0B" fillOpacity="0.6" stroke="#D97706" strokeWidth="0.8" />
+        {/* Center bore */}
+        <circle cx="0" cy="0" r="10" fill="#FEF9E1" stroke="#D97706" strokeWidth="1.2" />
+        <circle cx="0" cy="0" r="4" fill="#D97706" fillOpacity="0.75" />
+      </g>
+
+      {/* Interlocking Small Gear */}
+      <g transform="translate(150, 42)">
+        <circle cx="0" cy="0" r="16" fill="url(#gearGrad1)" stroke="#D97706" strokeWidth="1" strokeOpacity="0.4" />
+        <rect x="-2.5" y="-20" width="5" height="5" rx="1" fill="#F59E0B" fillOpacity="0.5" />
+        <rect x="-2.5" y="15" width="5" height="5" rx="1" fill="#F59E0B" fillOpacity="0.5" />
+        <rect x="-20" y="-2.5" width="5" height="5" rx="1" fill="#F59E0B" fillOpacity="0.5" />
+        <rect x="15" y="-2.5" width="5" height="5" rx="1" fill="#F59E0B" fillOpacity="0.5" />
+        <circle cx="0" cy="0" r="6" fill="#FEF9E1" stroke="#D97706" strokeWidth="1" />
+      </g>
+
+      {/* Execution Circuit Trace & Logic Pins */}
+      <path d="M 30 30 H 60 L 76 46 H 90" stroke="#D97706" strokeWidth="1.5" strokeOpacity="0.4" fill="none" />
+      <circle cx="30" cy="30" r="3" fill="#D97706" fillOpacity="0.6" />
+      <path d="M 30 90 H 70 L 86 74" stroke="#F59E0B" strokeWidth="1.2" strokeDasharray="3 3" strokeOpacity="0.4" fill="none" />
+      <circle cx="30" cy="90" r="3" fill="#F59E0B" fillOpacity="0.5" />
+
+      {/* Right: Modular Caliper Scale & Connector */}
+      <g transform="translate(195, 36)">
+        {/* Caliper rail */}
+        <rect x="0" y="20" width="85" height="8" rx="2" fill="#FDE68A" fillOpacity="0.4" stroke="#D97706" strokeWidth="1" strokeOpacity="0.4" />
+        {/* Measurement tick marks */}
+        <line x1="10" y1="20" x2="10" y2="14" stroke="#D97706" strokeWidth="1.2" strokeOpacity="0.6" />
+        <line x1="20" y1="20" x2="20" y2="16" stroke="#D97706" strokeWidth="1" strokeOpacity="0.4" />
+        <line x1="30" y1="20" x2="30" y2="14" stroke="#D97706" strokeWidth="1.2" strokeOpacity="0.6" />
+        <line x1="40" y1="20" x2="40" y2="16" stroke="#D97706" strokeWidth="1" strokeOpacity="0.4" />
+        <line x1="50" y1="20" x2="50" y2="14" stroke="#D97706" strokeWidth="1.2" strokeOpacity="0.6" />
+        <line x1="60" y1="20" x2="60" y2="16" stroke="#D97706" strokeWidth="1" strokeOpacity="0.4" />
+        <line x1="70" y1="20" x2="70" y2="14" stroke="#D97706" strokeWidth="1.2" strokeOpacity="0.6" />
+
+        {/* Modular Slider Jaws */}
+        <polygon points="32,8 48,8 48,20 42,26 38,26 32,20" fill="url(#toolGrad2)" stroke="#B45309" strokeWidth="1" />
+        <circle cx="40" cy="14" r="2.5" fill="#FFFFFF" />
+
+        {/* Output terminal connector */}
+        <circle cx="85" cy="24" r="5" fill="#F59E0B" stroke="#D97706" strokeWidth="1" />
+        <circle cx="100" cy="24" r="3" fill="#D97706" fillOpacity="0.75" />
+        <line x1="90" y1="24" x2="97" y2="24" stroke="#D97706" strokeWidth="1.5" strokeOpacity="0.6" />
+      </g>
+
+      {/* Target Crosshair */}
+      <circle cx="280" cy="80" r="12" stroke="#D97706" strokeWidth="1" strokeDasharray="3 3" strokeOpacity="0.4" />
+      <line x1="280" y1="64" x2="280" y2="96" stroke="#D97706" strokeWidth="1" strokeOpacity="0.3" />
+      <line x1="264" y1="80" x2="296" y2="80" stroke="#D97706" strokeWidth="1" strokeOpacity="0.3" />
+    </svg>
+  );
+
+  const AssetTypePattern: React.FC<{ type: string }> = ({ type }) => {
+    switch (type) {
+      case "Agent":
+        return <AgentPattern />;
+      case "Model":
+        return <ModelPattern />;
+      case "Dataset":
+        return <DatasetPattern />;
+      case "Tool":
+        return <ToolPattern />;
+      default:
+        return <AgentPattern />;
+    }
+  };
+
+  /* Pastel Theme Definitions from Image 1 */
+  const ASSET_THEMES: Record<
+    string,
+    {
+      bgLight: string;
+      bgDark: string;
+      borderLight: string;
+      borderDark: string;
+      hoverBorderLight: string;
+      hoverBorderDark: string;
+      bannerBgLight: string;
+      bannerBgDark: string;
+      badgeText: string;
+      badgeIcon: React.ElementType;
+    }
+  > = {
+    Agent: {
+      bgLight: "bg-[#F4F0FF]", // Soft Lavender from Image 1 (Audio Lab)
+      bgDark: "dark:bg-[#161324]",
+      borderLight: "border-[#E1D7FC]",
+      borderDark: "dark:border-purple-500/25",
+      hoverBorderLight: "hover:border-[#C4B5FD]",
+      hoverBorderDark: "dark:hover:border-purple-400/40",
+      bannerBgLight: "bg-[#EAE3FB]",
+      bannerBgDark: "dark:bg-[#201938]",
+      badgeText: "text-purple-700 dark:text-purple-300",
+      badgeIcon: Sparkles,
+    },
+    Model: {
+      bgLight: "bg-[#EDF5FF]", // Soft Sky Blue from Image 1 (Deep Search)
+      bgDark: "dark:bg-[#101726]",
+      borderLight: "border-[#CCE3FD]",
+      borderDark: "dark:border-sky-500/25",
+      hoverBorderLight: "hover:border-[#93C5FD]",
+      hoverBorderDark: "dark:hover:border-sky-400/40",
+      bannerBgLight: "bg-[#DFEFFF]",
+      bannerBgDark: "dark:bg-[#15233D]",
+      badgeText: "text-sky-700 dark:text-sky-300",
+      badgeIcon: BrainCircuit,
+    },
+    Dataset: {
+      bgLight: "bg-[#E6F9F0]", // Soft Mint Green from Image 1 (Doc Synthesizer)
+      bgDark: "dark:bg-[#0E1C15]",
+      borderLight: "border-[#C3F2DC]",
+      borderDark: "dark:border-emerald-500/25",
+      hoverBorderLight: "hover:border-[#86EFAC]",
+      hoverBorderDark: "dark:hover:border-emerald-400/40",
+      bannerBgLight: "bg-[#D4F5E4]",
+      bannerBgDark: "dark:bg-[#142B20]",
+      badgeText: "text-emerald-700 dark:text-emerald-300",
+      badgeIcon: Database,
+    },
+    Tool: {
+      bgLight: "bg-[#FEF9E1]", // Soft Butter Yellow from Image 1 (App Builder)
+      bgDark: "dark:bg-[#1D1910]",
+      borderLight: "border-[#FDECA8]",
+      borderDark: "dark:border-amber-500/25",
+      hoverBorderLight: "hover:border-[#FCD34D]",
+      hoverBorderDark: "dark:hover:border-amber-400/40",
+      bannerBgLight: "bg-[#FEF2C0]",
+      bannerBgDark: "dark:bg-[#2C2413]",
+      badgeText: "text-amber-800 dark:text-amber-300",
+      badgeIcon: Wrench,
+    },
+  };
+
   const getCategoryLabel = (item: MarketplaceItemType) => {
     if (
       item.category === "AI / ML Models" ||
@@ -521,6 +892,9 @@ export const MarketplaceHome: React.FC = () => {
 
   const renderAssetCard = (item: MarketplaceItemType) => {
     const isLiked = likedIds.includes(item.id);
+    const categoryLabel = getCategoryLabel(item);
+    const theme = ASSET_THEMES[categoryLabel] || ASSET_THEMES.Agent;
+    const CategoryIcon = theme.badgeIcon;
     const orgInitials = item.author.name
       .split(" ")
       .map((w) => w[0])
@@ -532,55 +906,68 @@ export const MarketplaceHome: React.FC = () => {
       <div
         key={item.id}
         onClick={() => setSelectedAsset(item)}
-        className="group relative bg-white dark:bg-[#131317] border border-slate-200/80 dark:border-zinc-800 hover:border-slate-400 dark:hover:border-zinc-600 rounded-2xl p-4 cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/40 flex flex-col justify-between"
+        className={`group relative ${theme.bgLight} ${theme.bgDark} border ${theme.borderLight} ${theme.borderDark} ${theme.hoverBorderLight} ${theme.hoverBorderDark} rounded-[22px] p-3.5 sm:p-4 cursor-pointer transition-all duration-200 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/40 hover:-translate-y-1 flex flex-col justify-between`}
       >
         <div>
-          {/* Top Row: Category in Orange text (no icon) & Price */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#FF6B00] tracking-wide">
-              {getCategoryLabel(item)}
-            </span>
-            <span
-              className={`px-2 py-0.5 rounded-md text-[10.5px] font-bold shadow-2xs ${
-                item.tier === "Free"
-                  ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/40"
-                  : "bg-black dark:bg-white text-white dark:text-black border border-transparent"
-              }`}
-            >
-              {item.price}
-            </span>
+          {/* Top Part: Category Shapes & Pattern Header Container */}
+          <div
+            className={`w-full h-28 sm:h-32 rounded-[16px] overflow-hidden relative flex items-center justify-center ${theme.bannerBgLight} ${theme.bannerBgDark} border ${theme.borderLight} ${theme.borderDark} shadow-inner`}
+          >
+            {/* The Distinct Category SVG Pattern */}
+            <AssetTypePattern type={categoryLabel} />
+
+            {/* Floating Top-Left Category Badge */}
+            <div className="absolute top-2.5 left-2.5 z-10">
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide backdrop-blur-md bg-white/90 dark:bg-black/75 shadow-xs border border-white/60 dark:border-white/10 ${theme.badgeText}`}>
+                <CategoryIcon className="w-3 h-3" />
+                {categoryLabel}
+              </span>
+            </div>
+
+            {/* Floating Top-Right Price Badge */}
+            <div className="absolute top-2.5 right-2.5 z-10">
+              <span
+                className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold tracking-wide backdrop-blur-md shadow-xs ${
+                  item.tier === "Free"
+                    ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30"
+                    : "bg-slate-900/85 dark:bg-white/90 text-white dark:text-black border border-white/20"
+                }`}
+              >
+                {item.price}
+              </span>
+            </div>
           </div>
 
           {/* Title & Description */}
-          <div className="mt-3">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#FF6B00] transition-colors line-clamp-1 tracking-tight">
+          <div className="mt-3.5">
+            <h3 className="text-[14px] sm:text-[15px] font-black text-slate-900 dark:!text-white group-hover:text-[#FF6B00] transition-colors line-clamp-1 tracking-tight">
               {item.name}
             </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 leading-relaxed min-h-[32px]">
+            <p className="mt-1 text-xs text-slate-600 dark:!text-zinc-300 line-clamp-2 leading-relaxed min-h-[34px]">
               {item.tagline}
             </p>
           </div>
 
           {/* Metadata Row: Clean Org Badge & Rating */}
-          <div className="mt-3.5 pt-3 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-xs">
+          <div className="mt-3 pt-2.5 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center justify-between text-xs">
             {/* Publisher: Clean Initials Badge */}
             <div
               className="flex items-center gap-1.5 min-w-0"
               title={item.author.name}
             >
-              <div className="w-5 h-5 rounded-md bg-slate-100 dark:bg-zinc-800 border border-slate-200/90 dark:border-zinc-700 flex items-center justify-center text-[9px] font-bold text-slate-700 dark:text-zinc-300 shrink-0">
+              <div className="w-5 h-5 rounded-md bg-white/80 dark:bg-zinc-800/80 border border-black/[0.08] dark:border-white/[0.12] flex items-center justify-center text-[9px] font-bold text-slate-800 dark:text-zinc-200 shrink-0 shadow-2xs">
                 {orgInitials}
               </div>
-              <span className="text-xs text-slate-600 dark:text-zinc-400 font-medium truncate max-w-[100px]">
+              <span className="text-xs text-slate-700 dark:text-zinc-300 font-medium truncate max-w-[105px]">
                 {item.author.name}
               </span>
             </div>
 
             {/* Rating & Runs */}
-            <div className="flex items-center gap-1 font-semibold text-slate-700 dark:text-zinc-300 shrink-0">
+            <div className="flex items-center gap-1 font-semibold text-slate-800 dark:text-zinc-200 shrink-0">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
               <span>{item.rating}</span>
-              <span className="text-slate-400 dark:text-zinc-500 font-normal text-[11px]">
+              <span className="text-slate-500 dark:text-zinc-400 font-normal text-[11px]">
                 ({item.runs})
               </span>
             </div>
@@ -588,13 +975,13 @@ export const MarketplaceHome: React.FC = () => {
         </div>
 
         {/* Action Row */}
-        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800/80 flex items-center gap-2">
+        <div className="mt-3.5 pt-2.5 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center gap-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
               setSelectedAsset(item);
             }}
-            className="group/btn flex-1 h-8 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-semibold rounded-xl transition-all shadow-2xs flex items-center justify-center gap-1.5 active:scale-98 cursor-pointer"
+            className="group/btn flex-1 h-8 bg-slate-900 hover:bg-black dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-black text-xs font-bold rounded-xl transition-all shadow-2xs flex items-center justify-center gap-1.5 active:scale-98 cursor-pointer"
           >
             <span>Inspect</span>
             <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
@@ -604,8 +991,8 @@ export const MarketplaceHome: React.FC = () => {
             onClick={(e) => toggleLike(item, e)}
             className={`h-8 w-8 rounded-xl border transition-colors shadow-2xs flex items-center justify-center cursor-pointer ${
               isLiked
-                ? "border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/30 text-rose-500"
-                : "border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-800 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-400 hover:text-rose-500"
+                ? "border-rose-300 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 text-rose-500"
+                : "border-black/[0.08] dark:border-white/[0.1] bg-white/70 dark:bg-zinc-800/70 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-500 hover:text-rose-500"
             }`}
             title={isLiked ? "Saved to assets" : "Save asset"}
           >
