@@ -906,7 +906,7 @@ export const MarketplaceHome: React.FC = () => {
       <div
         key={item.id}
         onClick={() => setSelectedAsset(item)}
-        className={`group relative ${theme.bgLight} ${theme.bgDark} border ${theme.borderLight} ${theme.borderDark} ${theme.hoverBorderLight} ${theme.hoverBorderDark} rounded-[22px] p-3.5 sm:p-4 cursor-pointer transition-all duration-200 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/40 hover:-translate-y-1 flex flex-col justify-between`}
+        className="group relative bg-white dark:bg-[#131317] border border-slate-200/90 dark:border-zinc-800 hover:border-slate-400 dark:hover:border-zinc-600 rounded-[22px] p-3.5 sm:p-4 cursor-pointer transition-all duration-200 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-black/40 hover:-translate-y-1 flex flex-col justify-between"
       >
         <div>
           {/* Top Part: Category Shapes & Pattern Header Container */}
@@ -916,21 +916,13 @@ export const MarketplaceHome: React.FC = () => {
             {/* The Distinct Category SVG Pattern */}
             <AssetTypePattern type={categoryLabel} />
 
-            {/* Floating Top-Left Category Badge */}
-            <div className="absolute top-2.5 left-2.5 z-10">
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide backdrop-blur-md bg-white/90 dark:bg-black/75 shadow-xs border border-white/60 dark:border-white/10 ${theme.badgeText}`}>
-                <CategoryIcon className="w-3 h-3" />
-                {categoryLabel}
-              </span>
-            </div>
-
             {/* Floating Top-Right Price Badge */}
             <div className="absolute top-2.5 right-2.5 z-10">
               <span
-                className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold tracking-wide backdrop-blur-md shadow-xs ${
+                className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide shadow-2xs bg-white dark:bg-zinc-800 border border-slate-200/90 dark:border-zinc-700/80 ${
                   item.tier === "Free"
-                    ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30"
-                    : "bg-slate-900/85 dark:bg-white/90 text-white dark:text-black border border-white/20"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-slate-900 dark:text-white"
                 }`}
               >
                 {item.price}
@@ -949,13 +941,13 @@ export const MarketplaceHome: React.FC = () => {
           </div>
 
           {/* Metadata Row: Clean Org Badge & Rating */}
-          <div className="mt-3 pt-2.5 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center justify-between text-xs">
+          <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-xs">
             {/* Publisher: Clean Initials Badge */}
             <div
               className="flex items-center gap-1.5 min-w-0"
               title={item.author.name}
             >
-              <div className="w-5 h-5 rounded-md bg-white/80 dark:bg-zinc-800/80 border border-black/[0.08] dark:border-white/[0.12] flex items-center justify-center text-[9px] font-bold text-slate-800 dark:text-zinc-200 shrink-0 shadow-2xs">
+              <div className="w-5 h-5 rounded-md bg-slate-50 dark:bg-zinc-800 border border-slate-200/90 dark:border-zinc-700 flex items-center justify-center text-[9px] font-bold text-slate-800 dark:text-zinc-200 shrink-0 shadow-2xs">
                 {orgInitials}
               </div>
               <span className="text-xs text-slate-700 dark:text-zinc-300 font-medium truncate max-w-[105px]">
@@ -975,7 +967,7 @@ export const MarketplaceHome: React.FC = () => {
         </div>
 
         {/* Action Row */}
-        <div className="mt-3.5 pt-2.5 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center gap-2">
+        <div className="mt-3.5 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80 flex items-center gap-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -991,13 +983,13 @@ export const MarketplaceHome: React.FC = () => {
             onClick={(e) => toggleLike(item, e)}
             className={`h-8 w-8 rounded-xl border transition-colors shadow-2xs flex items-center justify-center cursor-pointer ${
               isLiked
-                ? "border-rose-300 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/40 text-rose-500"
-                : "border-black/[0.08] dark:border-white/[0.1] bg-white/70 dark:bg-zinc-800/70 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-slate-500 hover:text-rose-500"
+                ? "border-amber-300 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/40 text-amber-500"
+                : "border-slate-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-700 text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200"
             }`}
             title={isLiked ? "Saved to assets" : "Save asset"}
           >
-            <Heart
-              className={`w-3.5 h-3.5 ${isLiked ? "fill-rose-500 text-rose-500" : ""}`}
+            <Bookmark
+              className={`w-3.5 h-3.5 ${isLiked ? "fill-amber-500 text-amber-500" : ""}`}
             />
           </button>
         </div>
