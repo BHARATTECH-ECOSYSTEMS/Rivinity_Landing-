@@ -198,10 +198,6 @@ const KnowledgeBase = () => {
                 className="mb-6 space-y-2.5"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 dark:bg-orange-500/15 border border-orange-500/20 text-[#FF6B00] dark:text-orange-400 text-xs font-semibold tracking-wide">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Skills & Knowledge Catalog</span>
-                  </div>
 
                   {/* Mobile Sidebar Toggle Button */}
                   <button
@@ -236,8 +232,7 @@ const KnowledgeBase = () => {
                       <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                         Installed
                       </div>
-                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100 flex items-center gap-1.5">
-                        <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100">
                         {installed.size} active
                       </div>
                     </div>
@@ -246,8 +241,7 @@ const KnowledgeBase = () => {
                       <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                         Catalog
                       </div>
-                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100 flex items-center gap-1.5">
-                        <span className="inline-block w-2 h-2 rounded-full bg-[#FF6B00]" />
+                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100">
                         {SKILLS.length} skills
                       </div>
                     </div>
