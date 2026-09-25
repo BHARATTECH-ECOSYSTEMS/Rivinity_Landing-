@@ -860,11 +860,9 @@ const DashboardContent = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setIsAddingTools((v) => {
-                          const next = !v;
-                          if (next) setSkillPickerOpen(false);
-                          return next;
-                        });
+                        const next = !isAddingTools;
+                        setIsAddingTools(next);
+                        if (next) setSkillPickerOpen(false);
                       }}
                       className={`w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 ${
                         isAddingTools
@@ -896,11 +894,9 @@ const DashboardContent = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setSkillPickerOpen((v) => {
-                          const next = !v;
-                          if (next) setIsAddingTools(false);
-                          return next;
-                        });
+                        const next = !skillPickerOpen;
+                        setSkillPickerOpen(next);
+                        if (next) setIsAddingTools(false);
                       }}
                       className={`w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 ${
                         skillPickerOpen

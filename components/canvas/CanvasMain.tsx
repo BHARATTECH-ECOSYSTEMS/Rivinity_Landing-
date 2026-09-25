@@ -735,11 +735,9 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
             <button
               type="button"
               onClick={() => {
-                setIsAddingTab((v) => {
-                  const next = !v;
-                  if (next) setSkillPickerOpen(false);
-                  return next;
-                });
+                const next = !isAddingTab;
+                setIsAddingTab(next);
+                if (next) setSkillPickerOpen(false);
               }}
               className={cn(
                 "transition-colors cursor-pointer shrink-0 w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center bg-transparent",
@@ -772,11 +770,9 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               ref={skillButtonRef}
               type="button"
               onClick={() => {
-                setSkillPickerOpen((v) => {
-                  const next = !v;
-                  if (next) setIsAddingTab(false);
-                  return next;
-                });
+                const next = !skillPickerOpen;
+                setSkillPickerOpen(next);
+                if (next) setIsAddingTab(false);
               }}
               className={cn(
                 "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
