@@ -420,17 +420,14 @@ export const MarketplaceHome: React.FC = () => {
   };
 
   /* SECTION RENDERER */
-  const renderSection = (title: string, subtitle: string, sectionItems: MarketplaceItemType[], icon?: React.ReactNode) => {
+  const renderSection = (title: string, sectionItems: MarketplaceItemType[], icon?: React.ReactNode) => {
     if (sectionItems.length === 0) return null;
 
     return (
       <div className="space-y-3">
-        <div>
-          <div className="flex items-center gap-2">
-            {icon}
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate tracking-tight">{title}</h2>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5 line-clamp-1">{subtitle}</p>
+        <div className="flex items-center gap-2">
+          {icon}
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate tracking-tight">{title}</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -531,7 +528,6 @@ export const MarketplaceHome: React.FC = () => {
             {/* 1. Trending Assets This Week */}
             {renderSection(
               'Trending Assets This Week',
-              'The most downloaded datasets and models across the ecosystem.',
               trendingItems,
             )}
 
@@ -540,7 +536,6 @@ export const MarketplaceHome: React.FC = () => {
               <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80">
                 {renderSection(
                   'Datasets',
-                  'Curated, license-clear data for training and evaluation.',
                   datasetItems
                 )}
               </div>
@@ -551,7 +546,6 @@ export const MarketplaceHome: React.FC = () => {
               <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80">
                 {renderSection(
                   'AI / ML Models',
-                  'Open and commercial weights with deployment recipes.',
                   modelItems
                 )}
               </div>
@@ -562,7 +556,6 @@ export const MarketplaceHome: React.FC = () => {
               <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80">
                 {renderSection(
                   'Agents',
-                  'Autonomous and crew-style agents for any domain.',
                   agentItems
                 )}
               </div>
@@ -573,7 +566,6 @@ export const MarketplaceHome: React.FC = () => {
               <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80">
                 {renderSection(
                   'AI Tools',
-                  'Productivity, workflow, vision, marketing and more.',
                   toolItems
                 )}
               </div>
