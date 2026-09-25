@@ -834,6 +834,31 @@ const DashboardContent = () => {
                   <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
                     <button
                       type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 transition-colors cursor-pointer shrink-0 border-0"
+                      title="Attach file"
+                    >
+                      <Paperclip className="w-4 h-4 shrink-0" strokeWidth={2} />
+                    </button>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      className="hidden"
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files && files.length > 0) {
+                          toast.success(`Attached: ${files[0].name}`);
+                          setPromptInput((prev) =>
+                            prev
+                              ? `${prev} [Attached: ${files[0].name}]`
+                              : `[Attached: ${files[0].name}] `,
+                          );
+                        }
+                      }}
+                    />
+
+                    <button
+                      type="button"
                       onClick={() => {
                         setIsAddingTools((v) => {
                           const next = !v;
@@ -920,31 +945,6 @@ const DashboardContent = () => {
                     >
                       <HatGlasses className="w-4 h-4 shrink-0" strokeWidth={2} />
                     </button>
-
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 transition-colors cursor-pointer shrink-0 border-0"
-                      title="Attach file"
-                    >
-                      <Paperclip className="w-4 h-4 shrink-0" strokeWidth={2} />
-                    </button>
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      className="hidden"
-                      onChange={(e) => {
-                        const files = e.target.files;
-                        if (files && files.length > 0) {
-                          toast.success(`Attached: ${files[0].name}`);
-                          setPromptInput((prev) =>
-                            prev
-                              ? `${prev} [Attached: ${files[0].name}]`
-                              : `[Attached: ${files[0].name}] `,
-                          );
-                        }
-                      }}
-                    />
                   </div>
 
                   <div className="flex items-center shrink-0 gap-1.5 sm:gap-2">
