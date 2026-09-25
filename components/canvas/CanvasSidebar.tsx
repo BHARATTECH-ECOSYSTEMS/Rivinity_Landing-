@@ -562,7 +562,15 @@ const CanvasSidebar = ({
                 <div className="flex items-center gap-1 shrink-0">
                   <button
                     type="button"
-                    onClick={handleActionToggle}
+                    onClick={() => {
+                      if (onCollapse) {
+                        onCollapse();
+                      } else if (onToggle) {
+                        onToggle();
+                      } else {
+                        setInternalOpen(false);
+                      }
+                    }}
                     className="w-8 h-8 rounded-full flex items-center justify-center bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors cursor-pointer border-0 shrink-0"
                     aria-label="Collapse sidebar"
                     title="Collapse sidebar"

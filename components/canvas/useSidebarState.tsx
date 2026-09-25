@@ -10,7 +10,6 @@ import React, {
 } from "react";
 
 const SIDEBAR_STORAGE_KEY = "rivinity_sidebar_open";
-const SIDEBAR_EVENT_NAME = "sidebar-toggle-event";
 
 export interface SidebarContextType {
   sidebarOpen: boolean;
@@ -29,33 +28,36 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     if (globalSidebarState !== null) {
       return globalSidebarState;
     }
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
+        if (saved !== null) {
+          const val = saved === "true";
+          globalSidebarState = val;
+          return val;
+        }
+        if (window.innerWidth < 768) {
+          globalSidebarState = false;
+          return false;
+        }
+      } catch {}
+    }
     return true;
   });
 
+  // Sync to localStorage and global cache whenever state changes
   useEffect(() => {
-    // Only runs once on initial root layout mount
-    const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
-    if (saved !== null) {
-      const val = saved === "true";
-      globalSidebarState = val;
-      setSidebarOpenState(val);
-    } else if (window.innerWidth < 768) {
-      globalSidebarState = false;
-      setSidebarOpenState(false);
-    }
+    globalSidebarState = sidebarOpen;
+    try {
+      localStorage.setItem(SIDEBAR_STORAGE_KEY, String(sidebarOpen));
+    } catch {}
+  }, [sidebarOpen]);
 
+  // Handle window resize and cross-tab storage changes
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        globalSidebarState = false;
         setSidebarOpenState(false);
-      }
-    };
-
-    const handleCustomEvent = (e: Event) => {
-      const ce = e as CustomEvent<boolean>;
-      if (typeof ce.detail === "boolean") {
-        globalSidebarState = ce.detail;
-        setSidebarOpenState(ce.detail);
       }
     };
 
@@ -68,12 +70,10 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     };
 
     window.addEventListener("resize", handleResize);
-    window.addEventListener(SIDEBAR_EVENT_NAME, handleCustomEvent);
     window.addEventListener("storage", handleStorageChange);
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener(SIDEBAR_EVENT_NAME, handleCustomEvent);
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
@@ -83,12 +83,6 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
       setSidebarOpenState((prev) => {
         const next = typeof value === "function" ? value(prev) : value;
         globalSidebarState = next;
-        if (typeof window !== "undefined") {
-          localStorage.setItem(SIDEBAR_STORAGE_KEY, String(next));
-          window.dispatchEvent(
-            new CustomEvent(SIDEBAR_EVENT_NAME, { detail: next })
-          );
-        }
         return next;
       });
     },
@@ -96,8 +90,12 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   );
 
   const toggleSidebar = useCallback(() => {
-    setSidebarOpen((prev) => !prev);
-  }, [setSidebarOpen]);
+    setSidebarOpenState((prev) => {
+      const next = !prev;
+      globalSidebarState = next;
+      return next;
+    });
+  }, []);
 
   return (
     <SidebarContext.Provider
