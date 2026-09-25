@@ -1,8 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
-import CanvasSidebar from "@/components/canvas/CanvasSidebar";
 import SidebarShell from "@/components/canvas/SidebarShell";
-import { useSidebarState } from "@/components/canvas/useSidebarState";
 import ChatMarkdown from "@/components/canvas/ChatMarkdown";
 import {
   Search,
@@ -13,7 +11,6 @@ import {
   X,
   BookOpen,
   ChevronRight,
-  PanelLeft,
   Copy,
   CheckCheck,
   PenTool,
@@ -26,7 +23,6 @@ import {
   Coins,
   Headphones,
   Scale,
-  Zap,
 } from "lucide-react";
 import {
   SKILLS,
@@ -55,19 +51,368 @@ const CATEGORY_ICONS: Record<
   Legal: Scale,
 };
 
+interface CategoryTheme {
+  cardBg: string;
+  cardBorder: string;
+  textPrimary: string;
+  textMuted: string;
+  iconBg: string;
+  iconBorder: string;
+  iconColor: string;
+  badgeBg: string;
+  badgeText: string;
+  filterActiveBg: string;
+  pixelPalette: string[];
+}
+
+// 10 Pastel Color sets derived from Dashboard Creative Tools (Image 2)
+const CATEGORY_THEMES: Record<SkillCategory, CategoryTheme> = {
+  // Edit Studio: Soft Peach / Warm Apricot
+  Writing: {
+    cardBg: "bg-[#FFF1E6] dark:bg-[#1D1512]",
+    cardBorder: "border-[#FEDCC8] dark:border-orange-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#FFC7A8] dark:border-orange-500/35",
+    iconColor: "text-[#C2410C] dark:text-orange-400",
+    badgeBg: "bg-[#FFE4D5] dark:bg-orange-500/20",
+    badgeText: "text-[#C2410C] dark:text-orange-300",
+    filterActiveBg: "bg-[#FFE4D5] text-[#C2410C] border-[#FFC7A8]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#FFF4EC",
+      "#FFE8D9",
+      "#FED3B8",
+      "#FDBA74",
+      "#FB923C",
+      "#EA580C",
+      "#C2410C",
+    ],
+  },
+
+  // Audio Lab: Soft Lavender / Lilac
+  Code: {
+    cardBg: "bg-[#F1EDFE] dark:bg-[#161322]",
+    cardBorder: "border-[#DDD3FC] dark:border-purple-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#CEC0FA] dark:border-purple-500/35",
+    iconColor: "text-[#6D28D9] dark:text-purple-400",
+    badgeBg: "bg-[#E6DDFF] dark:bg-purple-500/20",
+    badgeText: "text-[#6D28D9] dark:text-purple-300",
+    filterActiveBg: "bg-[#E6DDFF] text-[#6D28D9] border-[#CEC0FA]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#F6F2FF",
+      "#EDE5FE",
+      "#DDD0FD",
+      "#C4B5FD",
+      "#A78BFA",
+      "#8B5CF6",
+      "#6D28D9",
+    ],
+  },
+
+  // Deep Search: Soft Sky Blue / Powder Blue
+  Research: {
+    cardBg: "bg-[#EAF3FE] dark:bg-[#101724]",
+    cardBorder: "border-[#CDE3FD] dark:border-sky-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#BBD8FC] dark:border-sky-500/35",
+    iconColor: "text-[#0369A1] dark:text-sky-400",
+    badgeBg: "bg-[#D8EAFF] dark:bg-sky-500/20",
+    badgeText: "text-[#0369A1] dark:text-sky-300",
+    filterActiveBg: "bg-[#D8EAFF] text-[#0369A1] border-[#BBD8FC]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#F0F8FF",
+      "#E0F2FE",
+      "#BAE6FD",
+      "#7DD3FC",
+      "#38BDF8",
+      "#0284C7",
+      "#0369A1",
+    ],
+  },
+
+  // Doc Synthesizer: Soft Mint / Sage Green
+  Data: {
+    cardBg: "bg-[#E6F8F0] dark:bg-[#0E1C15]",
+    cardBorder: "border-[#C4F1DC] dark:border-emerald-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#B2ECCF] dark:border-emerald-500/35",
+    iconColor: "text-[#15803D] dark:text-emerald-400",
+    badgeBg: "bg-[#D1F6E5] dark:bg-emerald-500/20",
+    badgeText: "text-[#15803D] dark:text-emerald-300",
+    filterActiveBg: "bg-[#D1F6E5] text-[#15803D] border-[#B2ECCF]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#F0FDF5",
+      "#DCFCE7",
+      "#BBF7D0",
+      "#86EFAC",
+      "#4ADE80",
+      "#16A34A",
+      "#14532D",
+    ],
+  },
+
+  // Image Enhancer: Soft Blossom Pink (Image 3 design source)
+  Design: {
+    cardBg: "bg-[#FDEBF3] dark:bg-[#201219]",
+    cardBorder: "border-[#FBCFE4] dark:border-pink-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#F8BBD8] dark:border-pink-500/35",
+    iconColor: "text-[#BE185D] dark:text-pink-400",
+    badgeBg: "bg-[#FBD9E9] dark:bg-pink-500/20",
+    badgeText: "text-[#BE185D] dark:text-pink-300",
+    filterActiveBg: "bg-[#FBD9E9] text-[#BE185D] border-[#F8BBD8]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#FFF0F6",
+      "#FDE2EF",
+      "#FBCFE8",
+      "#F9A8D4",
+      "#F472B6",
+      "#DB2777",
+      "#9D174D",
+    ],
+  },
+
+  // App Builder: Soft Butter Yellow / Warm Sand
+  Ops: {
+    cardBg: "bg-[#FFF9E5] dark:bg-[#1D1910]",
+    cardBorder: "border-[#FEEBAE] dark:border-amber-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#FDE496] dark:border-amber-500/35",
+    iconColor: "text-[#B45309] dark:text-amber-400",
+    badgeBg: "bg-[#FEF1C5] dark:bg-amber-500/20",
+    badgeText: "text-[#B45309] dark:text-amber-300",
+    filterActiveBg: "bg-[#FEF1C5] text-[#B45309] border-[#FDE496]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#FFFDF0",
+      "#FEF8D4",
+      "#FEECA8",
+      "#FDE047",
+      "#FACC15",
+      "#D97706",
+      "#92400E",
+    ],
+  },
+
+  // Marketplace: Soft Rose / Coral Pink
+  Marketing: {
+    cardBg: "bg-[#FDEBF0] dark:bg-[#1E1117]",
+    cardBorder: "border-[#FBCFD9] dark:border-rose-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#F9BDCD] dark:border-rose-500/35",
+    iconColor: "text-[#BE123C] dark:text-rose-400",
+    badgeBg: "bg-[#FBD8E2] dark:bg-rose-500/20",
+    badgeText: "text-[#BE123C] dark:text-rose-300",
+    filterActiveBg: "bg-[#FBD8E2] text-[#BE123C] border-[#F9BDCD]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#FFF1F4",
+      "#FFE4E8",
+      "#FECDD3",
+      "#FDA4AF",
+      "#FB7185",
+      "#E11D48",
+      "#9F1239",
+    ],
+  },
+
+  // Knowledge Base: Soft Seafoam Teal / Aqua
+  Finance: {
+    cardBg: "bg-[#E3FAF5] dark:bg-[#0D1C1A]",
+    cardBorder: "border-[#BDF4E7] dark:border-teal-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#A9EFE0] dark:border-teal-500/35",
+    iconColor: "text-[#0F766E] dark:text-teal-400",
+    badgeBg: "bg-[#CFF6ED] dark:bg-teal-500/20",
+    badgeText: "text-[#0F766E] dark:text-teal-300",
+    filterActiveBg: "bg-[#CFF6ED] text-[#0F766E] border-[#A9EFE0]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#F0FDFA",
+      "#CCFBF1",
+      "#99F6E4",
+      "#5EEAD4",
+      "#2DD4BF",
+      "#0D9488",
+      "#115E59",
+    ],
+  },
+
+  // RivinityLM: Warm Peach Cream / Champagne
+  Support: {
+    cardBg: "bg-[#FFF2E8] dark:bg-[#1D1410]",
+    cardBorder: "border-[#FED9C0] dark:border-orange-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#FFCEB0] dark:border-orange-500/35",
+    iconColor: "text-[#C2410C] dark:text-orange-400",
+    badgeBg: "bg-[#FFE4D2] dark:bg-orange-500/20",
+    badgeText: "text-[#C2410C] dark:text-orange-300",
+    filterActiveBg: "bg-[#FFE4D2] text-[#C2410C] border-[#FFCEB0]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#FFF7ED",
+      "#FFEDD5",
+      "#FED7AA",
+      "#FDBA74",
+      "#FB923C",
+      "#EA580C",
+      "#9A3412",
+    ],
+  },
+
+  // Analytics: Soft Slate / Periwinkle Indigo
+  Legal: {
+    cardBg: "bg-[#EDF0FE] dark:bg-[#121526]",
+    cardBorder: "border-[#D0D7FD] dark:border-indigo-500/25",
+    textPrimary: "text-slate-900 dark:text-white",
+    textMuted: "text-slate-700/85 dark:text-zinc-300",
+    iconBg: "bg-white/90 dark:bg-zinc-800/90",
+    iconBorder: "border-[#C5D0FC] dark:border-indigo-500/35",
+    iconColor: "text-[#4338CA] dark:text-indigo-400",
+    badgeBg: "bg-[#DDE3FD] dark:bg-indigo-500/20",
+    badgeText: "text-[#4338CA] dark:text-indigo-300",
+    filterActiveBg: "bg-[#DDE3FD] text-[#4338CA] border-[#C5D0FC]",
+    pixelPalette: [
+      "#FFFFFF",
+      "#EEF2FF",
+      "#E0E7FF",
+      "#C7D2FE",
+      "#A5B4FC",
+      "#818CF8",
+      "#4F46E5",
+      "#312E81",
+    ],
+  },
+};
+
+/**
+ * Image 3 Pixel Mosaic Generator
+ * Renders a crisp pixelated gradient mosaic in the palette from Image 2.
+ */
+const PixelMosaic = ({
+  category,
+  seed,
+}: {
+  category: SkillCategory;
+  seed: string;
+}) => {
+  const theme = CATEGORY_THEMES[category] || CATEGORY_THEMES.Writing;
+  const palette = theme.pixelPalette;
+
+  const pixels = useMemo(() => {
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+      hash = (hash << 5) - hash + seed.charCodeAt(i);
+      hash |= 0;
+    }
+    const seedNum = Math.abs(hash);
+
+    const cols = 12;
+    const rows = 8;
+    // Focal center offset (slightly to left and up, matching Image 3)
+    const centerX = 4.2 + ((seedNum % 7) - 3) * 0.22;
+    const centerY = 3.5 + (((seedNum >> 3) % 5) - 2) * 0.22;
+
+    const items: { x: number; y: number; color: string }[] = [];
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const dx = (c - centerX) * 0.96;
+        const dy = (r - centerY) * 1.25;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Deterministic noise for generative mosaic look
+        const cellNoise =
+          Math.sin(c * 12.9898 + r * 78.233 + (seedNum % 100)) * 43758.5453;
+        const jitter = (cellNoise - Math.floor(cellNoise) - 0.5) * 0.82;
+
+        const effectiveDist = Math.max(0, dist + jitter);
+
+        let colorIndex = 0;
+        if (effectiveDist < 1.15) colorIndex = 0; // Pure white luminous center
+        else if (effectiveDist < 1.95) colorIndex = 1;
+        else if (effectiveDist < 2.95) colorIndex = 2;
+        else if (effectiveDist < 3.95) colorIndex = 3;
+        else if (effectiveDist < 5.0) colorIndex = 4;
+        else if (effectiveDist < 6.2) colorIndex = 5;
+        else if (effectiveDist < 7.4) colorIndex = 6;
+        else colorIndex = 7;
+
+        colorIndex = Math.min(palette.length - 1, Math.max(0, colorIndex));
+        items.push({
+          x: c * 10,
+          y: r * 10,
+          color: palette[colorIndex],
+        });
+      }
+    }
+    return items;
+  }, [category, seed, palette]);
+
+  return (
+    <div className="w-full h-full relative overflow-hidden select-none">
+      <svg
+        viewBox="0 0 120 80"
+        preserveAspectRatio="xMidYMid slice"
+        className="w-full h-full scale-[1.03] transform-gpu transition-transform duration-500 group-hover:scale-105"
+        shapeRendering="crispEdges"
+      >
+        {pixels.map((p, idx) => (
+          <rect
+            key={idx}
+            x={p.x}
+            y={p.y}
+            width="10"
+            height="10"
+            fill={p.color}
+            stroke="rgba(255, 255, 255, 0.08)"
+            strokeWidth="0.4"
+          />
+        ))}
+      </svg>
+      {/* Subtle lighting overlay for glowing depth */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/15 pointer-events-none" />
+      <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.06)] pointer-events-none" />
+    </div>
+  );
+};
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
       staggerChildren: 0.03,
-      delayChildren: 0.05,
+      delayChildren: 0.04,
     },
   },
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, y: 12 },
   show: {
     opacity: 1,
     y: 0,
@@ -79,7 +424,7 @@ const cardVariants: Variants = {
   },
   exit: {
     opacity: 0,
-    scale: 0.97,
+    scale: 0.96,
     transition: {
       duration: 0.15,
     },
@@ -204,7 +549,7 @@ const KnowledgeBase = () => {
 
                   {/* Quick Minimal Stats */}
                   <div className="flex items-center gap-3 shrink-0">
-                    <div className="px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 shadow-2xs text-left">
+                    <div className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 shadow-2xs text-left">
                       <div className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-semibold">
                         Installed
                       </div>
@@ -213,7 +558,7 @@ const KnowledgeBase = () => {
                       </div>
                     </div>
 
-                    <div className="px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 shadow-2xs text-left">
+                    <div className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 shadow-2xs text-left">
                       <div className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-semibold">
                         Catalog
                       </div>
@@ -257,7 +602,7 @@ const KnowledgeBase = () => {
                   </div>
                 </div>
 
-                {/* Filter Pills with Minimal Orange Active Accent */}
+                {/* Filter Pills with Pastel Colors (Image 2) */}
                 <div className="flex flex-wrap gap-1.5 sm:gap-2 relative items-center">
                   {(["All", "Installed", ...SKILL_CATEGORIES] as Filter[]).map(
                     (f) => {
@@ -270,10 +615,20 @@ const KnowledgeBase = () => {
                             ? installed.size
                             : SKILLS.filter((s) => s.category === f).length;
 
-                      const Icon =
-                        f !== "All" && f !== "Installed"
-                          ? CATEGORY_ICONS[f as SkillCategory]
-                          : null;
+                      const isCategory =
+                        f !== "All" && f !== "Installed";
+                      const categoryTheme = isCategory
+                        ? CATEGORY_THEMES[f as SkillCategory]
+                        : null;
+                      const Icon = isCategory
+                        ? CATEGORY_ICONS[f as SkillCategory]
+                        : null;
+
+                      let activeClass =
+                        "bg-[#FF6B00] text-white shadow-[0_2px_8px_rgba(255,107,0,0.25)] border border-[#FF6B00]";
+                      if (active && categoryTheme) {
+                        activeClass = `${categoryTheme.filterActiveBg} font-semibold shadow-xs`;
+                      }
 
                       return (
                         <button
@@ -281,15 +636,15 @@ const KnowledgeBase = () => {
                           onClick={() => setFilter(f)}
                           className={`relative h-7 sm:h-7.5 px-3 rounded-full text-[11.5px] font-medium transition-all select-none cursor-pointer flex items-center gap-1.5 ${
                             active
-                              ? "bg-[#FF6B00] text-white shadow-[0_2px_8px_rgba(255,107,0,0.25)] border border-[#FF6B00]"
-                              : "bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 hover:text-[#FF6B00] dark:hover:text-orange-400 hover:border-orange-500/30 hover:bg-orange-50/30 dark:hover:bg-orange-950/20 border border-slate-200/80 dark:border-zinc-800 shadow-2xs"
+                              ? activeClass
+                              : "bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:border-slate-300 dark:hover:border-zinc-700 border border-slate-200/80 dark:border-zinc-800 shadow-2xs"
                           }`}
                         >
                           {Icon && (
                             <Icon
                               className={`w-3 h-3 ${
                                 active
-                                  ? "text-white"
+                                  ? categoryTheme?.badgeText || "text-white"
                                   : "text-slate-400 dark:text-zinc-500"
                               }`}
                             />
@@ -300,7 +655,9 @@ const KnowledgeBase = () => {
                           <span
                             className={`text-[10px] px-1.5 py-0.2 rounded-full font-medium ${
                               active
-                                ? "bg-white/20 text-white font-semibold"
+                                ? isCategory
+                                  ? "bg-black/10 dark:bg-white/20 font-bold"
+                                  : "bg-white/20 text-white font-semibold"
                                 : "text-slate-400 dark:text-zinc-500"
                             }`}
                           >
@@ -313,19 +670,20 @@ const KnowledgeBase = () => {
                 </div>
               </div>
 
-              {/* Cards Grid: Minimal Clean Cards with Orange Highlights */}
+              {/* Cards Grid: Image 1 like cards with Image 3 pixel mosaic & Image 2 pastel colors */}
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
                 key={`${filter}-${query}`}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 pb-16"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 pb-16"
               >
                 <AnimatePresence mode="popLayout">
                   {filtered.map((s) => {
                     const inst = isInstalled(s.id);
-                    const active = s.id === selected?.id;
                     const CategoryIcon = CATEGORY_ICONS[s.category] || Sparkles;
+                    const theme =
+                      CATEGORY_THEMES[s.category] || CATEGORY_THEMES.Writing;
 
                     return (
                       <motion.div
@@ -336,46 +694,58 @@ const KnowledgeBase = () => {
                           setSelectedId(s.id);
                           setInspectorOpen(true);
                         }}
-                        className={`group relative text-left rounded-2xl border p-4 sm:p-5 cursor-pointer transition-colors duration-200 backdrop-blur-md bg-white/70 dark:bg-zinc-900/60 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.3)] ${
-                          active
-                            ? "border-slate-400 dark:border-zinc-500 ring-1 ring-slate-400/40 dark:ring-zinc-500/40"
-                            : "border-slate-200/70 dark:border-white/10 hover:border-slate-400 dark:hover:border-zinc-500"
-                        }`}
+                        className={`group relative text-left rounded-[26px] sm:rounded-[28px] border p-3.5 sm:p-4 cursor-pointer transition-all duration-300 ${theme.cardBg} ${theme.cardBorder} shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_30px_-6px_rgba(0,0,0,0.4)] hover:-translate-y-1 hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_16px_36px_-8px_rgba(0,0,0,0.6)] flex flex-col justify-between`}
                       >
-                        <div className="flex flex-col justify-between h-full min-h-[150px]">
-                          <div>
-                            {/* Card Topline: Minimal Orange Category Badge */}
-                            <div className="flex items-center justify-between gap-2 mb-2.5">
-                              <span className="inline-flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-orange-50/80 dark:bg-orange-950/40 text-[#FF6B00] dark:text-orange-400 border border-orange-200/60 dark:border-orange-900/40">
-                                <CategoryIcon className="w-3 h-3 text-[#FF6B00] dark:text-orange-400 shrink-0" />
-                                {s.category}
-                              </span>
+                        {/* TOP INSET CONTAINER (Image 1 top box housing Image 3 pixel mosaic) */}
+                        <div className="w-full h-40 sm:h-44 rounded-[18px] sm:rounded-[20px] overflow-hidden relative shadow-inner border border-black/5 dark:border-white/10 bg-black/5 dark:bg-black/35">
+                          <PixelMosaic category={s.category} seed={s.id} />
 
-                              {inst && (
-                                <motion.span
-                                  initial={{ scale: 0.85, opacity: 0 }}
-                                  animate={{ scale: 1, opacity: 1 }}
-                                  className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-800/50"
-                                >
-                                  <Check className="w-2.5 h-2.5 stroke-[2.5]" />
-                                  Attached
-                                </motion.span>
-                              )}
+                          {/* Top Right: Installed Active Badge */}
+                          {inst && (
+                            <div className="absolute top-2.5 right-2.5 z-10">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-600/90 text-white backdrop-blur-md shadow-xs">
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
+                                ACTIVE
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* BOTTOM CONTENT AREA (Image 1 style) */}
+                        <div className="pt-3.5 pb-1 px-0.5 flex flex-col justify-between flex-1">
+                          <div>
+                            {/* Icon + Title Header (Image 1 style) */}
+                            <div className="flex items-center gap-2.5">
+                              {/* Circular icon outline like Image 1 */}
+                              <div
+                                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center shrink-0 shadow-2xs ${theme.iconBg} ${theme.iconBorder}`}
+                              >
+                                <CategoryIcon
+                                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${theme.iconColor}`}
+                                />
+                              </div>
+
+                              <h3 className="text-[13px] sm:text-[14px] font-black uppercase tracking-wide leading-snug text-slate-900 dark:!text-white line-clamp-2 flex-1">
+                                {s.name}
+                              </h3>
+
+                              <ChevronRight className="w-4 h-4 text-slate-400 dark:text-zinc-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
                             </div>
 
-                            {/* Card Title */}
-                            <h3 className="text-[13.5px] sm:text-[14px] font-bold tracking-tight text-slate-900 dark:text-zinc-100 group-hover:text-slate-800 dark:group-hover:text-white transition-colors flex items-center justify-between">
-                              <span className="truncate">{s.name}</span>
-                              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-zinc-600 group-hover:text-slate-500 dark:group-hover:text-zinc-400 transition-colors shrink-0 ml-1.5" />
-                            </h3>
-
-                            {/* Card Description */}
-                            <p className="text-[11.5px] sm:text-[12px] text-slate-500 dark:text-zinc-400 mt-1.5 line-clamp-2 leading-relaxed font-normal min-h-[36px]">
+                            {/* Description (Spans full width under icon and title) */}
+                            <p className="text-[12px] sm:text-[12.5px] font-normal leading-relaxed mt-2.5 line-clamp-2 min-h-[38px] text-slate-700/90 dark:!text-zinc-300">
                               {s.summary}
                             </p>
                           </div>
 
-                          <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between">
+                          {/* Footer Action Bar */}
+                          <div className="mt-4 pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-between">
+                            <span
+                              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${theme.badgeBg} ${theme.badgeText}`}
+                            >
+                              {s.category}
+                            </span>
+
                             {inst ? (
                               <button
                                 type="button"
@@ -383,7 +753,7 @@ const KnowledgeBase = () => {
                                   e.stopPropagation();
                                   handleRemove(s);
                                 }}
-                                className="h-7 px-2.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/80 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:border-rose-300 dark:hover:border-rose-800 text-slate-600 dark:text-zinc-300 hover:text-rose-600 dark:hover:text-rose-400 text-[11px] font-medium transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                                className="h-7 px-3 rounded-full border border-black/10 dark:border-white/20 bg-white/70 dark:bg-zinc-800/80 hover:bg-rose-500 hover:text-white hover:border-rose-500 dark:hover:bg-rose-600 dark:hover:text-white dark:hover:border-rose-600 text-slate-700 dark:text-zinc-200 text-[11px] font-bold transition-all inline-flex items-center gap-1.5 shadow-2xs cursor-pointer"
                               >
                                 <Minus className="w-2.5 h-2.5 stroke-[2.5]" />
                                 <span>Detach</span>
@@ -395,7 +765,7 @@ const KnowledgeBase = () => {
                                   e.stopPropagation();
                                   handleAdd(s);
                                 }}
-                                className="h-7 px-3 rounded-lg bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] text-white dark:text-black text-[11px] font-semibold transition-all inline-flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                                className="h-7 px-3.5 rounded-full bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-zinc-200 active:scale-95 text-[11px] font-bold transition-all inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
                               >
                                 <Plus className="w-3 h-3 stroke-[2.5]" />
                                 <span>Add to AI</span>
@@ -412,7 +782,7 @@ const KnowledgeBase = () => {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="col-span-full text-center py-16 border border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl bg-white/60 dark:bg-zinc-900/60"
+                    className="col-span-full text-center py-16 border border-dashed border-slate-200 dark:border-zinc-800 rounded-3xl bg-white/60 dark:bg-zinc-900/60"
                   >
                     <div className="w-10 h-10 rounded-full bg-orange-500/10 text-[#FF6B00] flex items-center justify-center mx-auto mb-3">
                       <Search className="w-5 h-5" />
@@ -462,7 +832,7 @@ const KnowledgeBase = () => {
                     damping: 26,
                     stiffness: 320,
                   }}
-                  className="relative w-full max-w-lg max-h-[85vh] bg-white dark:bg-[#111115] border border-slate-200 dark:border-zinc-800 shadow-2xl rounded-2xl flex flex-col z-10 overflow-hidden"
+                  className="relative w-full max-w-lg max-h-[85vh] bg-white dark:bg-[#111115] border border-slate-200 dark:border-zinc-800 shadow-2xl rounded-3xl flex flex-col z-10 overflow-hidden"
                 >
                   {/* Modal Header */}
                   <div className="px-5 py-4 border-b border-slate-100 dark:border-zinc-800/80 flex justify-between items-center bg-slate-50/80 dark:bg-[#16161a]">
@@ -513,6 +883,7 @@ const SkillInspectorContent = ({
 }: InspectorProps) => {
   const [copied, setCopied] = useState(false);
   const CategoryIcon = CATEGORY_ICONS[skill.category] || Sparkles;
+  const theme = CATEGORY_THEMES[skill.category] || CATEGORY_THEMES.Writing;
 
   const cleanBody = useMemo(() => {
     return skill.body
@@ -522,7 +893,9 @@ const SkillInspectorContent = ({
   }, [skill.body]);
 
   const handleCopy = () => {
-    const textToCopy = skill.body.replace(/>\s*Installed by[^\n]*\n*/gi, "").trim();
+    const textToCopy = skill.body
+      .replace(/>\s*Installed by[^\n]*\n*/gi, "")
+      .trim();
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -530,16 +903,24 @@ const SkillInspectorContent = ({
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#111115]">
+      {/* Top Graphic Banner with Image 3 Pixel Mosaic */}
+      <div className="w-full h-24 overflow-hidden relative border-b border-black/5 dark:border-white/10">
+        <PixelMosaic category={skill.category} seed={skill.id} />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+      </div>
+
       {/* Detail header */}
       <div className="p-5 border-b border-slate-100 dark:border-zinc-800/80 bg-white dark:bg-[#111115]">
         <div className="flex items-center justify-between gap-2 mb-2">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/40 text-[#FF6B00] dark:text-orange-400 border border-orange-200/60 dark:border-orange-900/40">
-            <CategoryIcon className="w-3 h-3 text-[#FF6B00] dark:text-orange-400 shrink-0" />
+          <span
+            className={`inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${theme.badgeBg} ${theme.badgeText}`}
+          >
+            <CategoryIcon className="w-3 h-3 shrink-0" />
             {skill.category}
           </span>
         </div>
 
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wide text-slate-900 dark:text-white">
           {skill.name}
         </h2>
 
@@ -559,7 +940,7 @@ const SkillInspectorContent = ({
           ) : (
             <button
               onClick={onAdd}
-              className="flex-1 h-9 rounded-xl bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-semibold hover:opacity-95 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+              className="flex-1 h-9 rounded-xl bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-zinc-200 text-xs font-semibold hover:opacity-95 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               Attach to Runtime

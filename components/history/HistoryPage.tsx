@@ -437,9 +437,6 @@ const HistoryPage = () => {
                     Activity & History
                   </h1>
                 </div>
-                <p className="text-xs sm:text-[13px] text-slate-500 dark:text-zinc-400 max-w-xl leading-relaxed">
-                  Search, replay, and manage your past AI generations, workflows, and prompts across tools.
-                </p>
               </div>
 
               {/* Action Buttons */}
@@ -512,9 +509,6 @@ const HistoryPage = () => {
                   <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                     Saved Workspaces & Collections
                   </h2>
-                  <p className="text-xs text-slate-500 dark:text-zinc-400">
-                    Quickly jump into categorized workspace archives and prompts
-                  </p>
                 </div>
               </div>
 
@@ -571,9 +565,6 @@ const HistoryPage = () => {
                     <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                       Activity History Stream
                     </h2>
-                    <p className="text-xs text-slate-500 dark:text-zinc-400">
-                      Chronological history of interactions, generations, and executions
-                    </p>
                   </div>
 
                   {/* Sort Controls */}

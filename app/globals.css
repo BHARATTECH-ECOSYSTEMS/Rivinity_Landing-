@@ -3,6 +3,8 @@
 
 @layer theme, base, components, utilities;
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @config "../tailwind.config.js";
 
 @theme {
@@ -74,6 +76,17 @@
   --nav-height: 4rem;
   --content-max: 65ch;
   --headline-max: 900px;
+}
+
+.dark {
+  --color-text: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-bg: #0B0B0E;
+  --color-bg-alt: #16161a;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-ink: #f8fafc;
+  --color-ink-muted: #94a3b8;
 }
 
 /* ============================================
