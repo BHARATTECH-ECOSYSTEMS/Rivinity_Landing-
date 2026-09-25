@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
+import SidebarShell from "@/components/canvas/SidebarShell";
 import { useSidebarState } from "@/components/canvas/useSidebarState";
 
 import {
@@ -292,37 +293,14 @@ const HistoryPage = () => {
   }, [filtered]);
 
   return (
-    <div
-      className={`h-screen w-screen flex overflow-hidden font-sans antialiased selection:bg-[#6366F1]/25 transition-colors duration-300 ${
-        isDarkMode
-          ? "bg-[#060608] text-slate-100"
-          : "bg-slate-50 text-slate-900"
-      }`}
-    >
-      {/* Sidebar Wrapper */}
-      <div className="relative z-30" onClick={(e) => e.stopPropagation()}>
-        <CanvasSidebar
-          open={sidebarOpen}
-          onToggle={() => setSidebarOpen((prev) => !prev)}
-          onCollapse={() => setSidebarOpen(false)}
-        />
-      </div>
-
-      {/* Mobile Backdrop Overlay */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setSidebarOpen(false);
-            }}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-2xs md:hidden"
-          />
-        )}
-      </AnimatePresence>
+    <SidebarShell>
+      <div
+        className={`flex-1 flex overflow-hidden font-sans antialiased selection:bg-[#6366F1]/25 transition-colors duration-300 ${
+          isDarkMode
+            ? "bg-[#060608] text-slate-100"
+            : "bg-slate-50 text-slate-900"
+        }`}
+      >
 
       {/* Main Container */}
       <div className="flex-1 flex flex-col min-w-0 relative z-10 overflow-hidden">
@@ -706,7 +684,8 @@ const HistoryPage = () => {
           </div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </SidebarShell>
   );
 };
 

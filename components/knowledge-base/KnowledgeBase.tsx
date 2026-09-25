@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
+import SidebarShell from "@/components/canvas/SidebarShell";
 import { useSidebarState } from "@/components/canvas/useSidebarState";
 import ChatMarkdown from "@/components/canvas/ChatMarkdown";
 import {
@@ -173,15 +174,8 @@ const KnowledgeBase = () => {
   }
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden bg-[#FAFAFA] dark:bg-[#0B0B0E] selection:bg-[#FF6B00]/20 selection:text-[#FF6B00]">
-      {/* Fixed Collapsible App Sidebar */}
-      <CanvasSidebar
-        open={sidebarOpen}
-        onCollapse={() => setSidebarOpen(false)}
-        onToggle={() => setSidebarOpen((prev) => !prev)}
-      />
-
-      <div className="flex-1 flex flex-col h-full min-w-0 relative overflow-hidden">
+    <SidebarShell>
+      <div className="flex-1 flex flex-col h-full min-w-0 relative overflow-hidden bg-[#FAFAFA] dark:bg-[#0B0B0E] selection:bg-[#FF6B00]/20 selection:text-[#FF6B00]">
         <div className="flex-1 flex h-full min-h-0 relative">
           {/* Main List Section (Scrollable Area) */}
           <main className="flex-1 h-full min-w-0 overflow-y-auto [scrollbar-width:thin] [-ms-overflow-style:none]">
@@ -513,7 +507,7 @@ const KnowledgeBase = () => {
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    </SidebarShell>
   );
 };
 

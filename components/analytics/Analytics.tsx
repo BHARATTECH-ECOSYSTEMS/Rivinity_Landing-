@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
+import SidebarShell from "@/components/canvas/SidebarShell";
 import { useSidebarState } from "@/components/canvas/useSidebarState";
 import {
   motion,
@@ -583,7 +584,7 @@ const Analytics = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden font-sans antialiased selection:bg-[var(--color-primary)]/25 transition-colors duration-300 bg-[var(--color-bg)] text-[var(--color-text)]">
+    <SidebarShell>
       {/* Toast Notification */}
       <AnimatePresence>
         {toastMessage && (
@@ -599,29 +600,7 @@ const Analytics = () => {
         )}
       </AnimatePresence>
 
-      {/* Mobile Backdrop Overlay */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Sidebar Integration */}
-      <div className="relative z-50">
-        <CanvasSidebar
-          open={sidebarOpen}
-          onToggle={() => setSidebarOpen((prev) => !prev)}
-          onCollapse={() => setSidebarOpen(false)}
-        />
-      </div>
-
-      <div className="flex-1 flex flex-col min-w-0 relative z-10 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 relative z-10 overflow-hidden font-sans antialiased bg-[var(--color-bg)] text-[var(--color-text)]">
         {/* Scrollable Canvas Body */}
         <div className="w-full flex-1 overflow-y-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-6 space-y-4 sm:space-y-5">
@@ -1113,7 +1092,7 @@ const Analytics = () => {
           </div>
         </div>
       </div>
-    </div>
+    </SidebarShell>
   );
 };
 
