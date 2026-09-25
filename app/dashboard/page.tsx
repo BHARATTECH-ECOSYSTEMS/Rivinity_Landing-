@@ -76,66 +76,142 @@ const itemVariants: Variants = {
   },
 };
 
-import {
-  EditStudioShapeIcon,
-  AudioLabShapeIcon,
-  ImageEnhancerShapeIcon,
-  AppBuilderShapeIcon,
-  WebSearchShapeIcon,
-  TextSummarizerShapeIcon,
-} from "@/components/dashboard/CustomShapeIcons";
+/* 
+  IMAGE 2 BOLD SOLID GLYPH ICONS
+*/
+const EditStudioGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <rect x="4" y="11" width="25" height="26" rx="8" />
+    <path d="M31 20.2c0-1.2 1.3-1.9 2.3-1.3l8.6 5.1c1 .6 1 2 0 2.6l-8.6 5.1c-1 .6-2.3-.1-2.3-1.3v-10.2z" />
+  </svg>
+);
+
+const AudioLabGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <rect x="17" y="6" width="14" height="22" rx="7" />
+    <path
+      d="M10 20c0 7.7 6.3 14 14 14s14-6.3 14-14"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="4.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M24 34v7"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="4.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M16 41h16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="4.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const ImageEnhancerGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <g transform="translate(24, 24)">
+      {[0, 45, 90, 135].map((angle) => (
+        <rect
+          key={angle}
+          x="-4.5"
+          y="-19"
+          width="9"
+          height="38"
+          rx="4.5"
+          transform={`rotate(${angle})`}
+        />
+      ))}
+      <circle cx="0" cy="0" r="7" />
+    </g>
+  </svg>
+);
+
+const AppBuilderGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <rect x="6" y="9" width="9" height="30" rx="4.5" />
+    <rect x="18" y="9" width="9" height="30" rx="4.5" />
+    <g transform="translate(33, 24) rotate(14) translate(-4.5, -15)">
+      <rect x="0" y="0" width="9" height="30" rx="4.5" />
+    </g>
+  </svg>
+);
+
+const DeepSearchGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <path
+      d="M13 35L35 13M35 13H19M35 13V29"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const DocSynthesizerGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <g transform="translate(24, 24)">
+      <rect x="-14" y="-14" width="28" height="28" rx="8" />
+      <circle cx="-10" cy="0" r="7" />
+      <circle cx="10" cy="0" r="7" />
+      <circle cx="0" cy="-10" r="7" />
+      <circle cx="0" cy="10" r="7" />
+    </g>
+  </svg>
+);
 
 /* 
-  2x3 CREATIVE TOOLS DEFINITION
+  CREATIVE TOOLS DEFINITION (Image 2 style with words and solid logos)
 */
 const CREATIVE_TOOLS = [
   {
     id: "edit-studio",
-    title: "EDIT STUDIO",
-    desc: "Cinematic timeline editing, dynamic keyframing & neural video synthesis.",
-    icon: EditStudioShapeIcon,
+    title: "Edit Studio",
+    icon: EditStudioGlyph,
     path: "/app",
-    tag: "STUDIO",
+    bgColor: "#FA7044", // Vibrant coral orange
   },
   {
     id: "audio-lab",
-    title: "AUDIO LAB",
-    desc: "AI audio stem isolation, voice cloning & ultra-fast neural sound design.",
-    icon: AudioLabShapeIcon,
+    title: "Audio Lab",
+    icon: AudioLabGlyph,
     path: "/audio-lab",
-    tag: "VOICE AI",
+    bgColor: "#C1C5FF", // Soft periwinkle lavender
   },
   {
     id: "image-enhancer",
-    title: "IMAGE ENHANCER",
-    desc: "4K super-resolution upscaling, cinematic relighting & artifact cleanup.",
-    icon: ImageEnhancerShapeIcon,
+    title: "Image Enhancer",
+    icon: ImageEnhancerGlyph,
     path: "/image-enhancer",
-    tag: "VISION",
+    bgColor: "#F6C1DD", // Soft blush pink
   },
   {
     id: "app-builder",
-    title: "APP BUILDER",
-    desc: "Full-stack React & Next.js full-stack app scaffold with instant preview.",
-    icon: AppBuilderShapeIcon,
+    title: "App Builder",
+    icon: AppBuilderGlyph,
     path: "/app-builder",
-    tag: "FULL-STACK",
+    bgColor: "#FFF066", // Pastel lemon yellow
   },
   {
     id: "deep-search",
-    title: "DEEP SEARCH",
-    desc: "Live web intelligence, multi-source citations & verified answer grounding.",
-    icon: WebSearchShapeIcon,
+    title: "Deep Search",
+    icon: DeepSearchGlyph,
     path: "/app",
-    tag: "SEARCH",
+    bgColor: "#9ABEE9", // Soft pastel sky blue
   },
   {
     id: "doc-synthesizer",
-    title: "DOC SYNTHESIZER",
-    desc: "Long-form PDF synthesis, technical document analysis & structured briefs.",
-    icon: TextSummarizerShapeIcon,
+    title: "Doc Synthesizer",
+    icon: DocSynthesizerGlyph,
     path: "/app",
-    tag: "DOC AI",
+    bgColor: "#71B498", // Pastel mint / sage green
   },
 ];
 
@@ -888,67 +964,27 @@ const DashboardContent = () => {
               </button>
             </div>
 
-            {/* 2x3 Stepped Box Grid */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+            {/* Image 2 Inspired Squircle Cards Grid (Words + Solid Logos) */}
+            <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
               {CREATIVE_TOOLS.map((tool) => {
                 const Icon = tool.icon;
                 return (
                   <motion.div
                     key={tool.id}
-                    whileHover={{ y: -4, transition: springTransition }}
+                    whileHover={{ y: -4, scale: 1.015, transition: springTransition }}
+                    whileTap={{ scale: 0.985 }}
                     onClick={() => navigate(tool.path)}
-                    className="relative overflow-hidden rounded-[22px] sm:rounded-[24px] bg-white border border-[#e2e8f0] p-4.5 sm:p-5 flex flex-col justify-between min-h-[175px] sm:min-h-[185px] group transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:border-[#FF6B00]/40 cursor-pointer"
+                    style={{ backgroundColor: tool.bgColor }}
+                    className="relative overflow-hidden rounded-[26px] sm:rounded-[32px] p-5 sm:p-6 lg:p-7 flex flex-col justify-between min-h-[160px] sm:min-h-[175px] md:min-h-[190px] cursor-pointer shadow-[0_4px_14px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.09)] transition-all duration-200 select-none group"
                   >
-                    {/* Stepped Frame SVG Border (Matching Image 3 precisely) */}
-                    <svg
-                      className="absolute inset-0 w-full h-full pointer-events-none text-slate-300/85 opacity-90 group-hover:text-[#FF6B00]/60 transition-all duration-300"
-                      viewBox="0 0 360 180"
-                      fill="none"
-                      preserveAspectRatio="none"
-                    >
-                      <path
-                        d="M 18 2.5
-                           L 208 2.5
-                           C 222 2.5, 230 30, 246 30
-                           L 342 30
-                           C 352 30, 357.5 35.5, 357.5 45
-                           L 357.5 138
-                           C 357.5 148, 352 153, 342 153
-                           L 205 153
-                           C 190 153, 184 177.5, 170 177.5
-                           L 18 177.5
-                           C 8 177.5, 2.5 172, 2.5 162
-                           L 2.5 18
-                           C 2.5 8, 8 2.5, 18 2.5 Z"
-                        stroke="currentColor"
-                        strokeWidth="1.3"
-                        vectorEffect="non-scaling-stroke"
-                      />
-                    </svg>
-
-                    {/* Top Right Tag */}
-                    <div className="absolute top-2.5 right-4 sm:top-3 sm:right-5 pointer-events-none">
-                      <span className="text-[10.5px] sm:text-[11px] font-extrabold tracking-wider uppercase text-[#FF6B00] leading-none block">
-                        {tool.tag}
-                      </span>
+                    {/* Top Title */}
+                    <div className="text-[16px] sm:text-[18px] md:text-[20px] font-semibold text-black tracking-tight leading-snug">
+                      {tool.title}
                     </div>
 
-                    {/* Card Body */}
-                    <div className="relative z-10 pt-0.5">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white border border-[#e2e8f0] flex items-center justify-center mb-2.5 shadow-2xs group-hover:border-[#FF6B00]/40 transition-colors">
-                        <Icon className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-[#0f172a] group-hover:text-[#FF6B00] transition-colors" />
-                      </div>
-
-                      <div className="text-[12px] sm:text-[12.5px] text-[#64748b] leading-relaxed line-clamp-2 pr-2">
-                        {tool.desc}
-                      </div>
-                    </div>
-
-                    {/* Bottom Title */}
-                    <div className="relative z-10 mt-3">
-                      <div className="text-[12.5px] sm:text-[13px] font-black tracking-wider text-[#0f172a] uppercase truncate group-hover:text-[#FF6B00] transition-colors font-display">
-                        {tool.title}
-                      </div>
+                    {/* Bottom Logo */}
+                    <div className="mt-auto pt-6 sm:pt-8 flex items-end">
+                      <Icon className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 text-black transition-transform duration-200 group-hover:scale-105" />
                     </div>
                   </motion.div>
                 );
