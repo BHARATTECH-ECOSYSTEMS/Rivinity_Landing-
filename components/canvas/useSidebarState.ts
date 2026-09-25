@@ -6,16 +6,17 @@ const SIDEBAR_STORAGE_KEY = "rivinity_sidebar_open";
 const SIDEBAR_EVENT_NAME = "sidebar-toggle-event";
 
 export function useSidebarState() {
-  const [sidebarOpen, setSidebarOpenState] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
-      if (saved !== null) {
-        return saved === "true";
-      }
-      return window.innerWidth >= 768;
+  const [sidebarOpen, setSidebarOpenState] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Sync initial state from localStorage after mount to avoid hydration mismatch
+    const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
+    if (saved !== null) {
+      setSidebarOpenState(saved === "true");
+    } else if (window.innerWidth < 768) {
+      setSidebarOpenState(false);
     }
-    return true;
-  });
+  }, []);
 
   useEffect(() => {
     const handleCustomEvent = (e: Event) => {
