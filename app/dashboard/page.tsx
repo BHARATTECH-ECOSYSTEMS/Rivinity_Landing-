@@ -166,8 +166,41 @@ const DocSynthesizerGlyph = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const MarketplaceGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <path
+      d="M17 16c0-3.9 3.1-7 7-7s7 3.1 7 7"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="4.5"
+      strokeLinecap="round"
+    />
+    <rect x="8" y="15" width="32" height="26" rx="7" />
+  </svg>
+);
+
+const RivinityLMGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <path d="M24 4c2 10 10 18 20 20-10 2-18 10-20 20-2-10-10-18-20-20 10-2 18-10 20-20z" />
+  </svg>
+);
+
+const KnowledgeBaseGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <path d="M6 14c0-3.3 2.7-6 6-6h9c2 0 3.8 1 4.9 2.6L27.5 13H36c3.3 0 6 2.7 6 6v17c0 3.3-2.7 6-6 6H12c-3.3 0-6-2.7-6-6V14z" />
+  </svg>
+);
+
+const AnalyticsGlyph = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
+    <rect x="7" y="24" width="8" height="17" rx="4" />
+    <rect x="20" y="14" width="8" height="27" rx="4" />
+    <rect x="33" y="7" width="8" height="34" rx="4" />
+  </svg>
+);
+
 /* 
-  CREATIVE TOOLS DEFINITION (Square glassmorphic boxes with light pastel colors)
+  CREATIVE TOOLS DEFINITION (10 Small Square Glassmorphic Boxes, 5 per row)
 */
 const CREATIVE_TOOLS = [
   {
@@ -215,8 +248,40 @@ const CREATIVE_TOOLS = [
     title: "Doc Synthesizer",
     icon: DocSynthesizerGlyph,
     path: "/app",
-    bg: "rgba(95, 215, 160, 0.14)", // Light pastel mint / green glass
+    bg: "rgba(95, 215, 160, 0.14)", // Light pastel mint glass
     border: "rgba(95, 215, 160, 0.35)",
+  },
+  {
+    id: "marketplace",
+    title: "Marketplace",
+    icon: MarketplaceGlyph,
+    path: "/marketplace",
+    bg: "rgba(244, 114, 182, 0.14)", // Light pastel rose glass
+    border: "rgba(244, 114, 182, 0.35)",
+  },
+  {
+    id: "rivinity-lm",
+    title: "RivinityLM",
+    icon: RivinityLMGlyph,
+    path: "/rivinity-lm",
+    bg: "rgba(251, 146, 60, 0.14)", // Light pastel peach glass
+    border: "rgba(251, 146, 60, 0.35)",
+  },
+  {
+    id: "knowledge-base",
+    title: "Knowledge Base",
+    icon: KnowledgeBaseGlyph,
+    path: "/knowledge-base",
+    bg: "rgba(45, 212, 191, 0.14)", // Light pastel teal glass
+    border: "rgba(45, 212, 191, 0.35)",
+  },
+  {
+    id: "analytics",
+    title: "Analytics",
+    icon: AnalyticsGlyph,
+    path: "/analytics",
+    bg: "rgba(165, 180, 252, 0.14)", // Light pastel periwinkle glass
+    border: "rgba(165, 180, 252, 0.35)",
   },
 ];
 
@@ -932,33 +997,33 @@ const DashboardContent = () => {
               </div>
             </div>
 
-            {/* Square Glassmorphic Boxes with Light Pastel Colors */}
-            <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+            {/* 10 Small Square Glassmorphic Boxes (5 per row on desktop) */}
+            <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4">
               {CREATIVE_TOOLS.map((tool) => {
                 const Icon = tool.icon;
                 return (
                   <motion.div
                     key={tool.id}
-                    whileHover={{ y: -4, scale: 1.02, transition: springTransition }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ y: -3, scale: 1.025, transition: springTransition }}
+                    whileTap={{ scale: 0.975 }}
                     onClick={() => navigate(tool.path)}
                     style={{
                       backgroundColor: tool.bg,
                       borderColor: tool.border,
                     }}
-                    className="relative aspect-square overflow-hidden rounded-[24px] sm:rounded-[28px] p-5 sm:p-6 lg:p-7 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_14px_36px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
+                    className="relative aspect-square overflow-hidden rounded-[18px] sm:rounded-[22px] p-3.5 sm:p-4 lg:p-4.5 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
                   >
                     {/* Glass inner gradient reflection */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[24px] sm:rounded-[28px]" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[18px] sm:rounded-[22px]" />
 
                     {/* Top: Tool Name / Words */}
-                    <div className="relative z-10 text-[16px] sm:text-[18px] md:text-[20px] font-semibold text-slate-900 tracking-tight leading-snug font-display">
+                    <div className="relative z-10 text-[12.5px] sm:text-[13.5px] lg:text-[14px] font-bold text-slate-900 tracking-tight leading-snug font-display line-clamp-2">
                       {tool.title}
                     </div>
 
                     {/* Bottom: Solid Glyph Logo */}
-                    <div className="relative z-10 mt-auto pt-4 flex items-end">
-                      <Icon className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 text-slate-900 transition-transform duration-300 group-hover:scale-105" />
+                    <div className="relative z-10 mt-auto pt-2 flex items-end">
+                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-7.5 lg:h-7.5 text-slate-900 transition-transform duration-300 group-hover:scale-110" />
                     </div>
                   </motion.div>
                 );
