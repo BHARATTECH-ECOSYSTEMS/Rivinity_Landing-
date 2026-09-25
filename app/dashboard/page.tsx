@@ -43,12 +43,6 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { SKILLS } from "@/lib/skillsCatalog";
-import {
-  CATEGORIES,
-  SHOWCASE_CARDS,
-  type Category,
-  type ShowcaseCard,
-} from "@/components/dashboard/dashboardData";
 import rivinityLogo from "@/components/assets/Rivinity Logo.png";
 const logoSrc =
   typeof rivinityLogo === "string" ? rivinityLogo : rivinityLogo.src;
@@ -604,183 +598,6 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
 };
 
 /* 
-  5-COLOR PALETTE PER TOPIC
-*/
-const FOLDER_THEMES = [
-  {
-    name: "orange",
-    svgFill: "rgba(255, 145, 86, 0.95)",
-    bgFront: "bg-gradient-to-b from-[#FFA87D] via-[#FF8E52] to-[#FF7535]",
-    shadow: "shadow-[0_8px_28px_rgba(255,117,53,0.32)]",
-    border: "border-white/70",
-  },
-  {
-    name: "pink",
-    svgFill: "rgba(247, 115, 158, 0.95)",
-    bgFront: "bg-gradient-to-b from-[#FB8CB3] via-[#F76497] to-[#F14681]",
-    shadow: "shadow-[0_8px_28px_rgba(241,70,129,0.32)]",
-    border: "border-white/70",
-  },
-  {
-    name: "purple",
-    svgFill: "rgba(139, 92, 246, 0.95)",
-    bgFront: "bg-gradient-to-b from-[#A78BFA] via-[#8B5CF6] to-[#7C3AED]",
-    shadow: "shadow-[0_8px_28px_rgba(124,58,237,0.32)]",
-    border: "border-white/70",
-  },
-  {
-    name: "green",
-    svgFill: "rgba(52, 211, 153, 0.95)",
-    bgFront: "bg-gradient-to-b from-[#6EE7B7] via-[#34D399] to-[#10B981]",
-    shadow: "shadow-[0_8px_28px_rgba(16,185,129,0.32)]",
-    border: "border-white/70",
-  },
-  {
-    name: "blue",
-    svgFill: "rgba(59, 130, 246, 0.95)",
-    bgFront: "bg-gradient-to-b from-[#70BAFF] via-[#3B82F6] to-[#2563EB]",
-    shadow: "shadow-[0_8px_28px_rgba(37,99,235,0.32)]",
-    border: "border-white/70",
-  },
-];
-
-const CATEGORY_COLOR_ORDER: Record<Category, number[]> = {
-  "Marketing campaigns": [0, 1, 2, 3, 4],
-  "Movies & Shorts": [2, 4, 0, 3, 1],
-  "Social media": [1, 3, 4, 0, 2],
-  "Educational content": [3, 0, 2, 4, 1],
-  "Experimental art": [4, 2, 1, 0, 3],
-};
-
-const templateSlideVariants: Variants = {
-  hidden: (direction: number) => ({
-    x: direction > 0 ? 60 : -60,
-    opacity: 0,
-    filter: "blur(2px)",
-  }),
-  visible: {
-    x: 0,
-    opacity: 1,
-    filter: "blur(0px)",
-    transition: {
-      x: { type: "spring", stiffness: 460, damping: 32 },
-      opacity: { duration: 0.18, ease: "easeOut" },
-      filter: { duration: 0.15 },
-      staggerChildren: 0.025,
-      delayChildren: 0,
-    },
-  },
-  exit: (direction: number) => ({
-    x: direction < 0 ? 60 : -60,
-    opacity: 0,
-    filter: "blur(2px)",
-    transition: {
-      duration: 0.12,
-      ease: "easeIn",
-    },
-  }),
-};
-
-const folderCardVariants: Variants = {
-  hidden: (direction: number) => ({
-    x: direction > 0 ? 20 : -20,
-    opacity: 0,
-    scale: 0.97,
-  }),
-  visible: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 480,
-      damping: 28,
-    },
-  },
-};
-
-const FolderCard = ({
-  card,
-  index,
-  category,
-  direction = 1,
-  onClick,
-}: {
-  card: ShowcaseCard;
-  index: number;
-  category: Category;
-  direction?: number;
-  onClick: () => void;
-}) => {
-  const colorOrder = CATEGORY_COLOR_ORDER[category] || [0, 1, 2, 3, 4];
-  const themeIndex = colorOrder[index % colorOrder.length];
-  const theme = FOLDER_THEMES[themeIndex];
-
-  return (
-    <motion.div
-      variants={folderCardVariants}
-      custom={direction}
-      whileHover={{ y: -3, scale: 1.02, transition: springTransition }}
-      onClick={onClick}
-      className="group relative w-full flex flex-col cursor-pointer select-none aspect-[4/2.65] min-h-[88px] sm:min-h-[96px] max-h-[115px]"
-    >
-      {/* 1. BACK FOLDER LAYER */}
-      <div className="absolute inset-0 pointer-events-none drop-shadow-xs">
-        <svg
-          viewBox="0 0 200 160"
-          preserveAspectRatio="none"
-          className="w-full h-full"
-        >
-          <path
-            d="M 0 20 Q 0 0 16 0 L 72 0 Q 86 0 96 15 L 102 23 Q 110 30 122 30 L 184 30 Q 200 30 200 46 L 200 144 Q 200 160 184 160 L 16 160 Q 0 160 0 144 Z"
-            fill={theme.svgFill}
-          />
-        </svg>
-      </div>
-
-      {/* 2. INNER WHITE DOCUMENT SHEET */}
-      <div className="absolute top-[5px] sm:top-[6px] inset-x-2 sm:inset-x-2.5 h-7.5 bg-white/95 rounded-t-md sm:rounded-t-lg shadow-2xs z-[2] transition-transform duration-300 group-hover:-translate-y-1.5 border border-white/80">
-        <div className="mx-auto mt-1 w-8 sm:w-10 h-0.5 rounded-full bg-slate-300/85" />
-      </div>
-
-      {/* 3. FRONT FROSTED GLASS POCKET */}
-      <div
-        className={`relative z-[3] mt-[15px] sm:mt-[17px] w-full flex-1 rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col justify-between backdrop-blur-xl ${theme.bgFront} ${theme.shadow} border ${theme.border} shadow-[inset_0_1px_1.5px_rgba(255,255,255,0.7),inset_0_-1px_1.5px_rgba(0,0,0,0.12)] transition-all duration-300 text-white overflow-hidden`}
-      >
-        <div className="absolute -top-7 -right-7 w-16 h-16 bg-white/20 rounded-full blur-md pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/30 pointer-events-none rounded-lg" />
-
-        {/* Title */}
-        <div className="relative z-10">
-          <div
-            style={{ color: "#ffffff" }}
-            className="text-[10px] sm:text-[10.5px] lg:text-[11.5px] font-bold leading-snug tracking-tight !text-white line-clamp-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
-          >
-            {card.title}
-          </div>
-        </div>
-
-        {/* Bottom Bar: Use Template button */}
-        <div className="relative z-10 pt-0.5 flex items-center justify-end">
-          <button
-            type="button"
-            style={{ color: "#ffffff" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-            className="px-2 py-0.5 rounded-full bg-white/20 hover:bg-white/35 active:scale-95 !text-white text-white text-[8.5px] sm:text-[9.5px] font-semibold flex items-center gap-0.5 border border-white/60 shadow-[0_1px_4px_rgba(0,0,0,0.08)] backdrop-blur-md transition-all cursor-pointer shrink-0"
-          >
-            <span>Use Template</span>
-            <ArrowUpRight className="w-2.5 h-2.5" />
-          </button>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-/* 
   MAIN DASHBOARD COMPONENT
 */
 export default function DashboardPage() {
@@ -795,19 +612,9 @@ const DashboardContent = () => {
   const router = useRouter();
   const { isAuthenticated, openAuth } = useAuthModal();
   const navigate = (path: string) => router.push(path);
-  const [activeCategory, setActiveCategory] = useState<Category>(
-    "Marketing campaigns",
-  );
-  const [categoryDirection, setCategoryDirection] = useState(1);
   const [selectedWorkingFolder, setSelectedWorkingFolder] =
     useState<ContinueWorkingType | null>("Chat");
 
-  const handleCategoryChange = (tab: Category) => {
-    const currentIdx = CATEGORIES.indexOf(activeCategory);
-    const nextIdx = CATEGORIES.indexOf(tab);
-    setCategoryDirection(nextIdx >= currentIdx ? 1 : -1);
-    setActiveCategory(tab);
-  };
   const [promptInput, setPromptInput] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isWebSearchActive, setIsWebSearchActive] = useState(false);
@@ -818,10 +625,6 @@ const DashboardContent = () => {
   const [skillQuery, setSkillQuery] = useState("");
   const popoverRef = useRef<HTMLDivElement>(null);
   const skillButtonRef = useRef<HTMLButtonElement>(null);
-
-  const filteredShowcaseCards = SHOWCASE_CARDS.filter(
-    (card) => card.category === activeCategory,
-  );
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -1602,76 +1405,6 @@ const DashboardContent = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.section>
-
-          {/* 6. 'TEMPLATES' CAROUSEL */}
-          <motion.section
-            variants={itemVariants}
-            className="w-full space-y-4 sm:space-y-5"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e2e8f0] pb-0.5">
-              <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-2 -mb-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {CATEGORIES.map((tab) => {
-                  const isActive = activeCategory === tab;
-                  return (
-                    <button
-                      type="button"
-                      key={tab}
-                      onClick={() => handleCategoryChange(tab)}
-                      className={`relative px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors bg-transparent border-0 cursor-pointer ${
-                        isActive
-                          ? "text-[#0f172a]"
-                          : "text-[#64748b] hover:text-[#0f172a]"
-                      }`}
-                    >
-                      {tab}
-                      {isActive && (
-                        <motion.div
-                          layoutId="activeTabIndicator"
-                          className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#FF6B00] rounded-full"
-                          transition={springTransition}
-                        />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-              <span className="hidden sm:block text-xs text-[#64748b] pb-2 shrink-0">
-                Showing {filteredShowcaseCards.length} templates
-              </span>
-            </div>
-
-            <div className="w-full overflow-hidden">
-              <AnimatePresence
-                mode="popLayout"
-                initial={false}
-                custom={categoryDirection}
-              >
-                <motion.div
-                  key={activeCategory}
-                  custom={categoryDirection}
-                  variants={templateSlideVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  className="w-full grid grid-cols-5 gap-4 sm:gap-5 lg:gap-6"
-                >
-                  {filteredShowcaseCards.map((card, idx) => (
-                    <FolderCard
-                      key={card.id}
-                      card={card}
-                      index={idx}
-                      category={activeCategory}
-                      direction={categoryDirection}
-                      onClick={() => {
-                        toast.success(`Opening template: ${card.title}`);
-                        navigate("/app");
-                      }}
-                    />
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            </div>
           </motion.section>
         </motion.main>
       </div>
