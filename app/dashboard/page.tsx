@@ -26,7 +26,7 @@ import {
   Flame,
   Wand2,
   Layers,
-  Code,
+  HatGlasses,
   Paperclip,
   Mic,
   Sparkles,
@@ -620,6 +620,7 @@ const DashboardContent = () => {
   const [promptInput, setPromptInput] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isWebSearchActive, setIsWebSearchActive] = useState(false);
+  const [isIncognito, setIsIncognito] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isAddingTools, setIsAddingTools] = useState(false);
@@ -894,17 +895,30 @@ const DashboardContent = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setPromptInput((prev) =>
-                          prev
-                            ? `\`\`\`\n${prev}\n\`\`\``
-                            : "```typescript\n\n```",
-                        );
-                        textareaRef.current?.focus();
+                        setIsIncognito((prev) => {
+                          const next = !prev;
+                          if (next) {
+                            toast.info(
+                              "Incognito mode active: Chats will not be saved to history.",
+                            );
+                          } else {
+                            toast.info("Incognito mode disabled.");
+                          }
+                          return next;
+                        });
                       }}
-                      className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 transition-colors cursor-pointer shrink-0 border-0"
-                      title="Format Code"
+                      className={`w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 ${
+                        isIncognito
+                          ? "!bg-slate-900 text-white shadow-xs"
+                          : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100"
+                      }`}
+                      title={
+                        isIncognito
+                          ? "Incognito mode active (Chats are not saved)"
+                          : "Incognito mode (Don't save chat history)"
+                      }
                     >
-                      <Code className="w-4 h-4 shrink-0" strokeWidth={2} />
+                      <HatGlasses className="w-4 h-4 shrink-0" strokeWidth={2} />
                     </button>
 
                     <button
