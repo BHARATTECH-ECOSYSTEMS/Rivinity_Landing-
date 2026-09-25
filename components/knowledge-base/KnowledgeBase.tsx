@@ -11,7 +11,6 @@ import {
   X,
   BookOpen,
   ChevronRight,
-  Users,
   PanelLeft,
   Copy,
   CheckCheck,
@@ -38,7 +37,10 @@ import { useToast } from "@/hooks/use-toast";
 
 type Filter = "All" | SkillCategory | "Installed";
 
-const CATEGORY_ICONS: Record<SkillCategory, React.ComponentType<{ className?: string }>> = {
+const CATEGORY_ICONS: Record<
+  SkillCategory,
+  React.ComponentType<{ className?: string }>
+> = {
   Writing: PenTool,
   Code: Code2,
   Research: Compass,
@@ -123,11 +125,7 @@ const KnowledgeBase = () => {
     return SKILLS.filter((s) => {
       if (filter === "Installed" && !isInstalled(s.id)) return false;
 
-      if (
-        filter !== "All" &&
-        filter !== "Installed" &&
-        s.category !== filter
-      ) {
+      if (filter !== "All" && filter !== "Installed" && s.category !== filter) {
         return false;
       }
 
@@ -148,10 +146,7 @@ const KnowledgeBase = () => {
 
   // Synchronize selection fallback when filtering
   useEffect(() => {
-    if (
-      filtered.length > 0 &&
-      !filtered.some((s) => s.id === selectedId)
-    ) {
+    if (filtered.length > 0 && !filtered.some((s) => s.id === selectedId)) {
       setSelectedId(filtered[0].id);
     }
   }, [filtered, selectedId]);
@@ -198,7 +193,6 @@ const KnowledgeBase = () => {
                 className="mb-6 space-y-2.5"
               >
                 <div className="flex items-center justify-between gap-3">
-
                   {/* Mobile Sidebar Toggle Button */}
                   <button
                     type="button"
@@ -213,8 +207,7 @@ const KnowledgeBase = () => {
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pt-1">
                   <div>
                     <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                      Give your AI a{" "}
-                      <span className="text-[#FF6B00]">new skill</span>
+                      Give your AI a new skill
                     </h1>
 
                     <p className="text-xs sm:text-[13px] text-slate-500 dark:text-zinc-400 max-w-xl leading-relaxed mt-1">
@@ -222,7 +215,8 @@ const KnowledgeBase = () => {
                       <code className="text-[11px] px-1.5 py-0.5 rounded-md bg-orange-500/10 text-[#FF6B00] dark:text-orange-400 font-mono font-medium border border-orange-500/20">
                         SKILL.md
                       </code>{" "}
-                      definitions. Every selected tool is seamlessly injected into your agent's system runtime in real time.
+                      definitions. Every selected tool is seamlessly injected
+                      into your agent's system runtime in real time.
                     </p>
                   </div>
 
@@ -232,7 +226,8 @@ const KnowledgeBase = () => {
                       <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                         Installed
                       </div>
-                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100">
+                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100 flex items-center gap-1.5">
+                        <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
                         {installed.size} active
                       </div>
                     </div>
@@ -241,7 +236,8 @@ const KnowledgeBase = () => {
                       <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                         Catalog
                       </div>
-                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100">
+                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100 flex items-center gap-1.5">
+                        <span className="inline-block w-2 h-2 rounded-full bg-[#FF6B00]" />
                         {SKILLS.length} skills
                       </div>
                     </div>
@@ -278,66 +274,65 @@ const KnowledgeBase = () => {
                       /
                     </kbd>
                     <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400 font-medium">
-                      {filtered.length} {filtered.length === 1 ? "skill" : "skills"}
+                      {filtered.length}{" "}
+                      {filtered.length === 1 ? "skill" : "skills"}
                     </span>
                   </div>
                 </div>
 
                 {/* Filter Pills with Minimal Orange Active Accent */}
                 <div className="flex flex-wrap gap-1.5 sm:gap-2 relative items-center">
-                  {(
-                    ["All", "Installed", ...SKILL_CATEGORIES] as Filter[]
-                  ).map((f) => {
-                    const active = filter === f;
+                  {(["All", "Installed", ...SKILL_CATEGORIES] as Filter[]).map(
+                    (f) => {
+                      const active = filter === f;
 
-                    const count =
-                      f === "All"
-                        ? SKILLS.length
-                        : f === "Installed"
-                        ? installed.size
-                        : SKILLS.filter(
-                            (s) => s.category === f
-                          ).length;
+                      const count =
+                        f === "All"
+                          ? SKILLS.length
+                          : f === "Installed"
+                            ? installed.size
+                            : SKILLS.filter((s) => s.category === f).length;
 
-                    const Icon =
-                      f !== "All" && f !== "Installed"
-                        ? CATEGORY_ICONS[f as SkillCategory]
-                        : null;
+                      const Icon =
+                        f !== "All" && f !== "Installed"
+                          ? CATEGORY_ICONS[f as SkillCategory]
+                          : null;
 
-                    return (
-                      <button
-                        key={f}
-                        onClick={() => setFilter(f)}
-                        className={`relative h-7 sm:h-7.5 px-3 rounded-full text-[11.5px] font-medium transition-all select-none cursor-pointer flex items-center gap-1.5 ${
-                          active
-                            ? "bg-[#FF6B00] text-white shadow-[0_2px_8px_rgba(255,107,0,0.25)] border border-[#FF6B00]"
-                            : "bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 hover:text-[#FF6B00] dark:hover:text-orange-400 hover:border-orange-500/30 hover:bg-orange-50/30 dark:hover:bg-orange-950/20 border border-slate-200/80 dark:border-zinc-800 shadow-2xs"
-                        }`}
-                      >
-                        {Icon && (
-                          <Icon
-                            className={`w-3 h-3 ${
-                              active
-                                ? "text-white"
-                                : "text-slate-400 dark:text-zinc-500"
-                            }`}
-                          />
-                        )}
-
-                        <span>{f}</span>
-
-                        <span
-                          className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                      return (
+                        <button
+                          key={f}
+                          onClick={() => setFilter(f)}
+                          className={`relative h-7 sm:h-7.5 px-3 rounded-full text-[11.5px] font-medium transition-all select-none cursor-pointer flex items-center gap-1.5 ${
                             active
-                              ? "bg-white/20 text-white font-semibold"
-                              : "text-slate-400 dark:text-zinc-500"
+                              ? "bg-[#FF6B00] text-white shadow-[0_2px_8px_rgba(255,107,0,0.25)] border border-[#FF6B00]"
+                              : "bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-400 hover:text-[#FF6B00] dark:hover:text-orange-400 hover:border-orange-500/30 hover:bg-orange-50/30 dark:hover:bg-orange-950/20 border border-slate-200/80 dark:border-zinc-800 shadow-2xs"
                           }`}
                         >
-                          {count}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          {Icon && (
+                            <Icon
+                              className={`w-3 h-3 ${
+                                active
+                                  ? "text-white"
+                                  : "text-slate-400 dark:text-zinc-500"
+                              }`}
+                            />
+                          )}
+
+                          <span>{f}</span>
+
+                          <span
+                            className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                              active
+                                ? "bg-white/20 text-white font-semibold"
+                                : "text-slate-400 dark:text-zinc-500"
+                            }`}
+                          >
+                            {count}
+                          </span>
+                        </button>
+                      );
+                    },
+                  )}
                 </div>
               </div>
 
@@ -371,7 +366,7 @@ const KnowledgeBase = () => {
                             : "border-slate-200/80 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 hover:shadow-md"
                         }`}
                       >
-                        <div className="flex flex-col justify-between h-full min-h-[160px]">
+                        <div className="flex flex-col justify-between h-full min-h-[150px]">
                           <div>
                             {/* Card Topline: Minimal Orange Category Badge */}
                             <div className="flex items-center justify-between gap-2 mb-2.5">
@@ -404,58 +399,32 @@ const KnowledgeBase = () => {
                             </p>
                           </div>
 
-                          <div className="mt-3.5">
-                            {/* Tags without hashtags */}
-                            <div className="flex flex-wrap gap-1 mb-3">
-                              {s.tags.slice(0, 3).map((t) => (
-                                <span
-                                  key={t}
-                                  className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-zinc-400 font-mono border border-slate-200/60 dark:border-zinc-700/50"
-                                >
-                                  {t}
-                                </span>
-                              ))}
-
-                              {s.tags.length > 3 && (
-                                <span className="text-[10px] px-1 text-slate-400 dark:text-zinc-500 self-center font-mono">
-                                  +{s.tags.length - 3}
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Actions Bar: Black CTA & Users */}
-                            <div className="flex items-center gap-2 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80">
-                              {inst ? (
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleRemove(s);
-                                  }}
-                                  className="h-7 px-2.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/80 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:border-rose-300 dark:hover:border-rose-800 text-slate-600 dark:text-zinc-300 hover:text-rose-600 dark:hover:text-rose-400 text-[11px] font-medium transition-all inline-flex items-center gap-1.5 cursor-pointer"
-                                >
-                                  <Minus className="w-2.5 h-2.5 stroke-[2.5]" />
-                                  <span>Detach</span>
-                                </button>
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAdd(s);
-                                  }}
-                                  className="h-7 px-3 rounded-lg bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] text-white dark:text-black text-[11px] font-semibold transition-all inline-flex items-center gap-1.5 shadow-2xs cursor-pointer"
-                                >
-                                  <Plus className="w-3 h-3 stroke-[2.5]" />
-                                  <span>Add to AI</span>
-                                </button>
-                              )}
-
-                              <div className="flex items-center gap-1.5 text-[10.5px] text-slate-400 dark:text-zinc-500 font-mono ml-auto">
-                                <Users className="w-3 h-3 text-slate-400 dark:text-zinc-500" />
-                                <span>{s.usage.toLocaleString()} users</span>
-                              </div>
-                            </div>
+                          <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between">
+                            {inst ? (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleRemove(s);
+                                }}
+                                className="h-7 px-2.5 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/80 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:border-rose-300 dark:hover:border-rose-800 text-slate-600 dark:text-zinc-300 hover:text-rose-600 dark:hover:text-rose-400 text-[11px] font-medium transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                              >
+                                <Minus className="w-2.5 h-2.5 stroke-[2.5]" />
+                                <span>Detach</span>
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleAdd(s);
+                                }}
+                                className="h-7 px-3 rounded-lg bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] text-white dark:text-black text-[11px] font-semibold transition-all inline-flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                              >
+                                <Plus className="w-3 h-3 stroke-[2.5]" />
+                                <span>Add to AI</span>
+                              </button>
+                            )}
                           </div>
                         </div>
                       </motion.div>
@@ -476,7 +445,8 @@ const KnowledgeBase = () => {
                       No capabilities found for "{query}"
                     </p>
                     <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
-                      Try searching with different keywords or clearing your active category filters.
+                      Try searching with different keywords or clearing your
+                      active category filters.
                     </p>
                     <button
                       onClick={() => {
@@ -585,10 +555,6 @@ const SkillInspectorContent = ({
             <CategoryIcon className="w-3 h-3 text-[#FF6B00] dark:text-orange-400 shrink-0" />
             {skill.category}
           </span>
-
-          <span className="text-[10.5px] text-slate-400 dark:text-zinc-500 font-mono">
-            {skill.usage.toLocaleString()} users
-          </span>
         </div>
 
         <h2 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white">
@@ -598,18 +564,6 @@ const SkillInspectorContent = ({
         <p className="text-xs sm:text-[12.5px] text-slate-500 dark:text-zinc-400 mt-1.5 leading-relaxed font-normal">
           {skill.summary}
         </p>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1 mt-3">
-          {skill.tags.map((t) => (
-            <span
-              key={t}
-              className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 font-mono border border-slate-200/60 dark:border-zinc-700/50"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
 
         <div className="mt-5 flex gap-2">
           {isInstalled ? (
