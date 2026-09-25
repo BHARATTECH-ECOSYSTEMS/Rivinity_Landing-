@@ -205,6 +205,11 @@ const CanvasSidebar = ({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const isSettledCollapsed = !isOpen;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { logout, user, isAuthenticated, openAuth } = useAuthModal();
   const displayName = isAuthenticated && user?.name ? user.name : (isAuthenticated ? USER.name : "Guest User");
@@ -417,7 +422,11 @@ const CanvasSidebar = ({
   return (
     <>
       <aside
-        className={`sticky top-0 h-screen h-[100dvh] max-h-[100dvh] flex flex-col shrink-0 bg-white dark:bg-[#0d0d0d] border-r border-[#e2e8f0] dark:border-white/[0.08] select-none z-30 max-w-[85vw] md:max-w-none transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[width] ${
+        className={`sticky top-0 h-screen h-[100dvh] max-h-[100dvh] flex flex-col shrink-0 bg-white dark:bg-[#0d0d0d] border-r border-[#e2e8f0] dark:border-white/[0.08] select-none z-30 max-w-[85vw] md:max-w-none will-change-[width] ${
+          mounted
+            ? "transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            : "transition-none"
+        } ${
           isSettledCollapsed ? "overflow-visible" : "overflow-hidden"
         } ${
           isOpen ? "w-[260px]" : "w-[68px]"
@@ -426,7 +435,11 @@ const CanvasSidebar = ({
         <div className={`relative w-full h-full ${isSettledCollapsed ? "overflow-visible" : "overflow-hidden"}`}>
           {/* COLLAPSED STATE */}
           <div
-            className={`absolute inset-y-0 left-0 w-[68px] flex flex-col items-center justify-between py-3.5 px-2 transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            className={`absolute inset-y-0 left-0 w-[68px] flex flex-col items-center justify-between py-3.5 px-2 ${
+              mounted
+                ? "transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                : "transition-none"
+            } ${
               isOpen
                 ? "opacity-0 pointer-events-none -translate-x-2"
                 : "opacity-100 pointer-events-auto translate-x-0"
@@ -512,7 +525,11 @@ const CanvasSidebar = ({
 
           {/* EXPANDED STATE */}
           <div
-            className={`absolute inset-y-0 left-0 w-[260px] flex flex-col justify-between h-full transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            className={`absolute inset-y-0 left-0 w-[260px] flex flex-col justify-between h-full ${
+              mounted
+                ? "transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                : "transition-none"
+            } ${
               isOpen
                 ? "opacity-100 pointer-events-auto translate-x-0"
                 : "opacity-0 pointer-events-none -translate-x-2"

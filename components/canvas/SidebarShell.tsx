@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import CanvasSidebar from "./CanvasSidebar";
 import { PanelLeft } from "lucide-react";
 import { useSidebarState } from "./useSidebarState";
@@ -11,18 +11,11 @@ interface SidebarShellProps {
 
 const SidebarShell = ({ children }: SidebarShellProps) => {
   const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
+  const [mounted, setMounted] = useState(false);
 
-  // Track window resize to ensure proper state across screen size changes
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setSidebarOpen(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [setSidebarOpen]);
+    setMounted(true);
+  }, []);
 
   return (
     <div className="h-screen w-full flex overflow-hidden relative">
@@ -37,7 +30,11 @@ const SidebarShell = ({ children }: SidebarShellProps) => {
 
       {/* Sidebar Wrapper: 260px when open, 68px when collapsed */}
       <div
-        className={`fixed md:static inset-y-0 left-0 z-50 transition-[width,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[width,transform] md:shrink-0 ${
+        className={`fixed md:static inset-y-0 left-0 z-50 will-change-[width,transform] md:shrink-0 ${
+          mounted
+            ? "transition-[width,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            : "transition-none"
+        } ${
           sidebarOpen ? "w-[260px] translate-x-0" : "w-[260px] md:w-[68px] -translate-x-full md:translate-x-0"
         }`}
       >
