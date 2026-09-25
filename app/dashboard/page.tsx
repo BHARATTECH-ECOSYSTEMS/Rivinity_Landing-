@@ -200,6 +200,48 @@ const AnalyticsGlyph = ({ className }: { className?: string }) => (
 );
 
 /* 
+  RIVINITY BRAND OUTER TWO RINGS (Spins at bottom-left corner on hover)
+*/
+const RivinityOuterRings = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 200 200" fill="none" className={className}>
+    <defs>
+      <linearGradient id="riv-outer-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#EA580C" />
+        <stop offset="35%" stopColor="#FF6B00" />
+        <stop offset="70%" stopColor="#FF8A3D" />
+        <stop offset="100%" stopColor="#FFA866" />
+      </linearGradient>
+    </defs>
+    <g transform="translate(100, 100)">
+      {/* Outer Ring: 8 pointed petal loops */}
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+        <path
+          key={`outer-${deg}`}
+          d="M 0 -92 C 22 -76, 36 -50, 24 -24 C 0 -44, -24 -24, -24 -24 C -36 -50, -22 -76, 0 -92 Z"
+          fill="none"
+          stroke="url(#riv-outer-ring-grad)"
+          strokeWidth="5"
+          strokeLinejoin="round"
+          transform={`rotate(${deg})`}
+        />
+      ))}
+      {/* Middle Ring: 8 pointed petal loops rotated 22.5 deg */}
+      {[22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5].map((deg) => (
+        <path
+          key={`mid-${deg}`}
+          d="M 0 -72 C 18 -58, 28 -38, 18 -18 C 0 -34, -18 -18, -18 -18 C -28 -38, -18 -58, 0 -72 Z"
+          fill="none"
+          stroke="url(#riv-outer-ring-grad)"
+          strokeWidth="4.5"
+          strokeLinejoin="round"
+          transform={`rotate(${deg})`}
+        />
+      ))}
+    </g>
+  </svg>
+);
+
+/* 
   CREATIVE TOOLS DEFINITION (10 Small Square Glassmorphic Boxes, 5 per row)
 */
 const CREATIVE_TOOLS = [
@@ -1011,19 +1053,26 @@ const DashboardContent = () => {
                       backgroundColor: tool.bg,
                       borderColor: tool.border,
                     }}
-                    className="relative aspect-square overflow-hidden rounded-[20px] sm:rounded-[24px] p-4 sm:p-4.5 lg:p-5 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
+                    className="relative aspect-[1/0.88] overflow-hidden rounded-[18px] sm:rounded-[22px] p-3.5 sm:p-4 lg:p-4 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
                   >
                     {/* Glass inner gradient reflection */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[20px] sm:rounded-[24px]" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[18px] sm:rounded-[22px]" />
+
+                    {/* Rivinity Logo Outer Two Rings Spinning at Bottom-Left Corner on Hover */}
+                    <div className="absolute -bottom-8 -left-8 sm:-bottom-9 sm:-left-9 w-24 h-24 sm:w-28 sm:h-28 pointer-events-none opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-500 ease-out z-0">
+                      <div className="w-full h-full animate-[spin_8s_linear_infinite] [filter:drop-shadow(0_0_8px_rgba(255,107,0,0.45))]">
+                        <RivinityOuterRings className="w-full h-full" />
+                      </div>
+                    </div>
 
                     {/* Top: Tool Name / Words */}
-                    <div className="relative z-10 text-[14.5px] sm:text-[15.5px] lg:text-[16.5px] font-bold text-slate-900 tracking-tight leading-snug font-display">
+                    <div className="relative z-10 text-[14px] sm:text-[15px] lg:text-[16px] font-bold text-slate-900 tracking-tight leading-snug font-display">
                       {tool.title}
                     </div>
 
                     {/* Bottom: Solid Glyph Logo */}
                     <div className="relative z-10 mt-auto pt-2 flex items-end">
-                      <Icon className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-slate-900 transition-transform duration-300 group-hover:scale-110" />
+                      <Icon className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 lg:w-8 lg:h-8 text-slate-900 transition-transform duration-300 group-hover:scale-105" />
                     </div>
                   </motion.div>
                 );
