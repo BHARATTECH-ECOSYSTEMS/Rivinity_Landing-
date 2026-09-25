@@ -208,6 +208,7 @@ interface ChatComposerProps {
   activeTab: number;
   setActiveTab: (id: number) => void;
   onCloseTab: (id: number, e: React.MouseEvent) => void;
+  onAddNewTab?: () => void;
   skillPickerOpen: boolean;
   setSkillPickerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   skillQuery: string;
@@ -230,6 +231,7 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
   activeTab,
   setActiveTab,
   onCloseTab,
+  onAddNewTab,
   skillPickerOpen,
   setSkillPickerOpen,
   skillQuery,
@@ -456,6 +458,38 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               </div>
             );
           })}
+
+          {/* New Tab (+) Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onAddNewTab) {
+                onAddNewTab();
+              } else {
+                const newId = Date.now();
+                const newTab: TabState = {
+                  id: newId,
+                  icon: MessageSquare,
+                  label: "New Chat",
+                  kind: "chat",
+                  messages: [],
+                  draftInput: "",
+                  attachments: [],
+                };
+                setTabs((prev) => [...prev, newTab]);
+                setActiveTab(newId);
+              }
+            }}
+            className={cn(
+              "flex items-center justify-center rounded-full text-gray-500 hover:text-gray-800 dark:text-zinc-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 border-0",
+              isCompact ? "w-5 h-5" : "w-6 h-6",
+            )}
+            title="New Chat"
+            aria-label="New Chat"
+          >
+            <Plus className={isCompact ? "w-3 h-3" : "w-3.5 h-3.5"} strokeWidth={2.2} />
+          </button>
         </div>
 
         {/* TEMPLATE SELECTION EXPANDABLE PANEL */}
@@ -947,7 +981,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     {
       id: 1,
       icon: MessageSquare,
-      label: "Rivinity — The AI Infrastructure",
+      label: "New Chat",
       kind: "chat",
       messages: [],
       draftInput: "",
@@ -968,7 +1002,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     tabs[0] || {
       id: 1,
       icon: MessageSquare,
-      label: "Rivinity — The AI Infrastructure",
+      label: "New Chat",
       kind: "chat" as TabKind,
       messages: [],
       draftInput: "",
@@ -1320,7 +1354,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         {
           id: freshId,
           icon: MessageSquare,
-          label: "Rivinity — The AI Infrastructure",
+          label: "New Chat",
           kind: "chat",
           messages: [],
           draftInput: "",
@@ -1516,7 +1550,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
           {
             id: freshId,
             icon: MessageSquare,
-            label: "Rivinity — The AI Infrastructure",
+            label: "New Chat",
             kind: "chat",
             messages: [],
             draftInput: "",
@@ -1542,7 +1576,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         {
           id: freshId,
           icon: MessageSquare,
-          label: "Rivinity — The AI Infrastructure",
+          label: "New Chat",
           kind: "chat",
           messages: [],
           draftInput: "",
@@ -1588,226 +1622,91 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
   const isCompact = splitPercent < 45 || (!isDesktop && isDashboardActive);
   const isUltraCompact = splitPercent < 32;
 
-  const chromeTabsHeader = (
-    <div className="w-full bg-white dark:bg-[#121215] border-b border-slate-200/90 dark:border-zinc-800 px-2 sm:px-3 pt-0 h-[35px] flex items-end justify-between select-none shrink-0 z-30 transition-colors">
-      <div className="flex items-end min-w-0 flex-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-2 h-full">
-        {/* Mobile Toggle Button */}
-        <button
-          type="button"
-          onClick={onToggleSidebar}
-          className="bg-transparent md:hidden flex items-center justify-center h-7 w-7 rounded-full hover:bg-black/10 dark:hover:bg-white/10 text-[#3C4043] dark:text-zinc-200 shrink-0 my-auto mr-1 cursor-pointer border-0"
-          aria-label="Toggle sidebar"
-        >
-          <PanelLeft className="h-4 w-4" strokeWidth={2} />
-        </button>
-
-        {/* Scooped Tabs */}
-        {tabs.map((tab, idx) => {
-          const isActive = activeTabId === tab.id;
-          const prevIsActive = idx > 0 && tabs[idx - 1].id === activeTabId;
-          return (
-            <React.Fragment key={tab.id}>
-              {/* Divider between inactive tabs */}
-              {idx > 0 && !isActive && !prevIsActive && (
-                <div className="h-3.5 w-[1px] bg-slate-300 dark:bg-zinc-700 shrink-0 my-auto mx-1" />
-              )}
-
-              {isActive ? (
-                /* Scooped Orange Active Tab (#ff8b28) */
-                <div
-                  onClick={() => setActiveTabId(tab.id)}
-                  title={tab.label}
-                  className="relative flex items-center h-[34px] cursor-pointer select-none z-20 shrink-0 filter drop-shadow-[0_4px_12px_rgba(255,139,40,0.32)] -mb-px"
-                >
-                  {/* Left Concave Scoop Cap */}
-                  <svg
-                    width="22"
-                    height="34"
-                    viewBox="0 0 22 34"
-                    fill="none"
-                    className="shrink-0 pointer-events-none -mr-[1px]"
-                  >
-                    <path
-                      d="M 0 0 C 8 0, 14 34, 22 34 L 22 0 Z"
-                      fill="#ff8b28"
-                    />
-                  </svg>
-
-                  {/* Center Orange Body */}
-                  <div className="h-[34px] bg-[#ff8b28] flex items-center gap-2 px-2.5 text-white min-w-[120px] max-w-[240px]">
-                    {/* Normal Logo (no circle around it) */}
-                    <img
-                      src="/watermark.png"
-                      alt="Rivinity"
-                      className="w-4 h-4 object-contain brightness-0 invert shrink-0 select-none"
-                    />
-
-                    {/* Title */}
-                    <span className="truncate flex-1 text-[12.5px] font-medium text-white tracking-tight">
-                      {tab.label}
-                    </span>
-
-                    {/* Close button */}
-                    {tabs.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={(e) => closeTab(tab.id, e)}
-                        className="bg-transparent w-4.5 h-4.5 rounded-full hover:bg-white/25 text-white/80 hover:text-white transition-colors flex items-center justify-center shrink-0 cursor-pointer border-0 p-0"
-                        title="Close tab"
-                      >
-                        <X className="w-3 h-3 text-white" strokeWidth={2.2} />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Right Concave Scoop Cap */}
-                  <svg
-                    width="22"
-                    height="34"
-                    viewBox="0 0 22 34"
-                    fill="none"
-                    className="shrink-0 pointer-events-none -ml-[1px]"
-                  >
-                    <path
-                      d="M 0 34 C 8 34, 14 0, 22 0 L 0 0 Z"
-                      fill="#ff8b28"
-                    />
-                  </svg>
-                </div>
-              ) : (
-                /* Inactive Tab */
-                <div
-                  onClick={() => setActiveTabId(tab.id)}
-                  title={tab.label}
-                  className="group relative flex items-center transition-all duration-150 cursor-pointer select-none h-[28px] rounded-lg px-2.5 sm:px-3 gap-2 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/[0.05] dark:hover:bg-white/[0.06] my-auto"
-                >
-                  <img
-                    src="/watermark.png"
-                    alt=""
-                    className="w-3.5 h-3.5 object-contain shrink-0 opacity-60 group-hover:opacity-100"
-                  />
-                  <span className="truncate flex-1 min-w-0 text-[12px] leading-none text-left">
-                    {tab.label}
-                  </span>
-                  {tabs.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={(e) => closeTab(tab.id, e)}
-                      className="bg-transparent w-4 h-4 rounded-full hover:bg-black/10 dark:hover:bg-white/10 text-slate-400 hover:text-slate-700 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center border-0 p-0"
-                    >
-                      <X className="w-3 h-3" strokeWidth={2} />
-                    </button>
-                  )}
-                </div>
-              )}
-            </React.Fragment>
-          );
-        })}
-
-        {/* New Tab (+) Button */}
-        <button
-          type="button"
-          onClick={handleAddNewTab}
-          className="bg-transparent flex items-center justify-center w-7 h-7 rounded-full text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/10 transition-colors cursor-pointer shrink-0 my-auto ml-1 border-0"
-          title="New tab"
-          aria-label="New tab"
-        >
-          <Plus className="w-4 h-4" strokeWidth={2} />
-        </button>
-      </div>
-
-      {/* Right Controls */}
-      <div className="flex items-center gap-1.5 shrink-0 my-auto pl-2">
-        {/* Share Button & Chat Options Menu (visible once conversation has started) */}
-        {!isEmpty && (
-          <div className="flex items-center gap-1 relative" ref={chatMenuRef}>
-            {/* Share Button */}
-            <button
-              type="button"
-              onClick={handleShare}
-              className="bg-transparent hover:bg-black/[0.06] dark:hover:bg-white/10 px-2.5 py-1 rounded-full text-[12px] font-medium text-[#3C4043] dark:text-zinc-300 hover:text-[#1F1F1F] transition-colors cursor-pointer flex items-center gap-1.5 border-0"
-              title="Share"
-            >
-              <Share2 className="w-3.5 h-3.5 text-[#5F6368] dark:text-zinc-400" />
-              <span>Share</span>
-            </button>
-
-            {/* Three Dots More Button */}
-            <button
-              type="button"
-              onClick={() => setChatMenuOpen((prev) => !prev)}
-              className={cn(
-                "p-1 rounded-full flex items-center justify-center transition-colors cursor-pointer text-[#5F6368] hover:text-[#1F1F1F] dark:text-zinc-400 dark:hover:text-white hover:bg-black/[0.06] dark:hover:bg-white/10 border-0",
-                chatMenuOpen && "bg-black/[0.08] dark:bg-white/15 text-[#1F1F1F] dark:text-white",
-              )}
-              title="More options"
-              aria-label="More options"
-            >
-              <MoreHorizontal className="w-4 h-4" strokeWidth={2} />
-            </button>
-
-            {/* Dropdown Menu Popup (Light Mode Style) */}
-            {chatMenuOpen && (
-              <div className="absolute right-0 top-full mt-2 w-52 sm:w-56 rounded-2xl bg-white dark:bg-[#1c1c1f] text-gray-800 dark:text-zinc-100 border border-gray-200/90 dark:border-zinc-800 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-                {/* View files in chat */}
-                <button
-                  type="button"
-                  onClick={handleViewFilesInChat}
-                  className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-gray-800 dark:text-zinc-100 hover:bg-gray-100/90 dark:hover:bg-white/10 transition-colors cursor-pointer text-left border-0"
-                >
-                  <FileText className="w-4.5 h-4.5 shrink-0 text-gray-700 dark:text-zinc-300" />
-                  <span className="flex-1 truncate">View files in chat</span>
-                </button>
-
-                {/* Pin chat */}
-                <button
-                  type="button"
-                  onClick={handleTogglePinChat}
-                  className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-gray-800 dark:text-zinc-100 hover:bg-gray-100/90 dark:hover:bg-white/10 transition-colors cursor-pointer text-left border-0"
-                >
-                  <Pin
-                    className={cn(
-                      "w-4.5 h-4.5 shrink-0 text-gray-700 dark:text-zinc-300",
-                      currentTab.isPinned && "fill-amber-500 text-amber-500",
-                    )}
-                  />
-                  <span className="flex-1 truncate">
-                    {currentTab.isPinned ? "Unpin chat" : "Pin chat"}
-                  </span>
-                </button>
-
-                {/* Archive */}
-                <button
-                  type="button"
-                  onClick={handleArchiveChat}
-                  className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-gray-800 dark:text-zinc-100 hover:bg-gray-100/90 dark:hover:bg-white/10 transition-colors cursor-pointer text-left border-0"
-                >
-                  <Archive className="w-4.5 h-4.5 shrink-0 text-gray-700 dark:text-zinc-300" />
-                  <span className="flex-1 truncate">Archive</span>
-                </button>
-
-                {/* Delete */}
-                <button
-                  type="button"
-                  onClick={handleDeleteChat}
-                  className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer text-left border-0"
-                >
-                  <Trash2 className="w-4.5 h-4.5 shrink-0 text-red-500" />
-                  <span className="flex-1 truncate font-medium text-red-500">
-                    Delete
-                  </span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
   // AI Chat View (Canvas Main Prompt Box)
   const chatView = (
     <div className="flex-1 flex flex-col items-center justify-between min-w-0 min-h-0 h-full w-full relative overflow-hidden bg-white dark:bg-zinc-950">
+      {/* Top-right Actions (Share, More Options) when conversation has started */}
+      {!isEmpty && (
+        <div className="absolute top-2.5 right-3 z-30 flex items-center gap-1.5" ref={chatMenuRef}>
+          <button
+            type="button"
+            onClick={handleShare}
+            className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xs border border-gray-200/80 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800 px-2.5 py-1 rounded-full text-[12px] font-medium text-[#3C4043] dark:text-zinc-300 hover:text-[#1F1F1F] transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs"
+            title="Share"
+          >
+            <Share2 className="w-3.5 h-3.5 text-[#5F6368] dark:text-zinc-400" />
+            <span className="hidden sm:inline">Share</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setChatMenuOpen((prev) => !prev)}
+            className={cn(
+              "p-1.5 rounded-full flex items-center justify-center transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xs border border-gray-200/80 dark:border-zinc-800 shadow-xs text-[#5F6368] hover:text-[#1F1F1F] dark:text-zinc-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800",
+              chatMenuOpen && "bg-gray-100 dark:bg-zinc-800 text-[#1F1F1F] dark:text-white",
+            )}
+            title="More options"
+            aria-label="More options"
+          >
+            <MoreHorizontal className="w-4 h-4" strokeWidth={2} />
+          </button>
+
+          {/* Dropdown Menu Popup (Light Mode Style) */}
+          {chatMenuOpen && (
+            <div className="absolute right-0 top-full mt-2 w-52 sm:w-56 rounded-2xl bg-white dark:bg-[#1c1c1f] text-gray-800 dark:text-zinc-100 border border-gray-200/90 dark:border-zinc-800 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+              {/* View files in chat */}
+              <button
+                type="button"
+                onClick={handleViewFilesInChat}
+                className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-gray-800 dark:text-zinc-100 hover:bg-gray-100/90 dark:hover:bg-white/10 transition-colors cursor-pointer text-left border-0"
+              >
+                <FileText className="w-4.5 h-4.5 shrink-0 text-gray-700 dark:text-zinc-300" />
+                <span className="flex-1 truncate">View files in chat</span>
+              </button>
+
+              {/* Pin chat */}
+              <button
+                type="button"
+                onClick={handleTogglePinChat}
+                className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-gray-800 dark:text-zinc-100 hover:bg-gray-100/90 dark:hover:bg-white/10 transition-colors cursor-pointer text-left border-0"
+              >
+                <Pin
+                  className={cn(
+                    "w-4.5 h-4.5 shrink-0 text-gray-700 dark:text-zinc-300",
+                    currentTab.isPinned && "fill-amber-500 text-amber-500",
+                  )}
+                />
+                <span className="flex-1 truncate">
+                  {currentTab.isPinned ? "Unpin chat" : "Pin chat"}
+                </span>
+              </button>
+
+              {/* Archive */}
+              <button
+                type="button"
+                onClick={handleArchiveChat}
+                className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-gray-800 dark:text-zinc-100 hover:bg-gray-100/90 dark:hover:bg-white/10 transition-colors cursor-pointer text-left border-0"
+              >
+                <Archive className="w-4.5 h-4.5 shrink-0 text-gray-700 dark:text-zinc-300" />
+                <span className="flex-1 truncate">Archive</span>
+              </button>
+
+              {/* Delete */}
+              <button
+                type="button"
+                onClick={handleDeleteChat}
+                className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer text-left border-0"
+              >
+                <Trash2 className="w-4.5 h-4.5 shrink-0 text-red-500" />
+                <span className="flex-1 truncate font-medium text-red-500">
+                  Delete
+                </span>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       {!isEmpty && (
         <div className="absolute inset-0 pointer-events-none select-none z-0 flex items-center justify-center">
           <img
@@ -1836,6 +1735,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                 activeTab={activeTabId}
                 setActiveTab={setActiveTabId}
                 onCloseTab={closeTab}
+                onAddNewTab={handleAddNewTab}
                 skillPickerOpen={skillPickerOpen}
                 setSkillPickerOpen={setSkillPickerOpen}
                 skillQuery={skillQuery}
@@ -2102,6 +2002,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
               activeTab={activeTabId}
               setActiveTab={setActiveTabId}
               onCloseTab={closeTab}
+              onAddNewTab={handleAddNewTab}
               skillPickerOpen={skillPickerOpen}
               setSkillPickerOpen={setSkillPickerOpen}
               skillQuery={skillQuery}
@@ -2122,7 +2023,17 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
   return (
     <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full w-full relative overflow-hidden bg-white dark:bg-zinc-950">
-      {chromeTabsHeader}
+      {/* Mobile Toggle Button */}
+      {onToggleSidebar && (
+        <button
+          type="button"
+          onClick={onToggleSidebar}
+          className="md:hidden absolute top-2.5 left-2.5 z-30 flex items-center justify-center h-8 w-8 rounded-lg bg-white/90 dark:bg-zinc-800/90 backdrop-blur-xs border border-gray-200 dark:border-zinc-700 shadow-xs text-gray-700 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer"
+          aria-label="Toggle sidebar"
+        >
+          <PanelLeft className="h-4.5 w-4.5" strokeWidth={2} />
+        </button>
+      )}
       {isWriteMode ? (
         <div className="flex-1 min-h-0 overflow-hidden">
           <WriteAnythingStudio />
