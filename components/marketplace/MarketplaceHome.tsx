@@ -18,8 +18,7 @@ import {
   TrendingUp,
   Sparkles,
   Plus,
-  Bookmark,
-  Server
+  Bookmark
 } from 'lucide-react';
 
 import SidebarShell from "@/components/canvas/SidebarShell";
@@ -29,8 +28,6 @@ import MarketplaceCategory from './MarketplaceCategory';
 import MarketplaceCart from './MarketplaceCart';
 import MarketplaceCheckout from './MarketplaceCheckout';
 import MarketplaceUpload from './MarketplaceUpload';
-import AgentAsAService from './AgentAsAService';
-import CloudServices from './CloudServices';
 
 const INITIAL_MARKETPLACE_ITEMS: MarketplaceItemType[] = [
   // Trending Assets
@@ -300,24 +297,8 @@ export const MarketplaceHome: React.FC = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [likedIds, setLikedIds] = useState<string[]>([]);
 
-  // Expanded State for "See All" in each section
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    trending: false,
-    datasets: false,
-    models: false,
-    agents: false,
-    tools: false
-  });
-
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedPricing, setSelectedPricing] = useState<string[]>([]);
-
-  const toggleSection = (sectionKey: string) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [sectionKey]: !prev[sectionKey]
-    }));
-  };
 
   const toggleLike = (item: MarketplaceItemType, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -473,37 +454,21 @@ export const MarketplaceHome: React.FC = () => {
   };
 
   /* SECTION RENDERER */
-  const renderSection = (title: string, subtitle: string, sectionItems: MarketplaceItemType[], sectionKey: string, icon?: React.ReactNode) => {
+  const renderSection = (title: string, subtitle: string, sectionItems: MarketplaceItemType[], icon?: React.ReactNode) => {
     if (sectionItems.length === 0) return null;
 
-    const isExpanded = expandedSections[sectionKey];
-    const total = sectionItems.length;
-    const hasMore = total > 4;
-    const visibleItems = isExpanded ? sectionItems : sectionItems.slice(0, 4);
-
     return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              {icon}
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate tracking-tight">{title}</h2>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5 line-clamp-1">{subtitle}</p>
+      <div className="space-y-3">
+        <div>
+          <div className="flex items-center gap-2">
+            {icon}
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate tracking-tight">{title}</h2>
           </div>
-
-          {hasMore && (
-            <button
-              onClick={() => toggleSection(sectionKey)}
-              className="text-xs font-bold text-[#FF6B00] hover:text-[#e05e00] px-3 py-1.5 rounded-xl hover:bg-orange-50 dark:hover:bg-zinc-800 transition-colors shrink-0 cursor-pointer"
-            >
-              {isExpanded ? 'Show Less' : `See All (${total})`}
-            </button>
-          )}
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5 line-clamp-1">{subtitle}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {visibleItems.map(renderAssetCard)}
+          {sectionItems.map(renderAssetCard)}
         </div>
       </div>
     );
@@ -587,10 +552,10 @@ export const MarketplaceHome: React.FC = () => {
 
         {/* Marketplace Content Sections inside Container */}
         <main className="flex-1 p-3.5 sm:p-6 lg:p-8 flex justify-center">
-          <div className="w-full max-w-[1360px] bg-white dark:bg-[#111115] rounded-3xl border border-slate-200/80 dark:border-zinc-800/80 shadow-xs p-4 sm:p-8 space-y-8">
+          <div className="w-full max-w-[1360px] bg-white dark:bg-[#111115] rounded-3xl border border-slate-200/80 dark:border-zinc-800/80 shadow-xs p-4 sm:p-6 space-y-6">
             
             {/* Category Filter Pills Bar */}
-            <div className="pb-4 border-b border-slate-100 dark:border-white/10">
+            <div>
               <MarketplaceCategory
                 selectedCategory={selectedCategory}
                 onSelectCategory={setSelectedCategory}
@@ -602,67 +567,52 @@ export const MarketplaceHome: React.FC = () => {
               'Trending Assets This Week',
               'The most downloaded datasets and models across the ecosystem.',
               trendingItems,
-              'trending',
               <TrendingUp className="w-4 h-4 text-[#FF6B00]" />
             )}
 
             {/* 2. Datasets */}
-            <div className="pt-4 border-t border-slate-200/80 dark:border-white/10">
-              {renderSection(
-                'Datasets',
-                'Curated, license-clear data for training and evaluation.',
-                datasetItems,
-                'datasets'
-              )}
-            </div>
+            {datasetItems.length > 0 && (
+              <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80">
+                {renderSection(
+                  'Datasets',
+                  'Curated, license-clear data for training and evaluation.',
+                  datasetItems
+                )}
+              </div>
+            )}
 
             {/* 3. AI / ML Models */}
-            <div className="pt-4 border-t border-slate-200/80 dark:border-white/10">
-              {renderSection(
-                'AI / ML Models',
-                'Open and commercial weights with deployment recipes.',
-                modelItems,
-                'models'
-              )}
-            </div>
+            {modelItems.length > 0 && (
+              <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80">
+                {renderSection(
+                  'AI / ML Models',
+                  'Open and commercial weights with deployment recipes.',
+                  modelItems
+                )}
+              </div>
+            )}
 
             {/* 4. Agents */}
-            <div className="pt-4 border-t border-slate-200/80 dark:border-white/10">
-              {renderSection(
-                'Agents',
-                'Autonomous and crew-style agents for any domain.',
-                agentItems,
-                'agents'
-              )}
-            </div>
+            {agentItems.length > 0 && (
+              <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80">
+                {renderSection(
+                  'Agents',
+                  'Autonomous and crew-style agents for any domain.',
+                  agentItems
+                )}
+              </div>
+            )}
 
             {/* 5. AI Tools */}
-            <div className="pt-4 border-t border-slate-200/80 dark:border-white/10">
-              {renderSection(
-                'AI Tools',
-                'Productivity, workflow, vision, marketing and more.',
-                toolItems,
-                'tools'
-              )}
-            </div>
-
-            {/* 6. Cloud Compute & Agent-as-a-Service Infrastructure */}
-            <div className="pt-8 border-t border-slate-200/80 dark:border-white/10 space-y-5">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Server className="w-4 h-4 text-[#FF6B00]" />
-                  <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                    Serverless Gateway &amp; Compute Cluster
-                  </h2>
-                </div>
-                <p className="text-xs text-slate-500 dark:text-zinc-400">
-                  Dedicated NVIDIA H100 clusters and sub-millisecond API endpoints for subscribed assets.
-                </p>
+            {toolItems.length > 0 && (
+              <div className="pt-4 border-t border-slate-100 dark:border-zinc-800/80">
+                {renderSection(
+                  'AI Tools',
+                  'Productivity, workflow, vision, marketing and more.',
+                  toolItems
+                )}
               </div>
-
-              <CloudServices />
-              <AgentAsAService />
-            </div>
+            )}
 
           </div>
         </main>
