@@ -997,8 +997,8 @@ const DashboardContent = () => {
               </div>
             </div>
 
-            {/* 10 Small Square Glassmorphic Boxes (5 per row on desktop) */}
-            <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4 max-w-5xl">
+            {/* 10 Square Glassmorphic Boxes (5 per row, full width edge-to-edge with generous middle spacing) */}
+            <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-5 lg:gap-6 xl:gap-7">
               {CREATIVE_TOOLS.map((tool) => {
                 const Icon = tool.icon;
                 return (
@@ -1011,12 +1011,12 @@ const DashboardContent = () => {
                       backgroundColor: tool.bg,
                       borderColor: tool.border,
                     }}
-                    className="relative aspect-square overflow-hidden rounded-[20px] sm:rounded-[24px] p-3.5 sm:p-4 lg:p-4.5 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
+                    className="relative aspect-square overflow-hidden rounded-[20px] sm:rounded-[24px] p-4 sm:p-4.5 lg:p-5 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
                   >
                     {/* Glass inner gradient reflection */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[20px] sm:rounded-[24px]" />
 
-                    {/* Top: Tool Name / Words (Bigger bold font) */}
+                    {/* Top: Tool Name / Words */}
                     <div className="relative z-10 text-[14.5px] sm:text-[15.5px] lg:text-[16.5px] font-bold text-slate-900 tracking-tight leading-snug font-display">
                       {tool.title}
                     </div>
