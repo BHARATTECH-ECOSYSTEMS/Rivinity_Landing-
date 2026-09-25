@@ -442,13 +442,7 @@ const CanvasSidebar = ({
         <div className={`relative w-full h-full ${isSettledCollapsed ? "overflow-visible" : "overflow-hidden"}`}>
           {/* COLLAPSED STATE */}
           <div
-            onClick={(e) => {
-              if (collapsedMenuContainerRef.current?.contains(e.target as Node)) {
-                return;
-              }
-              handleActionToggle();
-            }}
-            className={`absolute inset-y-0 left-0 w-[68px] flex flex-col items-center justify-between py-3.5 px-2 cursor-pointer transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            className={`absolute inset-y-0 left-0 w-[68px] flex flex-col items-center justify-between py-3.5 px-2 transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
               isOpen
                 ? "opacity-0 pointer-events-none -translate-x-2"
                 : "opacity-100 pointer-events-auto translate-x-0"
@@ -458,10 +452,7 @@ const CanvasSidebar = ({
               {/* Logo / Expand Toggle */}
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleActionToggle();
-                }}
+                onClick={() => handleActionToggle()}
                 className="group relative w-10 h-10 flex items-center justify-center bg-transparent border-0 transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer"
                 aria-label="Expand sidebar"
               >
@@ -491,13 +482,11 @@ const CanvasSidebar = ({
                     <button
                       key={item.id}
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={() => {
                         if (item.path) {
                           router.push(item.path);
                           setSelectedId(item.id);
                         }
-                        handleActionToggle();
                       }}
                       className={`group/tooltip relative w-10 h-10 flex items-center justify-center rounded-full transition-all duration-150 cursor-pointer border-0 ${
                         isActive
