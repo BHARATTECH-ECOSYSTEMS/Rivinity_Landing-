@@ -355,22 +355,21 @@ const KnowledgeBase = () => {
                         key={s.id}
                         variants={cardVariants}
                         layout
-                        whileHover={{ y: -3 }}
                         onClick={() => {
                           setSelectedId(s.id);
                           setInspectorOpen(true);
                         }}
-                        className={`group relative text-left rounded-2xl border p-4 sm:p-5 cursor-pointer transition-all duration-200 bg-white dark:bg-zinc-900/90 shadow-2xs ${
+                        className={`group relative text-left rounded-2xl border p-4 sm:p-5 cursor-pointer transition-colors duration-200 backdrop-blur-md bg-white/70 dark:bg-zinc-900/60 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.3)] ${
                           active
-                            ? "border-slate-300 dark:border-zinc-700 ring-1 ring-slate-300/80 dark:ring-zinc-700/80 shadow-sm"
-                            : "border-slate-200/80 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 hover:shadow-md"
+                            ? "border-slate-400 dark:border-zinc-500 ring-1 ring-slate-400/40 dark:ring-zinc-500/40"
+                            : "border-slate-200/70 dark:border-white/10 hover:border-slate-400 dark:hover:border-zinc-500"
                         }`}
                       >
                         <div className="flex flex-col justify-between h-full min-h-[150px]">
                           <div>
                             {/* Card Topline: Minimal Orange Category Badge */}
                             <div className="flex items-center justify-between gap-2 mb-2.5">
-                              <span className="inline-flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-950/40 text-[#FF6B00] dark:text-orange-400 border border-orange-200/60 dark:border-orange-900/40 font-mono">
+                              <span className="inline-flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-orange-50/80 dark:bg-orange-950/40 text-[#FF6B00] dark:text-orange-400 border border-orange-200/60 dark:border-orange-900/40 font-mono">
                                 <CategoryIcon className="w-3 h-3 text-[#FF6B00] dark:text-orange-400 shrink-0" />
                                 {s.category}
                               </span>
@@ -388,9 +387,9 @@ const KnowledgeBase = () => {
                             </div>
 
                             {/* Card Title */}
-                            <h3 className="text-[13.5px] sm:text-[14px] font-bold tracking-tight text-slate-900 dark:text-zinc-100 group-hover:text-[#FF6B00] transition-colors flex items-center justify-between">
+                            <h3 className="text-[13.5px] sm:text-[14px] font-bold tracking-tight text-slate-900 dark:text-zinc-100 group-hover:text-slate-800 dark:group-hover:text-white transition-colors flex items-center justify-between">
                               <span className="truncate">{s.name}</span>
-                              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-zinc-600 group-hover:text-[#FF6B00] group-hover:translate-x-0.5 transition-all shrink-0 ml-1.5" />
+                              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-zinc-600 group-hover:text-slate-500 dark:group-hover:text-zinc-400 transition-colors shrink-0 ml-1.5" />
                             </h3>
 
                             {/* Card Description */}
