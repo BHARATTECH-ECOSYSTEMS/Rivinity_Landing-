@@ -599,7 +599,7 @@ const SkillInspectorContent = ({
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer shadow-2xs ${
               copied
                 ? "bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400"
-                : "bg-white dark:bg-zinc-800/90 border border-slate-200 dark:border-zinc-700/80 text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-zinc-700/80 hover:border-slate-300 dark:hover:border-zinc-600 active:scale-95"
+                : "bg-white dark:bg-zinc-800/90 border border-slate-200 dark:border-zinc-700/80 text-[#FF6B00] dark:text-orange-400 hover:bg-orange-50/50 dark:hover:bg-orange-950/20 hover:border-orange-200 dark:hover:border-orange-900/40 active:scale-95"
             }`}
           >
             {copied ? (
@@ -609,7 +609,7 @@ const SkillInspectorContent = ({
               </>
             ) : (
               <>
-                <Copy className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-400" />
+                <Copy className="w-3.5 h-3.5 text-[#FF6B00] dark:text-orange-400" />
                 <span>Copy</span>
               </>
             )}
