@@ -204,16 +204,7 @@ const CanvasSidebar = ({
   const [workspaceOpen, setWorkspaceOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [isSettledCollapsed, setIsSettledCollapsed] = useState(!isOpen);
-
-  useEffect(() => {
-    if (!isOpen) {
-      const timer = setTimeout(() => setIsSettledCollapsed(true), 300);
-      return () => clearTimeout(timer);
-    } else {
-      setIsSettledCollapsed(false);
-    }
-  }, [isOpen]);
+  const isSettledCollapsed = !isOpen;
 
   const { logout, user, isAuthenticated, openAuth } = useAuthModal();
   const displayName = isAuthenticated && user?.name ? user.name : (isAuthenticated ? USER.name : "Guest User");
@@ -431,13 +422,6 @@ const CanvasSidebar = ({
         } ${
           isOpen ? "w-[260px]" : "w-[68px]"
         }`}
-        style={{
-          width: isOpen
-            ? typeof window !== "undefined" && window.innerWidth < 768
-              ? "min(260px, 85vw)"
-              : "260px"
-            : "68px",
-        }}
       >
         <div className={`relative w-full h-full ${isSettledCollapsed ? "overflow-visible" : "overflow-hidden"}`}>
           {/* COLLAPSED STATE */}
