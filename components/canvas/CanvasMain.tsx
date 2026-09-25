@@ -17,6 +17,7 @@ import {
   Pencil,
   Wand2,
   Layers,
+  HatGlasses,
   BarChart3,
   BookOpen,
   ArrowUpRight,
@@ -249,6 +250,7 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
 
   const [isAddingTab, setIsAddingTab] = useState(false);
   const [isWebSearchActive, setIsWebSearchActive] = useState(false);
+  const [isIncognito, setIsIncognito] = useState(false);
   const [newTabName, setNewTabName] = useState("");
   const [editingTabId, setEditingTabId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState("");
@@ -707,6 +709,29 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               isCompact ? "gap-0.5" : "gap-0.5 sm:gap-1",
             )}
           >
+            {/* Attach context file on the left */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800 transition-colors cursor-pointer shrink-0"
+              title="Attach context file"
+            >
+              <Paperclip className="w-4 h-4 shrink-0" strokeWidth={2} />
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  onAttachFiles?.(files);
+                  e.target.value = "";
+                }
+              }}
+            />
+
             <button
               type="button"
               onClick={() => {
@@ -744,25 +769,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
             )}
 
             <button
-              ref={wandButtonRef}
-              type="button"
-              onClick={() => {
-                if (!input.trim()) {
-                  toast.info("Type a prompt first to enhance");
-                  return;
-                }
-                setInput(
-                  `${input.trim()} — provide detailed academic reasoning, key citations, and structured findings.`,
-                );
-                toast.success("Prompt enhanced!");
-              }}
-              className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800 transition-colors cursor-pointer shrink-0"
-              title="Enhance prompt"
-            >
-              <Wand2 className="w-4 h-4 shrink-0" strokeWidth={2.2} />
-            </button>
-
-            <button
               ref={skillButtonRef}
               type="button"
               onClick={() => {
@@ -780,7 +786,7 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               )}
               title="Skills"
             >
-              <Layers
+              <Wand2
                 className={cn(
                   "w-4 h-4 shrink-0 transition-colors",
                   skillPickerOpen
@@ -794,34 +800,34 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
             {!isCompact && (
               <button
                 type="button"
-                className="bg-transparent hidden sm:flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800 transition-colors cursor-pointer shrink-0"
-                title="Code interpreter"
+                onClick={() => {
+                  setIsIncognito((prev) => {
+                    const next = !prev;
+                    if (next) {
+                      toast.info(
+                        "Incognito mode active: Chats will not be saved to history.",
+                      );
+                    } else {
+                      toast.info("Incognito mode disabled.");
+                    }
+                    return next;
+                  });
+                }}
+                className={cn(
+                  "hidden sm:flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 border-0",
+                  isIncognito
+                    ? "!bg-slate-900 text-white shadow-xs"
+                    : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
+                )}
+                title={
+                  isIncognito
+                    ? "Incognito mode active (Chats are not saved)"
+                    : "Incognito mode (Don't save chat history)"
+                }
               >
-                <Code className="w-4 h-4" strokeWidth={2} />
+                <HatGlasses className="w-4 h-4 shrink-0" strokeWidth={2} />
               </button>
             )}
-
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800 transition-colors cursor-pointer shrink-0"
-              title="Attach context file"
-            >
-              <Paperclip className="w-4 h-4 shrink-0" strokeWidth={2} />
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              multiple
-              className="hidden"
-              onChange={(e) => {
-                const files = e.target.files;
-                if (files && files.length > 0) {
-                  onAttachFiles?.(files);
-                  e.target.value = "";
-                }
-              }}
-            />
           </div>
 
           <div className="flex items-center shrink-0 gap-1.5 sm:gap-2">
@@ -861,7 +867,7 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
         >
           <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-2xl overflow-hidden">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-zinc-800">
-              <Layers
+              <Wand2
                 className="w-5 h-5 text-[#FF5500] shrink-0"
                 strokeWidth={2.2}
               />
