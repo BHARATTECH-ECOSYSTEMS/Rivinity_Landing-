@@ -11,7 +11,6 @@ import {
   Star,
   Heart,
   ArrowUpRight,
-  TrendingUp,
   Sparkles,
   Plus,
   Bookmark,
@@ -1138,7 +1137,6 @@ export const MarketplaceHome: React.FC = () => {
     title: string,
     sectionItems: MarketplaceItemType[],
     allCategoryItems: MarketplaceItemType[],
-    icon?: React.ReactNode,
     categoryKey?: string,
   ) => {
     if (sectionItems.length === 0) return null;
@@ -1149,15 +1147,9 @@ export const MarketplaceHome: React.FC = () => {
     return (
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {icon}
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate tracking-tight">
-              {title}
-            </h2>
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400">
-              {sectionItems.length}
-            </span>
-          </div>
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate tracking-tight">
+            {title}
+          </h2>
 
           <button
             type="button"
@@ -1411,7 +1403,6 @@ export const MarketplaceHome: React.FC = () => {
                 "Trending Assets This Week",
                 trendingItems,
                 items.filter((i) => i.isTrending),
-                <TrendingUp className="w-4 h-4 text-[#FF6B00]" />,
                 "trending"
               )}
 
@@ -1426,7 +1417,6 @@ export const MarketplaceHome: React.FC = () => {
                       i.category === "Datasets" ||
                       i.badge?.toLowerCase() === "dataset",
                   ),
-                  <Database className="w-4 h-4 text-[#059669]" />,
                   "Datasets"
                 )}
               </div>
@@ -1443,7 +1433,6 @@ export const MarketplaceHome: React.FC = () => {
                       i.category === "AI / ML Models" ||
                       i.badge?.toLowerCase() === "model",
                   ),
-                  <BrainCircuit className="w-4 h-4 text-[#0284C7]" />,
                   "Models"
                 )}
               </div>
@@ -1460,7 +1449,6 @@ export const MarketplaceHome: React.FC = () => {
                       i.category === "Agents" ||
                       i.badge?.toLowerCase() === "agent",
                   ),
-                  <Sparkles className="w-4 h-4 text-[#7C3AED]" />,
                   "Agents"
                 )}
               </div>
@@ -1477,7 +1465,6 @@ export const MarketplaceHome: React.FC = () => {
                       i.category === "AI Tools" ||
                       i.badge?.toLowerCase() === "tool",
                   ),
-                  <Wrench className="w-4 h-4 text-[#D97706]" />,
                   "Tools"
                 )}
               </div>
