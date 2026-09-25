@@ -367,8 +367,8 @@ const KnowledgeBase = () => {
                         }}
                         className={`group relative text-left rounded-2xl border p-4 sm:p-5 cursor-pointer transition-all duration-200 bg-white dark:bg-zinc-900/90 shadow-2xs ${
                           active
-                            ? "border-[#FF6B00]/70 dark:border-[#FF6B00]/60 ring-2 ring-[#FF6B00]/15 shadow-md shadow-orange-500/[0.05] bg-gradient-to-b from-orange-500/[0.02] to-transparent"
-                            : "border-slate-200/80 dark:border-zinc-800 hover:border-orange-300 dark:hover:border-orange-500/30 hover:shadow-md hover:shadow-orange-500/[0.04]"
+                            ? "border-slate-300 dark:border-zinc-700 ring-1 ring-slate-300/80 dark:ring-zinc-700/80 shadow-sm"
+                            : "border-slate-200/80 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 hover:shadow-md"
                         }`}
                       >
                         <div className="flex flex-col justify-between h-full min-h-[160px]">
@@ -405,14 +405,14 @@ const KnowledgeBase = () => {
                           </div>
 
                           <div className="mt-3.5">
-                            {/* Tags */}
+                            {/* Tags without hashtags */}
                             <div className="flex flex-wrap gap-1 mb-3">
                               {s.tags.slice(0, 3).map((t) => (
                                 <span
                                   key={t}
                                   className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800/80 text-slate-600 dark:text-zinc-400 font-mono border border-slate-200/60 dark:border-zinc-700/50"
                                 >
-                                  #{t}
+                                  {t}
                                 </span>
                               ))}
 
@@ -423,7 +423,7 @@ const KnowledgeBase = () => {
                               )}
                             </div>
 
-                            {/* Actions Bar: Orange Minimal CTA & Users */}
+                            {/* Actions Bar: Black CTA & Users */}
                             <div className="flex items-center gap-2 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80">
                               {inst ? (
                                 <button
@@ -444,7 +444,7 @@ const KnowledgeBase = () => {
                                     e.stopPropagation();
                                     handleAdd(s);
                                   }}
-                                  className="h-7 px-3 rounded-lg bg-[#FF6B00] hover:bg-[#E55F00] active:scale-[0.98] text-white text-[11px] font-semibold transition-all inline-flex items-center gap-1.5 shadow-[0_2px_8px_rgba(255,107,0,0.2)] cursor-pointer"
+                                  className="h-7 px-3 rounded-lg bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] text-white dark:text-black text-[11px] font-semibold transition-all inline-flex items-center gap-1.5 shadow-2xs cursor-pointer"
                                 >
                                   <Plus className="w-3 h-3 stroke-[2.5]" />
                                   <span>Add to AI</span>
@@ -606,7 +606,7 @@ const SkillInspectorContent = ({
               key={t}
               className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 font-mono border border-slate-200/60 dark:border-zinc-700/50"
             >
-              #{t}
+              {t}
             </span>
           ))}
         </div>
@@ -623,7 +623,7 @@ const SkillInspectorContent = ({
           ) : (
             <button
               onClick={onAdd}
-              className="flex-1 h-9 rounded-xl bg-[#FF6B00] hover:bg-[#E55F00] text-white text-xs font-semibold hover:opacity-95 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-1.5 shadow-[0_2px_10px_rgba(255,107,0,0.25)] cursor-pointer"
+              className="flex-1 h-9 rounded-xl bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-semibold hover:opacity-95 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               Attach to Runtime
