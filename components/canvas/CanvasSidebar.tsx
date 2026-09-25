@@ -471,8 +471,9 @@ const CanvasSidebar = ({
                     e.currentTarget.src = "/watermark.png";
                   }}
                   alt="Rivinity"
-                  className="w-9 h-9 object-contain drop-shadow-[0_2px_8px_rgba(255,107,0,0.25)] select-none transition-transform"
+                  className="w-9 h-9 object-contain drop-shadow-[0_2px_8px_rgba(255,107,0,0.25)] select-none transition-all duration-200 group-hover:opacity-0 group-hover:scale-90"
                 />
+                <PanelLeft className="absolute w-5 h-5 text-slate-700 dark:text-zinc-200 opacity-0 group-hover:opacity-100 transition-all duration-200 scale-90 group-hover:scale-100" />
                 <span className="pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 z-[100] whitespace-nowrap rounded-full bg-[#18181b] dark:bg-[#212121] text-white px-3.5 py-1.5 text-[13px] font-medium shadow-2xl border border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-150 scale-95 group-hover:scale-100 select-none">
                   Expand sidebar
                 </span>
