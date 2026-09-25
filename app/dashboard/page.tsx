@@ -9,7 +9,6 @@ import {
   Search,
   Image as ImageIcon,
   FileText,
-  BarChart3,
   MessageSquare,
   Globe,
   Layout,
@@ -168,7 +167,7 @@ const DocSynthesizerGlyph = ({ className }: { className?: string }) => (
 );
 
 /* 
-  CREATIVE TOOLS DEFINITION (Image 2 style with words and solid logos)
+  CREATIVE TOOLS DEFINITION (Square glassmorphic boxes with light pastel colors)
 */
 const CREATIVE_TOOLS = [
   {
@@ -176,42 +175,48 @@ const CREATIVE_TOOLS = [
     title: "Edit Studio",
     icon: EditStudioGlyph,
     path: "/app",
-    bgColor: "#FA7044", // Vibrant coral orange
+    bg: "rgba(255, 145, 77, 0.14)", // Light pastel orange glass
+    border: "rgba(255, 145, 77, 0.35)",
   },
   {
     id: "audio-lab",
     title: "Audio Lab",
     icon: AudioLabGlyph,
     path: "/audio-lab",
-    bgColor: "#C1C5FF", // Soft periwinkle lavender
+    bg: "rgba(180, 140, 255, 0.14)", // Light pastel purple glass
+    border: "rgba(180, 140, 255, 0.35)",
   },
   {
     id: "image-enhancer",
     title: "Image Enhancer",
     icon: ImageEnhancerGlyph,
     path: "/image-enhancer",
-    bgColor: "#F6C1DD", // Soft blush pink
+    bg: "rgba(255, 148, 194, 0.14)", // Light pastel pink glass
+    border: "rgba(255, 148, 194, 0.35)",
   },
   {
     id: "app-builder",
     title: "App Builder",
     icon: AppBuilderGlyph,
     path: "/app-builder",
-    bgColor: "#FFF066", // Pastel lemon yellow
+    bg: "rgba(255, 215, 64, 0.15)", // Light pastel yellow glass
+    border: "rgba(255, 215, 64, 0.35)",
   },
   {
     id: "deep-search",
     title: "Deep Search",
     icon: DeepSearchGlyph,
     path: "/app",
-    bgColor: "#9ABEE9", // Soft pastel sky blue
+    bg: "rgba(125, 185, 255, 0.14)", // Light pastel blue glass
+    border: "rgba(125, 185, 255, 0.35)",
   },
   {
     id: "doc-synthesizer",
     title: "Doc Synthesizer",
     icon: DocSynthesizerGlyph,
     path: "/app",
-    bgColor: "#71B498", // Pastel mint / sage green
+    bg: "rgba(95, 215, 160, 0.14)", // Light pastel mint / green glass
+    border: "rgba(95, 215, 160, 0.35)",
   },
 ];
 
@@ -908,38 +913,9 @@ const DashboardContent = () => {
               )}
             </div>
 
-            {/* AI Capability Action Chips */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2.5 mt-3.5 sm:mt-4">
-              {[
-                { label: "Deep Research", icon: Search, prompt: "Perform deep research on " },
-                { label: "Create Image", icon: ImageIcon, prompt: "Generate a high-quality image of " },
-                { label: "Summarize Document", icon: FileText, prompt: "Summarize this document: " },
-                { label: "Analyze Data", icon: BarChart3, prompt: "Analyze the following dataset: " },
-                { label: "Timeline Mode", icon: Film, prompt: "Create a video timeline for " },
-              ].map((chip) => {
-                const Icon = chip.icon;
-                return (
-                  <motion.button
-                    key={chip.label}
-                    type="button"
-                    onClick={() => {
-                      setPromptInput(chip.prompt);
-                      textareaRef.current?.focus();
-                    }}
-                    whileHover={{ y: -2, scale: 1.025 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ type: "spring", stiffness: 420, damping: 24 }}
-                    className="group relative px-3.5 py-1.5 rounded-full text-xs font-medium text-[#0f172a] bg-white hover:bg-[#f8fafc] border border-[#e2e8f0] hover:border-[#FF6B00]/40 shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center gap-1.5 cursor-pointer transition-all duration-200"
-                  >
-                    <Icon className="w-3.5 h-3.5 text-[#64748b] group-hover:text-[#FF6B00] transition-colors shrink-0" />
-                    <span>{chip.label}</span>
-                  </motion.button>
-                );
-              })}
-            </div>
           </motion.section>
 
-          {/* 4. CONSOLIDATED 2x3 'CREATIVE TOOLS' GRID */}
+          {/* 4. CONSOLIDATED 'CREATIVE TOOLS' GRID */}
           <motion.section
             variants={itemVariants}
             className="w-full space-y-3.5 sm:space-y-4"
@@ -954,37 +930,35 @@ const DashboardContent = () => {
                   professional AI workflows
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => navigate("/app")}
-                className="text-xs font-semibold text-[#64748b] hover:text-[#0f172a] flex items-center gap-1 cursor-pointer bg-transparent border-0 p-0"
-              >
-                <span>View All Tools</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
             </div>
 
-            {/* Image 2 Inspired Squircle Cards Grid (Words + Solid Logos) */}
+            {/* Square Glassmorphic Boxes with Light Pastel Colors */}
             <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
               {CREATIVE_TOOLS.map((tool) => {
                 const Icon = tool.icon;
                 return (
                   <motion.div
                     key={tool.id}
-                    whileHover={{ y: -4, scale: 1.015, transition: springTransition }}
-                    whileTap={{ scale: 0.985 }}
+                    whileHover={{ y: -4, scale: 1.02, transition: springTransition }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => navigate(tool.path)}
-                    style={{ backgroundColor: tool.bgColor }}
-                    className="relative overflow-hidden rounded-[26px] sm:rounded-[32px] p-5 sm:p-6 lg:p-7 flex flex-col justify-between min-h-[160px] sm:min-h-[175px] md:min-h-[190px] cursor-pointer shadow-[0_4px_14px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.09)] transition-all duration-200 select-none group"
+                    style={{
+                      backgroundColor: tool.bg,
+                      borderColor: tool.border,
+                    }}
+                    className="relative aspect-square overflow-hidden rounded-[24px] sm:rounded-[28px] p-5 sm:p-6 lg:p-7 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_8px_30px_rgba(0,0,0,0.03),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_14px_36px_rgba(0,0,0,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
                   >
-                    {/* Top Title */}
-                    <div className="text-[16px] sm:text-[18px] md:text-[20px] font-semibold text-black tracking-tight leading-snug">
+                    {/* Glass inner gradient reflection */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[24px] sm:rounded-[28px]" />
+
+                    {/* Top: Tool Name / Words */}
+                    <div className="relative z-10 text-[16px] sm:text-[18px] md:text-[20px] font-semibold text-slate-900 tracking-tight leading-snug font-display">
                       {tool.title}
                     </div>
 
-                    {/* Bottom Logo */}
-                    <div className="mt-auto pt-6 sm:pt-8 flex items-end">
-                      <Icon className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 text-black transition-transform duration-200 group-hover:scale-105" />
+                    {/* Bottom: Solid Glyph Logo */}
+                    <div className="relative z-10 mt-auto pt-4 flex items-end">
+                      <Icon className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 text-slate-900 transition-transform duration-300 group-hover:scale-105" />
                     </div>
                   </motion.div>
                 );
