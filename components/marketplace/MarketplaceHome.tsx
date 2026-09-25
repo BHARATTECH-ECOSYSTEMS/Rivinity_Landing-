@@ -714,11 +714,12 @@ export const MarketplaceHome: React.FC = () => {
                     </span>
                     {(selectedTypes.length > 0 || selectedPricing.length > 0) && (
                       <button
+                        type="button"
                         onClick={() => {
                           setSelectedTypes([]);
                           setSelectedPricing([]);
                         }}
-                        className="text-[11px] font-semibold text-[#FF6B00] hover:underline cursor-pointer"
+                        className="text-[11px] font-semibold text-[#FF6B00] hover:text-[#e05e00] bg-transparent border-none p-0 outline-none hover:underline cursor-pointer"
                       >
                         Reset all
                       </button>

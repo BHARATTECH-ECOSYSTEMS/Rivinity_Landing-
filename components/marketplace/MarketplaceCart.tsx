@@ -47,13 +47,13 @@ export const MarketplaceCart: React.FC<CartProps> = ({
         <div className="flex flex-col flex-1 min-h-0">
           {/* Header */}
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-zinc-800 shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200/60 dark:border-orange-900/40 flex items-center justify-center text-[#FF6B00]">
-                <Bookmark className="w-4 h-4 fill-[#FF6B00]" />
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200/60 dark:border-orange-900/40 flex items-center justify-center text-[#FF6B00] shrink-0">
+                <Bookmark className="w-4.5 h-4.5 fill-[#FF6B00]" />
               </div>
-              <div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-sm">Saved Assets</h3>
-                <span className="text-[11px] text-slate-400 dark:text-zinc-500 font-medium">
+              <div className="flex flex-col justify-center">
+                <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-tight">Saved Assets</h3>
+                <span className="text-[11px] text-slate-400 dark:text-zinc-500 font-medium mt-0.5 leading-none">
                   {items.length} {items.length === 1 ? 'item' : 'items'} saved
                 </span>
               </div>
