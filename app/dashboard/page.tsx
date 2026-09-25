@@ -870,24 +870,6 @@ const DashboardContent = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        if (!promptInput.trim()) {
-                          toast.info("Type a draft prompt first to enhance.");
-                          return;
-                        }
-                        setPromptInput(
-                          `${promptInput.trim()} — provide detailed reasoning, structured findings, and actionable steps.`,
-                        );
-                        toast.success("Prompt enhanced!");
-                      }}
-                      className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 transition-colors cursor-pointer shrink-0 border-0"
-                      title="Enhance prompt"
-                    >
-                      <Wand2 className="w-4 h-4 shrink-0" strokeWidth={2.2} />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
                         setSkillPickerOpen((v) => {
                           const next = !v;
                           if (next) setIsAddingTools(false);
@@ -901,7 +883,7 @@ const DashboardContent = () => {
                       }`}
                       title="Skills"
                     >
-                      <Layers
+                      <Wand2
                         className={`w-4 h-4 shrink-0 transition-colors ${
                           skillPickerOpen ? "text-[#FF6B00]" : "text-slate-500"
                         }`}
@@ -989,7 +971,7 @@ const DashboardContent = () => {
                 >
                   <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden">
                     <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
-                      <Layers
+                      <Wand2
                         className="w-5 h-5 text-[#FF6B00] shrink-0"
                         strokeWidth={2.2}
                       />
