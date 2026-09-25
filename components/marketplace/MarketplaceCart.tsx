@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from 'react';
-import { X, Trash2, ArrowUpRight, Bookmark } from 'lucide-react';
+import { Trash2, ArrowUpRight, Bookmark } from 'lucide-react';
 import { MarketplaceItemType } from './MarketplaceItem';
 
 interface CartProps {
@@ -58,14 +58,6 @@ export const MarketplaceCart: React.FC<CartProps> = ({
                 </span>
               </div>
             </div>
-
-            <button 
-              onClick={onClose} 
-              className="p-1.5 text-slate-400 hover:text-slate-800 dark:hover:text-white cursor-pointer rounded-xl hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
-              title="Close drawer"
-            >
-              <X className="w-4 h-4" />
-            </button>
           </div>
 
           {/* Items List or Empty State */}
