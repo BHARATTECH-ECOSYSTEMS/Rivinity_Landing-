@@ -226,8 +226,7 @@ const KnowledgeBase = () => {
                       <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                         Installed
                       </div>
-                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100 flex items-center gap-1.5">
-                        <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100">
                         {installed.size} active
                       </div>
                     </div>
@@ -236,8 +235,7 @@ const KnowledgeBase = () => {
                       <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                         Catalog
                       </div>
-                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100 flex items-center gap-1.5">
-                        <span className="inline-block w-2 h-2 rounded-full bg-[#FF6B00]" />
+                      <div className="text-sm font-bold text-slate-800 dark:text-zinc-100">
                         {SKILLS.length} skills
                       </div>
                     </div>
@@ -269,10 +267,7 @@ const KnowledgeBase = () => {
                     </button>
                   )}
 
-                  <div className="flex items-center gap-2 pl-2 border-l border-slate-200 dark:border-zinc-800 select-none">
-                    <kbd className="hidden sm:inline-block text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700">
-                      /
-                    </kbd>
+                  <div className="flex items-center pl-2.5 border-l border-slate-200 dark:border-zinc-800 select-none">
                     <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400 font-medium">
                       {filtered.length}{" "}
                       {filtered.length === 1 ? "skill" : "skills"}
