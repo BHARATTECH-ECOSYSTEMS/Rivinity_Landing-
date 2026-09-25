@@ -1058,8 +1058,8 @@ const DashboardContent = () => {
                     {/* Glass inner gradient reflection */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[18px] sm:rounded-[22px]" />
 
-                    {/* Rivinity Logo Outer Two Rings Spinning at Bottom-Left Corner on Hover */}
-                    <div className="absolute -bottom-8 -left-8 sm:-bottom-9 sm:-left-9 w-24 h-24 sm:w-28 sm:h-28 pointer-events-none opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-500 ease-out z-0">
+                    {/* Rivinity Logo Outer Two Rings Spinning at Bottom-Right Corner on Hover */}
+                    <div className="absolute -bottom-8 -right-8 sm:-bottom-9 sm:-right-9 w-24 h-24 sm:w-28 sm:h-28 pointer-events-none opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-500 ease-out z-0">
                       <div className="w-full h-full animate-[spin_8s_linear_infinite] [filter:drop-shadow(0_0_8px_rgba(255,107,0,0.45))]">
                         <RivinityOuterRings className="w-full h-full" />
                       </div>
@@ -1070,8 +1070,8 @@ const DashboardContent = () => {
                       {tool.title}
                     </div>
 
-                    {/* Bottom: Solid Glyph Logo */}
-                    <div className="relative z-10 mt-auto pt-2 flex items-end">
+                    {/* Bottom: Solid Glyph Logo on Bottom Right Side */}
+                    <div className="relative z-10 mt-auto pt-2 flex items-end justify-end">
                       <Icon className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 lg:w-8 lg:h-8 text-slate-900 transition-transform duration-300 group-hover:scale-105" />
                     </div>
                   </motion.div>
