@@ -19,6 +19,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   ChevronRight,
+  ChevronDown,
   MoreHorizontal,
   MoreVertical,
   Film,
@@ -36,6 +37,7 @@ import {
   Download,
   Copy,
   Share2,
+  FolderClosed,
   type LucideIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -328,65 +330,278 @@ const CREATIVE_TOOLS = [
 ];
 
 /* 
-  CONTINUE WORKING ASSETS MOCK DATA
+  CONTINUE WORKING FOLDERS & ASSETS SYSTEM
 */
+export type ContinueWorkingType =
+  | "Chat"
+  | "App"
+  | "Audio"
+  | "Image"
+  | "Video"
+  | "Doc";
+
 type WorkingAsset = {
   id: string;
   name: string;
   subtitle: string;
-  type: "Chat" | "Video" | "Doc" | "App";
+  type: ContinueWorkingType;
   modified: string;
   icon: LucideIcon;
   path: string;
 };
 
-const CONTINUE_WORKING_ASSETS: WorkingAsset[] = [
+interface WorkingCategoryFolder {
+  id: ContinueWorkingType;
+  title: string;
+  icon: LucideIcon;
+  svgFill: string;
+  bgFront: string;
+  border: string;
+  shadow: string;
+}
+
+const WORKING_FOLDERS: WorkingCategoryFolder[] = [
   {
-    id: "w-1",
-    name: "Autonomous Agent Orchestration Specs",
-    subtitle: "Architecture breakdown · 4 multi-agent reasoning graphs",
-    type: "Chat",
-    modified: "10 mins ago",
+    id: "Chat",
+    title: "Chat",
     icon: MessageSquare,
-    path: "/app",
+    svgFill: "#0284c7", // Sky blue
+    bgFront: "bg-gradient-to-br from-sky-500/90 via-sky-600/95 to-blue-700/95",
+    border: "border-sky-300/40",
+    shadow: "shadow-[0_8px_20px_rgba(2,132,199,0.30)]",
   },
   {
-    id: "w-2",
-    name: "Cyberpunk Cinematic 4K Teaser",
-    subtitle: "Timeline project · 6 video tracks, 4 stem layers, 60fps",
-    type: "Video",
-    modified: "1 hour ago",
-    icon: Film,
-    path: "/app",
-  },
-  {
-    id: "w-3",
-    name: "Financial Data Extraction Model Brief",
-    subtitle: "Knowledge pipeline · 14 source documents connected",
-    type: "Doc",
-    modified: "Yesterday",
-    icon: FileText,
-    path: "/app",
-  },
-  {
-    id: "w-4",
-    name: "E-Commerce Microservice Architecture",
-    subtitle: "Full-stack app scaffold · React 19 + Tailwind v4 + PostgreSQL",
-    type: "App",
-    modified: "2 days ago",
+    id: "App",
+    title: "App",
     icon: Layout,
-    path: "/app-builder",
+    svgFill: "#059669", // Emerald green
+    bgFront: "bg-gradient-to-br from-emerald-500/90 via-emerald-600/95 to-teal-700/95",
+    border: "border-emerald-300/40",
+    shadow: "shadow-[0_8px_20px_rgba(5,150,105,0.30)]",
   },
   {
-    id: "w-5",
-    name: "Brand Identity Color Tokens & Design System",
-    subtitle: "Vector exports · Tailwind typography scale & components",
-    type: "Doc",
-    modified: "3 days ago",
+    id: "Audio",
+    title: "Audio",
+    icon: Mic,
+    svgFill: "#7c3aed", // Purple
+    bgFront: "bg-gradient-to-br from-purple-500/90 via-purple-600/95 to-indigo-700/95",
+    border: "border-purple-300/40",
+    shadow: "shadow-[0_8px_20px_rgba(124,58,237,0.30)]",
+  },
+  {
+    id: "Image",
+    title: "Image",
+    icon: ImageIcon,
+    svgFill: "#db2777", // Pink / Rose
+    bgFront: "bg-gradient-to-br from-pink-500/90 via-pink-600/95 to-rose-700/95",
+    border: "border-pink-300/40",
+    shadow: "shadow-[0_8px_20px_rgba(219,39,119,0.30)]",
+  },
+  {
+    id: "Video",
+    title: "Video",
+    icon: Film,
+    svgFill: "#ea580c", // Vibrant orange
+    bgFront: "bg-gradient-to-br from-orange-500/90 via-orange-600/95 to-amber-700/95",
+    border: "border-orange-300/40",
+    shadow: "shadow-[0_8px_20px_rgba(234,88,12,0.30)]",
+  },
+  {
+    id: "Doc",
+    title: "Doc",
     icon: FileText,
-    path: "/app",
+    svgFill: "#d97706", // Amber / Gold
+    bgFront: "bg-gradient-to-br from-amber-500/90 via-amber-600/95 to-yellow-700/95",
+    border: "border-amber-300/40",
+    shadow: "shadow-[0_8px_20px_rgba(217,119,6,0.30)]",
   },
 ];
+
+const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
+  Chat: [
+    {
+      id: "chat-1",
+      name: "Autonomous Agent Orchestration Specs",
+      subtitle: "Architecture breakdown · 4 multi-agent reasoning graphs",
+      type: "Chat",
+      modified: "10 mins ago",
+      icon: MessageSquare,
+      path: "/app",
+    },
+    {
+      id: "chat-2",
+      name: "Brand Strategy & Positioning Dialogue",
+      subtitle: "Interactive persona synthesis · 12 turn session",
+      type: "Chat",
+      modified: "3 hours ago",
+      icon: MessageSquare,
+      path: "/app",
+    },
+    {
+      id: "chat-3",
+      name: "API Route Optimizer & Debug Assistant",
+      subtitle: "Edge runtime debugging · 8 tool calls verified",
+      type: "Chat",
+      modified: "Yesterday",
+      icon: MessageSquare,
+      path: "/app",
+    },
+    {
+      id: "chat-4",
+      name: "Creative Ad Script Generation Session",
+      subtitle: "Multichannel copywriting variants for TikTok & Meta",
+      type: "Chat",
+      modified: "2 days ago",
+      icon: MessageSquare,
+      path: "/app",
+    },
+  ],
+  App: [
+    {
+      id: "app-1",
+      name: "E-Commerce Microservice Architecture",
+      subtitle: "Full-stack app scaffold · React 19 + Tailwind v4 + PostgreSQL",
+      type: "App",
+      modified: "2 days ago",
+      icon: Layout,
+      path: "/app-builder",
+    },
+    {
+      id: "app-2",
+      name: "Real-time Telemetry Dashboard Build",
+      subtitle: "Next.js 15 App Router · Tremor UI + Supabase WebSockets",
+      type: "App",
+      modified: "4 days ago",
+      icon: Layout,
+      path: "/app-builder",
+    },
+    {
+      id: "app-3",
+      name: "AI Customer Support Widget Scaffold",
+      subtitle: "Embeddable iframe bundle · WebSockets + Tailwind UI",
+      type: "App",
+      modified: "1 week ago",
+      icon: Layout,
+      path: "/app-builder",
+    },
+  ],
+  Audio: [
+    {
+      id: "audio-1",
+      name: "Podcast Master Stem Isolation",
+      subtitle: "Vocals & instruments isolated · 4 stems, 48kHz WAV",
+      type: "Audio",
+      modified: "30 mins ago",
+      icon: Mic,
+      path: "/audio-lab",
+    },
+    {
+      id: "audio-2",
+      name: "Neural Voice Clone - David (US Accent)",
+      subtitle: "Ultra-low latency speech model · 15s reference sample",
+      type: "Audio",
+      modified: "5 hours ago",
+      icon: Mic,
+      path: "/audio-lab",
+    },
+    {
+      id: "audio-3",
+      name: "Ambient Synthwave Soundscape Generator",
+      subtitle: "Generative neural sound design · 120 BPM stereo mix",
+      type: "Audio",
+      modified: "Yesterday",
+      icon: Mic,
+      path: "/audio-lab",
+    },
+  ],
+  Image: [
+    {
+      id: "img-1",
+      name: "Cyberpunk Cityscape 4K Ultra-Upscale",
+      subtitle: "Super-resolution 4x enhancement · Artifact denoising pass",
+      type: "Image",
+      modified: "15 mins ago",
+      icon: ImageIcon,
+      path: "/image-enhancer",
+    },
+    {
+      id: "img-2",
+      name: "Product Studio Cinematic Relighting",
+      subtitle: "Rim light + softbox reflections · High dynamic range",
+      type: "Image",
+      modified: "2 hours ago",
+      icon: ImageIcon,
+      path: "/image-enhancer",
+    },
+    {
+      id: "img-3",
+      name: "Character Concept Art Polish & Detail Pass",
+      subtitle: "Facial restoration & micro-contrast texture boost",
+      type: "Image",
+      modified: "Yesterday",
+      icon: ImageIcon,
+      path: "/image-enhancer",
+    },
+  ],
+  Video: [
+    {
+      id: "vid-1",
+      name: "Cyberpunk Cinematic 4K Teaser",
+      subtitle: "Timeline project · 6 video tracks, 4 stem layers, 60fps",
+      type: "Video",
+      modified: "1 hour ago",
+      icon: Film,
+      path: "/app",
+    },
+    {
+      id: "vid-2",
+      name: "SaaS Product Demo Promo Montage",
+      subtitle: "Dynamic motion keyframing & speed ramps · 1080p ProRes",
+      type: "Video",
+      modified: "Yesterday",
+      icon: Film,
+      path: "/app",
+    },
+    {
+      id: "vid-3",
+      name: "Social Kinetic Cut 9:16 Video",
+      subtitle: "Automated aspect ratio reframe & synchronized auto-captions",
+      type: "Video",
+      modified: "3 days ago",
+      icon: Film,
+      path: "/app",
+    },
+  ],
+  Doc: [
+    {
+      id: "doc-1",
+      name: "Financial Data Extraction Model Brief",
+      subtitle: "Knowledge pipeline · 14 source documents connected",
+      type: "Doc",
+      modified: "Yesterday",
+      icon: FileText,
+      path: "/app",
+    },
+    {
+      id: "doc-2",
+      name: "Brand Identity Color Tokens & Design System",
+      subtitle: "Vector exports · Tailwind typography scale & components",
+      type: "Doc",
+      modified: "3 days ago",
+      icon: FileText,
+      path: "/app",
+    },
+    {
+      id: "doc-3",
+      name: "Quarterly AI Infrastructure Security Audit",
+      subtitle: "PDF multi-page synthesis · 42 pages summarized with citations",
+      type: "Doc",
+      modified: "5 days ago",
+      icon: FileText,
+      path: "/app",
+    },
+  ],
+};
 
 /* 
   5-COLOR PALETTE PER TOPIC
@@ -584,6 +799,8 @@ const DashboardContent = () => {
     "Marketing campaigns",
   );
   const [categoryDirection, setCategoryDirection] = useState(1);
+  const [selectedWorkingFolder, setSelectedWorkingFolder] =
+    useState<ContinueWorkingType | null>("Chat");
 
   const handleCategoryChange = (tab: Category) => {
     const currentIdx = CATEGORIES.indexOf(activeCategory);
@@ -1080,10 +1297,10 @@ const DashboardContent = () => {
             </div>
           </motion.section>
 
-          {/* 5. 'CONTINUE WORKING' TABLE */}
+          {/* 5. 'CONTINUE WORKING' FOLDER SYSTEM */}
           <motion.section
             variants={itemVariants}
-            className="w-full space-y-3.5 sm:space-y-4"
+            className="w-full space-y-4 sm:space-y-5"
           >
             <div className="flex items-end justify-between gap-4">
               <div>
@@ -1091,8 +1308,7 @@ const DashboardContent = () => {
                   Continue Working
                 </div>
                 <div className="text-xs sm:text-sm text-[#64748b] mt-0.5">
-                  Streamlined asset access for your active production files and
-                  sessions
+                  Streamlined asset access for your active production files and sessions
                 </div>
               </div>
               <button
@@ -1105,141 +1321,287 @@ const DashboardContent = () => {
               </button>
             </div>
 
-            {/* Asset Table */}
-            <div className="w-full bg-white border border-[#e2e8f0] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse min-w-[620px]">
-                  <thead>
-                    <tr className="border-b border-[#e2e8f0] bg-[#f8fafc] text-[11px] font-bold uppercase tracking-wider text-[#64748b]">
-                      <th className="py-3 px-4 sm:px-6">Name</th>
-                      <th className="py-3 px-4 w-28">Type</th>
-                      <th className="py-3 px-4 w-32">Modified</th>
-                      <th className="py-3 px-4 sm:px-6 text-right w-44">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#f1f5f9] text-sm">
-                    {CONTINUE_WORKING_ASSETS.map((item) => {
-                      const Icon = item.icon;
-                      let badgeStyle = "bg-[#f1f5f9] text-[#64748b]";
-                      if (item.type === "Chat")
-                        badgeStyle =
-                          "bg-sky-50 text-sky-700 border border-sky-200";
-                      if (item.type === "Video")
-                        badgeStyle =
-                          "bg-purple-50 text-purple-700 border border-purple-200";
-                      if (item.type === "Doc")
-                        badgeStyle =
-                          "bg-amber-50 text-amber-700 border border-amber-200";
-                      if (item.type === "App")
-                        badgeStyle =
-                          "bg-emerald-50 text-emerald-700 border border-emerald-200";
+            {/* 6 Interactive Category Folders: Chat, App, Audio, Image, Video, Doc */}
+            <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-4.5 pt-5 pb-1">
+              {WORKING_FOLDERS.map((folder) => {
+                const Icon = folder.icon;
+                const isSelected = selectedWorkingFolder === folder.id;
+                const fileCount = ALL_WORKING_ASSETS[folder.id]?.length || 0;
 
-                      return (
-                        <tr
-                          key={item.id}
-                          className="hover:bg-[#f8fafc] transition-colors group cursor-pointer"
-                          onClick={() => {
-                            toast.success(`Opening ${item.name}`);
-                            navigate(item.path);
-                          }}
+                return (
+                  <motion.div
+                    key={folder.id}
+                    whileHover={{ y: -3, scale: 1.02, transition: springTransition }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() =>
+                      setSelectedWorkingFolder((prev) =>
+                        prev === folder.id ? null : folder.id,
+                      )
+                    }
+                    className="group relative w-full flex flex-col cursor-pointer select-none aspect-[4/2.75] min-h-[96px] sm:min-h-[105px]"
+                  >
+                    {/* 1. BACK FOLDER LAYER with tab */}
+                    <div className="absolute inset-0 pointer-events-none drop-shadow-xs">
+                      <svg
+                        viewBox="0 0 200 160"
+                        preserveAspectRatio="none"
+                        className="w-full h-full"
+                      >
+                        <path
+                          d="M 0 20 Q 0 0 16 0 L 72 0 Q 86 0 96 15 L 102 23 Q 110 30 122 30 L 184 30 Q 200 30 200 46 L 200 144 Q 200 160 184 160 L 16 160 Q 0 160 0 144 Z"
+                          fill={folder.svgFill}
+                        />
+                      </svg>
+                    </div>
+
+                    {/* 2. INNER WHITE DOCUMENT SHEET (Animates UP out of the folder when clicked!) */}
+                    <motion.div
+                      animate={{
+                        y: isSelected ? -24 : 0,
+                        opacity: isSelected ? 1 : 0.85,
+                        scale: isSelected ? 1.02 : 1,
+                      }}
+                      transition={{ type: "spring", stiffness: 420, damping: 24 }}
+                      className="absolute top-[4px] sm:top-[6px] inset-x-2.5 sm:inset-x-3 h-14 bg-white rounded-t-md sm:rounded-t-lg shadow-[0_-4px_14px_rgba(0,0,0,0.08)] z-[2] border border-slate-200/90 p-1.5 flex flex-col justify-start pointer-events-none overflow-hidden"
+                    >
+                      <div className="w-8 sm:w-10 h-0.5 rounded-full bg-slate-300 mx-auto mt-0.5" />
+                      <div className="w-5 sm:w-7 h-0.5 rounded-full bg-slate-200 mx-auto mt-1" />
+                      {isSelected && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 3 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="mt-1 text-[7.5px] sm:text-[8.5px] font-extrabold text-center text-[#FF6B00] uppercase tracking-wider"
                         >
-                          <td className="py-3.5 px-4 sm:px-6">
-                            <div className="flex items-center gap-3 min-w-0">
-                              <div className="w-8 h-8 rounded-2xl flex items-center justify-center shrink-0 transition-colors bg-[#f1f5f9] text-[#64748b] group-hover:text-[#FF6B00]">
-                                <Icon className="w-4 h-4" />
-                              </div>
-                              <div className="min-w-0">
-                                <div className="font-semibold truncate text-xs sm:text-sm transition-colors text-[#0f172a] group-hover:text-[#FF6B00]">
-                                  {item.name}
-                                </div>
-                                <div className="text-[11px] text-[#64748b] truncate">
-                                  {item.subtitle}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
+                          ACTIVE
+                        </motion.div>
+                      )}
+                    </motion.div>
 
-                          <td className="py-3.5 px-4">
-                            <span
-                              className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider ${badgeStyle}`}
-                            >
-                              {item.type}
-                            </span>
-                          </td>
+                    {/* 3. FRONT FROSTED GLASS POCKET */}
+                    <div
+                      className={`relative z-[3] mt-[16px] sm:mt-[18px] w-full flex-1 rounded-lg sm:rounded-xl p-2.5 sm:p-3 flex flex-col justify-between backdrop-blur-xl ${folder.bgFront} ${folder.border} ${folder.shadow} ${
+                        isSelected
+                          ? "ring-2 ring-offset-2 ring-[#FF6B00] shadow-lg -translate-y-0.5"
+                          : "hover:-translate-y-0.5"
+                      } transition-all duration-300 text-white overflow-hidden`}
+                    >
+                      <div className="absolute -top-7 -right-7 w-16 h-16 bg-white/20 rounded-full blur-md pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/30 pointer-events-none rounded-lg" />
 
-                          <td className="py-3.5 px-4 text-xs text-[#64748b] font-medium whitespace-nowrap">
-                            {item.modified}
-                          </td>
+                      {/* Header in Pocket */}
+                      <div className="relative z-10 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0 drop-shadow-xs" />
+                          <span className="text-[12px] sm:text-[13px] font-bold text-white tracking-tight drop-shadow-xs truncate">
+                            {folder.title}
+                          </span>
+                        </div>
+                        <span className="text-[9px] sm:text-[9.5px] font-bold bg-white/20 backdrop-blur-sm px-1.5 py-0.2 rounded-full border border-white/30 text-white shrink-0">
+                          {fileCount}
+                        </span>
+                      </div>
 
-                          <td className="py-3.5 px-4 sm:px-6 text-right">
-                            <div
-                              className="flex items-center justify-end gap-1"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  toast.success(`Resuming ${item.name}`);
-                                  navigate(item.path);
-                                }}
-                                className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#FF6B00] hover:bg-orange-50 transition-colors cursor-pointer bg-transparent border-0"
-                                title="Resume"
-                              >
-                                <Play className="w-3.5 h-3.5 fill-current" />
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  toast.success(`Exporting ${item.name}`)
-                                }
-                                className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
-                                title="Download"
-                              >
-                                <Download className="w-3.5 h-3.5" />
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  toast.success(
-                                    `Duplicated ${item.name} to workspace`,
-                                  )
-                                }
-                                className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
-                                title="Duplicate"
-                              >
-                                <Copy className="w-3.5 h-3.5" />
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (typeof window !== "undefined") {
-                                    navigator.clipboard?.writeText(
-                                      `${window.location.origin}${item.path}`,
-                                    );
-                                  }
-                                  toast.success(
-                                    `Share link copied for ${item.name}`,
-                                  );
-                                }}
-                                className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
-                                title="Share"
-                              >
-                                <Share2 className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                      {/* Footer in Pocket */}
+                      <div className="relative z-10 pt-1 flex items-center justify-between">
+                        <span className="text-[9px] sm:text-[10px] font-medium text-white/90">
+                          {isSelected ? "Active Folder" : "Click to View"}
+                        </span>
+                        <ChevronDown
+                          className={`w-3 h-3 text-white/90 transition-transform duration-300 ${
+                            isSelected ? "rotate-180 text-white" : ""
+                          }`}
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
+
+            {/* Selected Folder Works Table (Shows below when clicked!) */}
+            <AnimatePresence mode="wait">
+              {selectedWorkingFolder ? (
+                <motion.div
+                  key={selectedWorkingFolder}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="w-full bg-white border border-[#e2e8f0] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+                >
+                  <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-[#f1f5f9] bg-[#f8fafc]/70">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-[#64748b]">
+                        Active Category:
+                      </span>
+                      <span className="text-xs font-bold text-[#0f172a] uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-200/70">
+                        {selectedWorkingFolder}
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-[#64748b]">
+                      {ALL_WORKING_ASSETS[selectedWorkingFolder]?.length || 0} production files
+                    </span>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse min-w-[620px]">
+                      <thead>
+                        <tr className="border-b border-[#e2e8f0] bg-[#f8fafc] text-[11px] font-bold uppercase tracking-wider text-[#64748b]">
+                          <th className="py-3 px-4 sm:px-6">Name</th>
+                          <th className="py-3 px-4 w-28">Type</th>
+                          <th className="py-3 px-4 w-32">Modified</th>
+                          <th className="py-3 px-4 sm:px-6 text-right w-44">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#f1f5f9] text-sm">
+                        {ALL_WORKING_ASSETS[selectedWorkingFolder]?.map((item) => {
+                          const Icon = item.icon;
+                          let badgeStyle = "bg-[#f1f5f9] text-[#64748b]";
+                          if (item.type === "Chat")
+                            badgeStyle =
+                              "bg-sky-50 text-sky-700 border border-sky-200";
+                          if (item.type === "App")
+                            badgeStyle =
+                              "bg-emerald-50 text-emerald-700 border border-emerald-200";
+                          if (item.type === "Audio")
+                            badgeStyle =
+                              "bg-purple-50 text-purple-700 border border-purple-200";
+                          if (item.type === "Image")
+                            badgeStyle =
+                              "bg-pink-50 text-pink-700 border border-pink-200";
+                          if (item.type === "Video")
+                            badgeStyle =
+                              "bg-orange-50 text-orange-700 border border-orange-200";
+                          if (item.type === "Doc")
+                            badgeStyle =
+                              "bg-amber-50 text-amber-700 border border-amber-200";
+
+                          return (
+                            <tr
+                              key={item.id}
+                              className="hover:bg-[#f8fafc] transition-colors group cursor-pointer"
+                              onClick={() => {
+                                toast.success(`Opening ${item.name}`);
+                                navigate(item.path);
+                              }}
+                            >
+                              <td className="py-3.5 px-4 sm:px-6">
+                                <div className="flex items-center gap-3 min-w-0">
+                                  <div className="w-8 h-8 rounded-2xl flex items-center justify-center shrink-0 transition-colors bg-[#f1f5f9] text-[#64748b] group-hover:text-[#FF6B00]">
+                                    <Icon className="w-4 h-4" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <div className="font-semibold truncate text-xs sm:text-sm transition-colors text-[#0f172a] group-hover:text-[#FF6B00]">
+                                      {item.name}
+                                    </div>
+                                    <div className="text-[11px] text-[#64748b] truncate">
+                                      {item.subtitle}
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td className="py-3.5 px-4">
+                                <span
+                                  className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider ${badgeStyle}`}
+                                >
+                                  {item.type}
+                                </span>
+                              </td>
+
+                              <td className="py-3.5 px-4 text-xs text-[#64748b] font-medium whitespace-nowrap">
+                                {item.modified}
+                              </td>
+
+                              <td className="py-3.5 px-4 sm:px-6 text-right">
+                                <div
+                                  className="flex items-center justify-end gap-1"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      toast.success(`Resuming ${item.name}`);
+                                      navigate(item.path);
+                                    }}
+                                    className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#FF6B00] hover:bg-orange-50 transition-colors cursor-pointer bg-transparent border-0"
+                                    title="Resume"
+                                  >
+                                    <Play className="w-3.5 h-3.5 fill-current" />
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      toast.success(`Exporting ${item.name}`)
+                                    }
+                                    className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
+                                    title="Download"
+                                  >
+                                    <Download className="w-3.5 h-3.5" />
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      toast.success(
+                                        `Duplicated ${item.name} to workspace`,
+                                      )
+                                    }
+                                    className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
+                                    title="Duplicate"
+                                  >
+                                    <Copy className="w-3.5 h-3.5" />
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (typeof window !== "undefined") {
+                                        navigator.clipboard?.writeText(
+                                          `${window.location.origin}${item.path}`,
+                                        );
+                                      }
+                                      toast.success(
+                                        `Share link copied for ${item.name}`,
+                                      );
+                                    }}
+                                    className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
+                                    title="Share"
+                                  >
+                                    <Share2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="empty-selection"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="w-full py-8 px-6 rounded-2xl border border-dashed border-slate-200 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center text-center shadow-xs"
+                >
+                  <div className="w-10 h-10 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center text-[#FF6B00] mb-2.5">
+                    <FolderClosed className="w-5 h-5" />
+                  </div>
+                  <div className="text-sm font-semibold text-slate-800">
+                    Click any folder above
+                  </div>
+                  <div className="text-xs text-slate-500 mt-1 max-w-sm">
+                    Select Chat, App, Audio, Image, Video, or Doc to inspect and resume active production files.
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.section>
 
           {/* 6. 'TEMPLATES' CAROUSEL */}

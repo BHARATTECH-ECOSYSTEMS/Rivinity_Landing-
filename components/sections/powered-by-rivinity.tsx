@@ -765,7 +765,7 @@ export function PoweredByRivinity() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[125vh] sm:h-[145vh] md:h-[175vh] lg:h-[195vh] bg-white border-b border-gray-100/60"
+      className="relative w-full h-[125vh] sm:h-[145vh] md:h-[175vh] lg:h-[195vh] bg-white"
       id="powered-by-rivinity"
     >
       {/* Sticky Fullscreen Stage - Naturally positioned with top clearance below fixed header */}

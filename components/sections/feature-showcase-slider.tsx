@@ -923,7 +923,7 @@ export function FeatureShowcaseSlider() {
           ============================================================== */}
       <section
         ref={containerRef}
-        className="hidden md:block relative w-full bg-[#fafbfc] border-b border-slate-100"
+        className="hidden md:block relative w-full"
         style={{ height: "300vh" }}
       >
         {/* Sticky Viewport Stage */}

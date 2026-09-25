@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import CanvasSidebar from "@/components/canvas/CanvasSidebar";
 
 import {
-  Search,
   MessageSquare,
   Globe,
   Layout,
@@ -21,13 +20,7 @@ import {
   MoreVertical,
   History as HistoryIcon,
   Download,
-  Bell,
-  Moon,
-  Sun,
-  MoreHorizontal,
-  ChevronDown,
-  Settings,
-  LogOut,
+  BookOpen,
 } from "lucide-react";
 
 type SessionItem = {
@@ -40,7 +33,7 @@ type SessionItem = {
   toolIcon: typeof MessageSquare;
   iconBg: string;
   iconColor: string;
-  lineColor: string; // Exact matching color for the progress bar line
+  lineColor: string;
   tag: string;
   tokens: string;
   executionMs: number;
@@ -195,27 +188,30 @@ const tabs = [
 const historyCategories = [
   {
     title: "Website Redesign",
-    subtitle: "24 Chats • 12 Files",
-    desc: "Archived research and design planning records.",
+    badge: "24 CHATS • 12 FILES",
+    desc: "Archived research and design planning records for full system redesign.",
     icon: Layout,
-    accent: "from-emerald-500/20 via-teal-500/10 to-transparent",
-    iconBg: "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400",
+    accent: "from-emerald-500/15 via-teal-500/5 to-transparent",
+    iconBg:
+      "bg-emerald-500/10 border-emerald-500/25 text-emerald-600 dark:text-emerald-400",
   },
   {
     title: "Marketing Strategy",
-    subtitle: "18 Chats • 8 Files",
-    desc: "Saved campaign prompts and competitor summaries.",
+    badge: "18 CHATS • 8 FILES",
+    desc: "Saved campaign prompts, positioning playbooks and competitor summaries.",
     icon: Globe,
-    accent: "from-cyan-500/20 via-blue-500/10 to-transparent",
-    iconBg: "bg-cyan-500/10 border-cyan-500/30 text-cyan-600 dark:text-cyan-400",
+    accent: "from-cyan-500/15 via-blue-500/5 to-transparent",
+    iconBg:
+      "bg-cyan-500/10 border-cyan-500/25 text-cyan-600 dark:text-cyan-400",
   },
   {
     title: "AI Product Research",
-    subtitle: "32 Chats • 21 Files",
-    desc: "Validated feature specifications and market reports.",
+    badge: "32 CHATS • 21 FILES",
+    desc: "Validated feature specifications, benchmarks and market intelligence reports.",
     icon: Sparkles,
-    accent: "from-violet-500/20 via-purple-500/10 to-transparent",
-    iconBg: "bg-violet-500/10 border-violet-500/30 text-violet-600 dark:text-violet-400",
+    accent: "from-violet-500/15 via-purple-500/5 to-transparent",
+    iconBg:
+      "bg-violet-500/10 border-violet-500/25 text-violet-600 dark:text-violet-400",
   },
 ];
 
@@ -228,20 +224,13 @@ const HistoryPage = () => {
   });
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>("All");
   const [query, setQuery] = useState("");
-
-  const [headerSearchTerm, setHeaderSearchTerm] = useState("");
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [hasUnreadNotification, setHasUnreadNotification] = useState(true);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const [sessions, setSessions] = useState<SessionItem[]>(initialSessions);
-  const [selectedSession, setSelectedSession] = useState<SessionItem>(sessions[0]);
+  const [selectedSession, setSelectedSession] = useState<SessionItem>(
+    sessions[0],
+  );
   const [showModal, setShowModal] = useState(false);
-
-  const showToast = (msg: string) => {
-    console.log(msg);
-  };
 
   const handleAddNewHistory = () => {
     const titleInput = prompt("Enter new history session title:");
@@ -281,18 +270,16 @@ const HistoryPage = () => {
       list = list.filter((a) => a.tool === activeTab);
     }
 
-    const searchQuery = query.trim() || headerSearchTerm.trim();
+    const searchQuery = query.trim();
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       list = list.filter((a) =>
-        `${a.title} ${a.desc} ${a.tool} ${a.tag}`
-          .toLowerCase()
-          .includes(q)
+        `${a.title} ${a.desc} ${a.tool} ${a.tag}`.toLowerCase().includes(q),
       );
     }
 
     return list;
-  }, [sessions, activeTab, query, headerSearchTerm]);
+  }, [sessions, activeTab, query]);
 
   const grouped = useMemo(() => {
     const sections: Record<string, SessionItem[]> = {
@@ -311,11 +298,12 @@ const HistoryPage = () => {
   return (
     <div
       className={`h-screen w-screen flex overflow-hidden font-sans antialiased selection:bg-[#6366F1]/25 transition-colors duration-300 ${
-        isDarkMode ? "bg-[#060608] text-slate-100" : "bg-slate-50 text-slate-900"
+        isDarkMode
+          ? "bg-[#060608] text-slate-100"
+          : "bg-slate-50 text-slate-900"
       }`}
     >
-      
-      {/* Sidebar Wrapper with High Z-Index */}
+      {/* Sidebar Wrapper */}
       <div className="relative z-30" onClick={(e) => e.stopPropagation()}>
         <CanvasSidebar
           open={sidebarOpen}
@@ -335,82 +323,90 @@ const HistoryPage = () => {
               e.stopPropagation();
               setSidebarOpen(false);
             }}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-2xs md:hidden"
           />
         )}
       </AnimatePresence>
 
       {/* Main Container */}
       <div className="flex-1 flex flex-col min-w-0 relative z-10 overflow-hidden">
-        {/* Scrollable Canvas */}
+        {/* Scrollable Canvas Body */}
         <div className="w-full flex-1 overflow-y-auto">
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 sm:space-y-10">
-            {/* History Categories Section */}
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-6 space-y-5">
+            {/* Section 1: History Categories Section */}
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <div>
-                  <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-                    <div 
-                      style={{ background: "linear-gradient(135deg, #FF6B00 0%, #EC3678 100%)" }}
-                      className="p-2 rounded-xl text-white shadow-md shadow-[#FF6B00]/20"
+                  <h2 className="!text-lg font-bold tracking-tight text-[#0f172a] dark:text-white flex items-center gap-2 leading-tight">
+                    <div
+                      style={{
+                        background:
+                          "linear-gradient(135deg, #FF6B00 0%, #EC3678 100%)",
+                      }}
+                      className="w-7 h-7 rounded-xl text-white shadow-xs flex items-center justify-center shrink-0"
                     >
-                      <HistoryIcon className="w-5 h-5" />
+                      <HistoryIcon className="w-3.5 h-3.5" />
                     </div>
-                    Saved History Categories
+                    <span>Saved History Categories</span>
                   </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Browse your archived conversations and generated assets by category
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Browse your archived conversations and generated assets by
+                    category
                   </p>
                 </div>
 
                 <button
                   type="button"
                   onClick={handleAddNewHistory}
-                  style={{ background: "linear-gradient(135deg, #FF6B00 0%, #EC3678 100%)" }}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl hover:opacity-95 text-white text-xs font-semibold shadow-md shadow-[#FF6B00]/20 transition-all cursor-pointer shrink-0"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #FF6B00 0%, #EC3678 100%)",
+                  }}
+                  className="inline-flex items-center justify-center gap-1.5 h-8 px-3 rounded-xl hover:opacity-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer shrink-0 self-start sm:self-auto"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3.5 h-3.5" />
                   New History Log
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
+              {/* 3 Categories Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4 items-stretch">
                 {historyCategories.map((cat, idx) => {
                   const IconComp = cat.icon;
                   return (
                     <motion.div
                       key={idx}
-                      whileHover={{ y: -3 }}
-                      transition={{ duration: 0.2 }}
-                      className="relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#111115] p-6 shadow-sm flex flex-col justify-between space-y-4 group hover:border-[#6366F1]/40 transition-all"
+                      whileHover={{ y: -2 }}
+                      transition={{ duration: 0.18 }}
+                      className="relative overflow-hidden rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#111115] p-4 sm:p-4.5 shadow-2xs flex flex-col justify-between group hover:border-[#6366F1]/50 transition-all h-[155px] cursor-pointer"
                     >
-                      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${cat.accent} rounded-full blur-2xl pointer-events-none`} />
+                      <div
+                        className={`absolute top-0 right-0 w-28 h-28 bg-gradient-to-br ${cat.accent} rounded-full blur-xl pointer-events-none`}
+                      />
 
-                      <div className="space-y-3 relative z-10">
-                        <div className="flex items-start justify-between">
-                          <div className={`p-3 rounded-2xl border ${cat.iconBg} shadow-xs`}>
-                            <IconComp className="w-5 h-5" />
-                          </div>
-                          <span className="text-[11px] font-mono font-medium text-slate-400 dark:text-slate-500 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800/60">
-                            {cat.subtitle}
-                          </span>
+                      {/* Top Row: Squircle Icon + Tag */}
+                      <div className="relative z-10 flex items-center justify-between gap-2">
+                        <div
+                          className={`w-8 h-8 rounded-xl border ${cat.iconBg} flex items-center justify-center shadow-2xs shrink-0`}
+                        >
+                          <IconComp className="w-4 h-4" />
                         </div>
-
-                        <div>
-                          <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-[#6366F1] transition-colors">
-                            {cat.title}
-                          </h3>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                            {cat.desc}
-                          </p>
-                        </div>
+                        <span className="text-[10px] font-bold tracking-wider text-[#FF6B00] uppercase font-mono">
+                          {cat.badge}
+                        </span>
                       </div>
 
-                      <div className="pt-2 relative z-10">
-                        <span className="text-[#6366F1] inline-flex items-center gap-1.5 text-xs font-semibold hover:opacity-80 cursor-pointer group-hover:translate-x-1 transition-transform">
-                          View Archive
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </span>
+                      {/* Middle: Clean 2-Line Description */}
+                      <p className="text-[11.5px] sm:text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 relative z-10 my-auto font-normal">
+                        {cat.desc}
+                      </p>
+
+                      {/* Bottom Row: Full-width Bold Uppercase Title */}
+                      <div className="pt-2 relative z-10 flex items-center justify-between border-t border-slate-100 dark:border-slate-800/60">
+                        <h3 className="text-xs font-bold tracking-wider text-slate-900 dark:text-white uppercase group-hover:text-[#FF6B00] transition-colors leading-none">
+                          {cat.title}
+                        </h3>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#FF6B00] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0 ml-1.5" />
                       </div>
                     </motion.div>
                   );
@@ -418,21 +414,22 @@ const HistoryPage = () => {
               </div>
             </div>
 
-            {/* Main History Timeline Stream */}
-            <div className="space-y-6 pt-6 border-t border-slate-200/80 dark:border-slate-800/80">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            {/* Section 2: Main History Timeline Stream */}
+            <div className="space-y-3.5 pt-3 border-t border-slate-200/70 dark:border-slate-800/70">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-1">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  <h3 className="!text-sm sm:!text-base font-bold tracking-tight text-[#0f172a] dark:text-white">
                     Activity History Stream
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                    Chronological record of past interactions, model generations, and prompt queries.
+                    Chronological record of past interactions, model
+                    generations, and prompt queries
                   </p>
                 </div>
               </div>
 
               {/* Filter Tabs */}
-              <div className="flex items-center gap-2 overflow-x-auto pb-3 pt-1 [-ms-overflow-style:none] [&-webkit-scrollbar]:hidden scroll-smooth">
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 [-ms-overflow-style:none] [&-webkit-scrollbar]:hidden scroll-smooth">
                 {tabs.map((tab) => {
                   const isActive = activeTab === tab;
                   return (
@@ -443,15 +440,16 @@ const HistoryPage = () => {
                       style={
                         isActive
                           ? {
-                              background: "linear-gradient(135deg, #FF6B00 0%, #EC3678 100%)",
+                              background:
+                                "linear-gradient(135deg, #FF6B00 0%, #EC3678 100%)",
                               borderColor: "transparent",
                               color: "#FFFFFF",
                             }
                           : {}
                       }
-                      className={`h-9 px-4 sm:px-5 rounded-2xl text-xs font-semibold transition-all whitespace-nowrap border cursor-pointer shrink-0 ${
+                      className={`h-7 px-3 rounded-xl text-[11px] font-semibold transition-all whitespace-nowrap border cursor-pointer shrink-0 ${
                         isActive
-                          ? "shadow-md shadow-[#FF6B00]/20"
+                          ? "shadow-xs text-white"
                           : "bg-white dark:bg-[#111115] text-slate-600 dark:text-slate-400 border-slate-200/80 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
                       }`}
                     >
@@ -462,24 +460,25 @@ const HistoryPage = () => {
               </div>
 
               {/* Session Cards List */}
-              <div className="space-y-6 w-full">
+              <div className="space-y-3 w-full">
                 {(["Today", "Yesterday", "Earlier"] as const).map((day) => {
                   const items = grouped[day];
                   if (!items || items.length === 0) return null;
 
                   return (
-                    <div key={day} className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 tracking-wider">
-                          {day.toUpperCase()}
+                    <div key={day} className="space-y-2">
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                          {day}
                         </span>
-                        <div className="h-px flex-1 bg-slate-200/80 dark:border-slate-800/80" />
-                        <span className="text-[11px] font-mono text-slate-400">
-                          {items.length} sessions
+                        <div className="h-px flex-1 bg-slate-200/70 dark:bg-slate-800/70" />
+                        <span className="text-[10px] font-mono text-slate-400">
+                          {items.length}{" "}
+                          {items.length === 1 ? "session" : "sessions"}
                         </span>
                       </div>
 
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <AnimatePresence>
                           {items.map((session) => {
                             const Icon = session.toolIcon;
@@ -491,51 +490,58 @@ const HistoryPage = () => {
                                   setSelectedSession(session);
                                   setShowModal(true);
                                 }}
-                                className="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 hover:border-[#6366F1]/50 transition-all p-4 sm:p-5 cursor-pointer bg-white dark:bg-[#111115] space-y-3 shadow-xs relative group"
+                                className="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 hover:border-[#6366F1]/50 transition-all p-3 sm:p-3.5 cursor-pointer bg-white dark:bg-[#111115] space-y-2 shadow-2xs relative group"
                               >
-                                <div className="flex items-start justify-between gap-4">
-                                  <div className="flex items-start gap-3.5 min-w-0">
-                                    <div className={`p-3 rounded-2xl border ${session.iconBg} shrink-0 mt-0.5 shadow-xs`}>
-                                      <Icon className={`w-4 h-4 ${session.iconColor}`} />
+                                <div className="flex items-start justify-between gap-3">
+                                  <div className="flex items-start gap-2.5 min-w-0">
+                                    <div
+                                      className={`w-7 h-7 rounded-xl border ${session.iconBg} shrink-0 mt-0.5 flex items-center justify-center shadow-2xs`}
+                                    >
+                                      <Icon
+                                        className={`w-3.5 h-3.5 ${session.iconColor}`}
+                                      />
                                     </div>
-                                    <div className="min-w-0 space-y-1">
-                                      <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-[#6366F1] transition-colors truncate">
+                                    <div className="min-w-0 space-y-0.5">
+                                      <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-[#6366F1] transition-colors truncate">
                                         {session.title}
                                       </h4>
-                                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                                      <p className="text-[11.5px] text-slate-500 dark:text-slate-400 leading-normal line-clamp-1">
                                         {session.desc}
                                       </p>
                                     </div>
                                   </div>
 
-                                  <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                                    <span className="text-[11px] font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 font-mono">
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 font-mono">
                                       {session.status}
                                     </span>
-                                    <MoreVertical className="w-4 h-4 text-slate-400 hidden sm:block" />
+                                    <MoreVertical className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
                                   </div>
                                 </div>
 
-                                <div className="space-y-2 pt-1">
-                                  <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-full overflow-hidden">
+                                <div className="space-y-1.5 pt-1">
+                                  <div className="w-full h-1 bg-slate-100 dark:bg-slate-800/80 rounded-full overflow-hidden">
                                     <div
                                       className={`h-full rounded-full ${session.lineColor}`}
                                       style={{
                                         width: `${Math.min(
                                           session.executionMs / 30,
-                                          100
+                                          100,
                                         )}%`,
                                       }}
                                     />
                                   </div>
 
-                                  <div className="flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 font-mono">
-                                    <span className="flex items-center gap-1.5">
+                                  <div className="flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                                    <span className="flex items-center gap-1">
                                       <Clock className="w-3 h-3 text-[#6366F1]" />
-                                      Recorded at {session.time}
+                                      {session.time}
                                     </span>
-                                    <span className="text-[#6366F1] font-semibold hover:underline flex items-center gap-1">
-                                      {session.status === "Completed" ? "View Report" : "View Details"} →
+                                    <span className="text-[#6366F1] font-semibold hover:underline flex items-center gap-0.5">
+                                      {session.status === "Completed"
+                                        ? "Report"
+                                        : "Details"}{" "}
+                                      →
                                     </span>
                                   </div>
                                 </div>
@@ -549,18 +555,17 @@ const HistoryPage = () => {
                 })}
 
                 {filtered.length === 0 && (
-                  <div className="w-full py-20 text-center rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 bg-white dark:bg-[#111115]">
-                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                  <div className="w-full py-12 text-center rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white dark:bg-[#111115]">
+                    <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                       No history entries found
                     </p>
                     <button
                       type="button"
                       onClick={() => {
                         setQuery("");
-                        setHeaderSearchTerm("");
                         setActiveTab("All");
                       }}
-                      className="mt-4 px-4 py-2 text-xs font-medium rounded-2xl text-white bg-[#6366F1] hover:opacity-90 transition shadow-sm cursor-pointer"
+                      className="mt-3 px-3 py-1.5 text-xs font-medium rounded-xl text-white bg-[#6366F1] hover:opacity-90 transition shadow-xs cursor-pointer"
                     >
                       Reset filters
                     </button>
@@ -572,104 +577,134 @@ const HistoryPage = () => {
         </div>
       </div>
 
-      {/* Global Root Modal Overlay */}
+      {/* Detail Modal Overlay (Matching the exact Skill Inspector layout and styling) */}
       <AnimatePresence>
-        {showModal && (
-          <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
+        {showModal && selectedSession && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop overlay (Dimmed & Blurred) */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowModal(false)}
+              className="absolute inset-0 bg-black/60 dark:bg-black/75 backdrop-blur-sm"
+            />
+
+            {/* Centered Dialog Box (Solid Opaque White / Dark Theme Card) */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="w-full max-w-lg rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#111115] p-6 shadow-2xl space-y-6 relative pointer-events-auto max-h-[90vh] overflow-y-auto"
+              exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              transition={{
+                type: "spring",
+                damping: 26,
+                stiffness: 320,
+              }}
+              className="relative w-full max-w-md max-h-[85vh] bg-white dark:bg-[#111115] border border-slate-200 dark:border-slate-800 shadow-2xl rounded-2xl flex flex-col z-10 overflow-hidden"
+              style={{ backgroundColor: isDarkMode ? "#111115" : "#ffffff" }}
             >
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800/80">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-[#6366F1]/10 border border-[#6366F1]/20 text-[#6366F1]">
-                    <HistoryIcon className="w-5 h-5" />
-                  </div>
-                  History Session Record
-                </h3>
+              {/* Modal Top Header Bar */}
+              <div className="p-3.5 border-b border-slate-100 dark:border-slate-800/80 flex justify-between items-center bg-slate-50/80 dark:bg-[#16161a] shrink-0">
+                <span className="text-[11px] font-mono font-medium text-slate-500 dark:text-slate-400">
+                  Skill Inspector
+                </span>
+
                 <button
                   onClick={() => setShowModal(false)}
-                  className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 transition cursor-pointer"
+                  className="p-1 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              <div className="space-y-5">
-                <div className="flex items-center gap-3.5">
-                  <div className={`p-3.5 rounded-2xl border ${selectedSession.iconBg} shrink-0 shadow-xs`}>
-                    <selectedSession.toolIcon className={`w-6 h-6 ${selectedSession.iconColor}`} />
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="text-base font-bold text-slate-900 dark:text-white truncate">
+              {/* Scrollable Modal Content Container */}
+              <div className="flex-1 overflow-y-auto bg-white dark:bg-[#111115] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-800 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
+                <div className="flex flex-col h-full bg-white dark:bg-[#111115]">
+                  {/* Detail Header Section */}
+                  <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800/80 bg-white dark:bg-[#111115]">
+                    <div className="flex items-center gap-1.5 text-[#FF6B00] text-[10px] font-bold uppercase tracking-wider mb-1 font-mono">
+                      <Sparkles className="w-3 h-3" />
+                      <span>{selectedSession.tag}</span>
+                    </div>
+
+                    <h2 className="!text-sm sm:!text-base font-bold tracking-tight text-slate-900 dark:text-white">
                       {selectedSession.title}
-                    </h4>
-                    <p className="text-xs text-slate-400 font-mono mt-0.5">
-                      Recorded on {selectedSession.day} at {selectedSession.time} •{" "}
-                      <span className="text-[#6366F1] font-semibold">
-                        {selectedSession.status}
-                      </span>
+                    </h2>
+
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed font-normal">
+                      {selectedSession.desc}
                     </p>
-                  </div>
-                </div>
 
-                <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Engine Category & Tag
-                  </span>
-                  <div className="flex items-center gap-2 pt-1 text-xs text-slate-600 dark:text-slate-300 font-mono flex-wrap">
-                    <span className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80">
-                      {selectedSession.tool}
-                    </span>
-                    <span className="text-[#6366F1] px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 font-semibold">
-                      #{selectedSession.tag}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Archive Metrics
-                  </span>
-                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#18181C] space-y-2.5 font-mono text-xs border border-slate-200/50 dark:border-slate-800/50">
-                    <div className="flex justify-between text-slate-600 dark:text-slate-300">
-                      <span>Tokens Utilized:</span>
-                      <span className="text-[#6366F1] font-semibold">
-                        {selectedSession.tokens}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-slate-600 dark:text-slate-300">
-                      <span>Processing Latency:</span>
-                      <span className="font-semibold text-emerald-500">
-                        {selectedSession.executionMs}ms
-                      </span>
+                    <div className="mt-4 flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowModal(false)}
+                        style={{
+                          background:
+                            "linear-gradient(135deg, #FF6B00 0%, #EC3678 100%)",
+                        }}
+                        className="flex-1 h-8.5 rounded-xl text-white text-xs font-semibold hover:opacity-95 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                        Attach to Runtime
+                      </button>
                     </div>
                   </div>
-                </div>
 
-                <div className="space-y-2 pt-2">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Saved Prompt Summary & Output
-                  </span>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-[#18181C] p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80">
-                    {selectedSession.desc}
-                  </p>
-                </div>
-              </div>
+                  {/* Body Viewer (Exact Match to SKILL.md Inspector Box) */}
+                  <div className="p-4 sm:p-5 bg-white dark:bg-[#111115]">
+                    <div className="flex items-center justify-between mb-2 text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                      <span className="flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" />
+                        SKILL.md Instructions
+                      </span>
 
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  style={{ background: "linear-gradient(135deg, #FF6B00 0%, #EC3678 100%)" }}
-                  className="w-full py-3 rounded-2xl hover:opacity-95 text-white text-xs font-semibold shadow-md shadow-[#FF6B00]/20 transition cursor-pointer flex items-center justify-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export History Log
-                </button>
+                      <span className="text-[9px] text-slate-400">
+                        Read-Only
+                      </span>
+                    </div>
+
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#18181C] p-3.5 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200 space-y-3">
+                      <div className="space-y-1">
+                        <div>
+                          <span className="font-semibold text-slate-900 dark:text-white">
+                            name:
+                          </span>{" "}
+                          <span className="text-slate-600 dark:text-slate-300">
+                            {selectedSession.title
+                              .toLowerCase()
+                              .replace(/[^a-z0-9]+/g, "-")}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-semibold text-slate-900 dark:text-white">
+                            description:
+                          </span>{" "}
+                          <span className="text-slate-600 dark:text-slate-300">
+                            {selectedSession.desc}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-semibold text-slate-900 dark:text-white">
+                            category:
+                          </span>{" "}
+                          <span className="text-slate-600 dark:text-slate-300">
+                            {selectedSession.tag}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 space-y-1">
+                        <div className="font-bold text-slate-900 dark:text-white">
+                          Overview
+                        </div>
+                        <p className="text-slate-600 dark:text-slate-300 font-sans text-xs leading-relaxed">
+                          {selectedSession.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
