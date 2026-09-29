@@ -553,3 +553,58 @@ section.section {
     clip-path: none !important;
   }
 }
+
+/* ============================================
+   PRE-HYDRATION SIDEBAR STATE
+   Prevents visual flash/shift when sidebar is
+   collapsed and the page reloads. The inline
+   script sets data-sidebar-closed on <html>
+   before first paint; React removes it after
+   hydration syncs state.
+   
+   NOTE: Tailwind v4 uses the CSS `translate`
+   property (via --tw-translate-x), NOT
+   `transform`. Overrides must target the same.
+   ============================================ */
+
+/* Desktop (md+): collapsed sidebar = 68px, no translate */
+@media (min-width: 768px) {
+  html[data-sidebar-closed] [data-sidebar-wrapper] {
+    width: 68px !important;
+    --tw-translate-x: 0px !important;
+    translate: 0px 0px !important;
+  }
+  html[data-sidebar-closed] [data-sidebar-aside] {
+    width: 68px !important;
+  }
+}
+
+/* Mobile (<md): collapsed sidebar = off-screen */
+@media (max-width: 767px) {
+  html[data-sidebar-closed] [data-sidebar-wrapper] {
+    --tw-translate-x: -100% !important;
+    translate: -100% 0px !important;
+  }
+}
+
+/* Both: hide expanded content, show collapsed icons */
+html[data-sidebar-closed] [data-sidebar-expanded] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  --tw-translate-x: calc(var(--spacing) * -2) !important;
+  translate: calc(var(--spacing) * -2) 0px !important;
+}
+html[data-sidebar-closed] [data-sidebar-collapsed] {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  --tw-translate-x: 0px !important;
+  translate: 0px 0px !important;
+}
+
+/* Disable all sidebar transitions during pre-hydration */
+html[data-sidebar-closed] [data-sidebar-wrapper],
+html[data-sidebar-closed] [data-sidebar-aside],
+html[data-sidebar-closed] [data-sidebar-expanded],
+html[data-sidebar-closed] [data-sidebar-collapsed] {
+  transition: none !important;
+}

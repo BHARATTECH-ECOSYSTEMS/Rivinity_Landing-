@@ -11,415 +11,266 @@ import {
   Download,
   Sparkles,
   FileSpreadsheet,
+  Search,
+  Check,
+  ArrowUpRight,
 } from "lucide-react";
+import { toast } from "sonner";
 
-const sampleInsights = [
-  {
-    label: "Average Score",
-    value: "78.5%",
-    change: "+3.2%",
-    positive: true,
-  },
-  {
-    label: "Total Records",
-    value: "1,247",
-    change: "",
-    positive: true,
-  },
-  {
-    label: "Missing Data",
-    value: "2.1%",
-    change: "-0.5%",
-    positive: true,
-  },
-  {
-    label: "Outliers",
-    value: "15",
-    change: "+3",
-    positive: false,
-  },
+interface InsightMetric {
+  label: string;
+  value: string;
+  change: string;
+  positive: boolean;
+}
+
+const metrics: InsightMetric[] = [
+  { label: "Cohort Average Score", value: "84.2%", change: "+3.8%", positive: true },
+  { label: "Analyzed Records", value: "2,480", change: "+120", positive: true },
+  { label: "Missing Data Entries", value: "0.4%", change: "-1.2%", positive: true },
+  { label: "Statistical Outliers", value: "14", change: "+2", positive: false },
 ];
 
-const chartData = [65, 45, 78, 92, 58, 84, 71, 88, 95, 62, 76, 83];
+const chartData = [65, 48, 78, 92, 58, 84, 71, 88, 95, 62, 76, 89];
+const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const tableRows = [
-  ["Alex K.", "92", "85", "78", "85"],
-  ["Sarah M.", "88", "91", "94", "91"],
-  ["James L.", "76", "82", "70", "76"],
-  ["Emma R.", "95", "88", "92", "92"],
+const initialTableRows = [
+  ["Alex K.", "AP Calculus BC", "96%", "92%", "94% (A)"],
+  ["Sarah M.", "Cellular Biology", "89%", "95%", "92% (A)"],
+  ["James L.", "Classical Physics", "78%", "84%", "81% (B)"],
+  ["Emma R.", "Macroeconomics", "94%", "91%", "93% (A)"],
+  ["David H.", "Organic Chemistry", "88%", "86%", "87% (B+)"],
 ];
 
-const DataAnalystView = () => {
+export default function DataAnalystView() {
   const [query, setQuery] = useState("");
-  const [hasData] = useState(true);
-  const [activeChart, setActiveChart] = useState<"bar" | "pie" | "line">(
-    "bar"
+  const [activeChart, setActiveChart] = useState<"bar" | "line" | "pie">("bar");
+  const [tableSearch, setTableSearch] = useState("");
+  const [queryAnswer, setQueryAnswer] = useState<string | null>(
+    "Regression analysis indicates a 0.82 Pearson correlation between homework completion rates and final test scores."
   );
 
-  const chartButtons = [
-    { key: "bar" as const, icon: BarChart3, label: "Bar chart" },
-    { key: "pie" as const, icon: PieChart, label: "Pie chart" },
-    { key: "line" as const, icon: TrendingUp, label: "Line chart" },
-  ];
+  const handleRunQuery = () => {
+    if (!query.trim()) return;
+    toast.success("AI SQL/Python analytics query executed!");
+    setQueryAnswer(
+      `Statistical query executed for "${query.trim()}": Computed standard deviation σ = 4.31 with p-value < 0.001.`
+    );
+    setQuery("");
+  };
+
+  const filteredRows = initialTableRows.filter((r) =>
+    r.some((cell) => cell.toLowerCase().includes(tableSearch.toLowerCase()))
+  );
 
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-white">
-      {/* Header */}
-      <div className="border-b border-gray-200/80 bg-white/85 backdrop-blur-sm">
-        <div className="max-w-[1050px] mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-gray-500" />
+    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
+      {/* SUB-HEADER */}
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
+            <BarChart3 className="h-4 w-4" strokeWidth={2.2} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 text-[14px] font-semibold text-slate-900 dark:text-zinc-100">
+              <span>Data Analyst Pro</span>
+              <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-semibold text-[#FF6B00]">
+                Dataset Active
+              </span>
             </div>
-
-            <div>
-              <h1 className="text-[15px] font-semibold text-gray-900">
-                Data Analyst
-              </h1>
-              <p className="text-[11px] text-gray-500 mt-0.5">
-                Upload data, ask questions, get insights
-              </p>
+            <div className="text-[11px] text-slate-500 dark:text-zinc-400">
+              Natural language tabular querying, statistical regression & chart synthesis
             </div>
           </div>
+        </div>
 
-          <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FF5500] text-white text-[11px] font-medium hover:bg-[#e94d00] transition-colors">
-            <Upload className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Upload CSV/Excel</span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => toast.info("Upload CSV, TSV, or XLSX dataset")}
+            className="flex items-center gap-1.5 rounded-xl bg-[#FF6B00] px-3.5 py-1.5 text-[12px] font-semibold text-white hover:bg-[#E66000] transition-colors shadow-xs"
+          >
+            <Upload className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Upload Dataset</span>
           </button>
         </div>
       </div>
 
-      <div className="max-w-[1050px] mx-auto px-6 py-6">
-        {hasData && (
-          <>
-            {/* Dataset Info */}
-            <div className="flex items-center justify-between mb-4">
+      {/* MAIN BODY */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="mx-auto w-full max-w-[840px] space-y-5">
+          {/* STATS TILES SKELETON */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {metrics.map((m, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 space-y-1 shadow-xs"
+              >
+                <div className="text-[10.5px] uppercase font-bold text-slate-400 dark:text-zinc-500 tracking-wider truncate">
+                  {m.label}
+                </div>
+                <div className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-zinc-100">
+                  {m.value}
+                </div>
+                <div
+                  className={`text-[11px] font-semibold flex items-center gap-1 ${
+                    m.positive
+                      ? "text-emerald-600 dark:text-emerald-400"
+                      : "text-red-500"
+                  }`}
+                >
+                  <span>{m.change}</span>
+                  <span className="text-[10px] text-slate-400 dark:text-zinc-500 font-normal">vs prev cycle</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* AI NATURAL LANGUAGE QUERY BAR */}
+          <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs space-y-2">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleRunQuery();
+                }}
+                placeholder="Ask questions about your data (e.g. Which subject has the highest variance?)..."
+                className="flex-1 bg-transparent px-3 py-2 text-[13px] text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 outline-none border border-slate-200 dark:border-zinc-800 rounded-xl focus:border-[#FF6B00]"
+              />
+              <button
+                type="button"
+                onClick={handleRunQuery}
+                disabled={!query.trim()}
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#FF6B00] px-4 py-2 text-[12.5px] font-semibold text-white hover:bg-[#E66000] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>Run Analytics</span>
+              </button>
+            </div>
+
+            {queryAnswer && (
+              <div className="flex items-start gap-2 rounded-xl bg-orange-500/5 dark:bg-orange-500/10 p-3 text-[12.5px] text-slate-800 dark:text-zinc-200 border border-orange-500/15">
+                <Sparkles className="h-4 w-4 text-[#FF6B00] shrink-0 mt-0.5" />
+                <span>{queryAnswer}</span>
+              </div>
+            )}
+          </div>
+
+          {/* CHART VISUALIZER SKELETON */}
+          <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800 pb-3">
               <div>
-                <p className="text-[12px] font-semibold text-gray-900">
-                  Student Performance
-                </p>
-                <p className="text-[10px] text-gray-400 mt-0.5">
-                  1,247 records · 5 columns
-                </p>
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#FF6B00]">
+                  Performance Distribution
+                </div>
+                <div className="text-[14px] font-bold text-slate-900 dark:text-zinc-100">
+                  Student Cohort Grade Trendlines
+                </div>
               </div>
 
-              <div className="hidden sm:flex items-center gap-2 text-[10px] text-gray-400">
-                <FileSpreadsheet className="w-3.5 h-3.5" />
-                student-performance.xlsx
+              {/* CHART TYPE BUTTONS */}
+              <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800 p-1 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setActiveChart("bar")}
+                  className={`px-3 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+                    activeChart === "bar"
+                      ? "bg-white dark:bg-zinc-900 text-[#FF6B00] shadow-xs"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-zinc-200"
+                  }`}
+                >
+                  Bar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveChart("line")}
+                  className={`px-3 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+                    activeChart === "line"
+                      ? "bg-white dark:bg-zinc-900 text-[#FF6B00] shadow-xs"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-zinc-200"
+                  }`}
+                >
+                  Trend
+                </button>
               </div>
             </div>
 
-            {/* Quick Insights */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-              {sampleInsights.map((insight) => (
-                <div
-                  key={insight.label}
-                  className="bg-white border border-gray-200/80 rounded-xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.035)]"
-                >
-                  <p className="text-[10px] text-gray-400 mb-1.5">
-                    {insight.label}
-                  </p>
-
-                  <p className="text-[19px] font-bold text-gray-900">
-                    {insight.value}
-                  </p>
-
-                  {insight.change && (
-                    <p
-                      className={`text-[10px] font-medium mt-1 ${
-                        insight.positive ? "text-emerald-500" : "text-red-500"
-                      }`}
-                    >
-                      {insight.change}
-                      <span className="text-gray-400 font-normal ml-1">
-                        vs previous
-                      </span>
-                    </p>
-                  )}
+            {/* BARS SKELETON */}
+            <div className="h-48 sm:h-56 flex items-end justify-between gap-1.5 sm:gap-3 pt-4 px-2">
+              {chartData.map((val, idx) => (
+                <div key={idx} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
+                  <div className="text-[10px] text-slate-400 dark:text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity font-mono">
+                    {val}%
+                  </div>
+                  <div
+                    className="w-full rounded-t-xl bg-gradient-to-t from-[#FF6B00]/70 to-[#FF6B00] hover:from-[#E66000] hover:to-[#FF6B00] transition-all duration-300"
+                    style={{ height: `${val}%` }}
+                  />
+                  <div className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono">
+                    {monthLabels[idx]}
+                  </div>
                 </div>
               ))}
             </div>
+          </div>
 
-            {/* Visualization */}
-            <div className="bg-white border border-gray-200/80 rounded-2xl p-5 mb-5 shadow-[0_2px_12px_rgba(0,0,0,0.035)]">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <p className="text-[12px] font-semibold text-gray-900">
-                    Visualization
-                  </p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">
-                    Performance distribution across the dataset
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-1 bg-gray-50 border border-gray-100 rounded-lg p-1">
-                  {chartButtons.map((chart) => {
-                    const Icon = chart.icon;
-
-                    return (
-                      <button
-                        key={chart.key}
-                        onClick={() => setActiveChart(chart.key)}
-                        title={chart.label}
-                        className={`p-2 rounded-md transition-colors ${
-                          activeChart === chart.key
-                            ? "bg-white text-[#FF5500] shadow-sm border border-gray-100"
-                            : "text-gray-400 hover:text-gray-600 hover:bg-white/70"
-                        }`}
-                      >
-                        <Icon className="w-3.5 h-3.5" />
-                      </button>
-                    );
-                  })}
+          {/* TABULAR DATASET SKELETON */}
+          <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800 pb-3">
+              <div className="flex items-center gap-2">
+                <FileSpreadsheet className="h-4 w-4 text-[#FF6B00]" />
+                <div className="text-[13.5px] font-bold text-slate-900 dark:text-zinc-100">
+                  Active Student Grade Records
                 </div>
               </div>
 
-              {/* Chart */}
-              <div className="h-[230px] border-b border-l border-gray-100 relative px-4">
-                {/* Horizontal grid */}
-                <div className="absolute inset-x-4 top-0 border-t border-gray-100" />
-                <div className="absolute inset-x-4 top-1/4 border-t border-gray-100" />
-                <div className="absolute inset-x-4 top-1/2 border-t border-gray-100" />
-                <div className="absolute inset-x-4 top-3/4 border-t border-gray-100" />
-
-                {activeChart === "bar" && (
-                  <div className="absolute inset-0 px-6 pt-4 pb-6 flex items-end gap-2">
-                    {chartData.map((value, index) => (
-                      <div
-                        key={index}
-                        className="flex-1 h-full flex flex-col justify-end items-center gap-1"
-                      >
-                        <div
-                          className="w-full max-w-[42px] rounded-t-md bg-[#FF5500] opacity-80 hover:opacity-100 transition-all"
-                          style={{
-                            height: `${value * 1.8}px`,
-                          }}
-                        />
-
-                        <span className="text-[8px] text-gray-400">
-                          {index + 1}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {activeChart === "line" && (
-                  <div className="absolute inset-0 px-6 py-6 flex items-center">
-                    <svg
-                      viewBox="0 0 1000 220"
-                      className="w-full h-full overflow-visible"
-                      preserveAspectRatio="none"
-                    >
-                      <polyline
-                        fill="none"
-                        stroke="#FF5500"
-                        strokeWidth="4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        points={chartData
-                          .map((value, index) => {
-                            const x =
-                              (index / (chartData.length - 1)) * 1000;
-                            const y = 210 - value * 1.9;
-                            return `${x},${y}`;
-                          })
-                          .join(" ")}
-                      />
-
-                      {chartData.map((value, index) => {
-                        const x =
-                          (index / (chartData.length - 1)) * 1000;
-                        const y = 210 - value * 1.9;
-
-                        return (
-                          <circle
-                            key={index}
-                            cx={x}
-                            cy={y}
-                            r="6"
-                            fill="white"
-                            stroke="#FF5500"
-                            strokeWidth="3"
-                          />
-                        );
-                      })}
-                    </svg>
-                  </div>
-                )}
-
-                {activeChart === "pie" && (
-                  <div className="absolute inset-0 flex items-center justify-center gap-8">
-                    <div
-                      className="w-[150px] h-[150px] rounded-full relative"
-                      style={{
-                        background:
-                          "conic-gradient(#FF5500 0deg 140deg, #ff9a70 140deg 245deg, #ffd2c2 245deg 360deg)",
-                      }}
-                    >
-                      <div className="absolute inset-[28px] rounded-full bg-white flex items-center justify-center">
-                        <div className="text-center">
-                          <p className="text-[16px] font-bold text-gray-900">
-                            78.5%
-                          </p>
-                          <p className="text-[9px] text-gray-400">
-                            Average
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {[
-                        ["80–100", "39%"],
-                        ["60–79", "29%"],
-                        ["Below 60", "32%"],
-                      ].map(([label, value], index) => (
-                        <div
-                          key={label}
-                          className="flex items-center gap-2"
-                        >
-                          <div
-                            className={`w-2.5 h-2.5 rounded-full ${
-                              index === 0
-                                ? "bg-[#FF5500]"
-                                : index === 1
-                                ? "bg-orange-300"
-                                : "bg-orange-100"
-                            }`}
-                          />
-
-                          <span className="text-[10px] text-gray-500">
-                            {label}
-                          </span>
-
-                          <span className="text-[10px] font-semibold text-gray-700">
-                            {value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/60 px-3 py-1.5 w-full sm:w-64">
+                <Search className="h-3.5 w-3.5 text-slate-400" />
+                <input
+                  type="text"
+                  value={tableSearch}
+                  onChange={(e) => setTableSearch(e.target.value)}
+                  placeholder="Filter records..."
+                  className="w-full bg-transparent text-[12px] text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 outline-none border-none focus:ring-0"
+                />
               </div>
             </div>
 
-            {/* Data Preview */}
-            <div className="bg-white border border-gray-200/80 rounded-2xl p-5 mb-5 shadow-[0_2px_12px_rgba(0,0,0,0.035)] overflow-x-auto">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center">
-                    <Table className="w-3.5 h-3.5 text-[#FF5500]" />
-                  </div>
-
-                  <div>
-                    <p className="text-[12px] font-semibold text-gray-900">
-                      Data Preview
-                    </p>
-                    <p className="text-[10px] text-gray-400">
-                      Showing first 4 records
-                    </p>
-                  </div>
-                </div>
-
-                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-800 transition-colors">
-                  <Download className="w-3 h-3" />
-                  Export
-                </button>
-              </div>
-
-              <table className="w-full text-[11px]">
+            {/* TABLE */}
+            <div className="overflow-x-auto [scrollbar-width:thin]">
+              <table className="w-full text-left text-[12.5px]">
                 <thead>
-                  <tr className="border-b border-gray-100">
-                    {[
-                      "Student",
-                      "Math",
-                      "Science",
-                      "English",
-                      "Average",
-                    ].map((heading) => (
-                      <th
-                        key={heading}
-                        className="text-left py-2.5 px-3 text-[10px] text-gray-400 font-semibold"
-                      >
-                        {heading}
-                      </th>
-                    ))}
+                  <tr className="border-b border-slate-100 dark:border-zinc-800 text-slate-400 dark:text-zinc-500 text-[11px] font-bold uppercase tracking-wider">
+                    <th className="py-2.5 px-3">Student</th>
+                    <th className="py-2.5 px-3">Subject</th>
+                    <th className="py-2.5 px-3">Midterm</th>
+                    <th className="py-2.5 px-3">Final</th>
+                    <th className="py-2.5 px-3">Overall Grade</th>
                   </tr>
                 </thead>
-
-                <tbody>
-                  {tableRows.map((row, rowIndex) => (
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
+                  {filteredRows.map((row, idx) => (
                     <tr
-                      key={rowIndex}
-                      className="border-b border-gray-50 hover:bg-orange-50/30 transition-colors"
+                      key={idx}
+                      className="hover:bg-slate-50/70 dark:hover:bg-zinc-800/40 transition-colors"
                     >
-                      {row.map((cell, cellIndex) => (
-                        <td
-                          key={cellIndex}
-                          className={`py-3 px-3 ${
-                            cellIndex === 4
-                              ? "font-semibold text-gray-800"
-                              : "text-gray-600"
-                          }`}
-                        >
-                          {cell}
-                        </td>
-                      ))}
+                      <td className="py-3 px-3 font-semibold text-slate-900 dark:text-zinc-100">
+                        {row[0]}
+                      </td>
+                      <td className="py-3 px-3 text-slate-600 dark:text-zinc-400">{row[1]}</td>
+                      <td className="py-3 px-3 font-mono">{row[2]}</td>
+                      <td className="py-3 px-3 font-mono">{row[3]}</td>
+                      <td className="py-3 px-3 font-semibold text-[#FF6B00]">{row[4]}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </>
-        )}
-
-        {/* AI Query */}
-        <div className="bg-white border border-gray-200/80 rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.035)]">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 shrink-0 rounded-lg bg-orange-50 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-[#FF5500]" />
-            </div>
-
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && query.trim()) {
-                  // Existing UI-only query behavior preserved.
-                }
-              }}
-              placeholder="Ask about your data..."
-              className="flex-1 min-w-0 bg-transparent text-[12px] text-gray-800 placeholder:text-gray-400 focus:outline-none"
-            />
-
-            <button
-              disabled={!query.trim()}
-              className="w-8 h-8 shrink-0 rounded-lg bg-[#FF5500] flex items-center justify-center hover:bg-[#e94d00] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <Send className="w-3.5 h-3.5 text-white" />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2 mt-3 ml-11 flex-wrap">
-            {[
-              "Average math score?",
-              "Find top students",
-              "Show missing data",
-            ].map((suggestion) => (
-              <button
-                key={suggestion}
-                onClick={() => setQuery(suggestion)}
-                className="px-2.5 py-1 rounded-full bg-gray-50 border border-gray-100 text-[9.5px] text-gray-400 hover:bg-orange-50 hover:border-orange-100 hover:text-[#FF5500] transition-colors"
-              >
-                {suggestion}
-              </button>
-            ))}
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default DataAnalystView;
+}

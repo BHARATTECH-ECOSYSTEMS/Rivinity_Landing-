@@ -10,7 +10,11 @@ import {
   Trophy,
   RotateCcw,
   Sparkles,
+  Award,
+  Timer,
+  BookOpen,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Question {
   id: number;
@@ -19,980 +23,342 @@ interface Question {
   correct: number;
   hint: string;
   explanation: string;
+  category: string;
 }
 
-const sampleQuiz: Question[] = [
+const initialQuiz: Question[] = [
   {
     id: 1,
-    question:
-      "Which planet is known as the Red Planet?",
+    question: "Which cellular process generates the highest yield of ATP per glucose molecule?",
     options: [
-      "Venus",
-      "Mars",
-      "Jupiter",
-      "Saturn",
+      "Glycolysis in the Cytoplasm",
+      "Lactic Acid Fermentation",
+      "Oxidative Phosphorylation (Electron Transport Chain)",
+      "Substrate-Level Phosphorylation in Krebs Cycle",
     ],
-    correct: 1,
-    hint: "It's named after the Roman god of war.",
+    correct: 2,
+    hint: "Requires oxygen as the terminal electron acceptor.",
     explanation:
-      "Mars appears red due to iron oxide (rust) on its surface. It's the fourth planet from the Sun.",
+      "Oxidative phosphorylation generates approximately 30-32 ATP per glucose via the proton gradient across the inner mitochondrial membrane, far exceeding glycolysis (2 ATP) or fermentation (2 ATP).",
+    category: "Cell Biology",
   },
   {
     id: 2,
-    question:
-      "What is the chemical symbol for Gold?",
+    question: "What is the primary physical implication of Schrödinger's Wave Equation?",
     options: [
-      "Go",
-      "Gd",
-      "Au",
-      "Ag",
+      "Particles travel in deterministic classical trajectories",
+      "Describes the probability amplitude of finding a quantum system in a specific state",
+      "Proves light is purely a mechanical transverse wave",
+      "Eliminates relativistic time dilation in mass calculations",
     ],
-    correct: 2,
-    hint:
-      "It comes from the Latin word 'Aurum'.",
+    correct: 1,
+    hint: "Think about wave function probability density |Ψ|².",
     explanation:
-      "Au comes from 'Aurum', the Latin word for gold. Silver's symbol Ag comes from 'Argentum'.",
+      "Schrödinger's wave equation calculates the evolution of the wave function Ψ, where |Ψ|² provides the probability density of finding a particle in space-time.",
+    category: "Quantum Physics",
   },
   {
     id: 3,
-    question:
-      "Who wrote 'Romeo and Juliet'?",
+    question: "In Economics, what occurs during 'Stagflation'?",
     options: [
-      "Charles Dickens",
-      "William Shakespeare",
-      "Jane Austen",
-      "Mark Twain",
+      "Rapid economic growth coupled with negative deflation",
+      "High inflation combined with stagnant economic growth and high unemployment",
+      "Low unemployment with zero fiscal debt",
+      "Exponential stock market appreciation with declining money supply",
     ],
     correct: 1,
-    hint:
-      "He was born in Stratford-upon-Avon.",
+    hint: "A toxic mixture of 'Stagnation' and 'Inflation'.",
     explanation:
-      "William Shakespeare wrote Romeo and Juliet around 1594-1596. It's one of his earliest tragedies.",
+      "Stagflation occurs when inflation rates remain stubbornly elevated while economic output contracts and unemployment climbs, presenting a major monetary policy dilemma.",
+    category: "Macroeconomics",
   },
 ];
 
-const QuizzesView = () => {
-  const [currentQ, setCurrentQ] =
-    useState(0);
+export default function QuizzesView() {
+  const [questions, setQuestions] = useState<Question[]>(initialQuiz);
+  const [currentQ, setCurrentQ] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [showHint, setShowHint] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [score, setScore] = useState(0);
+  const [answered, setAnswered] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const [topic, setTopic] = useState("");
+  const [generating, setGenerating] = useState(false);
 
-  const [selected, setSelected] =
-    useState<number | null>(null);
+  const question = questions[currentQ] || questions[0];
+  const progress = Math.round(((currentQ + 1) / questions.length) * 100);
 
-  const [showHint, setShowHint] =
-    useState(false);
-
-  const [showExplanation, setShowExplanation] =
-    useState(false);
-
-  const [score, setScore] =
-    useState(0);
-
-  const [answered, setAnswered] =
-    useState(false);
-
-  const [completed, setCompleted] =
-    useState(false);
-
-  const question = sampleQuiz[currentQ];
-
-  const progress =
-    ((currentQ + 1) / sampleQuiz.length) *
-    100;
-
-  /* =========================================================
-     SELECT ANSWER
-  ========================================================= */
-
-  const handleSelect = (index: number) => {
+  const handleSelect = (idx: number) => {
     if (answered) return;
-
-    setSelected(index);
+    setSelected(idx);
     setAnswered(true);
     setShowExplanation(true);
 
-    if (index === question.correct) {
-      setScore((previous) => previous + 1);
+    if (idx === question.correct) {
+      setScore((s) => s + 1);
+      toast.success("Correct answer!");
+    } else {
+      toast.error("Incorrect! Check the explanation below.");
     }
   };
 
-  /* =========================================================
-     NEXT QUESTION
-  ========================================================= */
-
-  const nextQuestion = () => {
-    if (
-      currentQ >=
-      sampleQuiz.length - 1
-    ) {
+  const handleNext = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ((q) => q + 1);
+      setSelected(null);
+      setAnswered(false);
+      setShowHint(false);
+      setShowExplanation(false);
+    } else {
       setCompleted(true);
-      return;
     }
-
-    setCurrentQ(
-      (previous) => previous + 1
-    );
-
-    setSelected(null);
-    setShowHint(false);
-    setShowExplanation(false);
-    setAnswered(false);
   };
 
-  /* =========================================================
-     RESTART
-  ========================================================= */
-
-  const restart = () => {
+  const restartQuiz = () => {
     setCurrentQ(0);
     setSelected(null);
+    setAnswered(false);
     setShowHint(false);
     setShowExplanation(false);
-    setAnswered(false);
     setScore(0);
     setCompleted(false);
   };
 
-  /* =========================================================
-     COMPLETED SCREEN
-  ========================================================= */
+  const generateQuiz = () => {
+    if (!topic.trim() || generating) return;
+    setGenerating(true);
 
-  if (completed) {
-    const percentage = Math.round(
-      (score / sampleQuiz.length) * 100
-    );
+    setTimeout(() => {
+      const newQuestions: Question[] = [
+        {
+          id: Date.now(),
+          question: `Which fundamental principle is central to understanding ${topic.trim()}?`,
+          options: [
+            `The primary dynamic equilibrium of ${topic.trim()}`,
+            `Inverse quadratic decay without baseline limits`,
+            `Static invariant velocity under standard conditions`,
+            `Non-reciprocal thermal dissipation`,
+          ],
+          correct: 0,
+          hint: `Focus on the foundational dynamic theory of ${topic.trim()}`,
+          explanation: `In ${topic.trim()}, systems converge toward dynamic equilibrium according to empirical state boundaries.`,
+          category: topic.trim(),
+        },
+      ];
 
-    return (
-      <div
-        className="
-          flex
-          h-full
-          min-h-0
-          w-full
-          flex-col
-          bg-white
-        "
-      >
-        {/* HEADER */}
-
-        <div
-          className="
-            flex
-            shrink-0
-            items-center
-            gap-3
-            border-b
-            border-gray-200/70
-            bg-white/80
-            px-5
-            py-3
-            backdrop-blur-sm
-            sm:px-7
-          "
-        >
-
-          <div
-            className="
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-xl
-              bg-gray-50
-            "
-          >
-            <HelpCircle
-              className="
-                h-4.5
-                w-4.5
-                text-gray-500
-              "
-            />
-          </div>
-
-          <div>
-            <h1
-              className="
-                text-[14px]
-                font-semibold
-                text-[#242631]
-              "
-            >
-              Quiz Complete
-            </h1>
-
-            <p
-              className="
-                text-[11px]
-                text-gray-400
-              "
-            >
-              Here's how you performed
-            </p>
-          </div>
-        </div>
-
-        {/* RESULT */}
-
-        <div
-          className="
-            flex
-            min-h-0
-            flex-1
-            items-center
-            justify-center
-            overflow-y-auto
-            px-5
-            py-10
-          "
-        >
-          <div
-            className="
-              w-full
-              max-w-[520px]
-              text-center
-            "
-          >
-            {/* TROPHY */}
-
-            <div
-              className="
-                mx-auto
-                mb-6
-                flex
-                h-20
-                w-20
-                items-center
-                justify-center
-                rounded-full
-                bg-orange-50
-                ring-8
-                ring-orange-50/50
-              "
-            >
-              <Trophy
-                className="
-                  h-9
-                  w-9
-                  text-[#FF5500]
-                "
-                strokeWidth={1.8}
-              />
-            </div>
-
-            <h2
-              className="
-                text-[26px]
-                font-semibold
-                tracking-[-0.02em]
-                text-[#30313D]
-              "
-            >
-              Quiz Complete!
-            </h2>
-
-            <p
-              className="
-                mt-2
-                text-[13px]
-                text-gray-500
-              "
-            >
-              You scored{" "}
-              <span className="font-semibold text-gray-700">
-                {score}
-              </span>{" "}
-              out of{" "}
-              <span className="font-semibold text-gray-700">
-                {sampleQuiz.length}
-              </span>{" "}
-              ({percentage}%)
-            </p>
-
-            {/* SCORE INDICATORS */}
-
-            <div
-              className="
-                my-7
-                flex
-                items-center
-                justify-center
-                gap-2
-              "
-            >
-              {sampleQuiz.map(
-                (questionItem, index) => (
-                  <div
-                    key={questionItem.id}
-                    className={`
-                      flex
-                      h-8
-                      w-8
-                      items-center
-                      justify-center
-                      rounded-full
-
-                      ${
-                        index < score
-                          ? "bg-green-50 text-green-600"
-                          : "bg-red-50 text-red-500"
-                      }
-                    `}
-                  >
-                    {index < score ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <X className="h-4 w-4" />
-                    )}
-                  </div>
-                )
-              )}
-            </div>
-
-            {/* RESULT CARD */}
-
-            <div
-              className="
-                mb-7
-                rounded-[18px]
-                border
-                border-gray-200/80
-                bg-white
-                p-5
-                shadow-[0_2px_12px_rgba(0,0,0,0.035)]
-              "
-            >
-              <div className="flex items-center justify-between">
-                <span
-                  className="
-                    text-[11px]
-                    text-gray-400
-                  "
-                >
-                  Accuracy
-                </span>
-
-                <span
-                  className="
-                    text-[14px]
-                    font-semibold
-                    text-[#FF5500]
-                  "
-                >
-                  {percentage}%
-                </span>
-              </div>
-
-              <div
-                className="
-                  mt-3
-                  h-2
-                  overflow-hidden
-                  rounded-full
-                  bg-gray-100
-                "
-              >
-                <div
-                  className="
-                    h-full
-                    rounded-full
-                    bg-[#FF5500]
-                    transition-all
-                  "
-                  style={{
-                    width: `${percentage}%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* ACTIONS */}
-
-            <div
-              className="
-                flex
-                items-center
-                justify-center
-                gap-2
-              "
-            >
-              <button
-                type="button"
-                onClick={restart}
-                className="
-                  flex
-                  h-10
-                  items-center
-                  gap-2
-                  rounded-xl
-                  border
-                  border-gray-200
-                  bg-white
-                  px-5
-                  text-[11px]
-                  font-medium
-                  text-gray-600
-                  shadow-sm
-                  transition-all
-                  hover:border-gray-300
-                  hover:text-gray-900
-                "
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                Retry
-              </button>
-
-              <button
-                type="button"
-                onClick={restart}
-                className="
-                  flex
-                  h-10
-                  items-center
-                  gap-2
-                  rounded-xl
-                  bg-[#FF5500]
-                  px-5
-                  text-[11px]
-                  font-semibold
-                  text-white
-                  shadow-[0_3px_10px_rgba(255,85,0,0.15)]
-                  transition-all
-                  hover:bg-[#E64D00]
-                "
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                New Quiz
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  /* =========================================================
-     QUIZ PAGE
-  ========================================================= */
+      setQuestions(newQuestions);
+      restartQuiz();
+      setTopic("");
+      setGenerating(false);
+      toast.success(`Generated quiz on ${topic.trim()}!`);
+    }, 1300);
+  };
 
   return (
-    <div
-      className="
-        flex
-        h-full
-        min-h-0
-        w-full
-        flex-col
-        bg-white
-      "
-    >
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
-
-      <div
-        className="
-          flex
-          shrink-0
-          items-center
-          justify-between
-          border-b
-          border-gray-200/70
-          bg-white/80
-          px-5
-          py-3
-          backdrop-blur-sm
-          sm:px-7
-        "
-      >
-        <div className="flex items-center gap-3">
-          
-
-          <div
-            className="
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-xl
-              bg-gray-50
-            "
-          >
-            <HelpCircle
-              className="
-                h-4.5
-                w-4.5
-                text-gray-500
-              "
-              strokeWidth={2}
-            />
+    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
+      {/* SUB-HEADER */}
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
+            <HelpCircle className="h-4 w-4" strokeWidth={2.2} />
           </div>
-
           <div>
-            <h1
-              className="
-                text-[14px]
-                font-semibold
-                text-[#242631]
-              "
-            >
-              Quizzes
-            </h1>
-
-            <p
-              className="
-                text-[11px]
-                text-gray-400
-              "
-            >
-              Test your knowledge and learn as you go
-            </p>
+            <div className="flex items-center gap-2 text-[14px] font-semibold text-slate-900 dark:text-zinc-100">
+              <span>Interactive Quizzes</span>
+              <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-semibold text-[#FF6B00]">
+                Live Evaluation
+              </span>
+            </div>
+            <div className="text-[11px] text-slate-500 dark:text-zinc-400">
+              Instant feedback testing with comprehensive rationale explanations
+            </div>
           </div>
         </div>
 
-        {/* SCORE */}
-
-        <div
-          className="
-            rounded-xl
-            border
-            border-gray-200
-            bg-white
-            px-3
-            py-1.5
-          "
-        >
-          <span
-            className="
-              text-[10px]
-              text-gray-400
-            "
-          >
-            Score
-          </span>
-
-          <span
-            className="
-              ml-1.5
-              text-[11px]
-              font-semibold
-              text-[#FF5500]
-            "
-          >
-            {score}
-          </span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 text-[11.5px] font-medium text-slate-700 dark:text-zinc-300">
+            <Trophy className="h-3.5 w-3.5 text-[#FF6B00]" />
+            <span>
+              Score: {score}/{questions.length}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* =====================================================
-          MAIN
-      ===================================================== */}
-
-      <div
-        className="
-          min-h-0
-          flex-1
-          overflow-y-auto
-          px-4
-          py-6
-          sm:px-6
-          sm:py-8
-        "
-      >
-        <div
-          className="
-            mx-auto
-            w-full
-            max-w-[650px]
-          "
-        >
-          {/* =================================================
-              PROGRESS
-          ================================================= */}
-
-          <div className="mb-7">
-            <div
-              className="
-                mb-2
-                flex
-                items-center
-                justify-between
-              "
-            >
-              <span
-                className="
-                  text-[11px]
-                  font-medium
-                  text-gray-500
-                "
-              >
-                Question {currentQ + 1} of{" "}
-                {sampleQuiz.length}
-              </span>
-
-              <span
-                className="
-                  text-[10px]
-                  font-medium
-                  text-gray-400
-                "
-              >
-                {Math.round(progress)}%
-              </span>
-            </div>
-
-            <div
-              className="
-                h-1.5
-                overflow-hidden
-                rounded-full
-                bg-gray-200
-              "
-            >
-              <div
-                className="
-                  h-full
-                  rounded-full
-                  bg-[#FF5500]
-                  transition-all
-                  duration-300
-                "
-                style={{
-                  width: `${progress}%`,
+      {/* CONTENT AREA */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="mx-auto w-full max-w-[800px] space-y-5">
+          {/* AI QUIZ GENERATOR PROMPT */}
+          <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") generateQuiz();
                 }}
+                placeholder="Generate quiz on any subject (e.g. World History, Genetics, Organic Chemistry)..."
+                className="flex-1 bg-transparent px-3 py-2 text-[13px] text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 outline-none border border-slate-200 dark:border-zinc-800 rounded-xl focus:border-[#FF6B00]"
               />
-            </div>
-          </div>
-
-          {/* =================================================
-              QUESTION
-          ================================================= */}
-
-          <div
-            className="
-              mb-5
-              rounded-[20px]
-              border
-              border-gray-200/80
-              bg-white
-              p-6
-              shadow-[0_3px_16px_rgba(0,0,0,0.035)]
-              sm:p-7
-            "
-          >
-            <div
-              className="
-                mb-4
-                flex
-                items-center
-                gap-2
-              "
-            >
-              <span
-                className="
-                  flex
-                  h-7
-                  w-7
-                  items-center
-                  justify-center
-                  rounded-lg
-                  bg-orange-50
-                  text-[10px]
-                  font-bold
-                  text-[#FF5500]
-                "
-              >
-                {currentQ + 1}
-              </span>
-
-              <span
-                className="
-                  text-[10px]
-                  font-semibold
-                  uppercase
-                  tracking-[0.1em]
-                  text-gray-400
-                "
-              >
-                Question
-              </span>
-            </div>
-
-            <p
-              className="
-                text-[17px]
-                font-semibold
-                leading-[1.55]
-                tracking-[-0.01em]
-                text-[#30313D]
-                sm:text-[18px]
-              "
-            >
-              {question.question}
-            </p>
-          </div>
-
-          {/* =================================================
-              OPTIONS
-          ================================================= */}
-
-          <div className="mb-5 space-y-2.5">
-            {question.options.map(
-              (option, index) => {
-                const isCorrect =
-                  index === question.correct;
-
-                const isSelected =
-                  index === selected;
-
-                let containerStyle =
-                  "border-gray-200 bg-white hover:border-orange-200 hover:bg-orange-50/20";
-
-                if (answered) {
-                  if (isCorrect) {
-                    containerStyle =
-                      "border-green-200 bg-green-50/70";
-                  } else if (isSelected) {
-                    containerStyle =
-                      "border-red-200 bg-red-50/70";
-                  } else {
-                    containerStyle =
-                      "border-gray-200 bg-gray-50 opacity-55";
-                  }
-                }
-
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={() =>
-                      handleSelect(index)
-                    }
-                    disabled={answered}
-                    className={`
-                      flex
-                      w-full
-                      items-center
-                      gap-3
-                      rounded-[15px]
-                      border
-                      px-4
-                      py-3.5
-                      text-left
-                      transition-all
-                      duration-200
-
-                      ${containerStyle}
-                    `}
-                  >
-                    {/* LETTER */}
-
-                    <span
-                      className={`
-                        flex
-                        h-8
-                        w-8
-                        shrink-0
-                        items-center
-                        justify-center
-                        rounded-lg
-                        text-[11px]
-                        font-bold
-
-                        ${
-                          answered &&
-                          isCorrect
-                            ? "bg-green-500 text-white"
-                            : answered &&
-                              isSelected
-                            ? "bg-red-500 text-white"
-                            : "bg-gray-100 text-gray-500"
-                        }
-                      `}
-                    >
-                      {String.fromCharCode(
-                        65 + index
-                      )}
-                    </span>
-
-                    {/* TEXT */}
-
-                    <span
-                      className="
-                        min-w-0
-                        flex-1
-                        text-[13px]
-                        leading-relaxed
-                        text-gray-700
-                      "
-                    >
-                      {option}
-                    </span>
-
-                    {/* RESULT ICON */}
-
-                    {answered &&
-                      isCorrect && (
-                        <Check
-                          className="
-                            h-4
-                            w-4
-                            shrink-0
-                            text-green-600
-                          "
-                        />
-                      )}
-
-                    {answered &&
-                      isSelected &&
-                      !isCorrect && (
-                        <X
-                          className="
-                            h-4
-                            w-4
-                            shrink-0
-                            text-red-500
-                          "
-                        />
-                      )}
-                  </button>
-                );
-              }
-            )}
-          </div>
-
-          {/* =================================================
-              HINT
-          ================================================= */}
-
-          {!answered && (
-            <div className="mb-5">
               <button
                 type="button"
-                onClick={() =>
-                  setShowHint(!showHint)
-                }
-                className="
-                  flex
-                  items-center
-                  gap-2
-                  rounded-xl
-                  border
-                  border-amber-100
-                  bg-amber-50
-                  px-3.5
-                  py-2.5
-                  text-[11px]
-                  font-medium
-                  text-amber-700
-                  transition-colors
-                  hover:bg-amber-100
-                "
+                onClick={generateQuiz}
+                disabled={generating || !topic.trim()}
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#FF6B00] px-4 py-2 text-[12.5px] font-semibold text-white hover:bg-[#E66000] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
               >
-                <Lightbulb className="h-3.5 w-3.5" />
-
-                {showHint
-                  ? question.hint
-                  : "Show Hint"}
+                <Sparkles className="h-4 w-4" />
+                <span>{generating ? "Crafting Quiz..." : "Create Quiz"}</span>
               </button>
             </div>
-          )}
+          </div>
 
-          {/* =================================================
-              EXPLANATION
-          ================================================= */}
-
-          {showExplanation && (
-            <div
-              className="
-                mb-5
-                rounded-[16px]
-                border
-                border-orange-100
-                bg-orange-50/40
-                p-4
-              "
-            >
-              <div
-                className="
-                  mb-2
-                  flex
-                  items-center
-                  gap-2
-                "
-              >
-                <Sparkles
-                  className="
-                    h-3.5
-                    w-3.5
-                    text-[#FF5500]
-                  "
-                />
-
-                <p
-                  className="
-                    text-[10px]
-                    font-semibold
-                    uppercase
-                    tracking-[0.1em]
-                    text-[#D94A00]
-                  "
-                >
-                  Explanation
-                </p>
+          {!completed ? (
+            <div className="space-y-5">
+              {/* PROGRESS BAR */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-[12px] font-medium text-slate-500 dark:text-zinc-400">
+                  <span>
+                    Question {currentQ + 1} of {questions.length} • {question.category}
+                  </span>
+                  <span>{progress}% Complete</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-zinc-800 overflow-hidden">
+                  <div
+                    className="h-full bg-[#FF6B00] transition-all duration-300 rounded-full"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
               </div>
 
-              <p
-                className="
-                  text-[12px]
-                  leading-[1.75]
-                  text-gray-600
-                "
-              >
-                {question.explanation}
-              </p>
+              {/* QUIZ QUESTION SKELETON CARD */}
+              <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm space-y-6">
+                <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-zinc-100 leading-snug">
+                  {question.question}
+                </div>
+
+                {/* OPTIONS GRID */}
+                <div className="space-y-3">
+                  {question.options.map((option, idx) => {
+                    const isSelected = selected === idx;
+                    const isCorrect = idx === question.correct;
+
+                    let optionStyle =
+                      "border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-slate-300 dark:hover:border-zinc-700 text-slate-800 dark:text-zinc-200";
+
+                    if (answered) {
+                      if (isCorrect) {
+                        optionStyle =
+                          "border-emerald-500 bg-emerald-50/70 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-medium";
+                      } else if (isSelected && !isCorrect) {
+                        optionStyle =
+                          "border-red-500 bg-red-50/70 dark:bg-red-950/40 text-red-900 dark:text-red-200";
+                      } else {
+                        optionStyle = "opacity-50 border-slate-200 dark:border-zinc-800";
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => handleSelect(idx)}
+                        disabled={answered}
+                        className={`w-full flex items-center justify-between rounded-2xl p-4 border text-left text-[13.5px] transition-all cursor-pointer ${optionStyle}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-zinc-800 text-[11px] font-bold text-slate-600 dark:text-zinc-300">
+                            {String.fromCharCode(65 + idx)}
+                          </span>
+                          <span>{option}</span>
+                        </div>
+                        {answered && isCorrect && <Check className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0" />}
+                        {answered && isSelected && !isCorrect && <X className="h-5 w-5 text-red-500 shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* HINT TOGGLE */}
+                {!answered && (
+                  <div className="pt-2">
+                    {showHint ? (
+                      <div className="rounded-xl bg-orange-500/10 p-3 text-[12px] text-[#FF6B00] border border-orange-500/20">
+                        <span className="font-bold">Hint:</span> {question.hint}
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setShowHint(true)}
+                        className="inline-flex items-center gap-1.5 text-[12px] text-slate-500 hover:text-[#FF6B00] transition-colors"
+                      >
+                        <Lightbulb className="h-3.5 w-3.5" />
+                        <span>Need a hint?</span>
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                {/* EXPLANATION SKELETON BOX */}
+                {showExplanation && (
+                  <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-slate-50/70 dark:bg-zinc-800/50 p-4 space-y-1.5 animate-in fade-in duration-200">
+                    <div className="flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wider text-[#FF6B00]">
+                      <BookOpen className="h-3.5 w-3.5" />
+                      <span>Academic Rationale</span>
+                    </div>
+                    <div className="text-[13px] text-slate-700 dark:text-zinc-300 leading-relaxed font-sans">
+                      {question.explanation}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* ACTION FOOTER */}
+              {answered && (
+                <div className="flex justify-end pt-2">
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="flex items-center gap-2 rounded-xl bg-[#FF6B00] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-[#E66000] shadow-sm transition-colors"
+                  >
+                    <span>{currentQ < questions.length - 1 ? "Next Question" : "View Results"}</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+          ) : (
+            /* COMPLETION CARD */
+            <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 sm:p-12 text-center shadow-md space-y-6">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/10 text-[#FF6B00]">
+                <Award className="h-8 w-8" strokeWidth={2.2} />
+              </div>
 
-          {/* =================================================
-              NEXT
-          ================================================= */}
+              <div className="space-y-1.5">
+                <div className="text-2xl font-bold text-slate-900 dark:text-zinc-100">
+                  Quiz Completed!
+                </div>
+                <div className="text-sm text-slate-500 dark:text-zinc-400">
+                  You scored {score} out of {questions.length} questions correctly (
+                  {Math.round((score / questions.length) * 100)}%)
+                </div>
+              </div>
 
-          {answered && (
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={nextQuestion}
-                className="
-                  flex
-                  h-10
-                  items-center
-                  gap-2
-                  rounded-xl
-                  bg-[#FF5500]
-                  px-5
-                  text-[11px]
-                  font-semibold
-                  text-white
-                  shadow-[0_3px_10px_rgba(255,85,0,0.15)]
-                  transition-all
-                  hover:bg-[#E64D00]
-                "
-              >
-                {currentQ <
-                sampleQuiz.length - 1
-                  ? "Next Question"
-                  : "See Results"}
-
-                <ChevronRight className="h-4 w-4" />
-              </button>
+              <div className="flex items-center justify-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={restartQuiz}
+                  className="flex items-center gap-2 rounded-xl bg-[#FF6B00] px-5 py-2.5 text-[13px] font-semibold text-white hover:bg-[#E66000] transition-colors"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  <span>Retry Quiz</span>
+                </button>
+              </div>
             </div>
           )}
         </div>
       </div>
     </div>
   );
-};
-
-export default QuizzesView;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Bot,
   Send,
@@ -9,300 +9,231 @@ import {
   Trophy,
   CheckCircle2,
   Sparkles,
+  Timer,
+  Play,
+  Pause,
+  RotateCcw,
+  BookOpen,
+  Coffee,
+  Check,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Message {
   id: number;
   role: "user" | "ai";
   content: string;
+  time: string;
 }
 
-const StudyCompanionView = () => {
+export default function StudyCompanionView() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
       role: "ai",
+      time: "Just now",
       content:
-        "Hey! I'm your study companion. I'll help you stay focused, understand concepts, and track your progress. What are you studying today?",
+        "Hello! I am your Rivinity AI Study Companion. Whether you need a 25-minute Pomodoro focus block, an intuitive breakdown of hard concepts, or rapid quizzing, I'm here by your side. What are we mastering today?",
     },
   ]);
 
   const [input, setInput] = useState("");
-  const [streak] = useState(7);
-  const [level] = useState(12);
+  const [streak] = useState(14);
+  const [pomodoroSeconds, setPomodoroSeconds] = useState(25 * 60);
+  const [pomodoroActive, setPomodoroActive] = useState(false);
+  const [goals, setGoals] = useState([
+    { id: 1, label: "Review Cellular Respiration Cues", done: true },
+    { id: 2, label: "Complete 15 AP Bio Flashcards", done: true },
+    { id: 3, label: "Write 1 Debate Rebuttal", done: false },
+    { id: 4, label: "Solve 3 Calculus Problems", done: false },
+  ]);
 
-  const quickActions = [
-    "Explain this simply",
-    "Give me a quiz",
-    "Create flashcards",
-    "Summarize",
-  ];
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (pomodoroActive && pomodoroSeconds > 0) {
+      interval = setInterval(() => setPomodoroSeconds((s) => s - 1), 1000);
+    } else if (pomodoroSeconds === 0) {
+      setPomodoroActive(false);
+      toast.success("Focus sprint complete! Take a 5-minute break.");
+    }
+    return () => clearInterval(interval);
+  }, [pomodoroActive, pomodoroSeconds]);
 
-  const goals = [
-    { label: "Daily study", done: true },
-    { label: "5 flashcards", done: true },
-    { label: "1 quiz", done: false },
-  ];
+  const formatPomoTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  };
+
+  const toggleGoal = (id: number) => {
+    setGoals((prev) =>
+      prev.map((g) => (g.id === id ? { ...g, done: !g.done } : g))
+    );
+    toast.success("Goal status updated!");
+  };
 
   const handleSend = () => {
     if (!input.trim()) return;
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        role: "user",
-        content: input,
-      },
-    ]);
+    const userMsg: Message = {
+      id: Date.now(),
+      role: "user",
+      time: "Just now",
+      content: input.trim(),
+    };
 
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
 
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          role: "ai",
-          content:
-            "That's a great topic to focus on! Let me help you break it down into manageable chunks. I recommend starting with the fundamentals and building up. Would you like me to create a quick study plan or dive right into explaining the concept?",
-        },
-      ]);
+      const aiMsg: Message = {
+        id: Date.now() + 1,
+        role: "ai",
+        time: "Just now",
+        content:
+          "Awesome goal! I've set up a structured breakdown for you. Let's do a 25-minute uninterrupted sprint on this topic, followed by 3 rapid recall questions to lock it into long-term memory. Ready to begin?",
+      };
+      setMessages((prev) => [...prev, aiMsg]);
     }, 1000);
   };
 
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden bg-white">
-      {/* Header */}
-      <div className="border-b border-gray-200/80 bg-white/85 backdrop-blur-sm">
-        <div className="max-w-[1050px] mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center">
-              <Bot className="w-5 h-5 text-gray-500" />
+    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
+      {/* SUB-HEADER */}
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
+            <Bot className="h-4 w-4" strokeWidth={2.2} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 text-[14px] font-semibold text-slate-900 dark:text-zinc-100">
+              <span>Study Companion</span>
+              <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-semibold text-[#FF6B00]">
+                AI Mentor Active
+              </span>
             </div>
-
-            <div>
-              <h1 className="text-[15px] font-semibold text-gray-900">
-                Study Companion
-              </h1>
-              <p className="text-[11px] text-gray-500 mt-0.5">
-                Your personalized AI tutor
-              </p>
+            <div className="text-[11px] text-slate-500 dark:text-zinc-400">
+              Real-time accountability, Pomodoro focus sprints & personalized tutor dialogue
             </div>
           </div>
+        </div>
 
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50 border border-orange-100">
-            <Sparkles className="w-3.5 h-3.5 text-[#FF5500]" />
-            <span className="text-[11px] font-medium text-orange-700">
-              AI Powered
-            </span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-[11.5px] font-semibold text-[#FF6B00]">
+            <Flame className="h-3.5 w-3.5 fill-current" />
+            <span>{streak} Day Streak</span>
           </div>
         </div>
       </div>
 
-      <div className="max-w-[1050px] mx-auto px-6 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_210px] gap-6">
-          {/* Main Chat */}
-          <div className="min-w-0">
-            <div className="bg-white border border-gray-200/80 rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.035)] overflow-hidden">
-              {/* Chat Header */}
-              <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                <div>
-                  <p className="text-[13px] font-semibold text-gray-900">
-                    Your Study Session
-                  </p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">
-                    Ask questions, learn concepts, and stay on track.
-                  </p>
+      {/* MAIN LAYOUT */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="mx-auto w-full max-w-[840px] space-y-5">
+          {/* POMODORO & GOALS TOP STRIP */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {/* POMODORO SPRINT */}
+            <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 shadow-xs flex items-center justify-between">
+              <div>
+                <div className="text-[10.5px] uppercase font-bold text-slate-400 dark:text-zinc-500 tracking-wider flex items-center gap-1.5">
+                  <Timer className="h-3.5 w-3.5 text-[#FF6B00]" />
+                  <span>Pomodoro 25m Focus</span>
                 </div>
-
-                <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center">
-                  <Target className="w-4 h-4 text-[#FF5500]" />
+                <div className="text-2xl font-bold font-mono text-slate-900 dark:text-zinc-100 mt-0.5">
+                  {formatPomoTime(pomodoroSeconds)}
                 </div>
               </div>
-
-              {/* Messages */}
-              <div className="min-h-[420px] max-h-[520px] overflow-y-auto px-5 py-5 space-y-4">
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`flex ${
-                      msg.role === "user"
-                        ? "justify-end"
-                        : "justify-start"
-                    }`}
-                  >
-                    <div
-                      className={`flex items-end gap-2 max-w-[82%] ${
-                        msg.role === "user" ? "flex-row-reverse" : ""
-                      }`}
-                    >
-                      {msg.role === "ai" && (
-                        <div className="w-7 h-7 shrink-0 rounded-lg bg-orange-50 flex items-center justify-center mb-0.5">
-                          <Bot className="w-3.5 h-3.5 text-[#FF5500]" />
-                        </div>
-                      )}
-
-                      <div
-                        className={`px-4 py-3 text-[12.5px] leading-relaxed ${
-                          msg.role === "user"
-                            ? "rounded-2xl rounded-br-md bg-[#FF5500] text-white"
-                            : "rounded-2xl rounded-bl-md bg-gray-50 border border-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {msg.content}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setPomodoroActive(!pomodoroActive)}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-[11.5px] font-semibold text-white transition-all shadow-xs ${
+                    pomodoroActive ? "bg-amber-500 hover:bg-amber-600" : "bg-[#FF6B00] hover:bg-[#E66000]"
+                  }`}
+                >
+                  {pomodoroActive ? <Pause className="h-3 w-3 fill-current" /> : <Play className="h-3 w-3 fill-current" />}
+                  <span>{pomodoroActive ? "Pause" : "Start"}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPomodoroActive(false);
+                    setPomodoroSeconds(25 * 60);
+                  }}
+                  className="p-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 text-slate-500 hover:text-slate-900 dark:hover:text-zinc-200"
+                  title="Reset"
+                >
+                  <RotateCcw className="h-3 w-3" />
+                </button>
               </div>
+            </div>
 
-              {/* Quick Actions */}
-              <div className="px-5 pb-3">
-                <div className="flex gap-2 flex-wrap">
-                  {quickActions.map((action) => (
-                    <button
-                      key={action}
-                      onClick={() => setInput(action)}
-                      className="px-3 py-1.5 rounded-full bg-gray-50 border border-gray-200 text-[10.5px] font-medium text-gray-500 hover:border-orange-200 hover:bg-orange-50 hover:text-[#FF5500] transition-colors"
-                    >
-                      {action}
-                    </button>
-                  ))}
+            {/* MILESTONES PROGRESS */}
+            <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 shadow-xs flex items-center justify-between">
+              <div>
+                <div className="text-[10.5px] uppercase font-bold text-slate-400 dark:text-zinc-500 tracking-wider flex items-center gap-1.5">
+                  <Target className="h-3.5 w-3.5 text-[#FF6B00]" />
+                  <span>Daily Milestones</span>
+                </div>
+                <div className="text-sm font-bold text-slate-900 dark:text-zinc-100 mt-1">
+                  {goals.filter((g) => g.done).length} of {goals.length} Completed
                 </div>
               </div>
-
-              {/* Input */}
-              <div className="px-5 pb-5">
-                <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50/70 px-3 py-2 focus-within:border-orange-300 focus-within:ring-2 focus-within:ring-orange-100 transition-all">
-                  <input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleSend();
-                    }}
-                    placeholder="Ask your companion anything..."
-                    className="flex-1 min-w-0 bg-transparent text-[12px] text-gray-800 placeholder:text-gray-400 focus:outline-none"
-                  />
-
+              <div className="flex items-center gap-1">
+                {goals.map((g) => (
                   <button
-                    onClick={handleSend}
-                    disabled={!input.trim()}
-                    className="w-8 h-8 shrink-0 rounded-lg bg-[#FF5500] flex items-center justify-center hover:bg-[#e94d00] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    key={g.id}
+                    type="button"
+                    onClick={() => toggleGoal(g.id)}
+                    className={`h-7 w-7 rounded-lg border flex items-center justify-center transition-all ${
+                      g.done
+                        ? "bg-emerald-500 border-emerald-500 text-white"
+                        : "border-slate-200 dark:border-zinc-700 hover:border-[#FF6B00] text-slate-400"
+                    }`}
+                    title={g.label}
                   >
-                    <Send className="w-3.5 h-3.5 text-white" />
+                    {g.done ? <Check className="h-3.5 w-3.5 stroke-[3]" /> : <span className="text-[10px]">{g.id}</span>}
                   </button>
-                </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Stats Sidebar */}
-          <div className="space-y-3">
-            {/* Streak */}
-            <div className="bg-white border border-gray-200/80 rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.035)]">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center">
-                    <Flame className="w-3.5 h-3.5 text-[#FF5500]" />
-                  </div>
-                  <span className="text-[11px] font-semibold text-gray-700">
-                    Streak
-                  </span>
-                </div>
-
-                <span className="text-[10px] text-gray-400">🔥</span>
-              </div>
-
-              <p className="text-2xl font-bold text-gray-900">{streak}</p>
-              <p className="text-[10px] text-gray-400 mt-0.5">
-                days in a row
-              </p>
+          {/* COMPANION CONVERSATION STREAM */}
+          <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-sm space-y-4">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[#FF6B00] border-b border-slate-100 dark:border-zinc-800 pb-2">
+              Mentor Dialogue
             </div>
 
-            {/* Level */}
-            <div className="bg-white border border-gray-200/80 rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.035)]">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center">
-                  <Trophy className="w-3.5 h-3.5 text-amber-500" />
-                </div>
-
-                <span className="text-[11px] font-semibold text-gray-700">
-                  Level
-                </span>
-              </div>
-
-              <div className="flex items-end justify-between">
-                <p className="text-2xl font-bold text-gray-900">{level}</p>
-                <span className="text-[10px] text-gray-400">650 / 1000 XP</span>
-              </div>
-
-              <div className="h-1.5 rounded-full bg-gray-100 mt-3 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-[#FF5500]"
-                  style={{ width: "65%" }}
-                />
-              </div>
-            </div>
-
-            {/* Goals */}
-            <div className="bg-white border border-gray-200/80 rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.035)]">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center">
-                  <Target className="w-3.5 h-3.5 text-[#FF5500]" />
-                </div>
-
-                <span className="text-[11px] font-semibold text-gray-700">
-                  Today's Goals
-                </span>
-              </div>
-
-              <div className="space-y-2.5">
-                {goals.map((goal) => (
+            <div className="space-y-3">
+              {messages.map((msg) => {
+                const isUser = msg.role === "user";
+                return (
                   <div
-                    key={goal.label}
-                    className="flex items-center gap-2.5"
+                    key={msg.id}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"} animate-in fade-in duration-200`}
                   >
-                    {goal.done ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5500] shrink-0" />
-                    ) : (
-                      <div className="w-3.5 h-3.5 rounded-full border border-gray-300 shrink-0" />
-                    )}
-
-                    <span
-                      className={`text-[10.5px] ${
-                        goal.done
-                          ? "text-gray-400 line-through"
-                          : "text-gray-600"
+                    <div
+                      className={`max-w-[85%] rounded-2xl p-4 space-y-1.5 ${
+                        isUser
+                          ? "bg-[#FF6B00] text-white rounded-br-xs shadow-md"
+                          : "bg-slate-50 dark:bg-zinc-800/60 border border-slate-100 dark:border-zinc-700/60 text-slate-900 dark:text-zinc-100 rounded-bl-xs shadow-xs"
                       }`}
                     >
-                      {goal.label}
-                    </span>
+                      <div className="flex items-center justify-between text-[11px] opacity-80 font-medium">
+                        <span>{isUser ? "You" : "Companion Bot"}</span>
+                        <span>{msg.time}</span>
+                      </div>
+                      <div className="text-[13.5px] leading-relaxed whitespace-pre-wrap font-sans">
+                        {msg.content}
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-
-              <div className="mt-4 pt-3 border-t border-gray-100">
-                <p className="text-[10px] text-gray-400">
-                  2 of 3 goals completed
-                </p>
-              </div>
-            </div>
-
-            {/* Small Motivation Card */}
-            <div className="rounded-2xl border border-orange-100 bg-orange-50/60 p-4">
-              <p className="text-[11px] font-semibold text-gray-800">
-                Keep going!
-              </p>
-              <p className="text-[10px] text-gray-500 leading-relaxed mt-1">
-                One focused session today keeps your learning streak alive.
-              </p>
+                );
+              })}
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default StudyCompanionView;
+}

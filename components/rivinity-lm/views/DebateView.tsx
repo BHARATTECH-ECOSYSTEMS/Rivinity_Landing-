@@ -10,32 +10,39 @@ import {
   Sparkles,
   Timer,
   CheckCircle2,
+  Shield,
+  Award,
+  Scale,
+  Flame,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface DebateMessage {
   id: number;
   role: "user" | "ai";
   content: string;
+  round: number;
   score?: number;
+  fallacyCheck?: string;
   feedback?: string;
 }
 
 const debateTopics = [
-  "Should AI replace teachers in classrooms?",
-  "Is social media more harmful than beneficial?",
-  "Should college education be free?",
-  "Is space exploration worth the cost?",
-  "Should voting be mandatory?",
+  "Should Universal Basic Income be funded by AI automation taxes?",
+  "Is Nuclear Fission essential for achieving Net-Zero carbon emissions?",
+  "Should Artificial Intelligence development be paused under international treaties?",
+  "Are standardized entrance exams an accurate predictor of academic potential?",
 ];
 
-const DebateView = () => {
+export default function DebateView() {
   const [started, setStarted] = useState(false);
   const [topic, setTopic] = useState("");
   const [stance, setStance] = useState<"for" | "against">("for");
   const [messages, setMessages] = useState<DebateMessage[]>([]);
   const [input, setInput] = useState("");
   const [round, setRound] = useState(1);
-  const [totalRounds] = useState(5);
+  const totalRounds = 4;
+  const [customTopic, setCustomTopic] = useState("");
 
   const startDebate = (selectedTopic: string) => {
     setTopic(selectedTopic);
@@ -46,43 +53,43 @@ const DebateView = () => {
       {
         id: 1,
         role: "ai",
-        content: `Welcome to the debate! The topic is: "${selectedTopic}"\n\nYou are arguing ${
-          stance === "for" ? "FOR" : "AGAINST"
-        } this proposition. I will take the opposing side.\n\nPlease make your opening statement. You have ${totalRounds} rounds. Make your argument compelling!`,
+        round: 1,
+        content: `Welcome to the Oxford-style AI Debate Arena! The motion is: "${selectedTopic}".\n\nYou are arguing in the ${
+          stance === "for" ? "AFFIRMATIVE (PRO)" : "NEGATIVE (CON)"
+        } position. I will defend the opposing side.\n\nDeliver your opening argument whenever you are ready. Each round evaluates logic, empirical evidence, and rhetorical coherence.`,
       },
     ]);
+    toast.success("Debate session initialized!");
   };
 
   const handleSend = () => {
-    if (!input.trim() || round > totalRounds) return;
+    if (!input.trim()) return;
 
     const userMsg: DebateMessage = {
       id: Date.now(),
       role: "user",
-      content: input,
+      round,
+      content: input.trim(),
     };
 
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
 
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          role: "ai",
-          content:
-            "That's an interesting point, but I'd argue that the evidence suggests otherwise. Studies show that the implementation challenges far outweigh the theoretical benefits you've described. Furthermore, the practical implications on existing infrastructure would be significant.",
-          score: 7,
-          feedback:
-            "Good argument structure. Try adding specific data points to strengthen your case.",
-        },
-      ]);
+      const aiResponse: DebateMessage = {
+        id: Date.now() + 1,
+        role: "ai",
+        round,
+        content:
+          "While that argument addresses short-term systemic incentives, empirical studies across historical precedent demonstrate significant friction in institutional execution. Specifically, unintended economic deadweight loss and misaligned regulatory mandates often negate the theoretical efficiency you cite.",
+        score: 8.5,
+        fallacyCheck: "No major logical fallacies detected. Strong inductive premise.",
+        feedback: "Excellent premise. Bolstering your claim with a quantitative historical case study will elevate your round score.",
+      };
 
-      setRound((currentRound) =>
-        Math.min(currentRound + 1, totalRounds)
-      );
-    }, 1500);
+      setMessages((prev) => [...prev, aiResponse]);
+      setRound((r) => Math.min(r + 1, totalRounds));
+    }, 1400);
   };
 
   const restartDebate = () => {
@@ -92,345 +99,201 @@ const DebateView = () => {
     setInput("");
   };
 
-  if (!started) {
-    return (
-      <div className="min-h-full bg-white text-gray-900">
-        {/* Header */}
-        <div className="border-b border-gray-200/70 bg-white/85 backdrop-blur-xl">
-          <div className="px-6 py-4 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center">
-              <Swords className="w-4 h-4 text-gray-500" />
-            </div>
-
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-[15px] font-semibold text-gray-900">
-                  AI Debate Arena
-                </h1>
-
-                <span className="px-2 py-0.5 rounded-full bg-orange-50 text-[#FF5500] text-[9px] font-semibold">
-                  AI DEBATE
-                </span>
-              </div>
-
-              <p className="text-[11px] text-gray-400 mt-0.5">
-                Sharpen your critical thinking and argumentation skills
-              </p>
-            </div>
+  return (
+    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
+      {/* SUB-HEADER */}
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
+            <Swords className="h-4 w-4" strokeWidth={2.2} />
           </div>
-        </div>
-
-        <div className="max-w-[680px] mx-auto px-5 py-8">
-          {/* Intro */}
-          <div className="text-center mb-7">
-            <div className="w-14 h-14 rounded-2xl bg-[#FF5500] mx-auto mb-4 flex items-center justify-center shadow-[0_8px_20px_rgba(255,85,0,0.16)]">
-              <Swords className="w-7 h-7 text-white" />
-            </div>
-
-            <h2 className="text-[19px] font-semibold text-gray-900 mb-1.5">
-              Enter the Debate Arena
-            </h2>
-
-            <p className="text-[11px] text-gray-400">
-              Choose a topic, pick your stance, and challenge the AI.
-            </p>
-          </div>
-
-          {/* Topic */}
-          <section className="bg-white border border-gray-200/80 rounded-2xl p-5 mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.035)]">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[12px] font-semibold text-gray-900">
-                Choose a Topic
-              </p>
-
-              <span className="text-[9px] text-gray-400">
-                {debateTopics.length} topics
+          <div>
+            <div className="flex items-center gap-2 text-[14px] font-semibold text-slate-900 dark:text-zinc-100">
+              <span>AI Debate Arena</span>
+              <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-semibold text-[#FF6B00]">
+                {started ? `Round ${round}/${totalRounds}` : "Oxford Style"}
               </span>
             </div>
-
-            <div className="space-y-1.5 mb-4">
-              {debateTopics.map((debateTopic) => {
-                const selected = topic === debateTopic;
-
-                return (
-                  <button
-                    key={debateTopic}
-                    onClick={() => setTopic(debateTopic)}
-                    className={`w-full text-left px-3.5 py-3 rounded-xl border text-[11px] transition-all ${
-                      selected
-                        ? "bg-orange-50 border-orange-200 text-[#FF5500] font-medium"
-                        : "bg-white border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-200"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      {selected && (
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                      )}
-
-                      <span>{debateTopic}</span>
-                    </div>
-                  </button>
-                );
-              })}
+            <div className="text-[11px] text-slate-500 dark:text-zinc-400">
+              Structured philosophical & academic debate with real-time logical scoring
             </div>
+          </div>
+        </div>
 
-            <p className="text-[9px] text-gray-400 mb-2">
-              Or enter your own topic
-            </p>
-
-            <input
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              placeholder="Enter a debate topic..."
-              className="w-full h-10 bg-white border border-gray-200
-                rounded-xl px-3.5 text-[11px] text-gray-800
-                placeholder:text-gray-400 outline-none
-                focus:border-orange-300 focus:ring-2 focus:ring-orange-100"
-            />
-          </section>
-
-          {/* Stance */}
-          <section className="bg-white border border-gray-200/80 rounded-2xl p-5 mb-4 shadow-[0_2px_12px_rgba(0,0,0,0.035)]">
-            <p className="text-[12px] font-semibold text-gray-900 mb-3">
-              Your Stance
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button
-                onClick={() => setStance("for")}
-                className={`flex items-center justify-center gap-2 h-11 rounded-xl text-[11px] font-semibold border transition-all ${
-                  stance === "for"
-                    ? "bg-orange-50 border-orange-200 text-[#FF5500]"
-                    : "bg-white border-gray-200 text-gray-400 hover:border-gray-300"
-                }`}
-              >
-                <ThumbsUp className="w-3.5 h-3.5" />
-                For
-              </button>
-
-              <button
-                onClick={() => setStance("against")}
-                className={`flex items-center justify-center gap-2 h-11 rounded-xl text-[11px] font-semibold border transition-all ${
-                  stance === "against"
-                    ? "bg-orange-50 border-orange-200 text-[#FF5500]"
-                    : "bg-white border-gray-200 text-gray-400 hover:border-gray-300"
-                }`}
-              >
-                <ThumbsDown className="w-3.5 h-3.5" />
-                Against
-              </button>
-            </div>
-          </section>
-
-          {/* Start */}
+        {started && (
           <button
-            onClick={() => topic.trim() && startDebate(topic.trim())}
-            disabled={!topic.trim()}
-            className="w-full h-11 rounded-xl bg-[#FF5500] text-white
-              text-[11px] font-semibold
-              shadow-[0_5px_14px_rgba(255,85,0,0.16)]
-              hover:bg-[#e94d00] disabled:opacity-40
-              disabled:cursor-not-allowed transition-colors"
+            type="button"
+            onClick={restartDebate}
+            className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 text-[11.5px] font-medium text-slate-700 dark:text-zinc-300 hover:border-[#FF6B00]/40 transition-colors"
           >
-            Start Debate
+            <RotateCcw className="h-3.5 w-3.5" />
+            <span>New Motion</span>
           </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-full bg-white text-gray-900">
-      {/* Debate Header */}
-      <div className="border-b border-gray-200/70 bg-white/85 backdrop-blur-xl">
-        <div className="px-6 py-3.5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center shrink-0">
-              <Swords className="w-3.5 h-3.5 text-gray-500" />
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-[11px] font-semibold text-gray-800 truncate">
-                {topic}
-              </p>
-
-              <p className="text-[9px] text-gray-400 mt-0.5">
-                You are arguing {stance}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gray-50 text-[9px] text-gray-500">
-              <Timer className="w-3 h-3" />
-              Round {round}/{totalRounds}
-            </span>
-
-            <button
-              onClick={restartDebate}
-              className="w-8 h-8 rounded-lg flex items-center justify-center
-                text-gray-400 hover:text-gray-800 hover:bg-gray-100 transition-colors"
-              title="Restart debate"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
+        )}
       </div>
 
-      <div className="max-w-[760px] mx-auto px-5 py-5">
-        {/* Round Progress */}
-        <div className="mb-5">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[9px] uppercase tracking-wider font-semibold text-gray-400">
-              Debate Progress
-            </span>
-
-            <span className="text-[9px] text-gray-400">
-              {Math.min(round, totalRounds)}/{totalRounds}
-            </span>
-          </div>
-
-          <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[#FF5500] rounded-full transition-all"
-              style={{
-                width: `${(Math.min(round, totalRounds) / totalRounds) * 100}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Messages */}
-        <div className="space-y-4 pb-4">
-          {messages.map((message) => {
-            const isUser = message.role === "user";
-
-            return (
-              <div
-                key={message.id}
-                className={`flex ${
-                  isUser ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div className="max-w-[85%]">
-                  <div
-                    className={`flex items-center gap-2 mb-1.5 ${
-                      isUser ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    <span className="text-[9px] font-semibold text-gray-400">
-                      {isUser ? "You" : "AI Opponent"}
-                    </span>
-                  </div>
-
-                  <div
-                    className={`px-4 py-3.5 rounded-2xl ${
-                      isUser
-                        ? "bg-[#FF5500] text-white rounded-br-md"
-                        : "bg-white border border-gray-200/80 text-gray-600 rounded-bl-md shadow-[0_2px_8px_rgba(0,0,0,0.025)]"
-                    }`}
-                  >
-                    <p className="text-[11px] leading-relaxed whitespace-pre-wrap">
-                      {message.content}
-                    </p>
-
-                    {/* Feedback */}
-                    {message.feedback && (
-                      <div className="mt-3 pt-3 border-t border-gray-200/70">
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <Sparkles
-                            className={`w-3 h-3 ${
-                              isUser
-                                ? "text-white"
-                                : "text-[#FF5500]"
-                            }`}
-                          />
-
-                          <span
-                            className={`text-[9px] font-semibold ${
-                              isUser
-                                ? "text-white"
-                                : "text-[#FF5500]"
-                            }`}
-                          >
-                            Argument Score: {message.score}/10
-                          </span>
-                        </div>
-
-                        <p
-                          className={`text-[10px] leading-relaxed ${
-                            isUser
-                              ? "text-white/80"
-                              : "text-gray-400"
-                          }`}
-                        >
-                          {message.feedback}
-                        </p>
-                      </div>
-                    )}
-                  </div>
+      {/* MAIN CONTENT */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="mx-auto w-full max-w-[840px] space-y-5">
+          {!started ? (
+            /* MOTION SELECTION SKELETON */
+            <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm space-y-6">
+              <div>
+                <div className="text-[11px] font-bold uppercase tracking-widest text-[#FF6B00]">
+                  Oxford Debate Setup
+                </div>
+                <div className="text-xl font-bold text-slate-900 dark:text-zinc-100 mt-1">
+                  Choose Motion & Argument Stance
                 </div>
               </div>
-            );
-          })}
 
-          {round >= totalRounds && (
-            <div className="flex justify-center py-3">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-orange-50 border border-orange-100">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#FF5500]" />
-                <span className="text-[10px] font-medium text-[#FF5500]">
-                  Debate rounds completed
+              {/* STANCE PICKER */}
+              <div className="space-y-2">
+                <div className="text-[12px] font-semibold text-slate-700 dark:text-zinc-300">
+                  Your Proposition Stance:
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setStance("for")}
+                    className={`rounded-2xl p-4 border text-center transition-all ${
+                      stance === "for"
+                        ? "bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-bold"
+                        : "border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-300"
+                    }`}
+                  >
+                    <div className="text-sm">AFFIRMATIVE (PRO)</div>
+                    <div className="text-[11px] font-normal opacity-80 mt-0.5">Argue in favor of the motion</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setStance("against")}
+                    className={`rounded-2xl p-4 border text-center transition-all ${
+                      stance === "against"
+                        ? "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400 font-bold"
+                        : "border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-300"
+                    }`}
+                  >
+                    <div className="text-sm">NEGATIVE (CON)</div>
+                    <div className="text-[11px] font-normal opacity-80 mt-0.5">Argue against the proposition</div>
+                  </button>
+                </div>
+              </div>
+
+              {/* TOPIC SELECTION */}
+              <div className="space-y-3">
+                <div className="text-[12px] font-semibold text-slate-700 dark:text-zinc-300">
+                  Select Featured Motion:
+                </div>
+                <div className="space-y-2">
+                  {debateTopics.map((t, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => startDebate(t)}
+                      className="w-full text-left rounded-2xl border border-slate-200 dark:border-zinc-800 bg-slate-50/60 dark:bg-zinc-800/40 p-4 hover:border-[#FF6B00]/50 hover:bg-orange-500/5 transition-all flex items-center justify-between group"
+                    >
+                      <span className="text-[13px] font-semibold text-slate-800 dark:text-zinc-200 group-hover:text-[#FF6B00]">
+                        {t}
+                      </span>
+                      <Swords className="h-4 w-4 text-slate-400 group-hover:text-[#FF6B00] shrink-0 ml-2" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* ACTIVE DEBATE STREAM SKELETON */
+            <div className="space-y-5">
+              {/* TOPIC BANNER */}
+              <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 p-4 flex flex-wrap items-center justify-between gap-2">
+                <div className="space-y-0.5">
+                  <div className="text-[10px] uppercase font-bold text-[#FF6B00]">Active Motion</div>
+                  <div className="text-[13px] font-bold text-slate-900 dark:text-zinc-100">{topic}</div>
+                </div>
+                <span className="px-3 py-1 rounded-xl text-[11px] font-bold bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700">
+                  Your Stance: {stance.toUpperCase()}
                 </span>
+              </div>
+
+              {/* MESSAGES */}
+              <div className="space-y-4">
+                {messages.map((msg) => {
+                  const isUser = msg.role === "user";
+                  return (
+                    <div
+                      key={msg.id}
+                      className={`flex ${isUser ? "justify-end" : "justify-start"} animate-in fade-in duration-200`}
+                    >
+                      <div
+                        className={`max-w-[88%] rounded-2xl p-5 space-y-3 ${
+                          isUser
+                            ? "bg-[#FF6B00] text-white rounded-br-xs shadow-md"
+                            : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100 rounded-bl-xs shadow-xs"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-3 text-[11.5px] font-bold opacity-90">
+                          <span>{isUser ? `You (Round ${msg.round})` : "AI Opponent Rebuttal"}</span>
+                          {!isUser && msg.score && (
+                            <span className="flex items-center gap-1 text-[#FF6B00] bg-orange-500/10 px-2 py-0.5 rounded-md">
+                              <Scale className="h-3 w-3" />
+                              Score: {msg.score}/10
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="text-[13.5px] leading-relaxed whitespace-pre-wrap font-sans">
+                          {msg.content}
+                        </div>
+
+                        {/* JUDGE CRITIQUE / FALLACY SKELETON */}
+                        {!isUser && msg.fallacyCheck && (
+                          <div className="pt-2 border-t border-slate-100 dark:border-zinc-800 space-y-1 text-[11.5px]">
+                            <div className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                              <Shield className="h-3.5 w-3.5" />
+                              <span>{msg.fallacyCheck}</span>
+                            </div>
+                            {msg.feedback && (
+                              <div className="text-slate-500 dark:text-zinc-400 italic">
+                                Tip: {msg.feedback}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* INPUT BAR */}
+              <div className="pt-2">
+                <div className="flex items-center gap-2 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3.5 py-2 shadow-sm focus-within:border-[#FF6B00]">
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleSend();
+                    }}
+                    placeholder={`Deliver your Round ${round} argument / rebuttal...`}
+                    className="flex-1 bg-transparent text-[13.5px] text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 outline-none border-none focus:ring-0"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSend}
+                    disabled={!input.trim()}
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#FF6B00] text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#E66000]"
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           )}
         </div>
-
-        {/* Input */}
-        {round < totalRounds && (
-          <div className="mt-2 bg-white border border-gray-200/80 rounded-2xl p-2 shadow-[0_3px_12px_rgba(0,0,0,0.035)]">
-            <div className="flex items-center gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSend();
-                }}
-                placeholder="Make your argument..."
-                className="flex-1 h-10 px-3 bg-transparent text-[11px]
-                  text-gray-800 placeholder:text-gray-400
-                  outline-none"
-              />
-
-              <button
-                onClick={handleSend}
-                disabled={!input.trim()}
-                className="w-9 h-9 rounded-xl bg-[#FF5500]
-                  flex items-center justify-center text-white
-                  hover:bg-[#e94d00] disabled:opacity-40
-                  transition-colors"
-              >
-                <Send className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Restart */}
-        {round >= totalRounds && (
-          <button
-            onClick={restartDebate}
-            className="w-full mt-3 h-10 rounded-xl border border-gray-200
-              bg-white text-[10px] font-semibold text-gray-600
-              hover:border-orange-200 hover:text-[#FF5500] transition-colors"
-          >
-            Start New Debate
-          </button>
-        )}
       </div>
     </div>
   );
-};
-
-export default DebateView;
+}

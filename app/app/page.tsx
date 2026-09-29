@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   PanelLeft,
   X,
@@ -18,12 +19,19 @@ import CanvasMain from "@/components/canvas/CanvasMain";
 import { USER } from "@/lib/profile";
 
 const Index = () => {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [isChatActive, setIsChatActive] = useState(false);
   const [isBigDataActive, setIsBigDataActive] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.pathname === "/app") {
+      router.replace("/chat");
+    }
+  }, [router]);
 
   useEffect(() => {
     if (isMobileSearchOpen) {

@@ -1,19 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Moon, Sparkles } from "lucide-react";
-import { useAuthModal } from "@/components/auth/auth-context";
-import { USER } from "@/lib/profile";
 
 interface ChatEmptyStateProps {
   /** Optional override to preview/test the night effect at any time */
   forceNight?: boolean;
-}
-
-/** Determines greeting and whether it is night time */
-function getGreetingInfo(hour: number): { greeting: string; isNight: boolean } {
-  if (hour >= 5 && hour < 12) return { greeting: "Good Morning", isNight: false };
-  if (hour >= 12 && hour < 17) return { greeting: "Good Afternoon", isNight: false };
-  if (hour >= 17 && hour < 21) return { greeting: "Good Evening", isNight: false };
-  return { greeting: "Good Night", isNight: true };
 }
 
 // Background celestial stars for the night effect
@@ -32,16 +21,15 @@ const STARS = [
   { top: "24%", left: "68%", size: 2, delay: "1.9s", duration: "2.5s" },
 ];
 
-/** Greeting with background watermark and working Night Effect */
+/** Clean empty state with background watermark and night atmosphere */
 export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
-  const { isAuthenticated, user } = useAuthModal();
-  const rawName = user?.name || (isAuthenticated ? USER.name : "");
-  const firstName = isAuthenticated && rawName ? rawName.trim().split(" ")[0] : "";
-
-  // Stable default initialization prevents SSR hydration mismatch
-  const [greetingInfo, setGreetingInfo] = useState<{ greeting: string; isNight: boolean }>(() => {
-    if (forceNight) return { greeting: "Good Night", isNight: true };
-    return { greeting: "Good Morning", isNight: false };
+  const [isNight, setIsNight] = useState<boolean>(() => {
+    if (forceNight) return true;
+    if (typeof window !== "undefined") {
+      const h = new Date().getHours();
+      return h >= 21 || h < 5;
+    }
+    return false;
   });
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
@@ -60,13 +48,13 @@ export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
 
   useEffect(() => {
     if (forceNight) {
-      setGreetingInfo({ greeting: "Good Night", isNight: true });
+      setIsNight(true);
       return;
     }
 
-    // Update greeting on mount and refresh every 60s
     const update = () => {
-      setGreetingInfo(getGreetingInfo(new Date().getHours()));
+      const h = new Date().getHours();
+      setIsNight(h >= 21 || h < 5);
     };
     update();
     const interval = setInterval(update, 60000);
@@ -90,7 +78,6 @@ export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
   }, [forceNight]);
 
   // Night effect triggers when it's night time (9PM-5AM), when forceNight is set, or in dark mode
-  const isNight = greetingInfo.isNight || forceNight;
   const showNightAtmosphere = isNight || isDarkMode;
 
   return (
@@ -171,36 +158,9 @@ export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
       <div 
         className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto px-4"
       >
-        {/* Tagline */}
-        <div className="text-[11px] sm:text-xs font-semibold tracking-[0.2em] text-gray-400 dark:text-zinc-500 uppercase mb-2 sm:mb-2.5 text-center w-full flex items-center justify-center gap-1.5">
-          <span>THINK • RESEARCH • BUILD</span>
-          {isNight && (
-            <Sparkles className="w-3 h-3 text-amber-400 dark:text-amber-300 animate-pulse inline-block shrink-0" />
-          )}
-        </div>
-
-        {/* Greeting - Balanced proportional typography */}
-        <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight leading-tight mb-1.5 sm:mb-2 text-center w-full flex flex-wrap items-center justify-center">
-          <span suppressHydrationWarning>{greetingInfo.greeting}</span>
-          {isAuthenticated && firstName && (
-            <span className="text-[#FF6B00] ml-2">{firstName}</span>
-          )}
-          {/* Luminous Crescent Moon beside Good Night */}
-          {isNight && (
-            <span className="inline-flex items-center ml-2 sm:ml-2.5 align-middle shrink-0">
-              <Moon 
-                className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-amber-300 dark:text-amber-200 fill-amber-300/25 -mt-0.5 sm:-mt-1"
-                style={{ animation: "moonGlow 3.5s ease-in-out infinite" }}
-                strokeWidth={2}
-              />
-            </span>
-          )}
-        </div>
-
-        {/* Subtitle */}
-        <div className="text-[13.5px] sm:text-[15px] text-gray-500 dark:text-zinc-400 font-normal tracking-normal text-center w-full">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight leading-tight text-center w-full">
           How can I help you today?
-        </div>
+        </h2>
       </div>
     </div>
   );

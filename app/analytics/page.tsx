@@ -1,7 +1,12 @@
 "use client";
 
+import SidebarShell from "@/components/canvas/SidebarShell";
 import Analytics from "@/components/analytics/Analytics";
 
 export default function AnalyticsPage() {
-  return <Analytics />;
+  return (
+    <SidebarShell>
+      <Analytics />
+    </SidebarShell>
+  );
 }

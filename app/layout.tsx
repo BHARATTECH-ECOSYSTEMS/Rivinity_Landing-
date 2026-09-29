@@ -79,8 +79,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="antialiased">
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('rivinity_sidebar_open');var closed=s==='false'||(s===null&&window.innerWidth<768);if(closed){document.documentElement.setAttribute('data-sidebar-closed','');}}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="antialiased" suppressHydrationWarning>
         <AuthProvider>
           <SidebarProvider>
             {children}

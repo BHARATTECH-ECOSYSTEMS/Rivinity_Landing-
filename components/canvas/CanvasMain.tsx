@@ -37,8 +37,12 @@ import {
   Image as ImageIcon,
   File as FileIcon,
   Pin,
-  Archive,
   Trash2,
+  Folder,
+  FolderPlus,
+  FolderX,
+  Archive,
+  Check,
 } from "lucide-react";
 import ChatMarkdown from "./ChatMarkdown";
 import { toast } from "sonner";
@@ -52,6 +56,10 @@ import { cn } from "@/lib/utils";
 import { USER } from "@/lib/profile";
 import { useAuthModal } from "@/components/auth/auth-context";
 import { LoaderGooeyBlobs } from "@/components/ui/LoaderGooeyBlobs";
+import {
+  initialHistoryItems,
+  STORAGE_HISTORY_KEY,
+} from "@/components/history/HistoryPage";
 
 const SKILL_MARKER = "__SKILL__:";
 
@@ -83,6 +91,8 @@ interface TabState {
   draftInput: string;
   attachments?: AttachedFile[];
   isPinned?: boolean;
+  historyId?: string;
+  workspaceId?: string;
 }
 
 const formatFileSize = (bytes: number) => {
@@ -220,6 +230,7 @@ interface ChatComposerProps {
   onAttachFiles?: (files: FileList | File[]) => void;
   onRemoveAttachment?: (id: string) => void;
   onPreviewFile?: (file: AttachedFile) => void;
+  className?: string;
 }
 
 const ChatComposer: React.FC<ChatComposerProps> = ({
@@ -243,6 +254,7 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
   onAttachFiles,
   onRemoveAttachment,
   onPreviewFile,
+  className,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -344,16 +356,31 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
   const canSend = (input.trim().length > 0 || attachments.length > 0) && !disabled;
 
   return (
-    <div className="w-full max-w-[768px] mx-auto px-0 relative flex justify-center">
+    <div
+      className={cn(
+        "w-full max-w-full mx-auto px-0 relative flex flex-col justify-center transition-all duration-300",
+        isIncognito &&
+          "p-2 sm:p-2.5 rounded-[26px] bg-slate-100/85 dark:bg-zinc-800/60 backdrop-blur-2xl border border-slate-300 dark:border-zinc-600 shadow-[0_12px_40px_rgba(0,0,0,0.08)]",
+      )}
+    >
+      {/* INCOGNITO MODE TOP GLASS HEADER */}
+      {isIncognito && (
+        <div className="px-3.5 sm:px-4 pt-1 pb-2 text-[12px] select-none text-slate-600 dark:text-zinc-300 font-medium tracking-tight animate-in fade-in duration-200">
+          Incognito Mode Active &bull; Chats will not be saved to history
+        </div>
+      )}
+
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          "bg-white dark:bg-zinc-900 rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col w-full relative",
-          isDraggingOver
-            ? "border-[#FF5500] ring-2 ring-[#FF5500]/20 bg-orange-50/10"
-            : "border-gray-200/80 dark:border-zinc-800 shadow-[0_2px_16px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.25)]",
+          "transition-all duration-200 overflow-hidden flex flex-col w-full relative",
+          isIncognito
+            ? "bg-[#22242a] dark:bg-[#1c1e24] rounded-[20px] border border-white/10 dark:border-zinc-700/60 shadow-xl text-white"
+            : "bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200/80 dark:border-zinc-800 hover:border-slate-400 dark:hover:border-zinc-600 focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-400/20 dark:focus-within:border-zinc-500 dark:focus-within:ring-zinc-500/20 shadow-[0_2px_16px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.25)]",
+          isDraggingOver && "border-[#FF5500] ring-2 ring-[#FF5500]/20 bg-orange-50/10",
+          className,
         )}
       >
         {/* DRAG AND DROP HIGHLIGHT OVERLAY */}
@@ -391,8 +418,12 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                     ? "gap-1 px-2.5 py-0.5 text-[11.5px]"
                     : "gap-1.5 px-3 py-1 text-[12.5px]",
                   isActive
-                    ? "border border-[#FF6B00]/40 text-[#FF6B00] bg-orange-50/50 dark:bg-orange-950/30 font-medium"
-                    : "text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white border border-transparent font-medium",
+                    ? isIncognito
+                      ? "border border-[#FF6B00]/70 text-[#FF6B00] bg-[#FF6B00]/15 font-medium"
+                      : "border border-[#FF6B00]/40 text-[#FF6B00] bg-orange-50/50 dark:bg-orange-950/30 font-medium"
+                    : isIncognito
+                      ? "text-zinc-400 hover:text-white border border-white/10 hover:border-zinc-500 hover:bg-white/5 font-medium bg-white/5"
+                      : "text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white border border-gray-200/90 dark:border-zinc-700/70 hover:border-[#FF6B00]/40 dark:hover:border-[#FF6B00]/50 hover:bg-orange-50/20 dark:hover:bg-orange-950/20 font-medium bg-white/40 dark:bg-zinc-800/30",
                 )}
                 onClick={() => setActiveTab(tab.id)}
               >
@@ -482,8 +513,11 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               }
             }}
             className={cn(
-              "flex items-center justify-center rounded-full text-gray-500 hover:text-gray-800 dark:text-zinc-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 border-0",
+              "flex items-center justify-center rounded-full transition-colors cursor-pointer shrink-0 border",
               isCompact ? "w-5 h-5" : "w-6 h-6",
+              isIncognito
+                ? "text-zinc-400 hover:text-white hover:bg-white/10 border-white/10 hover:border-zinc-500 bg-white/5"
+                : "text-gray-500 hover:text-gray-800 dark:text-zinc-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 border-gray-200/90 dark:border-zinc-700/70 hover:border-[#FF6B00]/40 bg-white/40 dark:bg-zinc-800/30",
             )}
             title="New Chat"
             aria-label="New Chat"
@@ -496,18 +530,26 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
             isAddingTab
-              ? "max-h-[350px] opacity-100 border-t border-gray-100 dark:border-zinc-800"
+              ? cn(
+                  "max-h-[350px] opacity-100 border-t",
+                  isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
+                )
               : "max-h-0 opacity-0"
           }`}
         >
           <div
             className={cn(
-              "bg-gray-50/50 dark:bg-zinc-900/50",
+              isIncognito ? "bg-black/25" : "bg-gray-50/50 dark:bg-zinc-900/50",
               isCompact ? "p-2.5" : "p-3.5 sm:p-4.5",
             )}
           >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-              <div className="text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1 text-gray-400 dark:text-zinc-500">
+              <div
+                className={cn(
+                  "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1",
+                  isIncognito ? "text-zinc-400" : "text-gray-400 dark:text-zinc-500",
+                )}
+              >
                 Research Tools
               </div>
               <input
@@ -553,7 +595,10 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                   }
                 }}
                 className={cn(
-                  "bg-white dark:bg-zinc-800 border border-gray-200/90 dark:border-zinc-700 rounded-full outline-none transition-all focus:border-[#FF6B00] text-slate-800 dark:text-zinc-100 placeholder:text-slate-400",
+                  "rounded-full outline-none transition-all focus:border-[#FF6B00]",
+                  isIncognito
+                    ? "bg-white/10 border border-white/15 text-white placeholder:text-zinc-400"
+                    : "bg-white dark:bg-zinc-800 border border-gray-200/90 dark:border-zinc-700 text-slate-800 dark:text-zinc-100 placeholder:text-slate-400",
                   isCompact
                     ? "w-full px-3 py-0.5 text-[12px]"
                     : "w-full sm:w-44 px-3.5 py-1 text-[12.5px]",
@@ -604,7 +649,10 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                       textareaRef.current?.focus();
                     }}
                     className={cn(
-                      "flex items-center w-full rounded-xl border border-transparent bg-transparent hover:bg-white/80 dark:hover:bg-zinc-800/80 transition-all group text-left cursor-pointer",
+                      "flex items-center w-full rounded-xl border border-transparent bg-transparent transition-all group text-left cursor-pointer",
+                      isIncognito
+                        ? "hover:bg-white/10"
+                        : "hover:bg-white/80 dark:hover:bg-zinc-800/80",
                       isCompact
                         ? "gap-2.5 h-8 px-2.5"
                         : "gap-3 h-9 sm:h-9.5 px-3",
@@ -615,7 +663,9 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                         "shrink-0 transition-colors",
                         isSelected
                           ? "text-[#FF6B00]"
-                          : "text-slate-500 dark:text-zinc-400 group-hover:text-[#FF6B00]",
+                          : isIncognito
+                            ? "text-zinc-400 group-hover:text-[#FF6B00]"
+                            : "text-slate-500 dark:text-zinc-400 group-hover:text-[#FF6B00]",
                         isCompact ? "w-3.5 h-3.5" : "w-4 h-4",
                       )}
                       strokeWidth={2}
@@ -625,7 +675,9 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                         "font-semibold transition-colors truncate",
                         isSelected
                           ? "text-[#FF6B00]"
-                          : "text-slate-800 dark:text-zinc-200 group-hover:text-[#FF6B00]",
+                          : isIncognito
+                            ? "text-zinc-200 group-hover:text-white"
+                            : "text-slate-800 dark:text-zinc-200 group-hover:text-[#FF6B00]",
                         isCompact
                           ? "text-[12.5px]"
                           : "text-[13.5px]",
@@ -722,9 +774,14 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask anything..."
+          placeholder={isIncognito ? "Ask me anything (Incognito mode)..." : "Ask anything..."}
           rows={1}
-          className="w-full bg-transparent font-sans text-[14.5px] font-normal leading-relaxed text-[#0f172a] dark:text-zinc-100 placeholder:text-[#94a3b8] border-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none resize-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-3.5 sm:px-4.5 pt-2 sm:pt-2.5 pb-1"
+          className={cn(
+            "w-full bg-transparent font-sans text-[14.5px] font-normal leading-relaxed border-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none resize-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-3.5 sm:px-4.5 pt-2 sm:pt-2.5 pb-1",
+            isIncognito
+              ? "text-white placeholder:text-zinc-500"
+              : "text-[#0f172a] dark:text-zinc-100 placeholder:text-[#94a3b8]",
+          )}
           style={{ minHeight: isCompact ? "38px" : "46px", outline: "none" }}
         />
 
@@ -747,7 +804,12 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800 transition-colors cursor-pointer shrink-0"
+              className={cn(
+                "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 bg-transparent",
+                isIncognito
+                  ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                  : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
+              )}
               title="Attach context file"
             >
               <Paperclip className="w-4 h-4 shrink-0" strokeWidth={2} />
@@ -776,8 +838,12 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               className={cn(
                 "transition-colors cursor-pointer shrink-0 w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center bg-transparent",
                 isAddingTab
-                  ? "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
-                  : "hover:!bg-slate-100 dark:hover:!bg-zinc-800 text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-100",
+                  ? isIncognito
+                    ? "!bg-[#FF6B00]/25 text-[#FF6B00]"
+                    : "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
+                  : isIncognito
+                    ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                    : "hover:!bg-slate-100 dark:hover:!bg-zinc-800 text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-100",
               )}
               title="Add tool"
             >
@@ -791,8 +857,12 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                 className={cn(
                   "hidden sm:flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
                   isWebSearchActive
-                    ? "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
-                    : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
+                    ? isIncognito
+                      ? "!bg-sky-500/25 text-sky-400"
+                      : "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
+                    : isIncognito
+                      ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                      : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
                 )}
                 title={isWebSearchActive ? "Web search active (Click to disable)" : "Search web (Click to enable)"}
               >
@@ -811,8 +881,12 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               className={cn(
                 "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
                 skillPickerOpen
-                  ? "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
-                  : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
+                  ? isIncognito
+                    ? "!bg-[#FF6B00]/25 text-[#FF6B00]"
+                    : "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
+                  : isIncognito
+                    ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                    : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
               )}
               title="Skills"
             >
@@ -821,7 +895,9 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                   "w-4 h-4 shrink-0 transition-colors",
                   skillPickerOpen
                     ? "text-[#FF5500]"
-                    : "text-slate-500 dark:text-zinc-400",
+                    : isIncognito
+                      ? "text-zinc-400"
+                      : "text-slate-500 dark:text-zinc-400",
                 )}
                 strokeWidth={2}
               />
@@ -846,7 +922,7 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                 className={cn(
                   "hidden sm:flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 border-0",
                   isIncognito
-                    ? "!bg-slate-900 text-white shadow-xs"
+                    ? "!bg-white/20 text-white shadow-xs ring-1 ring-white/30"
                     : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
                 )}
                 title={
@@ -863,7 +939,12 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           <div className="flex items-center shrink-0 gap-1.5 sm:gap-2">
             <button
               type="button"
-              className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800 transition-colors cursor-pointer shrink-0"
+              className={cn(
+                "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
+                isIncognito
+                  ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                  : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
+              )}
               title="Voice input"
             >
               <Mic className="w-4 h-4 shrink-0" strokeWidth={2} />
@@ -873,15 +954,21 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               type="button"
               onClick={onSend}
               disabled={!canSend}
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 cursor-pointer transition-all ${
+              className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center shrink-0 cursor-pointer transition-all",
                 canSend
-                  ? "!bg-[#FF6B00] hover:!bg-[#E66000] shadow-[0_2px_8px_rgba(255,107,0,0.30)] active:scale-95"
-                  : "!bg-[#FFD5C2] dark:!bg-[#5a2e1d] text-white opacity-85 cursor-not-allowed"
-              }`}
+                  ? "!bg-[#FF6B00] hover:!bg-[#E66000] text-white shadow-[0_2px_8px_rgba(255,107,0,0.30)] active:scale-95"
+                  : isIncognito
+                    ? "!bg-white/10 text-white/35 cursor-not-allowed border border-white/5"
+                    : "!bg-[#FFD5C2] dark:!bg-[#5a2e1d] text-white opacity-85 cursor-not-allowed",
+              )}
               title="Send prompt"
             >
               <ArrowUpRight
-                className="w-4.5 h-4.5 shrink-0 text-white"
+                className={cn(
+                  "w-4.5 h-4.5 shrink-0",
+                  canSend ? "text-white" : isIncognito ? "text-white/40" : "text-white",
+                )}
                 strokeWidth={2.4}
               />
             </button>
@@ -895,8 +982,20 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           ref={popoverRef}
           className="absolute left-0 right-0 bottom-full mb-2.5 z-50 animate-in fade-in zoom-in-95 duration-150"
         >
-          <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-2xl overflow-hidden">
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-zinc-800">
+          <div
+            className={cn(
+              "rounded-2xl border shadow-2xl overflow-hidden",
+              isIncognito
+                ? "bg-[#22242a] border-white/15 text-white"
+                : "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800",
+            )}
+          >
+            <div
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 border-b",
+                isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
+              )}
+            >
               <Wand2
                 className="w-5 h-5 text-[#FF5500] shrink-0"
                 strokeWidth={2.2}
@@ -906,7 +1005,12 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                 value={skillQuery}
                 onChange={(e) => setSkillQuery(e.target.value)}
                 placeholder="Search skills to run…"
-                className="bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-[14.5px] flex-1 text-[#1C1C1C] dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500"
+                className={cn(
+                  "bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-[14.5px] flex-1",
+                  isIncognito
+                    ? "text-white placeholder:text-zinc-500"
+                    : "text-[#1C1C1C] dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500",
+                )}
               />
               <span className="text-[12.5px] text-gray-400 shrink-0">
                 {filteredSkills.length} available
@@ -923,17 +1027,37 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                     key={s.id}
                     type="button"
                     onClick={() => onRunSkill(s.id)}
-                    className="bg-transparent w-full text-left px-5 py-3 hover:bg-slate-50/80 dark:hover:bg-zinc-800/60 transition-colors flex items-center justify-between gap-4 group cursor-pointer border-b border-gray-100 dark:border-zinc-800/40 last:border-0"
+                    className={cn(
+                      "bg-transparent w-full text-left px-5 py-3 transition-colors flex items-center justify-between gap-4 group cursor-pointer border-b last:border-0",
+                      isIncognito
+                        ? "hover:bg-white/10 border-white/10"
+                        : "hover:bg-slate-50/80 dark:hover:bg-zinc-800/60 border-gray-100 dark:border-zinc-800/40",
+                    )}
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="text-[13.5px] sm:text-[14px] font-bold text-slate-900 dark:text-zinc-100 group-hover:text-[#FF6B00] transition-colors truncate">
+                      <div
+                        className={cn(
+                          "text-[13.5px] sm:text-[14px] font-bold group-hover:text-[#FF6B00] transition-colors truncate",
+                          isIncognito ? "text-zinc-100" : "text-slate-900 dark:text-zinc-100",
+                        )}
+                      >
                         {s.name}
                       </div>
-                      <div className="text-[12px] sm:text-[12.5px] text-slate-500 dark:text-zinc-400 font-normal leading-relaxed mt-0.5 truncate">
+                      <div
+                        className={cn(
+                          "text-[12px] sm:text-[12.5px] font-normal leading-relaxed mt-0.5 truncate",
+                          isIncognito ? "text-zinc-400" : "text-slate-500 dark:text-zinc-400",
+                        )}
+                      >
                         {s.summary}
                       </div>
                     </div>
-                    <span className="text-[10px] sm:text-[10.5px] uppercase tracking-[0.1em] font-extrabold text-[#FF6B00] bg-white dark:bg-zinc-900 border border-[#FF6B00]/70 px-3 py-0.5 rounded-full shrink-0 shadow-2xs">
+                    <span
+                      className={cn(
+                        "text-[10px] sm:text-[10.5px] uppercase tracking-[0.1em] font-extrabold text-[#FF6B00] border border-[#FF6B00]/70 px-3 py-0.5 rounded-full shrink-0 shadow-2xs",
+                        isIncognito ? "bg-white/10" : "bg-white dark:bg-zinc-900",
+                      )}
+                    >
                       {s.category}
                     </span>
                   </button>
@@ -995,6 +1119,40 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
   const [mobileTab, setMobileTab] = useState<"chat" | "dashboard">("dashboard");
   const [previewFile, setPreviewFile] = useState<AttachedFile | null>(null);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+
+  // Workspace in Chat State (Image 2 style)
+  const [activeWorkspace, setActiveWorkspace] = useState<{
+    id: string;
+    name: string;
+    topic?: string;
+    description?: string;
+    accentColor?: string;
+    bannerGradient?: string;
+  } | null>(null);
+  const [workspaceChats, setWorkspaceChats] = useState<any[]>([]);
+  const [workspaceMenuChatId, setWorkspaceMenuChatId] = useState<string | null>(null);
+  const [moveSubmenuOpen, setMoveSubmenuOpen] = useState(false);
+  const [renamingChatId, setRenamingChatId] = useState<string | null>(null);
+  const [renameChatTitle, setRenameChatTitle] = useState<string>("");
+  const workspaceMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleDocClick = (e: MouseEvent) => {
+      if (
+        workspaceMenuRef.current &&
+        !workspaceMenuRef.current.contains(e.target as Node)
+      ) {
+        setWorkspaceMenuChatId(null);
+        setMoveSubmenuOpen(false);
+      }
+    };
+    if (workspaceMenuChatId) {
+      document.addEventListener("mousedown", handleDocClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleDocClick);
+    };
+  }, [workspaceMenuChatId]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -1076,6 +1234,44 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
   useEffect(() => {
     try {
+      const pendingChatRaw =
+        sessionStorage.getItem("rivinity_active_chat") ||
+        localStorage.getItem("rivinity_active_chat");
+      if (pendingChatRaw) {
+        sessionStorage.removeItem("rivinity_active_chat");
+        localStorage.removeItem("rivinity_active_chat");
+        const parsed = JSON.parse(pendingChatRaw);
+        if (parsed && Array.isArray(parsed.messages) && parsed.messages.length > 0) {
+          const tabId = Date.now();
+          let isItemPinned = false;
+          try {
+            const storedPinned = localStorage.getItem("rivinity_pinned_items_v2");
+            if (storedPinned) {
+              const list = JSON.parse(storedPinned);
+              if (Array.isArray(list) && (list.includes(parsed.id) || (parsed.title && list.includes(parsed.title)))) {
+                isItemPinned = true;
+              }
+            }
+          } catch {}
+
+          setTabs([
+            {
+              id: tabId,
+              icon: MessageSquare,
+              label: parsed.title || "Chat",
+              kind: "chat",
+              messages: parsed.messages,
+              draftInput: "",
+              isPinned: isItemPinned,
+              historyId: parsed.id,
+            },
+          ]);
+          setActiveTabId(tabId);
+        }
+      }
+    } catch {}
+
+    try {
       const pending = sessionStorage.getItem("rivinity_pending_prompt");
       if (pending) {
         sessionStorage.removeItem("rivinity_pending_prompt");
@@ -1083,6 +1279,131 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
       }
     } catch {}
   }, [setInput]);
+
+  useEffect(() => {
+    const checkWorkspaceParam = () => {
+      try {
+        let wsId =
+          typeof window !== "undefined"
+            ? new URLSearchParams(window.location.search).get("workspace")
+            : null;
+        if (!wsId && typeof window !== "undefined") {
+          wsId = localStorage.getItem("rivinity_active_workspace_id");
+        }
+        if (wsId) {
+          let wsObj: any = null;
+          const rawObj = localStorage.getItem("rivinity_active_workspace_obj");
+          if (rawObj) {
+            try {
+              wsObj = JSON.parse(rawObj);
+            } catch {}
+          }
+          if (!wsObj || wsObj.id !== wsId) {
+            const rawList = localStorage.getItem("rivinity_workspaces_v4");
+            if (rawList) {
+              try {
+                const list = JSON.parse(rawList);
+                if (Array.isArray(list)) {
+                  wsObj = list.find((w: any) => w.id === wsId);
+                }
+              } catch {}
+            }
+          }
+          if (!wsObj) {
+            const defaultWorkspaces = [
+              {
+                id: "ws-email",
+                name: "Email Responder",
+                description:
+                  "Automate customer support email drafting & context-aware replies",
+              },
+              {
+                id: "ws-agents",
+                name: "Autonomous AI Agents",
+                description:
+                  "Multi-agent orchestration, tool-calling & reasoning graphs",
+              },
+              {
+                id: "ws-growth",
+                name: "Brand & Marketing",
+                description:
+                  "Campaign copywriting, interactive persona synthesis & social ads",
+              },
+              {
+                id: "ws-infra",
+                name: "Backend Optimizer",
+                description:
+                  "Next.js edge runtime, Redis idempotency keys & telemetry",
+              },
+              {
+                id: "ws-legal",
+                name: "Legal & Enterprise",
+                description:
+                  "Vendor MSA review, mutual NDAs & compliance verification",
+              },
+            ];
+            wsObj = defaultWorkspaces.find((w) => w.id === wsId) || {
+              id: wsId,
+              name: wsId
+                .replace(/^ws-/, "")
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase()),
+              description: "Workspace knowledge context",
+            };
+          }
+
+          setActiveWorkspace(wsObj);
+          try {
+            localStorage.setItem("rivinity_active_workspace_id", wsObj.id);
+            localStorage.setItem("rivinity_active_workspace_obj", JSON.stringify(wsObj));
+          } catch {}
+
+          // Associate active empty tabs with this workspace
+          setTabs((prev) =>
+            prev.map((t) =>
+              t.messages.length === 0
+                ? { ...t, workspaceId: wsObj.id }
+                : t,
+            ),
+          );
+
+          // Retrieve chats for this workspace
+          let histList: any[] = [];
+          const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+          if (rawHistory) {
+            try {
+              histList = JSON.parse(rawHistory);
+            } catch {}
+          }
+          if (!Array.isArray(histList) || histList.length === 0) {
+            histList = [...initialHistoryItems];
+            try {
+              localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(histList));
+            } catch {}
+          }
+          const chats = histList.filter((item: any) => item.workspaceId === wsId);
+          setWorkspaceChats(chats);
+        } else {
+          setActiveWorkspace(null);
+        }
+      } catch {}
+    };
+
+    checkWorkspaceParam();
+
+    const handleHistoryUpdated = () => {
+      checkWorkspaceParam();
+    };
+
+    window.addEventListener("popstate", checkWorkspaceParam);
+    window.addEventListener("workspace-selected", checkWorkspaceParam);
+    window.addEventListener("history-updated", handleHistoryUpdated);
+    return () => {
+      window.removeEventListener("popstate", checkWorkspaceParam);
+      window.removeEventListener("workspace-selected", checkWorkspaceParam);
+      window.removeEventListener("history-updated", handleHistoryUpdated);
+    };
+  }, []);
 
   const handleAttachFiles = useCallback(
     (files: FileList | File[]) => {
@@ -1168,10 +1489,26 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
       messages: [],
       draftInput: "",
       attachments: [],
+      workspaceId: activeWorkspace?.id,
     };
     setTabs((prev) => [...prev, newTab]);
     setActiveTabId(newId);
-  }, []);
+
+    if (activeWorkspace?.id) {
+      try {
+        const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+        if (rawHistory) {
+          const histList = JSON.parse(rawHistory);
+          if (Array.isArray(histList)) {
+            const chats = histList.filter(
+              (item: any) => item.workspaceId === activeWorkspace.id,
+            );
+            setWorkspaceChats(chats);
+          }
+        }
+      } catch {}
+    }
+  }, [activeWorkspace?.id]);
 
   // Split layout: 50% AI Chat / 50% Big Data Dashboard
   const [splitPercent, setSplitPercent] = useState<number>(50);
@@ -1239,9 +1576,17 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
       });
     };
 
+    const handleNewChat = () => {
+      handleAddNewTab();
+    };
+
     window.addEventListener("open-tab", handleOpenTab);
-    return () => window.removeEventListener("open-tab", handleOpenTab);
-  }, []);
+    window.addEventListener("rivinity:new-chat", handleNewChat);
+    return () => {
+      window.removeEventListener("open-tab", handleOpenTab);
+      window.removeEventListener("rivinity:new-chat", handleNewChat);
+    };
+  }, [handleAddNewTab]);
 
   const handleDragStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -1316,6 +1661,24 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
   const isEmpty = messages.length === 0;
 
+  // Ensure workspace chats are always up-to-date when viewing the workspace hub
+  useEffect(() => {
+    if (isEmpty && activeWorkspace?.id) {
+      try {
+        const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+        if (rawHistory) {
+          const histList = JSON.parse(rawHistory);
+          if (Array.isArray(histList)) {
+            const chats = histList.filter(
+              (item: any) => item.workspaceId === activeWorkspace.id,
+            );
+            setWorkspaceChats(chats);
+          }
+        }
+      } catch {}
+    }
+  }, [isEmpty, activeTabId, activeWorkspace?.id]);
+
   // STRICT RULE: The Big Data screen ONLY appears when the user's prompt explicitly uses "big data"
   const hasBigDataInPrompt = messages.some(
     (m) => m.role === "user" && /big\s*data/i.test(m.content),
@@ -1358,6 +1721,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
           kind: "chat",
           messages: [],
           draftInput: "",
+          workspaceId: activeWorkspace?.id,
         },
       ]);
       setActiveTabId(freshId);
@@ -1379,10 +1743,13 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     );
   };
 
-  const handleSend = () => {
-    const trimmed = input.trim();
+  const handleSend = (customText?: string) => {
+    const textToSend = typeof customText === "string" ? customText : (input || "");
+    const trimmed = textToSend.trim();
     const currentAttachments = currentTab.attachments || [];
     if ((!trimmed && currentAttachments.length === 0) || isThinking) return;
+
+    setInput("");
 
     // If user has already received an answer and still hasn't signed up, prompt to sign up
     if (!isAuthenticated && currentTab.messages.length >= 2) {
@@ -1390,6 +1757,8 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
       openAuth("signup");
       return;
     }
+
+    const targetWorkspaceId = activeWorkspace?.id || currentTab.workspaceId;
 
     // Check strictly if the user wrote a prompt containing "big data"
     const hasBigDataKeyword = /big\s*data/i.test(trimmed);
@@ -1403,6 +1772,15 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         ? currentAttachments[0].name.slice(0, 24)
         : "Attached File";
 
+    const chatId = currentTab.historyId || `chat-${Date.now()}`;
+    const userMsgId = Date.now();
+    const userMsg: MessageItem = {
+      id: userMsgId,
+      role: "user",
+      content: trimmed,
+      attachments: [...currentAttachments],
+    };
+
     setTabs((prev) =>
       prev.map((t) =>
         t.id === activeTabId
@@ -1414,14 +1792,11 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                 t.label === "New Chat"
                   ? dynamicTitle
                   : t.label,
+              historyId: chatId,
+              workspaceId: targetWorkspaceId,
               messages: [
                 ...t.messages,
-                {
-                  id: Date.now(),
-                  role: "user",
-                  content: trimmed,
-                  attachments: [...currentAttachments],
-                },
+                userMsg,
               ],
               draftInput: "",
               attachments: [],
@@ -1448,6 +1823,63 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         ? `Analyzed ${currentAttachments.length} attached file(s) and query: "${trimmed || "Analyzing uploaded document/image context"}". Extracted key features and integrated with reasoning model.`
         : `Analyzed query: "${trimmed}". Processing context across loaded index agents.`;
 
+    if (targetWorkspaceId) {
+      const todayFormatted = new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+
+      const newChatItem = {
+        id: chatId,
+        name: dynamicTitle,
+        subtitle:
+          trimmed.length > 80
+            ? trimmed.slice(0, 80) + "…"
+            : trimmed || "Interactive chat conversation",
+        category: "CHAT" as const,
+        workspaceId: targetWorkspaceId,
+        modified: "Just now",
+        dateStr: todayFormatted,
+        prompt: trimmed || "Interactive chat prompt",
+        response: responseContent,
+        tokens: 1200,
+        cost: "$0.002",
+        durationMs: 450,
+        messages: [...currentTab.messages, userMsg],
+      };
+
+      if (activeWorkspace && activeWorkspace.id === targetWorkspaceId) {
+        setWorkspaceChats((prev) => {
+          const filtered = prev.filter((c) => c.id !== chatId);
+          return [newChatItem, ...filtered];
+        });
+      }
+
+      try {
+        const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+        let histList: any[] = [];
+        if (rawHistory) {
+          try {
+            histList = JSON.parse(rawHistory);
+          } catch {}
+        }
+        if (!Array.isArray(histList) || histList.length === 0) {
+          histList = [...initialHistoryItems];
+        }
+        const existIdx = histList.findIndex((h: any) => h.id === chatId);
+        if (existIdx >= 0) {
+          histList[existIdx] = { ...histList[existIdx], ...newChatItem };
+        } else {
+          histList.unshift(newChatItem);
+        }
+        localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(histList));
+        window.dispatchEvent(new CustomEvent("history-updated"));
+      } catch (err) {
+        console.error("Error saving workspace chat to history", err);
+      }
+    }
+
     if (!isAuthenticated) {
       // Chatbot starts thinking animation, then opens login/signup modal.
       // Full output is withheld until login/signup succeeds.
@@ -1464,12 +1896,49 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     }
 
     setTimeout(() => {
-      appendTabMessage({
-        id: Date.now() + 1,
+      const aiMsgId = Date.now() + 1;
+      const aiMsg: MessageItem = {
+        id: aiMsgId,
         role: "ai",
         content: responseContent,
-      });
+      };
+      appendTabMessage(aiMsg);
       setIsThinking(false);
+
+      if (targetWorkspaceId) {
+        if (activeWorkspace && activeWorkspace.id === targetWorkspaceId) {
+          setWorkspaceChats((prev) =>
+            prev.map((c) =>
+              c.id === chatId
+                ? {
+                    ...c,
+                    response: responseContent,
+                    messages: [...(c.messages || []), aiMsg],
+                  }
+                : c,
+            ),
+          );
+        }
+        try {
+          const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+          if (rawHistory) {
+            const histList = JSON.parse(rawHistory);
+            if (Array.isArray(histList)) {
+              const updated = histList.map((h: any) =>
+                h.id === chatId
+                  ? {
+                      ...h,
+                      response: responseContent,
+                      messages: [...(h.messages || []), aiMsg],
+                    }
+                  : h,
+              );
+              localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(updated));
+              window.dispatchEvent(new CustomEvent("history-updated"));
+            }
+          }
+        } catch {}
+      }
     }, 600);
   };
 
@@ -1532,35 +2001,83 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
   const handleTogglePinChat = () => {
     setChatMenuOpen(false);
+    const newPinnedState = !currentTab.isPinned;
+    const historyId = currentTab.historyId || `c-${currentTab.id}`;
+
     setTabs((prev) =>
       prev.map((t) =>
-        t.id === activeTabId ? { ...t, isPinned: !t.isPinned } : t,
+        t.id === activeTabId ? { ...t, isPinned: newPinnedState, historyId } : t,
       ),
     );
-    toast.success(currentTab.isPinned ? "Chat unpinned" : "Chat pinned");
-  };
 
-  const handleArchiveChat = () => {
-    setChatMenuOpen(false);
-    const freshId = Date.now();
-    setTabs((prev) => {
-      const filtered = prev.filter((t) => t.id !== activeTabId);
-      if (filtered.length === 0) {
-        return [
-          {
-            id: freshId,
-            icon: MessageSquare,
-            label: "New Chat",
-            kind: "chat",
-            messages: [],
-            draftInput: "",
-          },
-        ];
+    try {
+      const storedPinned = localStorage.getItem("rivinity_pinned_items_v2");
+      let pinnedList: string[] = storedPinned ? JSON.parse(storedPinned) : [];
+      if (!Array.isArray(pinnedList)) pinnedList = [];
+
+      const storedHistory = localStorage.getItem("rivinity_history_v4");
+      let historyList: any[] = storedHistory ? JSON.parse(storedHistory) : [];
+      if (!Array.isArray(historyList)) historyList = [];
+
+      const matchedIdx = historyList.findIndex(
+        (h) =>
+          h.id === historyId ||
+          (currentTab.label &&
+            currentTab.label !== "New Chat" &&
+            h.name?.toLowerCase() === currentTab.label.toLowerCase()),
+      );
+
+      const targetId = matchedIdx >= 0 ? historyList[matchedIdx].id : historyId;
+
+      if (newPinnedState) {
+        if (!pinnedList.includes(targetId)) pinnedList.push(targetId);
+        if (currentTab.label && !pinnedList.includes(currentTab.label)) pinnedList.push(currentTab.label);
+
+        if (matchedIdx >= 0) {
+          historyList[matchedIdx].isPinned = true;
+        } else {
+          const userMsg =
+            currentTab.messages.find((m) => m.role === "user")?.content || currentTab.label;
+          const aiMsg =
+            currentTab.messages.filter((m) => m.role === "ai").slice(-1)[0]?.content || "";
+
+          historyList.unshift({
+            id: targetId,
+            name:
+              currentTab.label !== "New Chat"
+                ? currentTab.label
+                : userMsg.slice(0, 40) || "Chat Session",
+            subtitle: `${currentTab.messages.length || 1} messages • Interactive chat`,
+            category: "CHAT",
+            workspaceId: "ws-growth",
+            modified: "Just now",
+            dateStr: "Today",
+            prompt: userMsg || "Chat conversation",
+            response: aiMsg || "Assistant response",
+            tokens: 1200,
+            cost: "$0.002",
+            durationMs: 450,
+            isPinned: true,
+          });
+        }
+      } else {
+        pinnedList = pinnedList.filter(
+          (id) => id !== targetId && id !== historyId && id !== currentTab.label,
+        );
+        if (matchedIdx >= 0) {
+          historyList[matchedIdx].isPinned = false;
+        }
       }
-      return filtered;
-    });
-    setActiveTabId(freshId);
-    toast.success("Chat conversation archived");
+
+      localStorage.setItem("rivinity_pinned_items_v2", JSON.stringify(pinnedList));
+      if (historyList.length > 0) {
+        localStorage.setItem("rivinity_history_v4", JSON.stringify(historyList));
+      }
+    } catch (e) {
+      console.error("Failed to sync pinned state to history", e);
+    }
+
+    toast.success(newPinnedState ? "Chat pinned" : "Chat unpinned");
   };
 
   const handleDeleteChat = () => {
@@ -1570,6 +2087,21 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
   const confirmDeleteChat = () => {
     setShowDeleteConfirmModal(false);
+    if (currentTab.historyId) {
+      const hId = currentTab.historyId;
+      setWorkspaceChats((prev) => prev.filter((c) => c.id !== hId));
+      try {
+        const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+        if (rawHistory) {
+          const histList = JSON.parse(rawHistory);
+          if (Array.isArray(histList)) {
+            const filtered = histList.filter((h: any) => h.id !== hId);
+            localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(filtered));
+            window.dispatchEvent(new CustomEvent("history-updated"));
+          }
+        }
+      } catch {}
+    }
     if (tabs.length <= 1) {
       const freshId = Date.now();
       setTabs([
@@ -1580,6 +2112,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
           kind: "chat",
           messages: [],
           draftInput: "",
+          workspaceId: activeWorkspace?.id,
         },
       ]);
       setActiveTabId(freshId);
@@ -1590,6 +2123,290 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
       setTabs((prev) => prev.filter((t) => t.id !== activeTabId));
     }
     toast.success("Chat conversation deleted");
+  };
+
+  const handleShareWorkspace = () => {
+    if (!activeWorkspace) return;
+    const url =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/chat?workspace=${activeWorkspace.id}`
+        : "";
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url);
+      toast.success("Workspace link copied to clipboard!");
+    } else {
+      toast.info(`Workspace URL: ${url}`);
+    }
+  };
+
+  const handleExitWorkspace = () => {
+    setActiveWorkspace(null);
+    try {
+      localStorage.removeItem("rivinity_active_workspace_id");
+      localStorage.removeItem("rivinity_active_workspace_obj");
+      window.history.replaceState({}, "", "/chat");
+    } catch {}
+    toast.info("Switched to general chat");
+  };
+
+  const handleOpenWorkspaceChat = (chatItem: any) => {
+    const existingTab = tabs.find((t) => t.historyId === chatItem.id);
+    if (existingTab) {
+      setActiveTabId(existingTab.id);
+      return;
+    }
+
+    const userPrompt = chatItem.prompt || chatItem.name;
+    const aiResponse =
+      chatItem.response || `Here is the conversation for ${chatItem.name}`;
+    const loadedMessages: MessageItem[] =
+      chatItem.messages &&
+      Array.isArray(chatItem.messages) &&
+      chatItem.messages.length > 0
+        ? chatItem.messages
+        : [
+            {
+              id: Date.now() - 1000,
+              role: "user",
+              content: userPrompt,
+            },
+            {
+              id: Date.now(),
+              role: "ai",
+              content: aiResponse,
+            },
+          ];
+
+    if (currentTab.messages.length === 0) {
+      setTabs((prev) =>
+        prev.map((t) =>
+          t.id === activeTabId
+            ? {
+                ...t,
+                label: chatItem.name,
+                messages: loadedMessages,
+                historyId: chatItem.id,
+                workspaceId: chatItem.workspaceId || activeWorkspace?.id,
+              }
+            : t,
+        ),
+      );
+    } else {
+      const newId = Date.now();
+      const newTab: TabState = {
+        id: newId,
+        icon: MessageSquare,
+        label: chatItem.name,
+        kind: "chat",
+        messages: loadedMessages,
+        draftInput: "",
+        historyId: chatItem.id,
+        workspaceId: chatItem.workspaceId || activeWorkspace?.id,
+      };
+      setTabs((prev) => [...prev, newTab]);
+      setActiveTabId(newId);
+    }
+  };
+
+  const getAvailableWorkspaces = () => {
+    const defaultWorkspaces = [
+      { id: "ws-email", name: "Email Support Responder" },
+      { id: "ws-agents", name: "Autonomous AI Agents" },
+      { id: "ws-growth", name: "Brand & Marketing" },
+      { id: "ws-infra", name: "Backend Optimizer" },
+      { id: "ws-legal", name: "Legal & Enterprise" },
+    ];
+    try {
+      const rawWs = localStorage.getItem("rivinity_workspaces_v4");
+      if (rawWs) {
+        const parsed = JSON.parse(rawWs);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((w: any) => ({ id: w.id, name: w.name }));
+        }
+      }
+    } catch {}
+    return defaultWorkspaces;
+  };
+
+  const handleShareWorkspaceChat = (chatItem: any) => {
+    const url =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/chat?workspace=${activeWorkspace?.id || ""}&chat=${chatItem.id}`
+        : "";
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url);
+      toast.success("Chat link copied to clipboard!");
+    } else {
+      toast.info(`Chat: ${chatItem.name}`);
+    }
+    setWorkspaceMenuChatId(null);
+  };
+
+  const handleSaveRenameChat = (chatId: string) => {
+    const newTitle = renameChatTitle.trim();
+    if (!newTitle) {
+      setRenamingChatId(null);
+      return;
+    }
+    setWorkspaceChats((prev) =>
+      prev.map((c) => (c.id === chatId ? { ...c, name: newTitle } : c)),
+    );
+    setTabs((prev) =>
+      prev.map((t) => (t.historyId === chatId ? { ...t, label: newTitle } : t)),
+    );
+    try {
+      const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+      if (rawHistory) {
+        const histList = JSON.parse(rawHistory);
+        if (Array.isArray(histList)) {
+          const updated = histList.map((h: any) =>
+            h.id === chatId ? { ...h, name: newTitle } : h,
+          );
+          localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent("history-updated"));
+        }
+      }
+    } catch {}
+    toast.success("Chat renamed");
+    setRenamingChatId(null);
+    setWorkspaceMenuChatId(null);
+  };
+
+  const handlePinWorkspaceChat = (chatItem: any) => {
+    const newPinned = !chatItem.isPinned;
+    setWorkspaceChats((prev) =>
+      prev.map((c) =>
+        c.id === chatItem.id ? { ...c, isPinned: newPinned } : c,
+      ),
+    );
+    setTabs((prev) =>
+      prev.map((t) =>
+        t.historyId === chatItem.id ? { ...t, isPinned: newPinned } : t,
+      ),
+    );
+    try {
+      const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+      if (rawHistory) {
+        const histList = JSON.parse(rawHistory);
+        if (Array.isArray(histList)) {
+          const updated = histList.map((h: any) =>
+            h.id === chatItem.id ? { ...h, isPinned: newPinned } : h,
+          );
+          localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent("history-updated"));
+        }
+      }
+      const rawPinned = localStorage.getItem("rivinity_pinned_items_v2");
+      let pinnedList: string[] = rawPinned ? JSON.parse(rawPinned) : [];
+      if (!Array.isArray(pinnedList)) pinnedList = [];
+      if (newPinned) {
+        if (!pinnedList.includes(chatItem.id)) pinnedList.push(chatItem.id);
+      } else {
+        pinnedList = pinnedList.filter((id) => id !== chatItem.id);
+      }
+      localStorage.setItem(
+        "rivinity_pinned_items_v2",
+        JSON.stringify(pinnedList),
+      );
+    } catch {}
+    toast.success(newPinned ? "Chat pinned" : "Chat unpinned");
+    setWorkspaceMenuChatId(null);
+  };
+
+  const handleArchiveWorkspaceChat = (chatItem: any) => {
+    const nowArchived = !chatItem.isArchived;
+    setWorkspaceChats((prev) =>
+      prev.map((c) =>
+        c.id === chatItem.id ? { ...c, isArchived: nowArchived } : c,
+      ),
+    );
+    try {
+      const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+      if (rawHistory) {
+        const histList = JSON.parse(rawHistory);
+        if (Array.isArray(histList)) {
+          const updated = histList.map((h: any) =>
+            h.id === chatItem.id ? { ...h, isArchived: nowArchived } : h,
+          );
+          localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent("history-updated"));
+        }
+      }
+    } catch {}
+    toast.success(nowArchived ? "Chat archived" : "Chat unarchived");
+    setWorkspaceMenuChatId(null);
+  };
+
+  const handleDeleteWorkspaceChat = (chatId: string) => {
+    setWorkspaceChats((prev) => prev.filter((c) => c.id !== chatId));
+    setTabs((prev) => prev.filter((t) => t.historyId !== chatId));
+    try {
+      const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+      if (rawHistory) {
+        const histList = JSON.parse(rawHistory);
+        if (Array.isArray(histList)) {
+          const updated = histList.filter((h: any) => h.id !== chatId);
+          localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent("history-updated"));
+        }
+      }
+    } catch {}
+    toast.success("Chat deleted");
+    setWorkspaceMenuChatId(null);
+  };
+
+  const handleMoveChatToWorkspace = (
+    chatId: string,
+    targetWsId: string,
+    targetWsName: string,
+  ) => {
+    setWorkspaceChats((prev) => prev.filter((c) => c.id !== chatId));
+    setTabs((prev) =>
+      prev.map((t) =>
+        t.historyId === chatId ? { ...t, workspaceId: targetWsId } : t,
+      ),
+    );
+    try {
+      const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+      if (rawHistory) {
+        const histList = JSON.parse(rawHistory);
+        if (Array.isArray(histList)) {
+          const updated = histList.map((h: any) =>
+            h.id === chatId ? { ...h, workspaceId: targetWsId } : h,
+          );
+          localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent("history-updated"));
+        }
+      }
+    } catch {}
+    toast.success(`Moved chat to ${targetWsName}`);
+    setWorkspaceMenuChatId(null);
+    setMoveSubmenuOpen(false);
+  };
+
+  const handleRemoveChatFromWorkspace = (chatId: string) => {
+    const wsName = activeWorkspace?.name || "workspace";
+    setWorkspaceChats((prev) => prev.filter((c) => c.id !== chatId));
+    setTabs((prev) =>
+      prev.map((t) =>
+        t.historyId === chatId ? { ...t, workspaceId: "" } : t,
+      ),
+    );
+    try {
+      const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+      if (rawHistory) {
+        const histList = JSON.parse(rawHistory);
+        if (Array.isArray(histList)) {
+          const updated = histList.map((h: any) =>
+            h.id === chatId ? { ...h, workspaceId: "" } : h,
+          );
+          localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(updated));
+          window.dispatchEvent(new CustomEvent("history-updated"));
+        }
+      }
+    } catch {}
+    toast.success(`Removed from ${wsName}`);
+    setWorkspaceMenuChatId(null);
   };
 
   const handleViewFilesInChat = () => {
@@ -1625,9 +2442,48 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
   // AI Chat View (Canvas Main Prompt Box)
   const chatView = (
     <div className="flex-1 flex flex-col items-center justify-between min-w-0 min-h-0 h-full w-full relative overflow-hidden bg-white dark:bg-zinc-950">
+      {/* Workspace Indicator Badge when in chat conversation */}
+      {!isEmpty && activeWorkspace && (
+        <div className="absolute top-4 sm:top-6 left-4 sm:left-8 z-30 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              const emptyTab = tabs.find(
+                (t) =>
+                  t.workspaceId === activeWorkspace.id &&
+                  t.messages.length === 0,
+              );
+              if (emptyTab) {
+                setActiveTabId(emptyTab.id);
+              } else {
+                handleAddNewTab();
+              }
+              try {
+                const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
+                if (rawHistory) {
+                  const histList = JSON.parse(rawHistory);
+                  if (Array.isArray(histList)) {
+                    const chats = histList.filter(
+                      (item: any) => item.workspaceId === activeWorkspace.id,
+                    );
+                    setWorkspaceChats(chats);
+                  }
+                }
+              } catch {}
+            }}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-xs font-semibold text-slate-700 dark:text-zinc-200 transition-colors cursor-pointer border border-slate-200/60 dark:border-zinc-700 shadow-2xs group"
+            title="Return to workspace view"
+          >
+            <ChevronLeft className="w-3.5 h-3.5 text-slate-600 dark:text-zinc-300 group-hover:-translate-x-0.5 transition-transform" />
+            <Folder className="w-3.5 h-3.5 text-slate-600 dark:text-zinc-300" />
+            <span>{activeWorkspace.name}</span>
+          </button>
+        </div>
+      )}
+
       {/* Top-right Actions (Share, More Options) when conversation has started */}
       {!isEmpty && (
-        <div className="absolute top-2.5 right-3 z-30 flex items-center gap-1.5" ref={chatMenuRef}>
+        <div className="absolute top-4 sm:top-6 right-4 sm:right-8 z-30 flex items-center gap-1.5" ref={chatMenuRef}>
           <button
             type="button"
             onClick={handleShare}
@@ -1681,16 +2537,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                 </span>
               </button>
 
-              {/* Archive */}
-              <button
-                type="button"
-                onClick={handleArchiveChat}
-                className="bg-transparent flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[14px] font-medium text-gray-800 dark:text-zinc-100 hover:bg-gray-100/90 dark:hover:bg-white/10 transition-colors cursor-pointer text-left border-0"
-              >
-                <Archive className="w-4.5 h-4.5 shrink-0 text-gray-700 dark:text-zinc-300" />
-                <span className="flex-1 truncate">Archive</span>
-              </button>
-
               {/* Delete */}
               <button
                 type="button"
@@ -1720,38 +2566,325 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
       {/* Scrollable Message List or Empty State */}
       <div className="flex-1 min-h-0 flex flex-col items-center overflow-y-auto overflow-x-hidden relative z-10 w-full max-w-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {isEmpty ? (
-          <div className="relative flex-1 min-h-full flex flex-col items-center justify-center w-full px-3 sm:px-6 py-6 sm:py-10 my-auto">
-            <div className="w-full max-w-[768px] mx-auto flex flex-col items-center justify-center mb-4 sm:mb-6">
-              <ChatEmptyState />
-            </div>
+          activeWorkspace ? (
+            /* Image 2 Light Theme Workspace View */
+            <div className="relative flex-1 min-h-full flex flex-col items-center justify-start w-full px-4 sm:px-8 py-8 sm:py-12 my-auto animate-in fade-in duration-200">
+              <div className="w-full max-w-[700px] mx-auto flex flex-col gap-5">
+                {/* Top Row: Workspace Name (smaller text, no left icon, no 3-dots) */}
+                <div className="flex items-center justify-between gap-4">
+                  <div className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white tracking-tight truncate">
+                    {activeWorkspace.name}
+                  </div>
 
-            <div className="relative z-10 w-full max-w-[768px] mx-auto flex justify-center">
-              <ChatComposer
-                input={input}
-                setInput={setInput}
-                onSend={handleSend}
-                tabs={tabs}
-                setTabs={setTabs}
-                activeTab={activeTabId}
-                setActiveTab={setActiveTabId}
-                onCloseTab={closeTab}
-                onAddNewTab={handleAddNewTab}
-                skillPickerOpen={skillPickerOpen}
-                setSkillPickerOpen={setSkillPickerOpen}
-                skillQuery={skillQuery}
-                setSkillQuery={setSkillQuery}
-                onRunSkill={runSkill}
-                disabled={isThinking}
-                isCompact={false}
-                attachments={currentTab.attachments || []}
-                onAttachFiles={handleAttachFiles}
-                onRemoveAttachment={handleRemoveAttachment}
-                onPreviewFile={setPreviewFile}
-              />
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={handleShareWorkspace}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+                    >
+                      <Share className="w-3.5 h-3.5" />
+                      <span>Share</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleExitWorkspace}
+                      className="w-8 h-8 rounded-full border border-slate-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-slate-50 dark:hover:bg-zinc-800 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 shadow-2xs transition-colors cursor-pointer"
+                      title="Exit workspace view"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* User's Actual Chatbox */}
+                <div className="relative z-10 w-full flex justify-center">
+                  <ChatComposer
+                    input={input}
+                    setInput={setInput}
+                    onSend={handleSend}
+                    tabs={tabs}
+                    setTabs={setTabs}
+                    activeTab={activeTabId}
+                    setActiveTab={setActiveTabId}
+                    onCloseTab={closeTab}
+                    onAddNewTab={handleAddNewTab}
+                    skillPickerOpen={skillPickerOpen}
+                    setSkillPickerOpen={setSkillPickerOpen}
+                    skillQuery={skillQuery}
+                    setSkillQuery={setSkillQuery}
+                    onRunSkill={runSkill}
+                    disabled={isThinking}
+                    isCompact={false}
+                    attachments={currentTab.attachments || []}
+                    onAttachFiles={handleAttachFiles}
+                    onRemoveAttachment={handleRemoveAttachment}
+                    onPreviewFile={setPreviewFile}
+                  />
+                </div>
+
+                {/* Chats Filter Pill (Sources removed) */}
+                <div className="flex items-center gap-2 pt-1">
+                  <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-xs">
+                    Chats
+                  </span>
+                </div>
+
+                {/* Chats List */}
+                <div className="space-y-1">
+                  {workspaceChats.length === 0 ? (
+                    <div className="py-12 text-center space-y-2 rounded-2xl border border-dashed border-slate-200 dark:border-zinc-800 p-6">
+                      <div className="text-xs font-semibold text-slate-700 dark:text-zinc-300">
+                        No chats in this workspace yet
+                      </div>
+                      <div className="text-[11px] text-slate-400 dark:text-zinc-500">
+                        Type a question above to start chatting with {activeWorkspace.name} context.
+                      </div>
+                    </div>
+                  ) : (
+                    workspaceChats.map((chat) => (
+                      <div
+                        key={chat.id}
+                        onClick={() => {
+                          if (renamingChatId === chat.id) return;
+                          handleOpenWorkspaceChat(chat);
+                        }}
+                        className="relative group py-3 px-3.5 -mx-3.5 rounded-xl hover:bg-slate-100/70 dark:hover:bg-zinc-800/60 transition-colors cursor-pointer border-b border-slate-100 dark:border-zinc-800/60 last:border-b-0"
+                      >
+                        {renamingChatId === chat.id ? (
+                          <div
+                            className="flex items-center gap-2 py-0.5"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <input
+                              type="text"
+                              value={renameChatTitle}
+                              onChange={(e) => setRenameChatTitle(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") handleSaveRenameChat(chat.id);
+                                if (e.key === "Escape") setRenamingChatId(null);
+                              }}
+                              autoFocus
+                              className="flex-1 px-3 py-1.5 text-sm font-semibold rounded-xl border border-[#FF6B00] bg-white dark:bg-zinc-900 text-slate-900 dark:text-white focus:outline-hidden ring-2 ring-[#FF6B00]/20 shadow-xs"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleSaveRenameChat(chat.id)}
+                              className="p-2 rounded-xl bg-[#FF6B00] text-white hover:bg-[#E05300] transition-colors cursor-pointer shadow-xs"
+                              title="Save title"
+                            >
+                              <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setRenamingChatId(null)}
+                              className="p-2 rounded-xl bg-slate-200 dark:bg-zinc-700 text-slate-700 dark:text-zinc-200 hover:bg-slate-300 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
+                              title="Cancel"
+                            >
+                              <X className="w-3.5 h-3.5 stroke-[2.5]" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                              <div className="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-[#FF6B00] transition-colors truncate">
+                                {chat.name}
+                              </div>
+                              {chat.isPinned && (
+                                <Pin className="w-3 h-3 text-[#FF6B00] fill-[#FF6B00] shrink-0" />
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <div className="text-xs text-slate-400 dark:text-zinc-500 font-medium">
+                                {chat.dateStr || "May 23"}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setWorkspaceMenuChatId((prev) =>
+                                    prev === chat.id ? null : chat.id,
+                                  );
+                                  setMoveSubmenuOpen(false);
+                                }}
+                                className={cn(
+                                  "bg-transparent border-0 w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all cursor-pointer",
+                                  workspaceMenuChatId === chat.id
+                                    ? "bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-white opacity-100"
+                                    : "opacity-0 group-hover:opacity-100 focus:opacity-100",
+                                )}
+                                title="More options"
+                                aria-label="More options"
+                              >
+                                <MoreHorizontal className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        <div className="text-xs text-slate-500 dark:text-zinc-400 truncate mt-1 pr-6">
+                          {chat.subtitle || chat.prompt || chat.response}
+                        </div>
+
+                        {/* Three Dots Dropdown Menu Popup (Light theme according to project) */}
+                        {workspaceMenuChatId === chat.id && (
+                          <div
+                            ref={workspaceMenuRef}
+                            onClick={(e) => e.stopPropagation()}
+                            className="absolute right-0 top-11 w-52 rounded-2xl bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-100 border border-slate-200/90 dark:border-zinc-800 shadow-xl shadow-slate-200/80 dark:shadow-black/70 p-1.5 z-50 select-none text-left animate-in fade-in zoom-in-95 duration-100"
+                          >
+                            {/* 1. Share */}
+                            <button
+                              type="button"
+                              onClick={() => handleShareWorkspaceChat(chat)}
+                              className="bg-transparent border-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer w-full text-left"
+                            >
+                              <Share2 className="w-4 h-4 stroke-[2] text-slate-500 dark:text-zinc-400 shrink-0" />
+                              <span>Share</span>
+                            </button>
+
+                            {/* 2. Rename */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setRenamingChatId(chat.id);
+                                setRenameChatTitle(chat.name);
+                                setWorkspaceMenuChatId(null);
+                              }}
+                              className="bg-transparent border-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer w-full text-left"
+                            >
+                              <Pencil className="w-4 h-4 stroke-[2] text-slate-500 dark:text-zinc-400 shrink-0" />
+                              <span>Rename</span>
+                            </button>
+
+                            {/* 3. Pin chat */}
+                            <button
+                              type="button"
+                              onClick={() => handlePinWorkspaceChat(chat)}
+                              className="bg-transparent border-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer w-full text-left"
+                            >
+                              <Pin
+                                className={cn(
+                                  "w-4 h-4 stroke-[2] text-slate-500 dark:text-zinc-400 shrink-0",
+                                  chat.isPinned && "text-[#FF6B00] fill-[#FF6B00]",
+                                )}
+                              />
+                              <span>{chat.isPinned ? "Unpin chat" : "Pin chat"}</span>
+                            </button>
+
+                            {/* 4. Delete */}
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteWorkspaceChat(chat.id)}
+                              className="bg-transparent border-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer w-full text-left"
+                            >
+                              <Trash2 className="w-4 h-4 stroke-[2] text-red-500 dark:text-red-400 shrink-0" />
+                              <span>Delete</span>
+                            </button>
+
+                            <div className="my-1 border-t border-slate-100 dark:border-zinc-800" />
+
+                            {/* Section header: Workspace / Project Name */}
+                            <div className="px-3 pt-1.5 pb-1 text-[11px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider truncate">
+                              {activeWorkspace.name}
+                            </div>
+
+                            {/* 5. Move to workspace */}
+                            <button
+                              type="button"
+                              onClick={() => setMoveSubmenuOpen((prev) => !prev)}
+                              className="bg-transparent border-0 flex items-center justify-between px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer w-full text-left"
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <FolderPlus className="w-4 h-4 stroke-[2] text-slate-500 dark:text-zinc-400 shrink-0" />
+                                <span className="truncate">Move to workspace</span>
+                              </div>
+                              <ChevronRight
+                                className={cn(
+                                  "w-4 h-4 text-slate-400 dark:text-zinc-500 shrink-0 transition-transform",
+                                  moveSubmenuOpen && "rotate-90",
+                                )}
+                              />
+                            </button>
+
+                            {moveSubmenuOpen && (
+                              <div className="p-1 space-y-0.5 bg-slate-50 dark:bg-zinc-800/50 rounded-xl my-1 border border-slate-100 dark:border-zinc-800/80 max-h-36 overflow-y-auto">
+                                {getAvailableWorkspaces()
+                                  .filter((w) => w.id !== activeWorkspace.id)
+                                  .map((targetWs) => (
+                                    <button
+                                      key={targetWs.id}
+                                      type="button"
+                                      onClick={() =>
+                                        handleMoveChatToWorkspace(
+                                          chat.id,
+                                          targetWs.id,
+                                          targetWs.name,
+                                        )
+                                      }
+                                      className="bg-transparent border-0 w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-zinc-700/60 transition-colors truncate flex items-center gap-2 cursor-pointer"
+                                    >
+                                      <Folder className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                      <span className="truncate">{targetWs.name}</span>
+                                    </button>
+                                  ))}
+                              </div>
+                            )}
+
+                            {/* 6. Remove from workspace */}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveChatFromWorkspace(chat.id)}
+                              className="bg-transparent border-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer w-full text-left"
+                            >
+                              <FolderX className="w-4 h-4 stroke-[2] text-slate-500 dark:text-zinc-400 shrink-0" />
+                              <span>Remove from workspace</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="relative flex-1 min-h-full flex flex-col items-center justify-center w-full px-4 sm:px-8 py-6 sm:py-8 my-auto">
+              <div className="w-full max-w-[700px] mx-auto flex flex-col items-center justify-center mb-4 sm:mb-6">
+                <ChatEmptyState />
+              </div>
+
+              <div className="relative z-10 w-full max-w-[700px] mx-auto flex justify-center">
+                <ChatComposer
+                  input={input}
+                  setInput={setInput}
+                  onSend={handleSend}
+                  tabs={tabs}
+                  setTabs={setTabs}
+                  activeTab={activeTabId}
+                  setActiveTab={setActiveTabId}
+                  onCloseTab={closeTab}
+                  onAddNewTab={handleAddNewTab}
+                  skillPickerOpen={skillPickerOpen}
+                  setSkillPickerOpen={setSkillPickerOpen}
+                  skillQuery={skillQuery}
+                  setSkillQuery={setSkillQuery}
+                  onRunSkill={runSkill}
+                  disabled={isThinking}
+                  isCompact={false}
+                  attachments={currentTab.attachments || []}
+                  onAttachFiles={handleAttachFiles}
+                  onRemoveAttachment={handleRemoveAttachment}
+                  onPreviewFile={setPreviewFile}
+                />
+              </div>
+
+              <div className="text-[11.5px] sm:text-[12px] text-gray-400 dark:text-zinc-500 text-center mt-2.5 sm:mt-3 select-none">
+                Rivinity can make mistakes. Check important info.
+              </div>
+            </div>
+          )
         ) : (
-          <div className="w-full max-w-[768px] mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 flex flex-col items-center">
+          <div className="w-full max-w-[860px] mx-auto px-4 sm:px-8 pt-6 sm:pt-8 pb-8 space-y-4 sm:space-y-6 flex flex-col items-center">
             {messages.map((msg) => (
               <div
                 key={msg.id}
@@ -1991,8 +3124,8 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
       {/* Pinned Bottom Composer */}
       {!isEmpty && (
-        <div className="px-2.5 sm:px-4 pb-3 sm:pb-5 pt-2 sm:pt-2.5 flex justify-center items-center bg-gradient-to-t from-white dark:from-zinc-950 via-white/95 dark:via-zinc-950/95 to-transparent shrink-0 relative z-10 w-full">
-          <div className="w-full max-w-[768px] mx-auto flex justify-center">
+        <div className="px-4 sm:px-8 pb-3 sm:pb-4 pt-2 sm:pt-2.5 flex flex-col justify-center items-center bg-gradient-to-t from-white dark:from-zinc-950 via-white/95 dark:via-zinc-950/95 to-transparent shrink-0 relative z-10 w-full">
+          <div className="w-full max-w-[860px] mx-auto flex justify-center">
             <ChatComposer
               input={input}
               setInput={setInput}
@@ -2015,6 +3148,9 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
               onRemoveAttachment={handleRemoveAttachment}
               onPreviewFile={setPreviewFile}
             />
+          </div>
+          <div className="text-[11.5px] sm:text-[12px] text-gray-400 dark:text-zinc-500 text-center mt-2 sm:mt-2.5 select-none">
+            Rivinity can make mistakes. Check important info.
           </div>
         </div>
       )}
@@ -2164,14 +3300,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                 {currentTab.label || "this chat"}
               </span>
               .
-            </div>
-
-            <div className="text-[13.5px] text-gray-500 dark:text-zinc-400 mt-2.5 leading-relaxed">
-              Visit{" "}
-              <span className="underline underline-offset-2 hover:text-gray-800 dark:hover:text-zinc-200 cursor-pointer">
-                settings
-              </span>{" "}
-              to delete any memories saved during this chat.
             </div>
 
             <div className="flex items-center justify-end gap-2.5 mt-6">

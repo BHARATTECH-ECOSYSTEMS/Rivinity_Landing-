@@ -1,65 +1,68 @@
 "use client";
 
-import { useState } from "react";
-import { Volume2, Mic, AudioWaveform, Star, ChevronDown } from "lucide-react";
+import React, { useState } from "react";
+import { Volume2, Mic, AudioWaveform, Star, ChevronDown, Sparkles, Sliders, Play, Pause, Download } from "lucide-react";
 import ModelSelectorCard from "@/components/canvas/ModelSelectorCard";
 import RightPanelShell from "@/components/panels/RightPanelShell";
 import PanelSection from "@/components/panels/PanelSection";
 import RecentList, { type RecentItem } from "@/components/panels/RecentList";
 import CreditsCard from "@/components/panels/CreditsCard";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const voices = [
-  { id: "sarah", name: "Sarah", desc: "Warm & professional", avatar: "S" },
-  { id: "jonathan", name: "Jonathan", desc: "Powerful & persuasive", avatar: "J" },
-  { id: "yolanda", name: "Yolanda", desc: "Calm & friendly", avatar: "Y" },
-  { id: "george", name: "George", desc: "Deep & authoritative", avatar: "G" },
-  { id: "lily", name: "Lily", desc: "Bright & energetic", avatar: "L" },
+  { id: "sarah", name: "Sarah", desc: "Warm & professional", avatar: "S", color: "from-orange-500 to-amber-500" },
+  { id: "aarav", name: "Aarav", desc: "Natural & expressive", avatar: "A", color: "from-blue-500 to-cyan-500" },
+  { id: "jonathan", name: "Jonathan", desc: "Deep & authoritative", avatar: "J", color: "from-purple-500 to-indigo-500" },
+  { id: "yolanda", name: "Yolanda", desc: "Calm & friendly", avatar: "Y", color: "from-emerald-500 to-teal-500" },
+  { id: "lily", name: "Lily", desc: "Bright & energetic", avatar: "L", color: "from-pink-500 to-rose-500" },
 ];
 
 interface Props {
   activeFeature: string;
 }
 
-const AudioLabRightPanel = ({ activeFeature }: Props) => {
+export default function AudioLabRightPanel({ activeFeature }: Props) {
   const [selectedVoice, setSelectedVoice] = useState(voices[0]);
   const [voiceDropdownOpen, setVoiceDropdownOpen] = useState(false);
 
   const showVoiceSelector = activeFeature === "text-to-speech" || activeFeature === "voice-clone";
 
   const recents: RecentItem[] = [
-    { label: "Welcome greeting", time: "2m ago", icon: Volume2 },
-    { label: "Meeting transcript", time: "1h ago", icon: Mic },
-    { label: "Rain ambience", time: "3h ago", icon: AudioWaveform },
+    { label: "Meditation take 03.wav", time: "2m ago", icon: Volume2 },
+    { label: "Meeting sprint transcript", time: "45m ago", icon: Mic },
+    { label: "Rain on roof ambience", time: "2h ago", icon: AudioWaveform },
+    { label: "Cyberpunk plasma blast", time: "4h ago", icon: AudioWaveform },
   ];
 
   return (
     <RightPanelShell>
-      <ModelSelectorCard label="AI Model" />
+      <ModelSelectorCard label="AI Audio Engine" />
 
       {showVoiceSelector && (
-        <PanelSection label="Selected Voice">
+        <PanelSection label="Active Voice Profile">
           <div className="relative">
             <button
               type="button"
               onClick={() => setVoiceDropdownOpen(!voiceDropdownOpen)}
-              className="w-full glass rounded-2xl p-4 border border-glass shadow-float text-left hover:shadow-glow-accent transition-all duration-200 cursor-pointer"
+              className="w-full rounded-2xl p-3.5 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-xs text-left hover:border-[#FF6B00]/40 transition-all cursor-pointer"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-foreground/10 flex items-center justify-center text-sm font-semibold text-foreground/70">
+                  <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-white shadow-xs bg-gradient-to-tr", selectedVoice.color)}>
                     {selectedVoice.avatar}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">{selectedVoice.name}</p>
-                    <p className="text-[11px] text-muted-foreground/60">{selectedVoice.desc}</p>
+                    <div className="text-xs font-bold text-slate-900 dark:text-white">{selectedVoice.name}</div>
+                    <div className="text-[10.5px] text-slate-400 dark:text-zinc-500">{selectedVoice.desc}</div>
                   </div>
                 </div>
-                <ChevronDown className={`w-4 h-4 text-muted-foreground/50 transition-transform duration-200 ${voiceDropdownOpen ? "rotate-180" : ""}`} />
+                <ChevronDown className={cn("w-4 h-4 text-slate-400 transition-transform duration-200", voiceDropdownOpen && "rotate-180")} />
               </div>
             </button>
 
             {voiceDropdownOpen && (
-              <div className="absolute top-full mt-2 left-0 right-0 z-50 glass-strong rounded-xl border border-glass shadow-float overflow-hidden animate-float-in">
+              <div className="absolute top-full mt-2 left-0 right-0 z-50 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
                 {voices.map((v) => (
                   <button
                     key={v.id}
@@ -67,22 +70,24 @@ const AudioLabRightPanel = ({ activeFeature }: Props) => {
                     onClick={() => {
                       setSelectedVoice(v);
                       setVoiceDropdownOpen(false);
+                      toast.info(`Active voice: ${v.name}`);
                     }}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${
+                    className={cn(
+                      "w-full flex items-center gap-3 px-3.5 py-2.5 text-left transition-colors cursor-pointer",
                       v.id === selectedVoice.id
-                        ? "bg-accent text-foreground"
-                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                    }`}
+                        ? "bg-orange-500/10 text-[#FF6B00]"
+                        : "hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-300"
+                    )}
                   >
-                    <div className="w-8 h-8 rounded-full bg-foreground/10 flex items-center justify-center text-xs font-semibold text-foreground/70">
+                    <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white shadow-xs bg-gradient-to-tr", v.color)}>
                       {v.avatar}
                     </div>
-                    <div>
-                      <p className="text-[13px] font-medium">{v.name}</p>
-                      <p className="text-[11px] text-muted-foreground/50">{v.desc}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-bold truncate">{v.name}</div>
+                      <div className="text-[10px] text-slate-400 truncate">{v.desc}</div>
                     </div>
                     {v.id === selectedVoice.id && (
-                      <Star className="w-3 h-3 text-primary ml-auto fill-primary" />
+                      <Star className="w-3.5 h-3.5 text-[#FF6B00] fill-[#FF6B00]" />
                     )}
                   </button>
                 ))}
@@ -92,18 +97,34 @@ const AudioLabRightPanel = ({ activeFeature }: Props) => {
         </PanelSection>
       )}
 
-      <PanelSection label="Recent">
+      {/* QUICK AUDIO SPECS */}
+      <PanelSection label="Studio Master Settings">
+        <div className="p-3.5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 space-y-2 text-xs">
+          <div className="flex justify-between items-center text-slate-500 dark:text-zinc-400">
+            <span>Sampling Rate:</span>
+            <span className="font-mono font-bold text-slate-800 dark:text-zinc-200">48,000 Hz</span>
+          </div>
+          <div className="flex justify-between items-center text-slate-500 dark:text-zinc-400">
+            <span>Bit Depth:</span>
+            <span className="font-mono font-bold text-slate-800 dark:text-zinc-200">24-bit Lossless</span>
+          </div>
+          <div className="flex justify-between items-center text-slate-500 dark:text-zinc-400">
+            <span>Channels:</span>
+            <span className="font-mono font-bold text-slate-800 dark:text-zinc-200">Stereo Spatial</span>
+          </div>
+        </div>
+      </PanelSection>
+
+      <PanelSection label="Recent Audio Clips">
         <RecentList items={recents} />
       </PanelSection>
 
       <CreditsCard
-        label="Credits Remaining"
-        value="8,450"
+        label="Audio Generation Credits"
+        value="84,500"
         percent={84.5}
-        caption="84,500 / 100,000 characters used"
+        caption="84,500 / 100,000 neural compute units available"
       />
     </RightPanelShell>
   );
-};
-
-export default AudioLabRightPanel;
+}

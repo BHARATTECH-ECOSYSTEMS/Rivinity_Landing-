@@ -30,6 +30,7 @@ import {
   HelpCircle,
   LogOut,
   X,
+  Plus,
 } from "lucide-react";
 
 import rivinityLogo from "@/components/assets/Rivinity Logo.png";
@@ -70,6 +71,124 @@ const UpgradeArrowIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   </svg>
 );
 
+/** Credit segment type for multi-arc ring */
+type CreditSegment = {
+  label: string;
+  value: number;
+  max: number;
+  color: string;
+};
+
+/** Multi-segment circular credit ring around the user avatar */
+const CreditRing = ({
+  segments,
+  size = 38,
+  strokeWidth = 2.5,
+  tooltipSide = "right",
+  hideTooltip = false,
+  children,
+}: {
+  segments: CreditSegment[];
+  size?: number;
+  strokeWidth?: number;
+  tooltipSide?: "right" | "top";
+  hideTooltip?: boolean;
+  children: React.ReactNode;
+}) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const center = size / 2;
+
+  const totalMax = segments.reduce((s, seg) => s + seg.max, 0);
+  const totalValue = segments.reduce((s, seg) => s + seg.value, 0);
+  const totalPct = totalMax > 0 ? Math.round((totalValue / totalMax) * 100) : 0;
+
+  // Gap between segments (in SVG units)
+  const gapAngle = segments.length > 1 ? 3 : 0; // degrees
+  const gapLength = (gapAngle / 360) * circumference;
+
+  // Build arcs
+  let cursor = 0;
+  const arcs = segments.map((seg) => {
+    const rawLength = totalMax > 0 ? (seg.value / totalMax) * circumference : 0;
+    const arcLength = Math.max(0, rawLength - gapLength);
+    const startOffset = cursor + gapLength / 2;
+    cursor += rawLength;
+    return { ...seg, arcLength, startOffset };
+  });
+
+  const tooltipCls =
+    tooltipSide === "right"
+      ? "left-[calc(100%+10px)] top-1/2 -translate-y-1/2"
+      : "bottom-[calc(100%+10px)] left-1/2 -translate-x-1/2";
+
+  return (
+    <div className="group/credit relative shrink-0" style={{ width: size, height: size }}>
+      <svg
+        className="absolute inset-0"
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        style={{ transform: "rotate(-90deg)" }}
+      >
+        {/* Background track */}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          className="text-slate-200 dark:text-zinc-700/60"
+        />
+        {/* Colored segments */}
+        {arcs.map((arc, i) =>
+          arc.arcLength > 0 ? (
+            <circle
+              key={i}
+              cx={center}
+              cy={center}
+              r={radius}
+              fill="none"
+              stroke={arc.color}
+              strokeWidth={strokeWidth}
+              strokeDasharray={`${arc.arcLength} ${circumference - arc.arcLength}`}
+              strokeDashoffset={-arc.startOffset}
+              strokeLinecap="round"
+            />
+          ) : null
+        )}
+      </svg>
+      {/* Avatar centered inside */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        {children}
+      </div>
+      {/* Hover tooltip — hidden when dropdown menu is open */}
+      {!hideTooltip && (
+        <div
+          className={`pointer-events-none absolute z-[120] ${tooltipCls} rounded-lg bg-white dark:bg-[#1e1e22] text-slate-700 dark:text-zinc-200 px-2.5 py-1.5 shadow-lg border border-slate-200 dark:border-white/[0.12] opacity-0 group-hover/credit:opacity-100 transition-all duration-150 scale-95 group-hover/credit:scale-100 select-none`}
+        >
+          <div className="text-[9.5px] font-bold mb-0.5 text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
+            Credits — {totalPct}%
+          </div>
+          {segments.map((seg, i) => (
+            <div key={i} className="flex items-center gap-1.5 text-[10px] leading-[15px] whitespace-nowrap">
+              <span
+                className="w-1.5 h-1.5 rounded-full shrink-0"
+                style={{ backgroundColor: seg.color }}
+              />
+              <span className="text-slate-500 dark:text-zinc-400">{seg.label}</span>
+              <span className="font-semibold tabular-nums text-slate-700 dark:text-zinc-200 ml-auto">
+                {seg.value}/{seg.max}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const menuItems: NavItem[] = [
   {
     id: "dashboard",
@@ -81,7 +200,7 @@ const menuItems: NavItem[] = [
     id: "chat",
     label: "Chat",
     icon: MessageSquare,
-    path: "/app",
+    path: "/chat",
   },
   {
     id: "knowledge-base",
@@ -159,7 +278,7 @@ const workspaceItems: NavItem[] = [
 
 function findActiveId(pathname: string): string {
   if (pathname === "/" || pathname === "/dashboard") return "dashboard";
-  if (pathname === "/app" || pathname.startsWith("/chat")) return "chat";
+  if (pathname === "/chat" || pathname === "/app" || pathname.startsWith("/chat")) return "chat";
   if (
     pathname === "/agent-playground" ||
     pathname === "/agents" ||
@@ -205,16 +324,33 @@ const CanvasSidebar = ({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const isSettledCollapsed = !isOpen;
-  const [mounted, setMounted] = useState(false);
+  const [transitionsReady, setTransitionsReady] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => {
+      setTransitionsReady(true);
+    }, 200);
+    return () => clearTimeout(timer);
   }, []);
 
   const { logout, user, isAuthenticated, openAuth } = useAuthModal();
   const displayName = isAuthenticated && user?.name ? user.name : (isAuthenticated ? USER.name : "Guest User");
   const displayInitials = isAuthenticated && user?.initials ? user.initials : (isAuthenticated ? USER.initials : "GU");
   const displayPlan = isAuthenticated ? (user?.plan || USER.plan || "Pro Workspace") : "Free Plan";
+
+  // Credit ring segments: blue = daily, yellow = ad, pink = pro
+  const isPro = displayPlan.toLowerCase().includes("pro");
+  // TODO: replace with real credit data from API
+  const creditSegments: CreditSegment[] = isPro
+    ? [
+        { label: "Pro Credits",   value: 380, max: 500, color: "#ec4899" },
+        { label: "Daily Credits", value: 80,  max: 100, color: "#3b82f6" },
+        { label: "Ad Credits",    value: 20,  max: 50,  color: "#eab308" },
+      ]
+    : [
+        { label: "Daily Credits", value: 65,  max: 100, color: "#3b82f6" },
+        { label: "Ad Credits",    value: 15,  max: 50,  color: "#eab308" },
+      ];
 
   const userMenuContainerRef = useRef<HTMLDivElement>(null);
   const collapsedMenuContainerRef = useRef<HTMLDivElement>(null);
@@ -319,7 +455,7 @@ const CanvasSidebar = ({
           onClick={() => {
             setUserMenuOpen(false);
             logout();
-            router.push("/");
+            router.push("/dashboard");
           }}
           className="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-[13.5px] font-medium text-slate-700 dark:text-zinc-200 bg-transparent border-0 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-600 dark:hover:text-red-400 transition-colors cursor-pointer text-left"
         >
@@ -378,6 +514,17 @@ const CanvasSidebar = ({
     }
   };
 
+  const handleNewChat = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedId("chat");
+    if (pathname === "/chat" || pathname === "/app" || pathname.startsWith("/chat")) {
+      window.dispatchEvent(new CustomEvent("rivinity:new-chat"));
+    } else {
+      router.push("/chat");
+    }
+    closeOnMobile();
+  };
+
   const renderSectionItem = (item: NavItem) => {
     const Icon = item.icon;
     const isActive =
@@ -422,8 +569,9 @@ const CanvasSidebar = ({
   return (
     <>
       <aside
+        data-sidebar-aside="true"
         className={`sticky top-0 h-screen h-[100dvh] max-h-[100dvh] flex flex-col shrink-0 bg-white dark:bg-[#0d0d0d] border-r border-[#e2e8f0] dark:border-white/[0.08] select-none z-30 max-w-[85vw] md:max-w-none will-change-[width] ${
-          mounted
+          transitionsReady
             ? "transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
             : "transition-none"
         } ${
@@ -435,8 +583,9 @@ const CanvasSidebar = ({
         <div className={`relative w-full h-full ${isSettledCollapsed ? "overflow-visible" : "overflow-hidden"}`}>
           {/* COLLAPSED STATE */}
           <div
+            data-sidebar-collapsed="true"
             className={`absolute inset-y-0 left-0 w-[68px] flex flex-col items-center justify-between py-3.5 px-2 ${
-              mounted
+              transitionsReady
                 ? "transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]"
                 : "transition-none"
             } ${
@@ -469,6 +618,19 @@ const CanvasSidebar = ({
 
               {/* Primary Navigation Icons */}
               <div className="flex flex-col items-center gap-1.5 w-full">
+                {/* Collapsed New Chat (+) Button */}
+                <button
+                  type="button"
+                  onClick={handleNewChat}
+                  className="group/tooltip relative w-10 h-10 flex items-center justify-center rounded-full bg-[#F3F6FA] dark:bg-white/[0.06] hover:bg-[#E8EEF5] dark:hover:bg-white/10 border border-slate-200/80 dark:border-white/[0.08] hover:border-[#FF6B00]/40 transition-all duration-150 cursor-pointer mb-1 shadow-2xs"
+                  aria-label="New Chat"
+                >
+                  <Plus className="w-5 h-5 text-[#FF6B00] group-hover/tooltip:rotate-90 transition-transform duration-200" strokeWidth={2.4} />
+                  <span className="pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 z-[100] whitespace-nowrap rounded-full bg-[#18181b] dark:bg-[#212121] text-white px-3.5 py-1.5 text-[13px] font-medium shadow-2xl border border-white/10 opacity-0 group-hover/tooltip:opacity-100 transition-all duration-150 scale-95 group-hover/tooltip:scale-100 select-none">
+                    New Chat
+                  </span>
+                </button>
+
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   const isActive =
@@ -509,24 +671,45 @@ const CanvasSidebar = ({
               </div>
             </div>
 
-            {/* Bottom avatar */}
+            {/* Bottom avatar / Login */}
             <div ref={collapsedMenuContainerRef} className="relative mt-auto">
-              <button
-                type="button"
-                onClick={() => setUserMenuOpen((prev) => !prev)}
-                className="relative w-8 h-8 rounded-full !bg-[#FF6B00] text-white flex items-center justify-center text-xs font-bold shadow-xs cursor-pointer hover:opacity-90 transition-opacity"
-                aria-label={`${displayName} (${displayPlan})`}
-              >
-                {displayInitials}
-              </button>
-              {userMenuOpen && renderUserDropdownMenu(true)}
+              {isAuthenticated ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setUserMenuOpen((prev) => !prev)}
+                    className="relative cursor-pointer hover:opacity-90 transition-opacity bg-transparent border-0 p-0"
+                    aria-label={`${displayName} (${displayPlan})`}
+                  >
+                    <CreditRing segments={creditSegments} size={40} strokeWidth={2.5} tooltipSide="right" hideTooltip={userMenuOpen}>
+                      <div className="w-[30px] h-[30px] rounded-full !bg-[#FF6B00] text-white flex items-center justify-center text-[11px] font-bold shadow-xs">
+                        {displayInitials}
+                      </div>
+                    </CreditRing>
+                  </button>
+                  {userMenuOpen && renderUserDropdownMenu(true)}
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => openAuth("login")}
+                  className="group/tooltip relative w-10 h-10 flex items-center justify-center rounded-full bg-[#FF6B00] hover:bg-[#E66000] text-white transition-all duration-150 cursor-pointer shadow-sm"
+                  aria-label="Login"
+                >
+                  <LogOut className="w-5 h-5 rotate-180" strokeWidth={2} />
+                  <span className="pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 z-[100] whitespace-nowrap rounded-full bg-[#18181b] dark:bg-[#212121] text-white px-3.5 py-1.5 text-[13px] font-medium shadow-2xl border border-white/10 opacity-0 group-hover/tooltip:opacity-100 transition-all duration-150 scale-95 group-hover/tooltip:scale-100 select-none">
+                    Login
+                  </span>
+                </button>
+              )}
             </div>
           </div>
 
           {/* EXPANDED STATE */}
           <div
+            data-sidebar-expanded="true"
             className={`absolute inset-y-0 left-0 w-[260px] flex flex-col justify-between h-full ${
-              mounted
+              transitionsReady
                 ? "transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)]"
                 : "transition-none"
             } ${
@@ -537,7 +720,7 @@ const CanvasSidebar = ({
           >
             {/* Scrollable upper content */}
             <div className="flex-1 overflow-y-auto overflow-x-hidden px-3 pt-3.5 pb-2 [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-700 [&::-webkit-scrollbar-thumb]:rounded-full">
-              {/* Top Header: Logo on left, Collapse Toggle on right (Search removed) */}
+              {/* Top Header: Logo on left, Collapse Toggle on right */}
               <div className="flex items-center justify-between w-full h-9 mb-3 px-1">
                 <div
                   onClick={handleLogoClick}
@@ -579,6 +762,18 @@ const CanvasSidebar = ({
                   </button>
                 </div>
               </div>
+
+              {/* Dedicated New Chat Button above Dashboard */}
+              <button
+                type="button"
+                onClick={handleNewChat}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 mb-2.5 rounded-2xl text-[14.5px] font-medium text-slate-800 dark:text-zinc-100 bg-[#F3F6FA] dark:bg-white/[0.06] hover:bg-[#E8EEF5] dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-white/[0.08] hover:border-[#FF6B00]/40 dark:hover:border-[#FF6B00]/50 transition-all cursor-pointer group shadow-2xs select-none"
+              >
+                <div className="flex items-center gap-3.5">
+                  <Plus className="w-5 h-5 text-[#FF6B00] group-hover:rotate-90 transition-transform duration-200 shrink-0" strokeWidth={2.4} />
+                  <span className="font-semibold">New Chat</span>
+                </div>
+              </button>
 
               {/* Primary Navigation List */}
               <nav className="flex flex-col gap-1 w-full">
@@ -632,36 +827,50 @@ const CanvasSidebar = ({
               )}
             </div>
 
-            {/* Bottom Profile Bar */}
+            {/* Bottom Profile Bar / Login Button */}
             <div
               ref={userMenuContainerRef}
               className="relative pt-1.5 pb-1.5 px-2 border-t border-slate-200 dark:border-white/[0.08] w-full shrink-0"
             >
-              {userMenuOpen && renderUserDropdownMenu(false)}
-
-              <button
-                type="button"
-                onClick={() => setUserMenuOpen((prev) => !prev)}
-                className={`w-full px-2 py-1.5 rounded-xl flex items-center justify-between transition-colors cursor-pointer text-left group ${
-                  userMenuOpen
-                    ? "bg-slate-100 dark:bg-white/[0.08]"
-                    : "hover:bg-slate-100 dark:hover:bg-white/[0.06]"
-                }`}
-              >
-                <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                  <div className="w-8 h-8 rounded-full !bg-[#FF6B00] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-xs">
-                    {displayInitials}
-                  </div>
-                  <div className="flex flex-col min-w-0 text-left">
-                    <span className="text-xs font-semibold text-[#0f172a] dark:text-zinc-200 truncate">
-                      {displayName}
-                    </span>
-                    <span className="text-[10.5px] text-[#64748b] dark:text-zinc-400 truncate">
-                      {displayPlan}
-                    </span>
-                  </div>
-                </div>
-              </button>
+              {isAuthenticated ? (
+                <>
+                  {userMenuOpen && renderUserDropdownMenu(false)}
+                  <button
+                    type="button"
+                    onClick={() => setUserMenuOpen((prev) => !prev)}
+                    className={`w-full px-2 py-1.5 rounded-xl flex items-center justify-between transition-colors cursor-pointer text-left group ${
+                      userMenuOpen
+                        ? "bg-slate-100 dark:bg-white/[0.08]"
+                        : "hover:bg-slate-100 dark:hover:bg-white/[0.06]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      <CreditRing segments={creditSegments} size={36} strokeWidth={2.5} tooltipSide="top" hideTooltip={userMenuOpen}>
+                        <div className="w-[27px] h-[27px] rounded-full !bg-[#FF6B00] text-white flex items-center justify-center text-[10.5px] font-bold shadow-xs">
+                          {displayInitials}
+                        </div>
+                      </CreditRing>
+                      <div className="flex flex-col min-w-0 text-left">
+                        <span className="text-xs font-semibold text-[#0f172a] dark:text-zinc-200 truncate">
+                          {displayName}
+                        </span>
+                        <span className="text-[10.5px] text-[#64748b] dark:text-zinc-400 truncate">
+                          {displayPlan}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => openAuth("login")}
+                  className="w-full px-3 py-2.5 rounded-2xl flex items-center justify-center gap-2.5 bg-[#FF6B00] hover:bg-[#E66000] text-white font-semibold text-[14px] transition-all duration-150 cursor-pointer shadow-sm border-0 select-none"
+                >
+                  <LogOut className="w-4.5 h-4.5 rotate-180" strokeWidth={2.2} />
+                  <span>Login</span>
+                </button>
+              )}
             </div>
           </div>
         </div>

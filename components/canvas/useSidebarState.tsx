@@ -23,10 +23,9 @@ const SidebarContext = createContext<SidebarContextType | null>(null);
 let globalSidebarState: boolean | null = null;
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
-  // Always initialize uniformly on initial render to match SSR and prevent hydration mismatches
   const [sidebarOpen, setSidebarOpenState] = useState<boolean>(true);
 
-  // Sync from localStorage / screen width once on client mount (post-hydration)
+  // Sync from localStorage / screen width on client mount (post-hydration)
   useEffect(() => {
     try {
       const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);

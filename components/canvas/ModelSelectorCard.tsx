@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
 const models = [
-  { label: "Rivinity Core", route: "/app", icon: Cpu, meta: "v2.4 · 128k ctx" },
+  { label: "Rivinity Core", route: "/chat", icon: Cpu, meta: "v2.4 · 128k ctx" },
   { label: "Rivinity Builder", route: "/app-builder", icon: Layout, meta: "v1.8 · 64k ctx" },
   { label: "Audio Lab", route: "/audio-lab", icon: AudioWaveform, meta: "v1.2 · Studio" },
   { label: "RivinityLM", route: "/rivinity-lm", icon: GraduationCap, meta: "v2.0 · 200k ctx" },

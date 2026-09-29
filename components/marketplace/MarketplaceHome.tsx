@@ -1392,8 +1392,8 @@ export const MarketplaceHome: React.FC = () => {
         </header>
 
         {/* Marketplace Content Sections inside Container */}
-        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 flex justify-center">
-          <div className="w-full max-w-[1360px] bg-white dark:bg-[#111115] rounded-3xl border border-slate-200/80 dark:border-zinc-800/80 shadow-xs p-4 sm:p-6 space-y-6">
+        <main className="flex-1 px-4 sm:px-8 py-6 sm:py-8 flex justify-center">
+          <div className="w-full max-w-6xl bg-white dark:bg-[#111115] rounded-3xl border border-slate-200/80 dark:border-zinc-800/80 shadow-xs p-4 sm:p-6 space-y-6">
             {/* Category Filter Pills Bar */}
             <div>
               <MarketplaceCategory

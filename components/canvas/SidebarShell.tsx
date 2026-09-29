@@ -11,16 +11,20 @@ interface SidebarShellProps {
 
 const SidebarShell = ({ children }: SidebarShellProps) => {
   const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebarState();
-  const [mounted, setMounted] = useState(false);
+  const [transitionsReady, setTransitionsReady] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => {
+      document.documentElement.removeAttribute("data-sidebar-closed");
+      setTransitionsReady(true);
+    }, 150);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className="h-screen w-full flex overflow-hidden relative">
       {/* Mobile Backdrop Overlay */}
-      {mounted && sidebarOpen && (
+      {transitionsReady && sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs md:hidden"
@@ -30,8 +34,9 @@ const SidebarShell = ({ children }: SidebarShellProps) => {
 
       {/* Sidebar Wrapper: 260px when open, 68px when collapsed */}
       <div
+        data-sidebar-wrapper="true"
         className={`fixed md:static inset-y-0 left-0 z-50 will-change-[width,transform] md:shrink-0 ${
-          mounted
+          transitionsReady
             ? "transition-[width,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
             : "transition-none"
         } ${
@@ -51,7 +56,7 @@ const SidebarShell = ({ children }: SidebarShellProps) => {
         <button
           onClick={() => setSidebarOpen(true)}
           className={`absolute top-3 left-3 z-30 w-8 h-8 rounded-full glass border border-glass shadow-float items-center justify-center text-muted-foreground/60 hover:text-foreground/80 hover:shadow-glow-accent transition-all duration-200 cursor-pointer ${
-            mounted && !sidebarOpen ? "flex md:hidden" : "hidden"
+            transitionsReady && !sidebarOpen ? "flex md:hidden" : "hidden"
           }`}
           aria-label="Open sidebar"
         >

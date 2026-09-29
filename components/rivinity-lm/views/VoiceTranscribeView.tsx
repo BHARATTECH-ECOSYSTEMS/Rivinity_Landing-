@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Mic,
   Upload,
@@ -12,7 +12,19 @@ import {
   Sparkles,
   Square,
   Users,
+  Copy,
+  Check,
+  Radio,
+  FileText,
 } from "lucide-react";
+import { toast } from "sonner";
+
+interface Segment {
+  speaker: string;
+  role: "Instructor" | "Student" | "Presenter";
+  time: string;
+  text: string;
+}
 
 interface Transcript {
   id: number;
@@ -20,344 +32,256 @@ interface Transcript {
   duration: string;
   date: string;
   speakers: number;
-  segments: {
-    speaker: string;
-    time: string;
-    text: string;
-  }[];
+  segments: Segment[];
+  extractedSummary: string[];
 }
 
 const sampleTranscript: Transcript = {
   id: 1,
-  title: "Biology Lecture - Cell Division",
+  title: "Molecular Biology: Mitosis vs Meiosis Lecture",
   duration: "45:12",
   date: "Today",
   speakers: 2,
   segments: [
     {
-      speaker: "Professor",
+      speaker: "Prof. Miller",
+      role: "Instructor",
       time: "00:00",
-      text: "Today we're going to discuss mitosis and meiosis, the two fundamental types of cell division.",
+      text: "Good morning everyone. Today we are examining cellular reproduction mechanisms, specifically comparing the mitotic replication cycle with meiotic recombination.",
     },
     {
-      speaker: "Professor",
+      speaker: "Prof. Miller",
+      role: "Instructor",
       time: "02:15",
-      text: "Mitosis produces two identical daughter cells. It occurs in somatic cells for growth and repair.",
+      text: "Mitosis yields two diploid daughter cells that are genetically identical to the parent cell. This is the primary driver for somatic tissue repair, growth, and asexual division.",
     },
     {
-      speaker: "Student",
+      speaker: "Sarah K.",
+      role: "Student",
       time: "05:30",
-      text: "How does meiosis differ from mitosis in terms of the end result?",
+      text: "Professor, how does crossing over during prophase I in meiosis ensure genetic variation?",
     },
     {
-      speaker: "Professor",
+      speaker: "Prof. Miller",
+      role: "Instructor",
       time: "06:00",
-      text: "Great question. Meiosis produces four genetically unique haploid cells. This is essential for sexual reproduction and genetic diversity.",
+      text: "Excellent question, Sarah. During synapsis in Prophase I, non-sister chromatids form chiasmata and exchange reciprocal homologous segments, resulting in entirely unique recombinant alleles.",
     },
+  ],
+  extractedSummary: [
+    "Mitosis: 1 division cycle, 2 identical diploid cells, somatic repair/growth.",
+    "Meiosis: 2 division cycles, 4 unique haploid gametes, sexual reproduction.",
+    "Prophase I Crossing Over: Homologous recombination generates novel genetic variation.",
   ],
 };
 
-const languages = [
-  "English",
-  "Spanish",
-  "French",
-  "German",
-  "Hindi",
-  "Chinese",
-];
+const languages = ["English (US)", "Spanish", "French", "German", "Hindi", "Japanese"];
 
-const VoiceTranscribeView = () => {
+export default function VoiceTranscribeView() {
   const [recording, setRecording] = useState(false);
-  const [transcript] = useState<Transcript | null>(sampleTranscript);
+  const [recordTime, setRecordTime] = useState(0);
+  const [transcript, setTranscript] = useState<Transcript>(sampleTranscript);
   const [searchQuery, setSearchQuery] = useState("");
-  const [language, setLanguage] = useState("English");
-  const [showLangDropdown, setShowLangDropdown] = useState(false);
+  const [language, setLanguage] = useState("English (US)");
+  const [copied, setCopied] = useState(false);
 
-  const filteredSegments = transcript?.segments.filter(
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (recording) {
+      timer = setInterval(() => setRecordTime((t) => t + 1), 1000);
+    } else {
+      setRecordTime(0);
+    }
+    return () => clearInterval(timer);
+  }, [recording]);
+
+  const toggleRecording = () => {
+    if (!recording) {
+      setRecording(true);
+      toast.success("Live recording started...");
+    } else {
+      setRecording(false);
+      toast.info("Recording finalized. Synthesizing transcription...");
+    }
+  };
+
+  const copyTranscript = () => {
+    const text = `${transcript.title}\n\n${transcript.segments
+      .map((s) => `[${s.time}] ${s.speaker} (${s.role}): ${s.text}`)
+      .join("\n\n")}`;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast.success("Transcript copied!");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const filteredSegments = transcript.segments.filter(
     (segment) =>
       segment.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      !searchQuery
+      segment.speaker.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="min-h-full bg-white text-gray-900">
-      {/* Header */}
-      <div className="border-b border-gray-200/70 bg-white/85">
-        <div className="px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center">
-              <Mic className="w-4 h-4 text-gray-500" />
+    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
+      {/* SUB-HEADER */}
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
+            <Mic className="h-4 w-4" strokeWidth={2.2} />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 text-[14px] font-semibold text-slate-900 dark:text-zinc-100">
+              <span>Voice Transcribe</span>
+              <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-semibold text-[#FF6B00]">
+                Live Diarization
+              </span>
             </div>
-
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-[15px] font-semibold text-gray-900">
-                  Voice Transcribe
-                </h1>
-
-                <span className="px-2 py-0.5 rounded-full bg-orange-50 text-[#FF5500] text-[9px] font-semibold">
-                  AI POWERED
-                </span>
-              </div>
-
-              <p className="text-[11px] text-gray-400 mt-0.5">
-                Turn recordings into organized study material
-              </p>
+            <div className="text-[11px] text-slate-500 dark:text-zinc-400">
+              High-accuracy speech-to-text with multi-speaker detection & auto-summaries
             </div>
           </div>
+        </div>
 
-          <div className="hidden sm:flex items-center gap-1.5 text-[10px] text-gray-400">
-            <Sparkles className="w-3.5 h-3.5 text-[#FF5500]" />
-            Smart transcription
-          </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={copyTranscript}
+            className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 text-[11.5px] font-medium text-slate-700 dark:text-zinc-300 hover:border-[#FF6B00]/40 transition-colors"
+          >
+            {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+            <span className="hidden sm:inline">{copied ? "Copied" : "Copy Full Text"}</span>
+          </button>
         </div>
       </div>
 
-      <div className="max-w-[850px] mx-auto px-5 py-7">
-        {/* Recording Actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          {/* Record */}
-          <button
-            onClick={() => setRecording(!recording)}
-            className={`group flex items-center gap-4 p-5 rounded-2xl border text-left transition-all ${
-              recording
-                ? "bg-red-50 border-red-200"
-                : "bg-white border-gray-200/80 hover:border-orange-200 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]"
-            }`}
-          >
-            <div
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
-                recording ? "bg-red-500" : "bg-[#FF5500]"
-              }`}
-            >
-              {recording ? (
-                <Square className="w-4 h-4 text-white fill-white" />
-              ) : (
-                <Mic className="w-5 h-5 text-white" />
-              )}
-            </div>
-
-            <div>
-              <p className="text-[13px] font-semibold text-gray-900">
-                {recording ? "Recording..." : "Record Live"}
-              </p>
-
-              <p
-                className={`text-[10px] mt-1 ${
-                  recording ? "text-red-400" : "text-gray-400"
+      {/* MAIN BODY */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="mx-auto w-full max-w-[840px] space-y-5">
+          {/* LIVE RECORDING CONTROLLER SKELETON */}
+          <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={toggleRecording}
+                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-md transition-all ${
+                  recording
+                    ? "bg-red-500 text-white animate-pulse"
+                    : "bg-[#FF6B00] hover:bg-[#E66000] text-white"
                 }`}
               >
-                {recording
-                  ? "Tap to stop recording"
-                  : "Start recording a lecture"}
-              </p>
-            </div>
+                {recording ? <Square className="h-5 w-5 fill-current" /> : <Mic className="h-5 w-5" />}
+              </button>
 
-            {recording && (
-              <span className="ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            )}
-          </button>
-
-          {/* Upload */}
-          <button className="group flex items-center gap-4 p-5 rounded-2xl border border-gray-200/80 bg-white text-left transition-all hover:border-orange-200 hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
-            <div className="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center shrink-0">
-              <Upload className="w-5 h-5 text-[#FF5500]" />
-            </div>
-
-            <div>
-              <p className="text-[13px] font-semibold text-gray-900">
-                Upload Audio
-              </p>
-
-              <p className="text-[10px] text-gray-400 mt-1">
-                MP3, WAV, M4A supported
-              </p>
-            </div>
-          </button>
-        </div>
-
-        {/* Transcript */}
-        {transcript && (
-          <section className="bg-white border border-gray-200/80 rounded-2xl shadow-[0_2px_12px_rgba(0,0,0,0.035)] overflow-hidden">
-            {/* Transcript Header */}
-            <div className="p-5 border-b border-gray-100">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
-                    <FileAudio className="w-4 h-4 text-[#FF5500]" />
-                  </div>
-
-                  <div>
-                    <h2 className="text-[14px] font-semibold text-gray-900">
-                      {transcript.title}
-                    </h2>
-
-                    <div className="flex items-center gap-3 mt-1.5">
-                      <span className="flex items-center gap-1 text-[9px] text-gray-400">
-                        <Clock className="w-3 h-3" />
-                        {transcript.duration}
-                      </span>
-
-                      <span className="flex items-center gap-1 text-[9px] text-gray-400">
-                        <Users className="w-3 h-3" />
-                        {transcript.speakers} speakers
-                      </span>
-
-                      <span className="text-[9px] text-gray-300">
-                        {transcript.date}
-                      </span>
-                    </div>
-                  </div>
+              <div className="space-y-0.5">
+                <div className="text-[14px] font-bold text-slate-900 dark:text-zinc-100">
+                  {recording ? "Recording in progress..." : "Start Lecture Recording"}
                 </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                  {/* Language */}
-                  <div className="relative">
-                    <button
-                      onClick={() =>
-                        setShowLangDropdown(!showLangDropdown)
-                      }
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-lg
-                        border border-gray-200 bg-white text-[10px]
-                        font-medium text-gray-500 hover:text-gray-800
-                        hover:border-gray-300 transition-colors"
-                    >
-                      <Languages className="w-3.5 h-3.5" />
-                      {language}
-                    </button>
-
-                    {showLangDropdown && (
-                      <div className="absolute right-0 top-full mt-2 w-32 bg-white rounded-xl border border-gray-200 shadow-[0_8px_24px_rgba(0,0,0,0.08)] overflow-hidden z-50">
-                        {languages.map((lang) => (
-                          <button
-                            key={lang}
-                            onClick={() => {
-                              setLanguage(lang);
-                              setShowLangDropdown(false);
-                            }}
-                            className={`w-full px-3 py-2.5 text-[10px] text-left transition-colors ${
-                              lang === language
-                                ? "bg-orange-50 text-[#FF5500] font-medium"
-                                : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
-                            }`}
-                          >
-                            {lang}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Download */}
-                  <button
-                    className="w-8 h-8 rounded-lg border border-gray-200
-                      flex items-center justify-center text-gray-400
-                      hover:text-gray-800 hover:bg-gray-50 transition-colors"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                  </button>
-
-                  {/* Smart Notes */}
-                  <button
-                    className="flex items-center gap-1.5 px-3 py-2
-                      rounded-lg bg-[#FF5500] text-white text-[10px]
-                      font-semibold hover:bg-[#e94d00] transition-colors
-                      shadow-[0_3px_10px_rgba(255,85,0,0.15)]"
-                  >
-                    <Sparkles className="w-3 h-3" />
-                    Smart Notes
-                  </button>
+                <div className="text-[11.5px] text-slate-500 dark:text-zinc-400">
+                  {recording
+                    ? `Live audio stream: ${Math.floor(recordTime / 60)}:${(recordTime % 60)
+                        .toString()
+                        .padStart(2, "0")}`
+                    : "Click to record or upload an audio/video file"}
                 </div>
               </div>
             </div>
 
-            {/* Search */}
-            <div className="px-5 pt-5">
-              <div className="flex items-center gap-2 h-10 px-3 rounded-xl bg-white border border-gray-200">
-                <Search className="w-3.5 h-3.5 text-gray-400" />
+            {/* LIVE AUDIO WAVE SKELETON */}
+            {recording && (
+              <div className="flex items-center gap-1 h-8 bg-red-500/10 px-3 rounded-xl border border-red-500/20">
+                {[40, 80, 100, 60, 90, 70, 45, 85, 95, 60].map((h, i) => (
+                  <div
+                    key={i}
+                    className="w-1 bg-red-500 rounded-full animate-pulse"
+                    style={{ height: `${h}%`, animationDelay: `${i * 80}ms` }}
+                  />
+                ))}
+              </div>
+            )}
 
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              <button
+                type="button"
+                onClick={() => toast.info("Select MP3, WAV or M4A file from device")}
+                className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/60 px-3.5 py-2 text-[12px] font-medium text-slate-700 dark:text-zinc-300 hover:border-[#FF6B00]/40 transition-colors"
+              >
+                <Upload className="h-3.5 w-3.5 text-[#FF6B00]" />
+                <span>Upload Audio File</span>
+              </button>
+            </div>
+          </div>
+
+          {/* AUTO-EXTRACTED KEY TAKEAWAYS FORMAT */}
+          <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-orange-500/5 dark:bg-orange-500/10 p-4 sm:p-5 space-y-2.5">
+            <div className="flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wider text-[#FF6B00]">
+              <Sparkles className="h-4 w-4" />
+              <span>AI Auto-Extracted Key Takeaways</span>
+            </div>
+            <div className="space-y-1.5">
+              {transcript.extractedSummary.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start gap-2 text-[12.5px] text-slate-800 dark:text-zinc-200"
+                >
+                  <span className="text-[#FF6B00] font-bold">•</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* SEARCH & SEGMENTS STREAM */}
+          <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 space-y-4 shadow-sm">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800 pb-4">
+              <div className="flex items-center gap-2">
+                <FileAudio className="h-4 w-4 text-[#FF6B00]" />
+                <div className="text-[13px] font-bold text-slate-900 dark:text-zinc-100">
+                  {transcript.title}
+                </div>
+              </div>
+
+              {/* SEARCH SEGMENTS */}
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/60 px-3 py-1.5 w-full sm:w-64">
+                <Search className="h-3.5 w-3.5 text-slate-400" />
                 <input
+                  type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search transcript..."
-                  className="flex-1 bg-transparent text-[11px] text-gray-800
-                    placeholder:text-gray-400 outline-none"
+                  className="w-full bg-transparent text-[12px] text-slate-900 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 outline-none border-none focus:ring-0"
                 />
-
-                {searchQuery && (
-                  <span className="text-[9px] text-gray-400">
-                    {filteredSegments?.length} results
-                  </span>
-                )}
               </div>
             </div>
 
-            {/* Transcript Body */}
-            <div className="p-5">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">
-                  Transcript
-                </p>
-
-                <span className="text-[9px] text-gray-300">
-                  {filteredSegments?.length || 0} segments
-                </span>
-              </div>
-
-              <div className="space-y-1 max-h-[430px] overflow-y-auto pr-1">
-                {filteredSegments && filteredSegments.length > 0 ? (
-                  filteredSegments.map((segment, index) => (
-                    <div
-                      key={index}
-                      className="group flex gap-4 p-3.5 rounded-xl
-                        hover:bg-orange-50/40 transition-colors"
-                    >
-                      {/* Timestamp */}
-                      <div className="w-11 shrink-0 pt-0.5">
-                        <span className="text-[9px] font-mono text-gray-400">
-                          {segment.time}
-                        </span>
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1">
-                        <p className="text-[10px] font-semibold text-[#FF5500] mb-1">
-                          {segment.speaker}
-                        </p>
-
-                        <p className="text-[12px] text-gray-600 leading-relaxed">
-                          {segment.text}
-                        </p>
-                      </div>
+            {/* SPEAKER SEGMENT BLOCKS */}
+            <div className="space-y-3 pt-1">
+              {filteredSegments.map((segment, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-slate-100 dark:border-zinc-800/80 bg-slate-50/50 dark:bg-zinc-800/30 p-4 space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[12.5px] font-bold text-slate-900 dark:text-zinc-100">
+                        {segment.speaker}
+                      </span>
+                      <span className="rounded-md bg-slate-200/80 dark:bg-zinc-800 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:text-zinc-400">
+                        {segment.role}
+                      </span>
                     </div>
-                  ))
-                ) : (
-                  <div className="py-12 text-center">
-                    <Search className="w-6 h-6 text-gray-200 mx-auto mb-2" />
-                    <p className="text-[11px] text-gray-400">
-                      No matching transcript found
-                    </p>
+                    <span className="text-[11px] font-mono text-slate-400 dark:text-zinc-500">
+                      {segment.time}
+                    </span>
                   </div>
-                )}
-              </div>
+                  <div className="text-[13.5px] text-slate-700 dark:text-zinc-300 leading-relaxed font-sans">
+                    {segment.text}
+                  </div>
+                </div>
+              ))}
             </div>
-
-            {/* Footer */}
-            <div className="px-5 py-3 border-t border-gray-100 bg-white/60 flex items-center justify-between">
-              <span className="text-[9px] text-gray-400">
-                Transcript generated with AI
-              </span>
-
-              <span className="text-[9px] text-gray-300">
-                {language}
-              </span>
-            </div>
-          </section>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default VoiceTranscribeView;
+}

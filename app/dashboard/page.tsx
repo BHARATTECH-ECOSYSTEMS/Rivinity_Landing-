@@ -40,10 +40,13 @@ import {
   FolderClosed,
   Bot,
   Clapperboard,
+  BarChart2,
+  ShoppingBag,
   type LucideIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { SKILLS } from "@/lib/skillsCatalog";
 import rivinityLogo from "@/components/assets/Rivinity Logo.png";
 const logoSrc =
@@ -74,187 +77,21 @@ const itemVariants: Variants = {
 };
 
 /* 
-  IMAGE 2 BOLD SOLID GLYPH ICONS
-*/
-const EditStudioGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <rect x="4" y="11" width="25" height="26" rx="8" />
-    <path d="M31 20.2c0-1.2 1.3-1.9 2.3-1.3l8.6 5.1c1 .6 1 2 0 2.6l-8.6 5.1c-1 .6-2.3-.1-2.3-1.3v-10.2z" />
-  </svg>
-);
-
-const AudioLabGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <rect x="17" y="6" width="14" height="22" rx="7" />
-    <path
-      d="M10 20c0 7.7 6.3 14 14 14s14-6.3 14-14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="4.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M24 34v7"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="4.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M16 41h16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="4.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const ImageEnhancerGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <g transform="translate(24, 24)">
-      {[0, 45, 90, 135].map((angle) => (
-        <rect
-          key={angle}
-          x="-4.5"
-          y="-19"
-          width="9"
-          height="38"
-          rx="4.5"
-          transform={`rotate(${angle})`}
-        />
-      ))}
-      <circle cx="0" cy="0" r="7" />
-    </g>
-  </svg>
-);
-
-const AppBuilderGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <rect x="6" y="9" width="9" height="30" rx="4.5" />
-    <rect x="18" y="9" width="9" height="30" rx="4.5" />
-    <g transform="translate(33, 24) rotate(14) translate(-4.5, -15)">
-      <rect x="0" y="0" width="9" height="30" rx="4.5" />
-    </g>
-  </svg>
-);
-
-const DeepSearchGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <path
-      d="M13 35L35 13M35 13H19M35 13V29"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const DocSynthesizerGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <g transform="translate(24, 24)">
-      <rect x="-14" y="-14" width="28" height="28" rx="8" />
-      <circle cx="-10" cy="0" r="7" />
-      <circle cx="10" cy="0" r="7" />
-      <circle cx="0" cy="-10" r="7" />
-      <circle cx="0" cy="10" r="7" />
-    </g>
-  </svg>
-);
-
-const MarketplaceGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <path
-      d="M17 16c0-3.9 3.1-7 7-7s7 3.1 7 7"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="4.5"
-      strokeLinecap="round"
-    />
-    <rect x="8" y="15" width="32" height="26" rx="7" />
-  </svg>
-);
-
-const RivinityLMGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <path d="M24 4c2 10 10 18 20 20-10 2-18 10-20 20-2-10-10-18-20-20 10-2 18-10 20-20z" />
-  </svg>
-);
-
-const KnowledgeBaseGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <path d="M6 14c0-3.3 2.7-6 6-6h9c2 0 3.8 1 4.9 2.6L27.5 13H36c3.3 0 6 2.7 6 6v17c0 3.3-2.7 6-6 6H12c-3.3 0-6-2.7-6-6V14z" />
-  </svg>
-);
-
-const AnalyticsGlyph = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 48 48" fill="currentColor" className={className}>
-    <rect x="7" y="24" width="8" height="17" rx="4" />
-    <rect x="20" y="14" width="8" height="27" rx="4" />
-    <rect x="33" y="7" width="8" height="34" rx="4" />
-  </svg>
-);
-
-/* 
-  RIVINITY BRAND OUTER TWO RINGS (Spins at bottom-left corner on hover)
-*/
-const RivinityOuterRings = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 200 200" fill="none" className={className}>
-    <defs>
-      <linearGradient id="riv-outer-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#EA580C" />
-        <stop offset="35%" stopColor="#FF6B00" />
-        <stop offset="70%" stopColor="#FF8A3D" />
-        <stop offset="100%" stopColor="#FFA866" />
-      </linearGradient>
-    </defs>
-    <g transform="translate(100, 100)">
-      {/* Outer Ring: 8 pointed petal loops */}
-      {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-        <path
-          key={`outer-${deg}`}
-          d="M 0 -92 C 22 -76, 36 -50, 24 -24 C 0 -44, -24 -24, -24 -24 C -36 -50, -22 -76, 0 -92 Z"
-          fill="none"
-          stroke="url(#riv-outer-ring-grad)"
-          strokeWidth="5"
-          strokeLinejoin="round"
-          transform={`rotate(${deg})`}
-        />
-      ))}
-      {/* Middle Ring: 8 pointed petal loops rotated 22.5 deg */}
-      {[22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5].map((deg) => (
-        <path
-          key={`mid-${deg}`}
-          d="M 0 -72 C 18 -58, 28 -38, 18 -18 C 0 -34, -18 -18, -18 -18 C -28 -38, -18 -58, 0 -72 Z"
-          fill="none"
-          stroke="url(#riv-outer-ring-grad)"
-          strokeWidth="4.5"
-          strokeLinejoin="round"
-          transform={`rotate(${deg})`}
-        />
-      ))}
-    </g>
-  </svg>
-);
-
-/* 
   CREATIVE TOOLS DEFINITION (10 Small Square Glassmorphic Boxes, 5 per row)
 */
 const CREATIVE_TOOLS = [
   {
     id: "edit-studio",
     title: "Edit Studio",
-    icon: EditStudioGlyph,
-    path: "/app",
+    icon: Video,
+    path: "/chat",
     bg: "rgba(255, 145, 77, 0.14)", // Light pastel orange glass
     border: "rgba(255, 145, 77, 0.35)",
   },
   {
     id: "audio-lab",
     title: "Audio Lab",
-    icon: AudioLabGlyph,
+    icon: Mic,
     path: "/audio-lab",
     bg: "rgba(180, 140, 255, 0.14)", // Light pastel purple glass
     border: "rgba(180, 140, 255, 0.35)",
@@ -262,7 +99,7 @@ const CREATIVE_TOOLS = [
   {
     id: "image-enhancer",
     title: "Image Enhancer",
-    icon: ImageEnhancerGlyph,
+    icon: Sparkles,
     path: "/image-enhancer",
     bg: "rgba(255, 148, 194, 0.14)", // Light pastel pink glass
     border: "rgba(255, 148, 194, 0.35)",
@@ -270,7 +107,7 @@ const CREATIVE_TOOLS = [
   {
     id: "app-builder",
     title: "App Builder",
-    icon: AppBuilderGlyph,
+    icon: Layers,
     path: "/app-builder",
     bg: "rgba(255, 215, 64, 0.15)", // Light pastel yellow glass
     border: "rgba(255, 215, 64, 0.35)",
@@ -278,23 +115,23 @@ const CREATIVE_TOOLS = [
   {
     id: "deep-search",
     title: "Deep Search",
-    icon: DeepSearchGlyph,
-    path: "/app",
+    icon: Search,
+    path: "/chat",
     bg: "rgba(125, 185, 255, 0.14)", // Light pastel blue glass
     border: "rgba(125, 185, 255, 0.35)",
   },
   {
     id: "doc-synthesizer",
     title: "Doc Synthesizer",
-    icon: DocSynthesizerGlyph,
-    path: "/app",
+    icon: FileText,
+    path: "/chat",
     bg: "rgba(95, 215, 160, 0.14)", // Light pastel mint glass
     border: "rgba(95, 215, 160, 0.35)",
   },
   {
     id: "marketplace",
     title: "Marketplace",
-    icon: MarketplaceGlyph,
+    icon: ShoppingBag,
     path: "/marketplace",
     bg: "rgba(244, 114, 182, 0.14)", // Light pastel rose glass
     border: "rgba(244, 114, 182, 0.35)",
@@ -302,7 +139,7 @@ const CREATIVE_TOOLS = [
   {
     id: "rivinity-lm",
     title: "RivinityLM",
-    icon: RivinityLMGlyph,
+    icon: Bot,
     path: "/rivinity-lm",
     bg: "rgba(251, 146, 60, 0.14)", // Light pastel peach glass
     border: "rgba(251, 146, 60, 0.35)",
@@ -310,7 +147,7 @@ const CREATIVE_TOOLS = [
   {
     id: "knowledge-base",
     title: "Knowledge Base",
-    icon: KnowledgeBaseGlyph,
+    icon: FolderClosed,
     path: "/knowledge-base",
     bg: "rgba(45, 212, 191, 0.14)", // Light pastel teal glass
     border: "rgba(45, 212, 191, 0.35)",
@@ -318,7 +155,7 @@ const CREATIVE_TOOLS = [
   {
     id: "analytics",
     title: "Analytics",
-    icon: AnalyticsGlyph,
+    icon: BarChart2,
     path: "/analytics",
     bg: "rgba(165, 180, 252, 0.14)", // Light pastel periwinkle glass
     border: "rgba(165, 180, 252, 0.35)",
@@ -422,7 +259,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Chat",
       modified: "10 mins ago",
       icon: MessageSquare,
-      path: "/app",
+      path: "/chat",
     },
     {
       id: "chat-2",
@@ -431,7 +268,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Chat",
       modified: "3 hours ago",
       icon: MessageSquare,
-      path: "/app",
+      path: "/chat",
     },
     {
       id: "chat-3",
@@ -440,7 +277,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Chat",
       modified: "Yesterday",
       icon: MessageSquare,
-      path: "/app",
+      path: "/chat",
     },
     {
       id: "chat-4",
@@ -449,7 +286,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Chat",
       modified: "2 days ago",
       icon: MessageSquare,
-      path: "/app",
+      path: "/chat",
     },
   ],
   App: [
@@ -547,7 +384,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Video",
       modified: "1 hour ago",
       icon: Film,
-      path: "/app",
+      path: "/chat",
     },
     {
       id: "vid-2",
@@ -556,7 +393,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Video",
       modified: "Yesterday",
       icon: Film,
-      path: "/app",
+      path: "/chat",
     },
     {
       id: "vid-3",
@@ -565,7 +402,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Video",
       modified: "3 days ago",
       icon: Film,
-      path: "/app",
+      path: "/chat",
     },
   ],
   Doc: [
@@ -576,7 +413,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Doc",
       modified: "Yesterday",
       icon: FileText,
-      path: "/app",
+      path: "/chat",
     },
     {
       id: "doc-2",
@@ -585,7 +422,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Doc",
       modified: "3 days ago",
       icon: FileText,
-      path: "/app",
+      path: "/chat",
     },
     {
       id: "doc-3",
@@ -594,7 +431,7 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Doc",
       modified: "5 days ago",
       icon: FileText,
-      path: "/app",
+      path: "/chat",
     },
   ],
 };
@@ -671,7 +508,7 @@ const DashboardContent = () => {
     try {
       sessionStorage.setItem("rivinity_pending_prompt", finalPrompt);
     } catch {}
-    router.push("/app");
+    router.push("/chat");
   };
 
   useEffect(() => {
@@ -679,7 +516,7 @@ const DashboardContent = () => {
       try {
         const pending = sessionStorage.getItem("rivinity_pending_prompt");
         if (pending && pending === promptInput.trim()) {
-          router.push("/app");
+          router.push("/chat");
         }
       } catch {}
     }
@@ -700,12 +537,12 @@ const DashboardContent = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-10 space-y-12 pb-24"
+          className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-10 pb-24"
         >
           {/* HERO / CENTRALIZED PROMPT BOX */}
           <motion.section
             variants={itemVariants}
-            className="w-full max-w-3xl mx-auto flex flex-col items-center justify-center text-center pt-2 sm:pt-4 relative z-40"
+            className="w-full max-w-[860px] mx-auto flex flex-col items-center justify-center text-center pt-0 relative z-40"
           >
             {/* Company Logo */}
             <div className="mb-4 sm:mb-5 flex items-center justify-center">
@@ -725,24 +562,49 @@ const DashboardContent = () => {
             </div>
 
             {/* Centralized Prompt Composer */}
-            <div className="w-full relative z-40">
+            <div
+              className={cn(
+                "w-full max-w-[700px] mx-auto relative z-40 transition-all duration-300",
+                isIncognito &&
+                  "p-2 sm:p-2.5 rounded-[26px] bg-slate-100/85 dark:bg-zinc-800/60 backdrop-blur-2xl border border-slate-300 dark:border-zinc-600 shadow-[0_12px_40px_rgba(0,0,0,0.08)]",
+              )}
+            >
+              {/* INCOGNITO MODE TOP GLASS HEADER */}
+              {isIncognito && (
+                <div className="px-3.5 sm:px-4 pt-1 pb-2 text-[12px] select-none text-slate-600 dark:text-zinc-300 font-medium tracking-tight animate-in fade-in duration-200">
+                  Incognito Mode Active &bull; Chats will not be saved to history
+                </div>
+              )}
+
               <div
-                className={`w-full bg-white rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col text-left shadow-[0_4px_24px_rgba(0,0,0,0.06)] ${
-                  isInputFocused
-                    ? "border-[#FF6B00]/60 ring-2 ring-[#FF6B00]/20"
-                    : "border-[#e2e8f0]"
-                }`}
+                className={cn(
+                  "w-full rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col text-left",
+                  isIncognito
+                    ? "bg-[#22242a] dark:bg-[#1c1e24] rounded-[20px] border border-white/10 dark:border-zinc-700/60 shadow-xl text-white"
+                    : cn(
+                        "bg-white border-slate-200 shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:border-slate-400",
+                        isInputFocused && "border-slate-400 ring-2 ring-slate-400/20",
+                      ),
+                )}
               >
                 {/* Expandable Tools Panel */}
                 <div
                   className={`overflow-hidden transition-all duration-300 ease-in-out ${
                     isAddingTools
-                      ? "max-h-[260px] opacity-100 border-b border-[#e2e8f0]"
+                      ? cn(
+                          "max-h-[260px] opacity-100 border-b",
+                          isIncognito ? "border-white/10 bg-black/25" : "border-[#e2e8f0] bg-[#f8fafc]",
+                        )
                       : "max-h-0 opacity-0"
                   }`}
                 >
-                  <div className="bg-[#f8fafc] p-3 sm:p-4">
-                    <div className="text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1 text-[#64748b] mb-2">
+                  <div className="p-3 sm:p-4">
+                    <div
+                      className={cn(
+                        "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1 mb-2",
+                        isIncognito ? "text-zinc-400" : "text-[#64748b]",
+                      )}
+                    >
                       Quick AI Modes
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -750,32 +612,26 @@ const DashboardContent = () => {
                         {
                           icon: Bot,
                           label: "Agents Playground",
-                          desc: "Multi-agent systems & simulations",
                         },
                         {
                           icon: GraduationCap,
                           label: "RivinityLM",
-                          desc: "Frontier reasoning & intelligence",
                         },
                         {
                           icon: Sparkles,
                           label: "Image Enhancer",
-                          desc: "Super-resolution, relighting & polish",
                         },
                         {
                           icon: AudioWaveform,
                           label: "Audio Lab",
-                          desc: "Voice synthesis & stem mastering",
                         },
                         {
                           icon: Layers,
                           label: "App Builder",
-                          desc: "Full-stack code & app scaffolding",
                         },
                         {
                           icon: Clapperboard,
                           label: "Prompt to Video",
-                          desc: "Cinematic scenes & video generation",
                         },
                       ].map((tool) => (
                         <button
@@ -790,18 +646,30 @@ const DashboardContent = () => {
                             );
                             textareaRef.current?.focus();
                           }}
-                          className="flex items-center gap-2.5 p-2 rounded-xl text-left bg-white hover:bg-[#f1f5f9] transition-all border border-[#e2e8f0] cursor-pointer"
+                          className={cn(
+                            "flex items-center gap-2.5 p-2 rounded-xl text-left transition-all border cursor-pointer",
+                            isIncognito
+                              ? "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                              : "bg-white hover:bg-[#f1f5f9] border-[#e2e8f0]",
+                          )}
                         >
-                          <div className="w-8 h-8 rounded-lg bg-orange-50 text-[#FF6B00] flex items-center justify-center shrink-0">
+                          <div
+                            className={cn(
+                              "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                              isIncognito
+                                ? "bg-white/10 text-white"
+                                : "bg-slate-100 text-slate-900",
+                            )}
+                          >
                             <tool.icon className="w-4 h-4" />
                           </div>
-                          <div className="min-w-0">
-                            <div className="text-[12px] font-semibold text-[#0f172a] truncate">
-                              {tool.label}
-                            </div>
-                            <div className="text-[10px] text-[#64748b] truncate">
-                              {tool.desc}
-                            </div>
+                          <div
+                            className={cn(
+                              "text-[12px] font-semibold truncate",
+                              isIncognito ? "text-zinc-200" : "text-[#0f172a]",
+                            )}
+                          >
+                            {tool.label}
                           </div>
                         </button>
                       ))}
@@ -810,7 +678,7 @@ const DashboardContent = () => {
                 </div>
 
                 {/* Textarea Input */}
-                <div className="px-3.5 sm:px-4.5 pt-3 pb-1">
+                <div className="px-3.5 sm:px-4.5 pt-2.5 pb-0">
                   <textarea
                     ref={textareaRef}
                     value={promptInput}
@@ -822,20 +690,34 @@ const DashboardContent = () => {
                     onKeyDown={handleKeyDown}
                     onFocus={() => setIsInputFocused(true)}
                     onBlur={() => setIsInputFocused(false)}
-                    placeholder="Ask anything, generate workflows, build apps..."
-                    rows={2}
-                    className="w-full bg-transparent font-sans text-[14.5px] font-normal leading-relaxed text-[#0f172a] placeholder:text-[#94a3b8] focus:outline-none focus-visible:outline-none focus-visible:ring-0 resize-none border-none outline-none shadow-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden min-h-[44px]"
+                    placeholder={
+                      isIncognito
+                        ? "Ask me anything (Incognito mode)..."
+                        : "Ask anything, generate workflows, build apps..."
+                    }
+                    rows={1}
+                    className={cn(
+                      "w-full bg-transparent font-sans text-[14.5px] font-normal leading-normal focus:outline-none focus-visible:outline-none focus-visible:ring-0 resize-none border-none outline-none shadow-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden min-h-[26px]",
+                      isIncognito
+                        ? "text-white placeholder:text-zinc-500"
+                        : "text-[#0f172a] placeholder:text-[#94a3b8]",
+                    )}
                     style={{ outline: "none" }}
                   />
                 </div>
 
                 {/* Bottom Action Controls */}
-                <div className="flex items-center justify-between w-full px-3 sm:px-4 pb-2 sm:pb-2.5 pt-0.5">
+                <div className="flex items-center justify-between w-full px-3 sm:px-4 pb-2 pt-0.5">
                   <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 transition-colors cursor-pointer shrink-0 border-0"
+                      className={cn(
+                        "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 bg-transparent",
+                        isIncognito
+                          ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                          : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                      )}
                       title="Attach file"
                     >
                       <Paperclip className="w-4 h-4 shrink-0" strokeWidth={2} />
@@ -864,11 +746,16 @@ const DashboardContent = () => {
                         setIsAddingTools(next);
                         if (next) setSkillPickerOpen(false);
                       }}
-                      className={`w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 ${
+                      className={cn(
+                        "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 bg-transparent",
                         isAddingTools
-                          ? "bg-orange-50 text-[#FF6B00]"
-                          : "bg-transparent hover:bg-slate-100 text-slate-500 hover:text-slate-900"
-                      }`}
+                          ? isIncognito
+                            ? "!bg-[#FF6B00]/25 text-[#FF6B00]"
+                            : "!bg-orange-50 text-[#FF6B00]"
+                          : isIncognito
+                            ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                            : "hover:bg-slate-100 text-slate-500 hover:text-slate-900",
+                      )}
                       title="Add tool / mode"
                     >
                       <Plus className="w-4 h-4 shrink-0" strokeWidth={2.2} />
@@ -877,11 +764,16 @@ const DashboardContent = () => {
                     <button
                       type="button"
                       onClick={() => setIsWebSearchActive((prev) => !prev)}
-                      className={`w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 ${
+                      className={cn(
+                        "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 bg-transparent",
                         isWebSearchActive
-                          ? "!bg-orange-50 text-[#FF6B00]"
-                          : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100"
-                      }`}
+                          ? isIncognito
+                            ? "!bg-sky-500/25 text-sky-400"
+                            : "!bg-orange-50 text-[#FF6B00]"
+                          : isIncognito
+                            ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                            : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                      )}
                       title={
                         isWebSearchActive
                           ? "Web search active (Click to disable)"
@@ -898,17 +790,27 @@ const DashboardContent = () => {
                         setSkillPickerOpen(next);
                         if (next) setIsAddingTools(false);
                       }}
-                      className={`w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 ${
+                      className={cn(
+                        "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 bg-transparent",
                         skillPickerOpen
-                          ? "!bg-orange-50 text-[#FF6B00]"
-                          : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100"
-                      }`}
+                          ? isIncognito
+                            ? "!bg-[#FF6B00]/25 text-[#FF6B00]"
+                            : "!bg-orange-50 text-[#FF6B00]"
+                          : isIncognito
+                            ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                            : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                      )}
                       title="Skills"
                     >
                       <Wand2
-                        className={`w-4 h-4 shrink-0 transition-colors ${
-                          skillPickerOpen ? "text-[#FF6B00]" : "text-slate-500"
-                        }`}
+                        className={cn(
+                          "w-4 h-4 shrink-0 transition-colors",
+                          skillPickerOpen
+                            ? "text-[#FF6B00]"
+                            : isIncognito
+                              ? "text-zinc-400"
+                              : "text-slate-500",
+                        )}
                         strokeWidth={2}
                       />
                     </button>
@@ -928,11 +830,12 @@ const DashboardContent = () => {
                           return next;
                         });
                       }}
-                      className={`w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 ${
+                      className={cn(
+                        "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0",
                         isIncognito
-                          ? "!bg-slate-900 text-white shadow-xs"
-                          : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100"
-                      }`}
+                          ? "!bg-white/20 text-white shadow-xs ring-1 ring-white/30"
+                          : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                      )}
                       title={
                         isIncognito
                           ? "Incognito mode active (Chats are not saved)"
@@ -947,7 +850,12 @@ const DashboardContent = () => {
                     <button
                       type="button"
                       onClick={() => toast.info("Microphone listening...")}
-                      className="bg-transparent w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:!bg-slate-100 transition-colors cursor-pointer shrink-0 border-0"
+                      className={cn(
+                        "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 bg-transparent",
+                        isIncognito
+                          ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                          : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                      )}
                       title="Voice input"
                     >
                       <Mic className="w-4 h-4 shrink-0" strokeWidth={2} />
@@ -957,15 +865,21 @@ const DashboardContent = () => {
                       type="button"
                       onClick={() => handleSend()}
                       disabled={!promptInput.trim()}
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-white shrink-0 cursor-pointer transition-all ${
+                      className={cn(
+                        "w-8 h-8 rounded-full flex items-center justify-center shrink-0 cursor-pointer transition-all",
                         promptInput.trim()
-                          ? "!bg-[#FF6B00] hover:!bg-[#E66000] shadow-[0_2px_8px_rgba(255,107,0,0.30)] active:scale-95"
-                          : "!bg-[#FFD5C2] dark:!bg-[#5a2e1d] text-white opacity-85 cursor-not-allowed"
-                      }`}
+                          ? "!bg-[#FF6B00] hover:!bg-[#E66000] text-white shadow-[0_2px_8px_rgba(255,107,0,0.30)] active:scale-95"
+                          : isIncognito
+                            ? "!bg-white/10 text-white/35 cursor-not-allowed border border-white/5"
+                            : "!bg-[#FFD5C2] dark:!bg-[#5a2e1d] text-white opacity-85 cursor-not-allowed",
+                      )}
                       title="Send prompt"
                     >
                       <ArrowUpRight
-                        className="w-4.5 h-4.5 shrink-0 text-white"
+                        className={cn(
+                          "w-4.5 h-4.5 shrink-0",
+                          promptInput.trim() ? "text-white" : isIncognito ? "text-white/40" : "text-white",
+                        )}
                         strokeWidth={2.4}
                       />
                     </button>
@@ -1034,6 +948,10 @@ const DashboardContent = () => {
               )}
             </div>
 
+            {/* Disclaimer */}
+            <div className="text-[11.5px] sm:text-[12px] text-gray-400 dark:text-zinc-500 text-center mt-2.5 sm:mt-3 select-none">
+              Rivinity can make mistakes. Check important info.
+            </div>
           </motion.section>
 
           {/* 4. CONSOLIDATED 'CREATIVE TOOLS' GRID */}
@@ -1072,11 +990,17 @@ const DashboardContent = () => {
                     {/* Glass inner gradient reflection */}
                     <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[18px] sm:rounded-[22px]" />
 
-                    {/* Rivinity Logo Outer Two Rings Spinning at Bottom-Right Corner on Hover */}
-                    <div className="absolute -bottom-8 -right-8 sm:-bottom-9 sm:-right-9 w-24 h-24 sm:w-28 sm:h-28 pointer-events-none opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-500 ease-out z-0">
-                      <div className="w-full h-full animate-[spin_8s_linear_infinite] [filter:drop-shadow(0_0_8px_rgba(255,107,0,0.45))]">
-                        <RivinityOuterRings className="w-full h-full" />
-                      </div>
+                    {/* Rivinity Logo at Bottom-Right Corner on Hover */}
+                    <div className="absolute -bottom-5 -right-5 sm:-bottom-6 sm:-right-6 w-20 h-20 sm:w-24 sm:h-24 pointer-events-none opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 ease-out z-0">
+                      <img
+                        src={logoSrc}
+                        onError={(e) => {
+                          e.currentTarget.src = "/watermark.png";
+                        }}
+                        alt="Rivinity Logo"
+                        className="w-full h-full object-contain select-none drop-shadow-[0_4px_16px_rgba(255,107,0,0.35)]"
+                        draggable={false}
+                      />
                     </div>
 
                     {/* Top: Tool Name / Words */}
@@ -1084,9 +1008,12 @@ const DashboardContent = () => {
                       {tool.title}
                     </div>
 
-                    {/* Bottom: Solid Black Glyph Logo on Bottom Left Side */}
+                    {/* Bottom: Normal Icon on Bottom Left Side */}
                     <div className="relative z-10 mt-auto pt-2 flex items-end justify-start">
-                      <Icon className="w-6.5 h-6.5 sm:w-7.5 sm:h-7.5 lg:w-8 lg:h-8 text-slate-900 transition-transform duration-300 group-hover:scale-105" />
+                      <Icon
+                        className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-slate-700 group-hover:text-slate-900 transition-transform duration-300 group-hover:scale-110"
+                        strokeWidth={1.8}
+                      />
                     </div>
                   </motion.div>
                 );

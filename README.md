@@ -1,6 +1,6 @@
 # Rivinity
 
-Rivinity is a modern Next.js marketing and product website for an AI application-building platform. The platform presents an AI infrastructure and workspace layer designed for generating, orchestrating, and deploying intelligent applications with autonomous agents, collaborative canvas tools, and instant edge deployment.
+Rivinity is a full-stack AI workspace and marketing platform built with Next.js 15. It combines a rich public-facing marketing site with a fully-featured authenticated product workspace — including an AI canvas/chat interface, analytics dashboard, audio lab, app builder, history view, marketplace, and a Rivinity LM multi-tool suite.
 
 ---
 
@@ -11,7 +11,7 @@ Rivinity is a modern Next.js marketing and product website for an AI application
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) with PostCSS & custom CSS variable design tokens
 - **Animations**: [Framer Motion](https://www.framer.com/motion/) & [Motion](https://motion.dev/)
 - **Shaders & Effects**: [@paper-design/shaders-react](https://www.npmjs.com/package/@paper-design/shaders-react)
-- **Primitives & UI**: [Radix UI](https://www.radix-ui.com/) (`NavigationMenu`, `Slot`), [Lucide React](https://lucide.dev/)
+- **Primitives & UI**: [Radix UI](https://www.radix-ui.com/) (`Dialog`, `Switch`, `Slider`, `DropdownMenu`, `NavigationMenu`, `Slot`), [Lucide React](https://lucide.dev/), [shadcn/ui](https://ui.shadcn.com/)
 - **Typography**: [Google Fonts](https://fonts.google.com/) (`Inter`, `JetBrains Mono`, `Fraunces`)
 - **Utilities**: `clsx`, `tailwind-merge`, `class-variance-authority`, `react-use-measure`
 
@@ -66,103 +66,148 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ```text
 ├── app/                                 # Next.js App Router root
-│   ├── (routes)/                        # 26+ page routes (about, blog, docs, pricing, etc.)
-│   ├── globals.css                      # Tailwind v4 theme, font definitions, and CSS variables
-│   ├── layout.tsx                       # Root layout with fonts, metadata, OpenGraph, and AuthProvider
+│   ├── (marketing routes)/              # 26+ public-facing marketing pages
+│   ├── analytics/page.tsx               # Analytics dashboard page
+│   ├── app/page.tsx                     # App builder inner page
+│   ├── chat/                            # Chat routing (inner workspace)
+│   ├── dashboard/page.tsx               # Main product dashboard (authenticated)
+│   ├── rivinitylm/page.tsx              # Rivinity LM multi-tool suite page
+│   ├── globals.css                      # Tailwind v4 theme, fonts, and CSS variables
+│   ├── layout.tsx                       # Root layout with fonts, metadata, OpenGraph, AuthProvider
 │   ├── not-found.tsx                    # Custom 404 page
 │   └── page.tsx                         # Main homepage assembling landing sections
-├── components/                          # UI components and layout building blocks
-│   ├── assets/                          # Component-specific media assets
-│   ├── auth/                            # Authentication context and modal system
+├── components/
+│   ├── analytics/
+│   │   └── Analytics.tsx                # Analytics dashboard with charts and metrics
+│   ├── app-builder/
+│   │   ├── AppBuilder.tsx               # App builder shell
+│   │   ├── AppBuilderMain.tsx           # Main workbench layout
+│   │   └── BuilderWorkbench.tsx         # Code editor & preview panel
+│   ├── audio-lab/
+│   │   ├── AudioLab.tsx                 # Audio Lab shell
+│   │   ├── AudioLabMain.tsx             # Audio lab main panel router
+│   │   ├── AudioLabRightPanel.tsx       # Properties/output panel
+│   │   └── views/                       # TTS, STT, Generator, Voice Clone views
+│   ├── canvas/
+│   │   ├── CanvasMain.tsx               # Primary AI chat canvas interface
+│   │   ├── CanvasSidebar.tsx            # Sidebar with credits, model selector, user controls
+│   │   ├── ChatEmptyState.tsx           # Empty state with prompt suggestions
+│   │   ├── ModelSelectorCard.tsx        # Floating model/credit selector card
+│   │   ├── SettingsDialog.tsx           # Full-featured settings dialog (14 sections)
+│   │   ├── SidebarShell.tsx             # Sidebar layout shell with navigation
+│   │   └── useSidebarState.tsx          # Sidebar open/close state hook
+│   ├── history/
+│   │   └── HistoryPage.tsx              # Conversation history browser
+│   ├── image-enhancer/
+│   │   └── ImageEnhancer.tsx            # AI image enhancer/upscaler tool
+│   ├── marketplace/
+│   │   └── MarketplaceHome.tsx          # Integration and plugin marketplace
+│   ├── rivinity-lm/
+│   │   ├── RivinityLM.tsx               # Rivinity LM shell
+│   │   ├── RivinityLMMain.tsx           # LM tool router
+│   │   └── views/                       # Smart Notes, Flashcards, Quizzes, Debate,
+│   │                                    # Homework Planner, Exam Lab, Study Companion,
+│   │                                    # AI Podcast, Data Analyst, Voice Transcribe,
+│   │                                    # Contextual Chat views
+│   ├── auth/
 │   │   ├── auth-context.tsx             # Auth state provider and hook (`useAuthModal`)
 │   │   └── auth-modal.tsx               # Unified login/signup modal and standalone page card
-│   ├── layout/                          # Site navigation and shell
+│   ├── layout/
 │   │   ├── header.tsx                   # Sticky responsive navigation bar with mega menu
 │   │   └── footer.tsx                   # Site-wide footer with links & newsletter
 │   ├── sections/                        # Modular landing page sections
-│   │   ├── bentofeatures.tsx            # Bento feature grid wrapper
-│   │   ├── cta-section.tsx              # Conversion CTA block
-│   │   ├── faq-section.tsx              # Interactive accordion FAQ
-│   │   ├── how-it-works.tsx             # Step-by-step interactive workflow
-│   │   ├── powered-by-rivinity.tsx      # Platform capabilities breakdown
-│   │   ├── problem-statement.tsx        # Visual problem/solution contrast
-│   │   └── testimonials-section.tsx     # Social proof & customer reviews
-│   ├── ui/                              # Reusable UI primitives
-│   │   ├── bento.tsx                    # Bento grid card components
-│   │   ├── interactive-pixel-background.tsx # Atmospheric diffused glass background
-│   │   └── ScrollReveal.tsx             # Viewport reveal animation component
-│   ├── ArrowButton.tsx                  # Animated CTA arrow button
-│   ├── GlassAssistant.tsx               # Glassmorphic interactive AI assistant widget
-│   ├── Hero.tsx                         # Hero section with interactive visuals & badges
-│   ├── Magnetic.tsx                     # Cursor attraction wrapper
-│   ├── Reveal.tsx                       # Scroll-triggered reveal effect
-│   └── logoslide.tsx                    # Infinite logo marquee slider
-├── lib/                                 # Shared utilities
+│   └── ui/                              # Reusable UI primitives (shadcn/ui + custom)
+├── lib/
 │   └── utils.ts                         # Class merging utility (`cn`)
 ├── public/                              # Static public assets
-│   ├── images/                          # Product illustrations & `auth-bg.png`
-│   ├── logos/                           # Integration and partner SVG logos
-│   └── *.png                            # Brand logos, favicons, and banners
-├── types/                               # TypeScript declarations & shared interfaces
-│   └── index.ts                         # Navigation, team, FAQ, and testimonial types
-├── next.config.js                       # Next.js configuration (images, compiler)
-├── tailwind.config.js                   # Tailwind theme & color extensions
-└── tsconfig.json                        # TypeScript path aliases & compiler settings
+├── types/
+│   └── index.ts                         # Shared TypeScript interfaces
+├── next.config.js
+├── tailwind.config.js
+└── tsconfig.json
 ```
 
 ---
 
 ## Routes & Pages
 
-All pages are located under the `app/` directory:
+### Public Marketing Pages
 
-| Route | File Path | Description |
-| :--- | :--- | :--- |
-| `/` | `app/page.tsx` | Main Rivinity homepage with interactive bento sections and platform showcase |
-| `/about` | `app/about/page.tsx` | About company, mission, leadership, and values |
-| `/academy` | `app/academy/page.tsx` | Learning resources, certifications, and AI developer curriculum |
-| `/apireference` | `app/apireference/page.tsx` | Developer API reference and client endpoints |
-| `/blog` | `app/blog/page.tsx` | Engineering blog with custom procedural wireframe graphics and brand `#ff8b28` accents |
-| `/careers` | `app/careers/page.tsx` | Career opportunities, interactive principles, and role application flow |
-| `/changelog` | `app/changelog/page.tsx` | Product changelog and chronological release notes |
-| `/compliance` | `app/compliance/page.tsx` | Regulatory, HIPAA, GDPR, and enterprise compliance certifications |
-| `/contact` | `app/contact/page.tsx` | Contact, support inquiries, and sales consultation |
-| `/cybersecurity` | `app/cybersecurity/page.tsx` | Cybersecurity architecture, threat detection, and zero-trust controls |
-| `/developer` | `app/developer/page.tsx` | Developer portal, SDKs, and code quickstarts |
-| `/docs` | `app/docs/page.tsx` | Comprehensive product documentation and integration guides |
-| `/education` | `app/education/page.tsx` | Higher education solutions, campus AI labs, and academic grants |
-| `/enterprise` | `app/enterprise/page.tsx` | Enterprise-grade AI solutions, dedicated infrastructure, and SLA tiers |
-| `/government` | `app/government/page.tsx` | Sovereign AI, air-gapped deployments, and public sector compliance |
-| `/login` | `app/login/page.tsx` | Standalone sign-in page with atmospheric background |
-| `/pricing` | `app/pricing/page.tsx` | Subscription tiers, billing calculator, and feature comparison matrix |
-| `/privacy` | `app/privacy/page.tsx` | Privacy policy and data handling practices |
-| `/research` | `app/research/page.tsx` | AI research mission, technical grid blueprint cards, and publication archive |
-| `/security` | `app/security/page.tsx` | Security architecture and trust center |
-| `/signup` | `app/signup/page.tsx` | Standalone registration page with unified auth context |
-| `/status` | `app/status/page.tsx` | Real-time platform status, incident history, and uptime metrics |
-| `/terms` | `app/terms/page.tsx` | Terms of service and usage policies |
-| `404` | `app/not-found.tsx` | Custom 404 Not Found error page |
+| Route | Description |
+| :--- | :--- |
+| `/` | Main Rivinity homepage |
+| `/about` | Company, mission, leadership |
+| `/academy` | Learning resources and certifications |
+| `/apireference` | Developer API reference |
+| `/blog` | Engineering blog |
+| `/careers` | Career opportunities |
+| `/changelog` | Product changelog |
+| `/compliance` | HIPAA, GDPR, compliance certs |
+| `/contact` | Contact and sales |
+| `/cybersecurity` | Security architecture |
+| `/developer` | Developer portal and SDKs |
+| `/docs` | Product documentation |
+| `/education` | Education solutions |
+| `/enterprise` | Enterprise AI solutions |
+| `/government` | Sovereign AI for public sector |
+| `/login` | Sign-in page |
+| `/pricing` | Subscription tiers and billing |
+| `/privacy` | Privacy policy |
+| `/research` | AI research mission |
+| `/security` | Security trust center |
+| `/signup` | Registration page |
+| `/status` | Platform status and uptime |
+| `/terms` | Terms of service |
+
+### Authenticated Product Pages
+
+| Route | Description |
+| :--- | :--- |
+| `/dashboard` | Main product dashboard with workspace overview |
+| `/app` | App builder workspace |
+| `/analytics` | Analytics dashboard with usage metrics and charts |
+| `/rivinitylm` | Rivinity LM multi-tool suite (Notes, Flashcards, Quizzes, etc.) |
+| `/chat/*` | AI canvas chat interface with model selection and credit tracking |
+
+---
+
+## Key Features (feat/inner-pages)
+
+### AI Canvas Chat Interface
+- Real-time AI chat with model selector (Rivinity Apex, Lite, Spark, Flash)
+- Credit system supporting Free (daily + ad credits), and Pro (monthly credits) tiers
+- Animated credit circle indicator with per-tier color coding (blue = daily, yellow = ad, pink = pro)
+- Hover tooltip and click popup for credit breakdown
+- Sidebar with collapsible chat history, quick-action buttons, and user avatar
+
+### Settings Dialog
+- 14-section settings panel: General, Notifications, Personalization, Integrations, Voice, Billing, Data Controls, Storage, Security & Login, Parental Controls, Trusted Contact, Account, Keyboard Shortcuts
+- Sidebar with search filter, active state highlighting (slate-gray pill), and Workspace links
+- Custom orange toggle switch (`CustomSwitch`) replacing shadcn/ui Switch for brand consistency
+- Integrations tab with connected tools list (HubSpot, Salesforce, Slack, OpenAI, Claude, Gemini, MongoDB, GitHub, Brevo, Stripe) and per-item toggle
+- API Keys tab with copy, rotate, and revoke actions
+- Clean compact size: 740px wide × 640px tall, no DPR zoom scaling
+
+### Dashboard
+- Workspace overview with quick-access tiles for all product modules
+- Recent activity feed and team collaboration shortcuts
+
+### Analytics
+- Usage charts, API call metrics, model performance breakdowns
+
+### Rivinity LM Suite
+- 11 specialized AI tools: Smart Notes, Flashcards, Quizzes, AI Debate, Homework Planner, Exam Lab, Study Companion, AI Podcast, Data Analyst, Voice Transcribe, Contextual Chat
 
 ---
 
 ## Configuration & Architecture
 
-- **Path Aliases**: The `@/*` path alias is mapped to the workspace root in [tsconfig.json](file:///Users/hardik/Downloads/BharatTech/main%20rep/tsconfig.json) (e.g., `@/components/...`, `@/lib/...`).
-- **SEO & Social Metadata**: [app/layout.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/layout.tsx) configures comprehensive SEO metadata, including `metadataBase` (`https://rivinity.ai`), OpenGraph cards, Twitter preview cards, keywords, and favicon icons.
-- **Brand Identity & Color Tokens**: Tailored brand primary `#ff8b28` accents paired with clean monochrome slate/zinc palettes, dark borders, and responsive hover feedback.
-- **Supernova Particle Canvas & Light Orange Palette**: [components/sections/powered-by-rivinity.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/sections/powered-by-rivinity.tsx) features a high-performance 120fps particle explosion and logo accretion simulation calibrated with an authentic light orange palette (`#FFA866`, `#FF8A3D`, `#FF944D`) and `source-over` particle compositing to eliminate oversaturated yellow artifacts while preserving supersonic shockwave rings and diffraction spikes.
-- **Glassmorphic Team Architecture & Geometric Grids**: [app/about/page.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/about/page.tsx) features full-box glassmorphism cards (`backdrop-blur-md bg-white/75 border-white/60 shadow-xl`), procedural pixel tile geometry with dual-tone gradients (orange/white, purple/white, pink/white), and refined dark-grey hover interactions on team social links.
-- **Organic Geometric Half-Shapes**: [app/compliance/page.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/compliance/page.tsx) integrates 4 organic vector half-shapes (Orange Cross, Pink Rosette, Blue Concave Star Donut, Purple Clover) anchored in the top-right corner of each approach principle card with interactive hover zoom effects.
-- **Optimized Documentation Sidebar**: [app/docs/page.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/docs/page.tsx) provides a clean, fixed-width documentation drawer with unified button heights, left-aligned chevrons, right-aligned badges, and an unobtrusive 6px custom scrollbar.
-- **Sovereign AI & Government Architecture**: [app/government/page.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/government/page.tsx) integrates dedicated sovereign intelligence for national security, Tri-Services, and Paramilitary forces, strictly aligned with DAP 2020 Make in India mandates and DPDP Act / CERT-In data compliance.
-- **Enhanced Header Navigation**: [components/layout/header.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/layout/header.tsx) features an expanded Platform mega menu with Core Products (including coming soon badges for Rivinity Cloud and Supernova), categorized solution columns (`BUILD`, `AUTOMATE`, `CREATE`, `UNDERSTAND`, `GOVERN`) with bold visual hierarchy, and smooth accordion controls on mobile.
-- **Unified CTA Button System**: Standardized primary conversion buttons across all sub-pages (API Reference, Security, Compliance, Developer) with high-contrast pill styling, hover micro-interactions, and angled directional arrows.
-- **Procedural Geometric Illustration System**: Dynamic, zero-raster geometric shapes and atmospheric accents across Security, Blog, and Research sections.
-- **Typography & Font Optimization**: Managed via `next/font/google` for `--font-body` (`Inter`), `--font-mono` (`JetBrains Mono`), and serif accents (`Fraunces`).
-- **Unified Authentication Architecture**: [components/auth/auth-modal.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/auth/auth-modal.tsx) consolidates login, signup, and password reset flows with built-in client rate limiting, input sanitization, and dual usage (overlay modal triggered by `useAuthModal()` or full-page embedded card).
-- **Atmospheric Backgrounds**: [components/ui/interactive-pixel-background.tsx](file:///Users/hardik/Downloads/BharatTech/main%20rep/components/ui/interactive-pixel-background.tsx) renders ambient glass diffusion and high-resolution background art for auth views.
-- **Styling System**: Tailwind CSS 4 is loaded in [app/globals.css](file:///Users/hardik/Downloads/BharatTech/main%20rep/app/globals.css) with design system variables extending [tailwind.config.js](file:///Users/hardik/Downloads/BharatTech/main%20rep/tailwind.config.js).
-- **Image Optimization**: Configured in [next.config.js](file:///Users/hardik/Downloads/BharatTech/main%20rep/next.config.js) with `remotePatterns` for external image providers and automatic AVIF/WebP conversion.
+- **Path Aliases**: `@/*` mapped to workspace root in `tsconfig.json`
+- **SEO & Social Metadata**: Configured in `app/layout.tsx` with `metadataBase`, OpenGraph, Twitter cards
+- **Brand Colors**: Primary `#ff6600` / `#ff8b28` accent with zinc/slate neutral palette
+- **Auth System**: `auth-context.tsx` + `auth-modal.tsx` — unified login/signup/reset with rate limiting and input sanitization
+- **Image Optimization**: `next.config.js` with `remotePatterns` and automatic AVIF/WebP conversion
+- **Styling System**: Tailwind CSS 4 via `app/globals.css` with CSS variable design tokens
 
 ---
 
