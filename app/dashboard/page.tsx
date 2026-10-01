@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAuthModal } from "@/components/auth/auth-context";
 import SidebarShell from "@/components/canvas/SidebarShell";
+import Preloader from "@/components/Preloader";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import {
@@ -97,10 +98,10 @@ const CREATIVE_TOOLS = [
     border: "rgba(180, 140, 255, 0.35)",
   },
   {
-    id: "image-enhancer",
-    title: "Image Enhancer",
+    id: "image-generation",
+    title: "Image Generation",
     icon: Sparkles,
-    path: "/image-enhancer",
+    path: "/image-generation",
     bg: "rgba(255, 148, 194, 0.14)", // Light pastel pink glass
     border: "rgba(255, 148, 194, 0.35)",
   },
@@ -250,6 +251,15 @@ const WORKING_FOLDERS: WorkingCategoryFolder[] = [
   },
 ];
 
+const WORKING_FOLDER_BADGES: Record<ContinueWorkingType, string> = {
+  Chat: "border-orange-200 bg-orange-50 text-orange-700",
+  App: "border-pink-200 bg-pink-50 text-pink-700",
+  Audio: "border-violet-200 bg-violet-50 text-violet-700",
+  Image: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  Video: "border-blue-200 bg-blue-50 text-blue-700",
+  Doc: "border-amber-200 bg-amber-50 text-amber-700",
+};
+
 const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
   Chat: [
     {
@@ -351,11 +361,11 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
     {
       id: "img-1",
       name: "Cyberpunk Cityscape 4K Ultra-Upscale",
-      subtitle: "Super-resolution 4x enhancement · Artifact denoising pass",
+      subtitle: "Neural diffusion synthesis · High-res cinematic pass",
       type: "Image",
       modified: "15 mins ago",
       icon: ImageIcon,
-      path: "/image-enhancer",
+      path: "/image-generation",
     },
     {
       id: "img-2",
@@ -364,16 +374,16 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
       type: "Image",
       modified: "2 hours ago",
       icon: ImageIcon,
-      path: "/image-enhancer",
+      path: "/image-generation",
     },
     {
       id: "img-3",
       name: "Character Concept Art Polish & Detail Pass",
-      subtitle: "Facial restoration & micro-contrast texture boost",
+      subtitle: "Facial synthesis & micro-contrast texture boost",
       type: "Image",
       modified: "Yesterday",
       icon: ImageIcon,
-      path: "/image-enhancer",
+      path: "/image-generation",
     },
   ],
   Video: [
@@ -440,10 +450,25 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
   MAIN DASHBOARD COMPONENT
 */
 export default function DashboardPage() {
+  const [showPreloader, setShowPreloader] = useState(false);
+
+  useEffect(() => {
+    try {
+      const hasShownPreloader = sessionStorage.getItem("rivinity_dashboard_preloader_shown");
+      if (hasShownPreloader) return;
+      sessionStorage.setItem("rivinity_dashboard_preloader_shown", "true");
+    } catch {}
+
+    setShowPreloader(true);
+  }, []);
+
   return (
-    <SidebarShell>
-      <DashboardContent />
-    </SidebarShell>
+    <>
+      {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
+      <SidebarShell>
+        <DashboardContent />
+      </SidebarShell>
+    </>
   );
 }
 
@@ -453,6 +478,10 @@ const DashboardContent = () => {
   const navigate = (path: string) => router.push(path);
   const [selectedWorkingFolder, setSelectedWorkingFolder] =
     useState<ContinueWorkingType | null>("Chat");
+  const [workingSearchQuery, setWorkingSearchQuery] = useState("");
+  const [isWorkingSelectionMode, setIsWorkingSelectionMode] = useState(false);
+  const [selectedWorkingAssetIds, setSelectedWorkingAssetIds] = useState<Set<string>>(new Set());
+  const [activeWorkingMenuId, setActiveWorkingMenuId] = useState<string | null>(null);
 
   const [promptInput, setPromptInput] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -490,6 +519,39 @@ const DashboardContent = () => {
       s.category.toLowerCase().includes(q)
     );
   });
+
+  const workingAssets = selectedWorkingFolder
+    ? (ALL_WORKING_ASSETS[selectedWorkingFolder] || []).filter((item) => {
+        const query = workingSearchQuery.trim().toLowerCase();
+        return (
+          !query ||
+          item.name.toLowerCase().includes(query) ||
+          item.subtitle.toLowerCase().includes(query)
+        );
+      })
+    : [];
+
+  const handleNewWorkingAsset = () => {
+    if (!selectedWorkingFolder) return;
+    const newPaths: Record<ContinueWorkingType, string> = {
+      Chat: "/chat",
+      App: "/app-builder",
+      Audio: "/audio-lab",
+      Image: "/image-generation",
+      Video: "/chat",
+      Doc: "/chat",
+    };
+    navigate(newPaths[selectedWorkingFolder]);
+  };
+
+  const toggleWorkingAssetSelection = (assetId: string) => {
+    setSelectedWorkingAssetIds((current) => {
+      const next = new Set(current);
+      if (next.has(assetId)) next.delete(assetId);
+      else next.add(assetId);
+      return next;
+    });
+  };
 
   const handleSend = (textToSend?: string) => {
     const finalPrompt = (
@@ -571,7 +633,7 @@ const DashboardContent = () => {
             >
               {/* INCOGNITO MODE TOP GLASS HEADER */}
               {isIncognito && (
-                <div className="px-3.5 sm:px-4 pt-1 pb-2 text-[12px] select-none text-slate-600 dark:text-zinc-300 font-medium tracking-tight animate-in fade-in duration-200">
+                <div className="px-3.5 sm:px-4 pt-1 pb-2 text-[12px] select-none text-slate-600 dark:text-zinc-300 font-medium tracking-tight animate-in fade-in duration-200 text-left">
                   Incognito Mode Active &bull; Chats will not be saved to history
                 </div>
               )}
@@ -587,95 +649,192 @@ const DashboardContent = () => {
                       ),
                 )}
               >
-                {/* Expandable Tools Panel */}
-                <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    isAddingTools
-                      ? cn(
-                          "max-h-[260px] opacity-100 border-b",
-                          isIncognito ? "border-white/10 bg-black/25" : "border-[#e2e8f0] bg-[#f8fafc]",
-                        )
-                      : "max-h-0 opacity-0"
-                  }`}
-                >
-                  <div className="p-3 sm:p-4">
-                    <div
-                      className={cn(
-                        "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1 mb-2",
-                        isIncognito ? "text-zinc-400" : "text-[#64748b]",
-                      )}
-                    >
-                      Quick AI Modes
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {[
-                        {
-                          icon: Bot,
-                          label: "Agents Playground",
-                        },
-                        {
-                          icon: GraduationCap,
-                          label: "RivinityLM",
-                        },
-                        {
-                          icon: Sparkles,
-                          label: "Image Enhancer",
-                        },
-                        {
-                          icon: AudioWaveform,
-                          label: "Audio Lab",
-                        },
-                        {
-                          icon: Layers,
-                          label: "App Builder",
-                        },
-                        {
-                          icon: Clapperboard,
-                          label: "Prompt to Video",
-                        },
-                      ].map((tool) => (
-                        <button
-                          type="button"
-                          key={tool.label}
-                          onClick={() => {
-                            setIsAddingTools(false);
-                            setPromptInput((prev) =>
-                              prev
-                                ? `${prev} [Mode: ${tool.label}]`
-                                : `[Mode: ${tool.label}] `,
-                            );
-                            textareaRef.current?.focus();
-                          }}
-                          className={cn(
-                            "flex items-center gap-2.5 p-2 rounded-xl text-left transition-all border cursor-pointer",
-                            isIncognito
-                              ? "bg-white/5 hover:bg-white/10 border-white/10 text-white"
-                              : "bg-white hover:bg-[#f1f5f9] border-[#e2e8f0]",
-                          )}
-                        >
-                          <div
+                {/* QUICK AI MODES PANEL */}
+                {isAddingTools && (
+                  <div
+                    className={cn(
+                      "border-b",
+                      isIncognito ? "border-white/10 bg-black/25" : "border-[#e2e8f0] bg-[#f8fafc]",
+                    )}
+                  >
+                    <div className="p-3 sm:p-4">
+                      <div
+                        className={cn(
+                          "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1 mb-2",
+                          isIncognito ? "text-zinc-400" : "text-[#64748b]",
+                        )}
+                      >
+                        Quick AI Modes
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {[
+                          {
+                            icon: Bot,
+                            label: "Rivinity Chat",
+                          },
+                          {
+                            icon: Terminal,
+                            label: "Fullstack Builder",
+                          },
+                          {
+                            icon: Layout,
+                            label: "Frontend Builder",
+                          },
+                          {
+                            icon: Search,
+                            label: "Deep Search",
+                          },
+                          {
+                            icon: Wand2,
+                            label: "Write Anything",
+                          },
+                          {
+                            icon: Sparkles,
+                            label: "Image Enhancer",
+                          },
+                          {
+                            icon: AudioWaveform,
+                            label: "Audio Lab",
+                          },
+                        ].map((tool) => (
+                          <button
+                            type="button"
+                            key={tool.label}
+                            onClick={() => {
+                              setIsAddingTools(false);
+                              setPromptInput((prev) =>
+                                prev
+                                  ? `${prev} [Mode: ${tool.label}]`
+                                  : `[Mode: ${tool.label}] `,
+                              );
+                              textareaRef.current?.focus();
+                            }}
                             className={cn(
-                              "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                              "flex items-center gap-2.5 p-2 rounded-xl text-left border cursor-pointer",
                               isIncognito
-                                ? "bg-white/10 text-white"
-                                : "bg-slate-100 text-slate-900",
+                                ? "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                                : "bg-white hover:bg-[#f1f5f9] border-[#e2e8f0]",
                             )}
                           >
-                            <tool.icon className="w-4 h-4" />
-                          </div>
-                          <div
-                            className={cn(
-                              "text-[12px] font-semibold truncate",
-                              isIncognito ? "text-zinc-200" : "text-[#0f172a]",
-                            )}
-                          >
-                            {tool.label}
-                          </div>
-                        </button>
-                      ))}
+                            <div
+                              className={cn(
+                                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                                isIncognito
+                                  ? "bg-white/10 text-white"
+                                  : "bg-slate-100 text-slate-900",
+                              )}
+                            >
+                              <tool.icon className="w-4 h-4" />
+                            </div>
+                            <div
+                              className={cn(
+                                "text-[12px] font-semibold truncate",
+                                isIncognito ? "text-zinc-200" : "text-[#0f172a]",
+                              )}
+                            >
+                              {tool.label}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {/* SKILLS PANEL */}
+                {skillPickerOpen && (
+                  <div
+                    className={cn(
+                      "border-b",
+                      isIncognito ? "border-white/10" : "border-[#e2e8f0]",
+                    )}
+                  >
+                    <div className={cn(isIncognito ? "bg-black/25" : "bg-[#f8fafc] dark:bg-zinc-900/60")}>
+                      <div
+                        className={cn(
+                          "flex items-center gap-3 px-4 py-2.5 border-b",
+                          isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider shrink-0",
+                            isIncognito ? "text-zinc-400" : "text-[#64748b]",
+                          )}
+                        >
+                          Skills
+                        </div>
+                        <input
+                          autoFocus
+                          value={skillQuery}
+                          onChange={(e) => setSkillQuery(e.target.value)}
+                          placeholder="Search skills to run…"
+                          className={cn(
+                            "bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-[13px] flex-1 min-w-0",
+                            isIncognito
+                              ? "text-white placeholder:text-zinc-500"
+                              : "text-[#1C1C1C] dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500",
+                          )}
+                        />
+                        <span className="text-[12px] text-gray-400 dark:text-zinc-500 shrink-0">
+                          {filteredSkills.length} available
+                        </span>
+                      </div>
+                      <div className="max-h-[216px] overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#e2e8f0_transparent]">
+                        {filteredSkills.length === 0 ? (
+                          <div className="py-6 text-center text-[13px] text-gray-400 dark:text-zinc-500">
+                            No skills found matching &ldquo;{skillQuery}&rdquo;
+                          </div>
+                        ) : (
+                          filteredSkills.map((s) => (
+                            <button
+                              key={s.name}
+                              type="button"
+                              onClick={() => {
+                                setSkillPickerOpen(false);
+                                setPromptInput(`Run skill: ${s.name}`);
+                                handleSend(`Run skill: ${s.name}`);
+                              }}
+                              className={cn(
+                                "bg-transparent w-full text-left px-4 py-[17px] flex items-center justify-between gap-4 cursor-pointer border-b last:border-0",
+                                isIncognito
+                                  ? "hover:bg-white/10 border-white/10"
+                                  : "hover:bg-white dark:hover:bg-zinc-800 border-gray-100 dark:border-zinc-800/40",
+                              )}
+                            >
+                              <div className="min-w-0 flex-1">
+                                <div
+                                  className={cn(
+                                    "text-[13px] font-bold truncate",
+                                    isIncognito ? "text-zinc-100" : "text-slate-900 dark:text-zinc-100",
+                                  )}
+                                >
+                                  {s.name}
+                                </div>
+                                <div
+                                  className={cn(
+                                    "text-[11.5px] font-normal leading-relaxed mt-0.5 truncate",
+                                    isIncognito ? "text-zinc-400" : "text-slate-500 dark:text-zinc-400",
+                                  )}
+                                >
+                                  {s.summary}
+                                </div>
+                              </div>
+                              <span
+                                className={cn(
+                                  "text-[10px] uppercase tracking-[0.1em] font-extrabold text-[#FF6B00] border border-[#FF6B00]/70 px-2.5 py-0.5 rounded-full shrink-0",
+                                  isIncognito ? "bg-white/10" : "bg-white dark:bg-zinc-900",
+                                )}
+                              >
+                                {s.category}
+                              </span>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Textarea Input */}
                 <div className="px-3.5 sm:px-4.5 pt-2.5 pb-0">
@@ -887,65 +1046,7 @@ const DashboardContent = () => {
                 </div>
               </div>
 
-              {/* Skills Picker Popover */}
-              {skillPickerOpen && (
-                <div
-                  ref={popoverRef}
-                  className="absolute left-0 right-0 top-full mt-2.5 z-50 animate-in fade-in zoom-in-95 duration-150"
-                >
-                  <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden">
-                    <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
-                      <Wand2
-                        className="w-5 h-5 text-[#FF6B00] shrink-0"
-                        strokeWidth={2.2}
-                      />
-                      <input
-                        autoFocus
-                        value={skillQuery}
-                        onChange={(e) => setSkillQuery(e.target.value)}
-                        placeholder="Search skills to run…"
-                        className="bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-[14.5px] flex-1 text-[#0f172a] placeholder:text-gray-400"
-                      />
-                      <span className="text-[12.5px] text-gray-400 shrink-0">
-                        {filteredSkills.length} available
-                      </span>
-                    </div>
 
-                    <div className="max-h-[310px] overflow-y-auto py-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                      {filteredSkills.length === 0 ? (
-                        <div className="py-6 text-center text-[13.5px] text-gray-400">
-                          No skills found matching &ldquo;{skillQuery}&rdquo;
-                        </div>
-                      ) : (
-                        filteredSkills.map((s) => (
-                          <button
-                            type="button"
-                            key={s.name}
-                            onClick={() => {
-                              setSkillPickerOpen(false);
-                              setPromptInput(`Run skill: ${s.name}`);
-                              handleSend(`Run skill: ${s.name}`);
-                            }}
-                            className="bg-transparent w-full text-left px-5 py-3 hover:bg-slate-50/80 transition-colors flex items-center justify-between gap-4 group cursor-pointer border-b border-gray-100 last:border-0"
-                          >
-                            <div className="min-w-0 flex-1">
-                              <div className="text-[13.5px] sm:text-[14px] font-bold text-slate-900 group-hover:text-[#FF6B00] transition-colors truncate">
-                                {s.name}
-                              </div>
-                              <div className="text-[12px] sm:text-[12.5px] text-slate-500 font-normal leading-relaxed mt-0.5 truncate">
-                                {s.summary}
-                              </div>
-                            </div>
-                            <span className="text-[10px] sm:text-[10.5px] uppercase tracking-[0.1em] font-extrabold text-[#FF6B00] bg-white border border-[#FF6B00]/70 px-3 py-0.5 rounded-full shrink-0 shadow-2xs">
-                              {s.category}
-                            </span>
-                          </button>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Disclaimer */}
@@ -1058,9 +1159,15 @@ const DashboardContent = () => {
                     whileHover={{ y: -3, scale: 1.02, transition: springTransition }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() =>
-                      setSelectedWorkingFolder((prev) =>
-                        prev === folder.id ? null : folder.id,
-                      )
+                      {
+                        setSelectedWorkingFolder((prev) =>
+                          prev === folder.id ? null : folder.id,
+                        );
+                        setWorkingSearchQuery("");
+                        setSelectedWorkingAssetIds(new Set());
+                        setIsWorkingSelectionMode(false);
+                        setActiveWorkingMenuId(null);
+                      }
                     }
                     className="group relative w-full flex flex-col cursor-pointer select-none aspect-[4/2.75] min-h-[96px] sm:min-h-[105px]"
                   >
@@ -1153,157 +1260,148 @@ const DashboardContent = () => {
                   transition={{ duration: 0.25, ease: "easeOut" }}
                   className="w-full bg-white border border-[#e2e8f0] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
                 >
-                  <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-[#f1f5f9] bg-[#f8fafc]/70">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-[#64748b]">
-                        Active Category:
-                      </span>
-                      <span className="text-xs font-bold text-[#0f172a] uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-200/70">
-                        {selectedWorkingFolder}
+                  <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-semibold text-slate-500">Active Category:</span>
+                      <span className={`rounded-full border px-3 py-1 text-xs font-bold tracking-wide ${WORKING_FOLDER_BADGES[selectedWorkingFolder]}`}>
+                        {selectedWorkingFolder.toUpperCase()}
                       </span>
                     </div>
-                    <span className="text-[11px] text-[#64748b]">
-                      {ALL_WORKING_ASSETS[selectedWorkingFolder]?.length || 0} production files
-                    </span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <label className="relative min-w-0 flex-1 sm:w-52 sm:flex-none">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <input
+                          type="search"
+                          value={workingSearchQuery}
+                          onChange={(event) => setWorkingSearchQuery(event.target.value)}
+                          placeholder={`Search ${selectedWorkingFolder.toLowerCase()}s...`}
+                          className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
+                        />
+                      </label>
+                      {isWorkingSelectionMode ? (
+                        <>
+                          <span className="px-1 text-xs font-semibold text-slate-500">
+                            {selectedWorkingAssetIds.size} selected
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedWorkingAssetIds(new Set(workingAssets.map((item) => item.id)))}
+                            className="h-10 rounded-xl bg-slate-100 px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-200"
+                          >
+                            Select all
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsWorkingSelectionMode(false);
+                              setSelectedWorkingAssetIds(new Set());
+                            }}
+                            className="h-10 rounded-xl bg-slate-100 px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-200"
+                          >
+                            Done
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => setIsWorkingSelectionMode(true)}
+                            className="h-10 rounded-xl bg-slate-100 px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-200"
+                          >
+                            Select
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleNewWorkingAsset}
+                            className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                          >
+                            New
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse min-w-[620px]">
-                      <thead>
-                        <tr className="border-b border-[#e2e8f0] bg-[#f8fafc] text-[11px] font-bold uppercase tracking-wider text-[#64748b]">
-                          <th className="py-3 px-4 sm:px-6">Name</th>
-                          <th className="py-3 px-4 w-28">Type</th>
-                          <th className="py-3 px-4 w-32">Modified</th>
-                          <th className="py-3 px-4 sm:px-6 text-right w-44">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-[#f1f5f9] text-sm">
-                        {ALL_WORKING_ASSETS[selectedWorkingFolder]?.map((item) => {
-                          const Icon = item.icon;
-                          let badgeStyle = "bg-[#f1f5f9] text-[#64748b]";
-                          if (item.type === "Chat")
-                            badgeStyle =
-                              "bg-orange-50 text-orange-700 border border-orange-200";
-                          if (item.type === "App")
-                            badgeStyle =
-                              "bg-pink-50 text-pink-700 border border-pink-200";
-                          if (item.type === "Audio")
-                            badgeStyle =
-                              "bg-purple-50 text-purple-700 border border-purple-200";
-                          if (item.type === "Image")
-                            badgeStyle =
-                              "bg-emerald-50 text-emerald-700 border border-emerald-200";
-                          if (item.type === "Video")
-                            badgeStyle =
-                              "bg-sky-50 text-sky-700 border border-sky-200";
-                          if (item.type === "Doc")
-                            badgeStyle =
-                              "bg-amber-50 text-amber-700 border border-amber-200";
-
-                          return (
-                            <tr
-                              key={item.id}
-                              className="hover:bg-[#f8fafc] transition-colors group cursor-pointer"
-                              onClick={() => {
-                                toast.success(`Opening ${item.name}`);
-                                navigate(item.path);
-                              }}
+                  <div className="divide-y divide-slate-100">
+                    {workingAssets.length === 0 ? (
+                      <div className="px-6 py-12 text-center text-sm text-slate-500">
+                        No {selectedWorkingFolder.toLowerCase()} files match your search.
+                      </div>
+                    ) : (
+                      workingAssets.map((item) => (
+                        <div
+                          key={item.id}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => {
+                            if (isWorkingSelectionMode) {
+                              toggleWorkingAssetSelection(item.id);
+                              return;
+                            }
+                            toast.success(`Opening ${item.name}`);
+                            navigate(item.path);
+                          }}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              if (isWorkingSelectionMode) toggleWorkingAssetSelection(item.id);
+                              else navigate(item.path);
+                            }
+                          }}
+                          className="grid grid-cols-[1fr_130px_48px] items-center px-5 py-3.5 transition-colors group cursor-pointer relative hover:bg-slate-50/80 dark:hover:bg-zinc-800/40"
+                        >
+                          <div className="flex items-center gap-3.5 min-w-0 pr-4">
+                            {isWorkingSelectionMode && (
+                              <input
+                                type="checkbox"
+                                checked={selectedWorkingAssetIds.has(item.id)}
+                                onChange={() => toggleWorkingAssetSelection(item.id)}
+                                onClick={(event) => event.stopPropagation()}
+                                aria-label={`Select ${item.name}`}
+                                className="h-4 w-4 shrink-0 accent-slate-700"
+                              />
+                            )}
+                            <span className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white truncate">
+                              {item.name}
+                            </span>
+                          </div>
+                          <span className="text-xs text-slate-500 dark:text-zinc-400 pl-2">
+                            {item.modified}
+                          </span>
+                          <div className="flex items-center justify-end pr-1 relative" onClick={(event) => event.stopPropagation()}>
+                            <button
+                              type="button"
+                              title="More options"
+                              aria-label={`More options for ${item.name}`}
+                              onClick={() => setActiveWorkingMenuId((current) => current === item.id ? null : item.id)}
+                              className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                             >
-                              <td className="py-3.5 px-4 sm:px-6">
-                                <div className="flex items-center gap-3 min-w-0">
-                                  <div className="w-8 h-8 rounded-2xl flex items-center justify-center shrink-0 transition-colors bg-[#f1f5f9] text-[#64748b] group-hover:text-[#FF6B00]">
-                                    <Icon className="w-4 h-4" />
-                                  </div>
-                                  <div className="min-w-0">
-                                    <div className="font-semibold truncate text-xs sm:text-sm transition-colors text-[#0f172a] group-hover:text-[#FF6B00]">
-                                      {item.name}
-                                    </div>
-                                    <div className="text-[11px] text-[#64748b] truncate">
-                                      {item.subtitle}
-                                    </div>
-                                  </div>
-                                </div>
-                              </td>
-
-                              <td className="py-3.5 px-4">
-                                <span
-                                  className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider ${badgeStyle}`}
-                                >
-                                  {item.type}
-                                </span>
-                              </td>
-
-                              <td className="py-3.5 px-4 text-xs text-[#64748b] font-medium whitespace-nowrap">
-                                {item.modified}
-                              </td>
-
-                              <td className="py-3.5 px-4 sm:px-6 text-right">
-                                <div
-                                  className="flex items-center justify-end gap-1"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      toast.success(`Resuming ${item.name}`);
-                                      navigate(item.path);
-                                    }}
-                                    className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#FF6B00] hover:bg-orange-50 transition-colors cursor-pointer bg-transparent border-0"
-                                    title="Resume"
-                                  >
-                                    <Play className="w-3.5 h-3.5 fill-current" />
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      toast.success(`Exporting ${item.name}`)
-                                    }
-                                    className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
-                                    title="Download"
-                                  >
-                                    <Download className="w-3.5 h-3.5" />
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      toast.success(
-                                        `Duplicated ${item.name} to workspace`,
-                                      )
-                                    }
-                                    className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
-                                    title="Duplicate"
-                                  >
-                                    <Copy className="w-3.5 h-3.5" />
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      if (typeof window !== "undefined") {
-                                        navigator.clipboard?.writeText(
-                                          `${window.location.origin}${item.path}`,
-                                        );
-                                      }
-                                      toast.success(
-                                        `Share link copied for ${item.name}`,
-                                      );
-                                    }}
-                                    className="p-1.5 rounded-full text-[#94a3b8] hover:text-[#0f172a] hover:bg-[#f1f5f9] transition-colors cursor-pointer bg-transparent border-0"
-                                    title="Share"
-                                  >
-                                    <Share2 className="w-3.5 h-3.5" />
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
+                              <MoreVertical className="h-4 w-4" />
+                            </button>
+                            {activeWorkingMenuId === item.id && (
+                              <div className="absolute right-0 top-full z-30 mt-1.5 w-44 rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-xl">
+                                <button type="button" onClick={() => { navigate(item.path); setActiveWorkingMenuId(null); }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                  <Play className="h-4 w-4" /> Resume
+                                </button>
+                                <button type="button" onClick={() => { toast.success(`Exporting ${item.name}`); setActiveWorkingMenuId(null); }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                  <Download className="h-4 w-4" /> Download
+                                </button>
+                                <button type="button" onClick={() => { toast.success(`Duplicated ${item.name} to workspace`); setActiveWorkingMenuId(null); }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                  <Copy className="h-4 w-4" /> Duplicate
+                                </button>
+                                <button type="button" onClick={() => {
+                                  navigator.clipboard?.writeText(`${window.location.origin}${item.path}`);
+                                  toast.success(`Share link copied for ${item.name}`);
+                                  setActiveWorkingMenuId(null);
+                                }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                  <Share2 className="h-4 w-4" /> Share
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </motion.div>
               ) : (

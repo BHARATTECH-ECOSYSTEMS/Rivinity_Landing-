@@ -7,13 +7,8 @@ import {
   Clock,
   Check,
   Sparkles,
-  MessageSquare,
   X,
-  ListTodo,
-  AlertCircle,
-  BookOpen,
-  Calendar,
-  Filter,
+
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -126,7 +121,7 @@ export default function HomeworkPlannerView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -157,10 +152,10 @@ export default function HomeworkPlannerView() {
         </div>
       </div>
 
-      {/* MAIN CONTENT */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
-          {/* STATS TILES */}
+          {}
           <div className="grid grid-cols-3 gap-3">
             <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 space-y-1 shadow-xs">
               <div className="text-[10.5px] uppercase font-bold text-slate-400 dark:text-zinc-500 tracking-wider">
@@ -190,7 +185,7 @@ export default function HomeworkPlannerView() {
             </div>
           </div>
 
-          {/* FILTER TABS */}
+          {}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-zinc-900 p-1 rounded-xl border border-slate-200 dark:border-zinc-800">
               {(["all", "pending", "done"] as const).map((tab) => (
@@ -210,7 +205,7 @@ export default function HomeworkPlannerView() {
             </div>
           </div>
 
-          {/* TASKS LIST SKELETON */}
+          {}
           <div className="space-y-3">
             {filteredTasks.map((task) => {
               const isDone = task.status === "done";
@@ -224,7 +219,7 @@ export default function HomeworkPlannerView() {
                   }`}
                 >
                   <div className="flex items-start gap-3.5">
-                    {/* CHECKBOX */}
+                    {}
                     <button
                       type="button"
                       onClick={() => toggleStatus(task.id)}
@@ -237,7 +232,7 @@ export default function HomeworkPlannerView() {
                       {isDone && <Check className="h-3.5 w-3.5" strokeWidth={2.5} />}
                     </button>
 
-                    {/* CONTENT */}
+                    {}
                     <div className="flex-1 min-w-0 space-y-2">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
@@ -274,7 +269,7 @@ export default function HomeworkPlannerView() {
                         {task.title}
                       </div>
 
-                      {/* AI STRATEGY SUGGESTION SKELETON */}
+                      {}
                       {task.aiSuggestion && (
                         <div className="flex items-start gap-2 rounded-xl bg-orange-500/5 dark:bg-orange-500/10 p-2.5 text-[12px] text-slate-700 dark:text-zinc-300 border border-orange-500/15">
                           <Sparkles className="h-3.5 w-3.5 text-[#FF6B00] shrink-0 mt-0.5" />
@@ -290,7 +285,7 @@ export default function HomeworkPlannerView() {
         </div>
       </div>
 
-      {/* ADD ASSIGNMENT MODAL */}
+      {}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
           <div className="w-full max-w-md rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-2xl space-y-4">

@@ -183,7 +183,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
             ref={closeRef}
             onClick={onClose}
             aria-label="Close"
-            className="md:absolute md:right-6 md:top-6 md:z-50 flex h-9 w-9 items-center justify-center rounded-full text-[#0A0A0C] hover:bg-white bg-white/95 backdrop-blur-xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/40 cursor-pointer transition shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
+            className="md:absolute md:right-6 md:top-6 md:z-50 flex h-9 w-9 items-center justify-center rounded-full text-[#0A0A0C] hover:bg-white bg-white/95 backdrop-blur-xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-slate-400/40 cursor-pointer transition shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
           >
             <Close />
           </button>
@@ -205,7 +205,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
       >
         {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
         <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none my-auto">
-          <div className="relative w-[215px] h-[195px] lg:w-[240px] lg:h-[220px] flex items-center justify-center">
+          <div className="relative w-[300px] h-[275px] lg:w-[360px] lg:h-[330px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
@@ -234,7 +234,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
       >
         {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
         <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none my-auto">
-          <div className="relative w-[215px] h-[195px] lg:w-[240px] lg:h-[220px] flex items-center justify-center">
+          <div className="relative w-[300px] h-[275px] lg:w-[360px] lg:h-[330px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
@@ -398,7 +398,7 @@ function FormContent({
               }
             }}
             aria-label={`Continue with ${name}`}
-            className="inline-flex h-10 sm:h-11 w-full items-center justify-center rounded-xl border border-neutral-200/90 bg-[#FAFAFA] text-neutral-800 shadow-2xs transition-all hover:bg-white hover:border-neutral-300 hover:shadow-xs active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-[#7C3AED]/30 disabled:opacity-50 cursor-pointer"
+            className="inline-flex h-10 sm:h-11 w-full items-center justify-center rounded-xl border border-neutral-200/90 bg-[#FAFAFA] text-neutral-800 shadow-2xs transition-all hover:bg-white hover:border-neutral-300 hover:shadow-xs active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-slate-400/30 disabled:opacity-50 cursor-pointer"
           >
             <Icon />
           </button>
@@ -422,7 +422,7 @@ function FormContent({
             <span className="mb-1 block text-[11px] font-medium text-[#6B6B75]">Name</span>
             <input type="text" placeholder="Your name" value={name} maxLength={64} autoComplete="name" disabled={busy || loading}
               onChange={(e) => { setName(sanitize(e.target.value, 64)); clearErr("name"); }}
-              className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-[#7C3AED] ${err.name ? "border-red-400" : "border-[#E8E8EC]"}`} />
+              className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-slate-500 ${err.name ? "border-red-400" : "border-[#E8E8EC]"}`} />
             {err.name && <span className="mt-1 block text-[11px] text-red-500">{err.name}</span>}
           </label>
         )}
@@ -432,7 +432,7 @@ function FormContent({
           <span className="mb-1 block text-[11px] font-medium text-[#6B6B75]">Email</span>
           <input type="email" placeholder="you@example.com" value={email} maxLength={254} autoComplete="email" disabled={busy || loading}
             onChange={(e) => { setEmail(sanitize(e.target.value, 254)); clearErr("email"); }}
-            className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-[#7C3AED] ${err.email ? "border-red-400" : "border-[#E8E8EC]"}`} />
+            className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-slate-500 ${err.email ? "border-red-400" : "border-[#E8E8EC]"}`} />
           {err.email && <span className="mt-1 block text-[11px] text-red-500">{err.email}</span>}
         </label>
 
@@ -442,12 +442,12 @@ function FormContent({
           <div className="relative">
             <input type={showPwd ? "text" : "password"} placeholder="••••••••" value={pwd} maxLength={128} autoComplete={isLogin ? "current-password" : "new-password"} disabled={busy || loading}
               onChange={(e) => { setPwd(sanitize(e.target.value, 128)); clearErr("password"); }}
-              className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 pr-12 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-[#7C3AED] ${err.password ? "border-red-400" : "border-[#E8E8EC]"}`} />
+              className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 pr-12 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-slate-500 ${err.password ? "border-red-400" : "border-[#E8E8EC]"}`} />
             <button
               type="button"
               disabled={busy || loading}
               onClick={() => setShowPwd((v) => !v)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 text-[11px] font-medium text-[#6B6B75] hover:text-[#7C3AED] transition outline-none border-none bg-transparent cursor-pointer"
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-[11px] font-medium text-[#6B6B75] hover:text-slate-900 transition outline-none border-none bg-transparent cursor-pointer"
             >
               {showPwd ? "Hide" : "Show"}
             </button>
@@ -459,7 +459,7 @@ function FormContent({
         {isLogin && (
           <div className="my-3 flex items-center justify-between gap-2 sm:my-4">
             <label className="flex items-center gap-2 text-[11px] text-[#6B6B75] cursor-pointer select-none">
-              <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} disabled={busy || loading} className="h-3.5 w-3.5 accent-[#7C3AED] rounded" />
+              <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} disabled={busy || loading} className="h-3.5 w-3.5 accent-slate-600 rounded" />
               <span>Keep me signed in</span>
             </label>
             <button
@@ -489,7 +489,7 @@ function FormContent({
             type="button"
             disabled={busy || loading}
             onClick={onSwitch}
-            className="font-semibold text-[#7C3AED] underline underline-offset-2 hover:text-[#EC4899] transition outline-none border-none bg-transparent cursor-pointer"
+            className="font-semibold text-slate-600 underline underline-offset-2 hover:text-slate-900 transition outline-none border-none bg-transparent cursor-pointer"
           >
             {isLogin ? "Sign up" : "Log in"}
           </button>

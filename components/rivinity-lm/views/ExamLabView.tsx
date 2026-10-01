@@ -4,17 +4,12 @@ import { useState, useEffect } from "react";
 import {
   GraduationCap,
   Clock,
-  Target,
   Play,
-  Sparkles,
-  ChevronDown,
-  BarChart3,
+
   Check,
   Award,
-  AlertCircle,
   Flag,
   RotateCcw,
-  BookOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -100,7 +95,7 @@ export default function ExamLabView() {
   const [examSubmitted, setExamSubmitted] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [questions, setQuestions] = useState<ExamQuestion[]>(mockQuestions);
-  const [timeLeft, setTimeLeft] = useState(1500); // 25 mins in sec
+  const [timeLeft, setTimeLeft] = useState(1500); 
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -139,7 +134,7 @@ export default function ExamLabView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -168,11 +163,11 @@ export default function ExamLabView() {
         )}
       </div>
 
-      {/* MAIN CONTENT */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
           {!examStarted ? (
-            /* EXAM PREPARATION LOBBY SKELETON */
+            
             <div className="space-y-5">
               <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm space-y-5">
                 <div>
@@ -228,9 +223,9 @@ export default function ExamLabView() {
               </div>
             </div>
           ) : !examSubmitted ? (
-            /* LIVE EXAM TESTING SKELETON */
+            
             <div className="space-y-5">
-              {/* QUESTION PALETTE */}
+              {}
               <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
                 <div className="flex items-center gap-1.5">
                   {questions.map((q, idx) => {
@@ -274,7 +269,7 @@ export default function ExamLabView() {
                 </div>
               </div>
 
-              {/* CURRENT QUESTION CARD SKELETON */}
+              {}
               <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm space-y-6">
                 <div className="flex items-center justify-between text-[11.5px] text-slate-400 dark:text-zinc-500 font-medium">
                   <span>Question {currentIdx + 1} of {questions.length}</span>
@@ -312,7 +307,7 @@ export default function ExamLabView() {
                 </div>
               </div>
 
-              {/* BOTTOM NAVIGATION */}
+              {}
               <div className="flex items-center justify-between pt-2">
                 <button
                   type="button"
@@ -343,7 +338,7 @@ export default function ExamLabView() {
               </div>
             </div>
           ) : (
-            /* SCORE EVALUATION SKELETON */
+            
             <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 sm:p-10 shadow-md text-center space-y-6">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/10 text-[#FF6B00]">
                 <Award className="h-8 w-8" strokeWidth={2.2} />

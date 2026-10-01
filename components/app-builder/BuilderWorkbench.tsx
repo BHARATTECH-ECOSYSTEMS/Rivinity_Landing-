@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback, type MouseEvent } from "react";
 import {
   Code2,
   GitCompare,
@@ -8,17 +8,12 @@ import {
   Terminal as TerminalIcon,
   RefreshCw,
   X,
-  Users,
-  Gamepad2,
-  Music,
-  CreditCard,
   FileCode,
   Folder,
   FolderOpen,
   ChevronRight,
   ChevronDown,
   Search,
-  Lock,
   ArrowUpRight,
   Paperclip,
   Mic,
@@ -36,7 +31,6 @@ import {
   ShoppingBag,
   LayoutDashboard,
   FileText,
-  Boxes,
   Zap,
   Globe,
   Server,
@@ -63,15 +57,10 @@ type FileNode = {
   language?: string;
 };
 
-// Universal Smart Dynamic Badge
 const ProjectBadge = ({ name }: { name: string }) => {
   const lower = (name || "").toLowerCase();
 
-  if (
-    lower.includes("todo") ||
-    lower.includes("task") ||
-    lower.includes("list")
-  ) {
+  if (lower.includes("todo") || lower.includes("task") || lower.includes("list")) {
     return <CheckSquare className="w-3.5 h-3.5 text-[#FF6B00]" />;
   }
   if (
@@ -281,6 +270,16 @@ const buildSteps = [
   { label: "Apply styling & polish", status: "pending" as const },
 ];
 
+function collectFileNames(nodes: FileNode[], acc: string[] = []): string[] {
+  for (const n of nodes) {
+    if (n.type === "file") acc.push(n.name);
+    if (n.children) collectFileNames(n.children, acc);
+  }
+  return acc;
+}
+
+const allFileNames = collectFileNames(fileTree);
+
 const FileTreeNode = ({
   node,
   depth = 0,
@@ -298,6 +297,7 @@ const FileTreeNode = ({
     return (
       <div>
         <button
+          type="button"
           onClick={() => setOpen((v) => !v)}
           className="w-full flex items-center gap-1.5 px-2 py-1 rounded-md hover:bg-zinc-100/70 text-[12px] font-medium text-zinc-600 transition-colors bg-transparent border-0 outline-none"
           style={{ paddingLeft: 8 + depth * 12 }}
@@ -317,7 +317,7 @@ const FileTreeNode = ({
         {open &&
           node.children?.map((c) => (
             <FileTreeNode
-              key={c.name}
+              key={`${node.name}/${c.name}`}
               node={c}
               depth={depth + 1}
               selected={selected}
@@ -331,6 +331,7 @@ const FileTreeNode = ({
   const isSelected = selected === node.name;
   return (
     <button
+      type="button"
       onClick={() => onSelect(node.name)}
       className={`w-full flex items-center gap-1.5 px-2 py-1 rounded-md text-[12px] transition-all my-0.5 border-0 outline-none ${
         isSelected
@@ -356,46 +357,54 @@ const BuilderWorkbench = ({
   const [tab, setTab] = useState<"code" | "diff" | "preview">("preview");
   const [terminalOpen, setTerminalOpen] = useState(false);
   const [leftTab, setLeftTab] = useState<"files" | "search" | "locks">("files");
-
-  const [openTabs, setOpenTabs] = useState<string[]>([
-    "App.tsx",
-    "TodoList.tsx",
-  ]);
+  const [openTabs, setOpenTabs] = useState<string[]>(["App.tsx", "TodoList.tsx"]);
   const [selectedFile, setSelectedFile] = useState("App.tsx");
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">(
-    "desktop",
-  );
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
   const [previewRefreshing, setPreviewRefreshing] = useState(false);
-
   const [input, setInput] = useState("");
   const [copied, setCopied] = useState(false);
   const [cmdCopied, setCmdCopied] = useState(false);
-
   const [publishModalOpen, setPublishModalOpen] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [publishedSuccess, setPublishedSuccess] = useState(false);
-
+  const [publishTarget, setPublishTarget] = useState<"cloud" | "export">("cloud");
   const [fileWidth, setFileWidth] = useState(210);
   const [terminalHeight, setTerminalHeight] = useState(170);
 
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cmdCopyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const publishTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const publishSuccessTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const previewRefreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dragCleanupRef = useRef<(() => void) | null>(null);
+
   useEffect(() => {
-    if (tab === "preview") {
-      setTerminalOpen(false);
-    } else {
-      setTerminalOpen(true);
-    }
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
+    setTerminalOpen(tab !== "preview");
   }, [tab]);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      if (cmdCopyTimeoutRef.current) clearTimeout(cmdCopyTimeoutRef.current);
+      if (publishTimeoutRef.current) clearTimeout(publishTimeoutRef.current);
+      if (publishSuccessTimeoutRef.current) clearTimeout(publishSuccessTimeoutRef.current);
+      if (previewRefreshTimeoutRef.current) clearTimeout(previewRefreshTimeoutRef.current);
+      dragCleanupRef.current?.();
+    };
+  }, []);
 
   const handleSelectFile = (fileName: string) => {
     setSelectedFile(fileName);
-    if (!openTabs.includes(fileName)) {
-      setOpenTabs((prev) => [...prev, fileName]);
-    }
+    setOpenTabs((prev) => (prev.includes(fileName) ? prev : [...prev, fileName]));
   };
 
-  const handleCloseTab = (fileName: string, e: React.MouseEvent) => {
+  const handleCloseTab = (fileName: string, e: MouseEvent) => {
     e.stopPropagation();
     if (openTabs.length <= 1) return;
     const nextTabs = openTabs.filter((t) => t !== fileName);
@@ -405,50 +414,53 @@ const BuilderWorkbench = ({
     }
   };
 
-  const handleFileResizeStart = (e: React.MouseEvent) => {
+  const attachDragListeners = useCallback(
+    (onMove: (e: globalThis.MouseEvent) => void) => {
+      dragCleanupRef.current?.();
+
+      const onMouseUp = () => {
+        document.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+        dragCleanupRef.current = null;
+      };
+
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onMouseUp);
+      dragCleanupRef.current = onMouseUp;
+    },
+    []
+  );
+
+  const handleFileResizeStart = (e: MouseEvent) => {
     e.preventDefault();
     const startX = e.clientX;
     const startWidth = fileWidth;
 
-    const onMouseMove = (moveEvent: MouseEvent) => {
+    const onMouseMove = (moveEvent: globalThis.MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
       setFileWidth(Math.min(Math.max(startWidth + deltaX, 140), 450));
     };
 
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
+    attachDragListeners(onMouseMove);
   };
 
-  const handleTerminalResizeStart = (e: React.MouseEvent) => {
+  const handleTerminalResizeStart = (e: MouseEvent) => {
     e.preventDefault();
     const startY = e.clientY;
     const startHeight = terminalHeight;
 
-    const onMouseMove = (moveEvent: MouseEvent) => {
+    const onMouseMove = (moveEvent: globalThis.MouseEvent) => {
       const deltaY = startY - moveEvent.clientY;
       setTerminalHeight(Math.min(Math.max(startHeight + deltaY, 80), 450));
     };
 
-    const onMouseUp = () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-    };
-
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
     document.body.style.cursor = "row-resize";
     document.body.style.userSelect = "none";
+    attachDragListeners(onMouseMove);
   };
 
   const send = () => {
@@ -464,29 +476,46 @@ const BuilderWorkbench = ({
   const handleCopyCode = () => {
     navigator.clipboard.writeText(currentCode);
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    copyTimeoutRef.current = setTimeout(() => {
+      setCopied(false);
+      copyTimeoutRef.current = null;
+    }, 1500);
   };
 
   const triggerPreviewRefresh = () => {
     setPreviewRefreshing(true);
-    setTimeout(() => setPreviewRefreshing(false), 500);
+    if (previewRefreshTimeoutRef.current) clearTimeout(previewRefreshTimeoutRef.current);
+    previewRefreshTimeoutRef.current = setTimeout(() => {
+      setPreviewRefreshing(false);
+      previewRefreshTimeoutRef.current = null;
+    }, 500);
   };
 
   const confirmPublish = () => {
     setPublishing(true);
-    setTimeout(() => {
+    if (publishTimeoutRef.current) clearTimeout(publishTimeoutRef.current);
+    publishTimeoutRef.current = setTimeout(() => {
       setPublishing(false);
       setPublishedSuccess(true);
-      setTimeout(() => {
+      publishTimeoutRef.current = null;
+      if (publishSuccessTimeoutRef.current) clearTimeout(publishSuccessTimeoutRef.current);
+      publishSuccessTimeoutRef.current = setTimeout(() => {
         setPublishedSuccess(false);
         setPublishModalOpen(false);
+        publishSuccessTimeoutRef.current = null;
       }, 1800);
     }, 1200);
   };
 
+  const lastAiMessageId = [...messages].reverse().find((m) => m.role === "ai")?.id;
+  const searchLower = searchQuery.trim().toLowerCase();
+  const searchResults = searchLower
+    ? allFileNames.filter((n) => n.toLowerCase().includes(searchLower))
+    : allFileNames;
+
   return (
     <div className="flex-1 flex h-full w-full min-h-0 min-w-0 bg-white text-zinc-800 antialiased font-sans overflow-hidden select-none relative">
-      {/* Publish Modal Popup */}
       {publishModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl border border-zinc-200 shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
@@ -496,15 +525,14 @@ const BuilderWorkbench = ({
                   <UploadCloud className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-zinc-900">
-                    Publish Project
-                  </div>
+                  <div className="text-sm font-bold text-zinc-900">Publish Project</div>
                   <div className="text-[11.5px] text-zinc-500">
                     Deploy your app instantly to the web
                   </div>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setPublishModalOpen(false)}
                 className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors border-0 outline-none"
               >
@@ -518,30 +546,56 @@ const BuilderWorkbench = ({
                   Target Environment
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">
-                  <div className="p-3 rounded-xl border-2 border-[#FF6B00] bg-orange-50/30 flex flex-col gap-1 cursor-pointer">
+                  <button
+                    type="button"
+                    onClick={() => setPublishTarget("cloud")}
+                    className={`p-3 rounded-xl flex flex-col gap-1 cursor-pointer text-left border-0 outline-none transition-all ${
+                      publishTarget === "cloud"
+                        ? "border-2 border-[#FF6B00] bg-orange-50/30"
+                        : "border border-zinc-200 bg-white hover:border-zinc-300"
+                    }`}
+                    style={{
+                      borderWidth: publishTarget === "cloud" ? 2 : 1,
+                      borderColor: publishTarget === "cloud" ? "#FF6B00" : undefined,
+                    }}
+                  >
                     <div className="flex items-center justify-between">
-                      <Cloud className="w-4 h-4 text-[#FF6B00]" />
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#FF6B00] text-white">
-                        Recommended
-                      </span>
+                      <Cloud
+                        className={`w-4 h-4 ${publishTarget === "cloud" ? "text-[#FF6B00]" : "text-zinc-400"}`}
+                      />
+                      {publishTarget === "cloud" && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#FF6B00] text-white">
+                          Recommended
+                        </span>
+                      )}
                     </div>
-                    <span className="text-xs font-bold text-zinc-900 mt-1">
-                      Rivinity Cloud
-                    </span>
+                    <span className="text-xs font-bold text-zinc-900 mt-1">Rivinity Cloud</span>
                     <span className="text-[10.5px] text-zinc-500">
                       Instant global edge deployment
                     </span>
-                  </div>
+                  </button>
 
-                  <div className="p-3 rounded-xl border border-zinc-200 bg-white hover:border-zinc-300 flex flex-col gap-1 cursor-pointer transition-all">
-                    <Server className="w-4 h-4 text-zinc-400" />
-                    <span className="text-xs font-bold text-zinc-900 mt-1">
-                      Custom Export
-                    </span>
+                  <button
+                    type="button"
+                    onClick={() => setPublishTarget("export")}
+                    className={`p-3 rounded-xl flex flex-col gap-1 cursor-pointer text-left border-0 outline-none transition-all ${
+                      publishTarget === "export"
+                        ? "border-2 border-[#FF6B00] bg-orange-50/30"
+                        : "border border-zinc-200 bg-white hover:border-zinc-300"
+                    }`}
+                    style={{
+                      borderWidth: publishTarget === "export" ? 2 : 1,
+                      borderColor: publishTarget === "export" ? "#FF6B00" : undefined,
+                    }}
+                  >
+                    <Server
+                      className={`w-4 h-4 ${publishTarget === "export" ? "text-[#FF6B00]" : "text-zinc-400"}`}
+                    />
+                    <span className="text-xs font-bold text-zinc-900 mt-1">Custom Export</span>
                     <span className="text-[10.5px] text-zinc-500">
                       Download static build files
                     </span>
-                  </div>
+                  </button>
                 </div>
               </div>
 
@@ -561,12 +615,14 @@ const BuilderWorkbench = ({
 
             <div className="px-6 py-3.5 bg-zinc-50 border-t border-zinc-100 flex items-center justify-end gap-2.5">
               <button
+                type="button"
                 onClick={() => setPublishModalOpen(false)}
                 className="px-4 py-2 rounded-xl text-xs font-medium text-zinc-600 hover:bg-zinc-200/60 transition-colors border-0 outline-none"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={confirmPublish}
                 disabled={publishing || publishedSuccess}
                 className="px-5 py-2 rounded-xl text-xs font-semibold bg-[#FF6B00] text-white shadow-sm hover:opacity-90 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border-0 outline-none"
@@ -584,7 +640,7 @@ const BuilderWorkbench = ({
                 ) : (
                   <>
                     <Globe className="w-3.5 h-3.5" />
-                    <span>Publish Now</span>
+                    <span>{publishTarget === "cloud" ? "Publish Now" : "Export Build"}</span>
                   </>
                 )}
               </button>
@@ -593,7 +649,6 @@ const BuilderWorkbench = ({
         </div>
       )}
 
-      {/* Left: Chat Thread Panel */}
       <div className="shrink-0 w-full md:w-[340px] lg:w-[370px] border-r border-zinc-200 bg-white flex flex-col z-10 overflow-hidden">
         <div className="h-full w-full flex flex-col min-h-0">
           <div className="px-4 py-3 border-b border-zinc-200 flex items-center justify-between bg-white shrink-0">
@@ -606,6 +661,7 @@ const BuilderWorkbench = ({
               </div>
             </div>
             <button
+              type="button"
               onClick={onExit}
               className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors border-0 outline-none"
               title="Back to landing"
@@ -629,90 +685,92 @@ const BuilderWorkbench = ({
                       {m.content}
                     </div>
 
-                    <div className="rounded-xl border border-zinc-200/80 bg-white shadow-xs overflow-hidden">
-                      <div className="px-3.5 py-2 flex items-center justify-between border-b border-zinc-100 bg-zinc-50/60">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[#FF6B00]" />
-                          <span className="text-[11.5px] font-semibold text-zinc-800">
-                            {projectName}
-                          </span>
+                    {m.id === lastAiMessageId && (
+                      <div className="rounded-xl border border-zinc-200/80 bg-white shadow-xs overflow-hidden">
+                        <div className="px-3.5 py-2 flex items-center justify-between border-b border-zinc-100 bg-zinc-50/60">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-[#FF6B00]" />
+                            <span className="text-[11.5px] font-semibold text-zinc-800">
+                              {projectName}
+                            </span>
+                          </div>
+                          <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
                         </div>
-                        <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />
-                      </div>
 
-                      <div className="p-3 space-y-1.5">
-                        {buildSteps.map((s) => {
-                          const isRunning = s.status === "running";
-                          return (
-                            <div
-                              key={s.label}
-                              className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-[11.5px] transition-colors ${
-                                isRunning
-                                  ? "bg-[#FF6B00]/5 text-[#FF6B00] font-medium"
-                                  : "text-zinc-600"
-                              }`}
-                            >
-                              {s.status === "done" && (
-                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                              )}
-                              {isRunning && (
-                                <Loader2 className="w-3.5 h-3.5 text-[#FF6B00] animate-spin shrink-0" />
-                              )}
-                              {s.status === "pending" && (
-                                <div className="w-3.5 h-3.5 rounded-full border border-zinc-300 shrink-0" />
-                              )}
-                              <span
-                                className={
-                                  s.status === "pending" ? "text-zinc-400" : ""
-                                }
+                        <div className="p-3 space-y-1.5">
+                          {buildSteps.map((s) => {
+                            const isRunning = s.status === "running";
+                            return (
+                              <div
+                                key={s.label}
+                                className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-[11.5px] transition-colors ${
+                                  isRunning
+                                    ? "bg-[#FF6B00]/5 text-[#FF6B00] font-medium"
+                                    : "text-zinc-600"
+                                }`}
                               >
-                                {s.label}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      <div className="px-3.5 py-2.5 border-t border-zinc-100 bg-zinc-50/40">
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
-                            Execution Command
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              navigator.clipboard.writeText(
-                                "npm create vite@latest todo-app",
-                              );
-                              setCmdCopied(true);
-                              setTimeout(() => setCmdCopied(false), 1200);
-                            }}
-                            className="flex items-center gap-1 text-[10.5px] text-zinc-500 hover:text-[#FF6B00] transition-colors cursor-pointer border-0 outline-none bg-transparent"
-                          >
-                            {cmdCopied ? (
-                              <>
-                                <Check className="w-3 h-3 text-emerald-500" />
-                                <span className="text-emerald-500 font-medium">
-                                  Copied
+                                {s.status === "done" && (
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                )}
+                                {isRunning && (
+                                  <Loader2 className="w-3.5 h-3.5 text-[#FF6B00] animate-spin shrink-0" />
+                                )}
+                                {s.status === "pending" && (
+                                  <div className="w-3.5 h-3.5 rounded-full border border-zinc-300 shrink-0" />
+                                )}
+                                <span className={s.status === "pending" ? "text-zinc-400" : ""}>
+                                  {s.label}
                                 </span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3 h-3" />
-                                <span>Copy</span>
-                              </>
-                            )}
-                          </button>
+                              </div>
+                            );
+                          })}
                         </div>
-                        <code className="block text-[11px] font-mono text-zinc-800 bg-white border border-zinc-200/80 px-2.5 py-1.5 rounded-lg shadow-2xs truncate select-all">
-                          npm create vite@latest todo-app
-                        </code>
+
+                        <div className="px-3.5 py-2.5 border-t border-zinc-100 bg-zinc-50/40">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">
+                              Execution Command
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(
+                                  "npm create vite@latest todo-app"
+                                );
+                                setCmdCopied(true);
+                                if (cmdCopyTimeoutRef.current)
+                                  clearTimeout(cmdCopyTimeoutRef.current);
+                                cmdCopyTimeoutRef.current = setTimeout(() => {
+                                  setCmdCopied(false);
+                                  cmdCopyTimeoutRef.current = null;
+                                }, 1200);
+                              }}
+                              className="flex items-center gap-1 text-[10.5px] text-zinc-500 hover:text-[#FF6B00] transition-colors cursor-pointer border-0 outline-none bg-transparent"
+                            >
+                              {cmdCopied ? (
+                                <>
+                                  <Check className="w-3 h-3 text-emerald-500" />
+                                  <span className="text-emerald-500 font-medium">Copied</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="w-3 h-3" />
+                                  <span>Copy</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
+                          <code className="block text-[11px] font-mono text-zinc-800 bg-white border border-zinc-200/80 px-2.5 py-1.5 rounded-lg shadow-2xs truncate select-all">
+                            npm create vite@latest todo-app
+                          </code>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
               </div>
             ))}
+            <div ref={chatEndRef} />
           </div>
 
           <div className="p-3 border-t border-zinc-200 bg-white shrink-0">
@@ -742,9 +800,7 @@ const BuilderWorkbench = ({
                     <span className="w-3 h-3 rounded-full bg-[#FF6B00] flex items-center justify-center text-white shrink-0">
                       <Sparkles className="w-1.5 h-1.5" />
                     </span>
-                    <span className="font-semibold text-zinc-700">
-                      Rivinity
-                    </span>
+                    <span className="font-semibold text-zinc-700">Rivinity</span>
                     <span className="text-[9px] text-zinc-400">1.8</span>
                     <ChevronDown className="w-2.5 h-2.5 opacity-60 ml-0.5" />
                   </div>
@@ -777,21 +833,22 @@ const BuilderWorkbench = ({
         </div>
       </div>
 
-      {/* Right: Main IDE Workspace Panel */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full p-2.5 bg-zinc-50/70 overflow-hidden">
         <div className="flex-1 rounded-xl border border-zinc-200 shadow-xs overflow-hidden flex flex-col bg-white min-h-0 h-full">
-          {/* Top Workbench Toolbar */}
           <div className="flex items-center justify-between px-3 py-1.5 border-b border-zinc-200 bg-white shrink-0 gap-3 overflow-x-auto [scrollbar-width:none]">
             <div className="flex items-center p-0.5 rounded-lg bg-zinc-100/60 border border-zinc-200/60 shrink-0">
-              {[
-                { key: "preview" as const, icon: Eye, label: "Preview" },
-                { key: "code" as const, icon: Code2, label: "Code" },
-                { key: "diff" as const, icon: GitCompare, label: "Diff" },
-              ].map((t) => {
+              {(
+                [
+                  { key: "preview" as const, icon: Eye, label: "Preview" },
+                  { key: "code" as const, icon: Code2, label: "Code" },
+                  { key: "diff" as const, icon: GitCompare, label: "Diff" },
+                ] as const
+              ).map((t) => {
                 const isActive = tab === t.key;
                 return (
                   <button
                     key={t.key}
+                    type="button"
                     onClick={() => setTab(t.key)}
                     className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-[11.5px] font-medium transition-all cursor-pointer border-0 outline-none ${
                       isActive
@@ -811,8 +868,11 @@ const BuilderWorkbench = ({
             {tab === "preview" && (
               <div className="flex-1 flex items-center justify-center max-w-md mx-auto gap-2">
                 <button
+                  type="button"
                   onClick={triggerPreviewRefresh}
-                  className={`p-1 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded transition-colors cursor-pointer border-0 outline-none bg-transparent ${previewRefreshing ? "animate-spin text-[#FF6B00]" : ""}`}
+                  className={`p-1 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded transition-colors cursor-pointer border-0 outline-none bg-transparent ${
+                    previewRefreshing ? "animate-spin text-[#FF6B00]" : ""
+                  }`}
                   title="Reload preview"
                 >
                   <RotateCw className="w-3.5 h-3.5" />
@@ -823,14 +883,24 @@ const BuilderWorkbench = ({
                 </div>
                 <div className="flex items-center p-0.5 rounded-lg bg-zinc-100/60 border border-zinc-200/60 shrink-0">
                   <button
+                    type="button"
                     onClick={() => setPreviewDevice("desktop")}
-                    className={`p-1 rounded cursor-pointer border-0 outline-none ${previewDevice === "desktop" ? "bg-white text-zinc-900 shadow-2xs" : "bg-transparent text-zinc-400 hover:text-zinc-700"}`}
+                    className={`p-1 rounded cursor-pointer border-0 outline-none ${
+                      previewDevice === "desktop"
+                        ? "bg-white text-zinc-900 shadow-2xs"
+                        : "bg-transparent text-zinc-400 hover:text-zinc-700"
+                    }`}
                   >
                     <Monitor className="w-3.5 h-3.5" />
                   </button>
                   <button
+                    type="button"
                     onClick={() => setPreviewDevice("mobile")}
-                    className={`p-1 rounded cursor-pointer border-0 outline-none ${previewDevice === "mobile" ? "bg-white text-zinc-900 shadow-2xs" : "bg-transparent text-zinc-400 hover:text-zinc-700"}`}
+                    className={`p-1 rounded cursor-pointer border-0 outline-none ${
+                      previewDevice === "mobile"
+                        ? "bg-white text-zinc-900 shadow-2xs"
+                        : "bg-transparent text-zinc-400 hover:text-zinc-700"
+                    }`}
                   >
                     <Smartphone className="w-3.5 h-3.5" />
                   </button>
@@ -839,11 +909,15 @@ const BuilderWorkbench = ({
             )}
 
             <div className="flex items-center gap-1.5 text-zinc-500 ml-auto shrink-0">
-              <button className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-600 transition-colors cursor-pointer outline-none">
+              <button
+                type="button"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-600 transition-colors cursor-pointer outline-none"
+              >
                 <RefreshCw className="w-3 h-3" /> Sync
               </button>
 
               <button
+                type="button"
                 onClick={() => setPublishModalOpen(true)}
                 className="flex items-center gap-1.5 px-3 py-1 rounded-md text-[11.5px] font-semibold bg-[#FF6B00] text-white shadow-xs hover:opacity-90 active:scale-95 transition-all cursor-pointer border-0 outline-none"
               >
@@ -854,6 +928,7 @@ const BuilderWorkbench = ({
               <div className="w-px h-3.5 bg-zinc-200 mx-0.5" />
 
               <button
+                type="button"
                 onClick={onExit}
                 className="p-1.5 rounded-md text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 transition-colors cursor-pointer border-0 outline-none bg-transparent"
                 title="Close editor"
@@ -863,7 +938,6 @@ const BuilderWorkbench = ({
             </div>
           </div>
 
-          {/* Workbench Body */}
           <div className="flex-1 flex min-h-0 h-0 overflow-hidden">
             {tab !== "preview" && (
               <>
@@ -872,13 +946,16 @@ const BuilderWorkbench = ({
                   style={{ width: fileWidth }}
                 >
                   <div className="flex items-center justify-around px-2 py-1.5 border-b border-zinc-100 text-[11px] font-medium shrink-0 bg-white">
-                    {[
-                      { key: "files" as const, label: "Files" },
-                      { key: "search" as const, label: "Search" },
-                      { key: "locks" as const, label: "Locks" },
-                    ].map((t) => (
+                    {(
+                      [
+                        { key: "files" as const, label: "Files" },
+                        { key: "search" as const, label: "Search" },
+                        { key: "locks" as const, label: "Locks" },
+                      ] as const
+                    ).map((t) => (
                       <button
                         key={t.key}
+                        type="button"
                         onClick={() => setLeftTab(t.key)}
                         className={`px-2 py-0.5 rounded transition-colors cursor-pointer border-0 outline-none bg-transparent ${
                           leftTab === t.key
@@ -912,6 +989,36 @@ const BuilderWorkbench = ({
                             className="bg-transparent text-[11px] outline-none border-none focus:outline-none focus:ring-0 flex-1 text-zinc-700 placeholder:text-zinc-400 p-0"
                           />
                         </div>
+                        <div className="space-y-0.5">
+                          {searchResults.length === 0 ? (
+                            <div className="text-[11px] text-zinc-400 text-center py-3">
+                              No matching files
+                            </div>
+                          ) : (
+                            searchResults.map((name) => {
+                              const isSelected = selectedFile === name;
+                              return (
+                                <button
+                                  key={name}
+                                  type="button"
+                                  onClick={() => handleSelectFile(name)}
+                                  className={`w-full flex items-center gap-1.5 px-2 py-1 rounded-md text-[12px] transition-all border-0 outline-none ${
+                                    isSelected
+                                      ? "bg-[#FF6B00]/10 text-[#FF6B00] font-semibold"
+                                      : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70 bg-transparent"
+                                  }`}
+                                >
+                                  <FileCode
+                                    className={`w-3.5 h-3.5 ${
+                                      isSelected ? "text-[#FF6B00]" : "text-zinc-400"
+                                    }`}
+                                  />
+                                  <span className="truncate">{name}</span>
+                                </button>
+                              );
+                            })
+                          )}
+                        </div>
                       </div>
                     )}
                     {leftTab === "locks" && (
@@ -933,12 +1040,16 @@ const BuilderWorkbench = ({
                     >
                       <div className="flex items-center gap-2">
                         <TerminalIcon
-                          className={`w-3.5 h-3.5 ${terminalOpen ? "text-[#FF6B00]" : "text-zinc-500"}`}
+                          className={`w-3.5 h-3.5 ${
+                            terminalOpen ? "text-[#FF6B00]" : "text-zinc-500"
+                          }`}
                         />
                         <span>Terminal</span>
                       </div>
                       <span
-                        className={`w-2 h-2 rounded-full ${terminalOpen ? "bg-[#FF6B00]" : "bg-zinc-300"}`}
+                        className={`w-2 h-2 rounded-full ${
+                          terminalOpen ? "bg-[#FF6B00]" : "bg-zinc-300"
+                        }`}
                       />
                     </button>
                   </div>
@@ -970,7 +1081,9 @@ const BuilderWorkbench = ({
                           }`}
                         >
                           <FileCode
-                            className={`w-3.5 h-3.5 ${isActive ? "text-[#FF6B00]" : "text-zinc-400"}`}
+                            className={`w-3.5 h-3.5 ${
+                              isActive ? "text-[#FF6B00]" : "text-zinc-400"
+                            }`}
                           />
                           {filename}
                           {openTabs.length > 1 && (
@@ -986,6 +1099,7 @@ const BuilderWorkbench = ({
 
                   {tab === "code" && (
                     <button
+                      type="button"
                       onClick={handleCopyCode}
                       className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 rounded-md transition-colors cursor-pointer border-0 outline-none bg-transparent"
                     >
@@ -1000,7 +1114,6 @@ const BuilderWorkbench = ({
                 </div>
               )}
 
-              {/* Viewport Panels */}
               <div className="flex-1 h-0 min-h-0 overflow-y-auto overflow-x-hidden bg-white [scrollbar-width:thin]">
                 {tab === "code" && (
                   <div className="flex min-w-full text-[12px] font-mono leading-6 p-2">
@@ -1030,6 +1143,7 @@ const BuilderWorkbench = ({
                   <div className="h-full w-full flex flex-col bg-zinc-100/70 overflow-y-auto p-6 [scrollbar-width:thin]">
                     <div className="flex-1 flex justify-center items-center">
                       <div
+                        key={previewRefreshing ? "refreshing" : "stable"}
                         className={`transition-all duration-300 rounded-2xl border border-zinc-200 p-6 bg-white shadow-sm my-auto ${
                           previewDevice === "mobile"
                             ? "w-[360px] min-h-[520px] border-zinc-300 shadow-md"
@@ -1044,16 +1158,15 @@ const BuilderWorkbench = ({
                             placeholder="Add a task..."
                             className="flex-1 px-3 py-2 rounded-xl bg-zinc-50 border border-zinc-200 text-xs focus:outline-none focus:border-[#FF6B00]"
                           />
-                          <button className="px-4 py-2 rounded-xl bg-[#FF6B00] text-white text-xs font-semibold shadow-xs hover:opacity-90 cursor-pointer border-0 outline-none">
+                          <button
+                            type="button"
+                            className="px-4 py-2 rounded-xl bg-[#FF6B00] text-white text-xs font-semibold shadow-xs hover:opacity-90 cursor-pointer border-0 outline-none"
+                          >
                             Add
                           </button>
                         </div>
                         <div className="space-y-2">
-                          {[
-                            "Design landing page",
-                            "Wire up auth",
-                            "Ship MVP",
-                          ].map((t, i) => (
+                          {["Design landing page", "Wire up auth", "Ship MVP"].map((t, i) => (
                             <label
                               key={t}
                               className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-zinc-50 border border-zinc-100 text-[12.5px] text-zinc-700 cursor-pointer"
@@ -1063,11 +1176,7 @@ const BuilderWorkbench = ({
                                 defaultChecked={i === 0}
                                 className="accent-[#FF6B00] rounded"
                               />
-                              <span
-                                className={
-                                  i === 0 ? "line-through text-zinc-400" : ""
-                                }
-                              >
+                              <span className={i === 0 ? "line-through text-zinc-400" : ""}>
                                 {t}
                               </span>
                             </label>
@@ -1096,12 +1205,12 @@ const BuilderWorkbench = ({
                   <div className="flex items-center justify-between px-3 py-1.5 border-b border-zinc-100 bg-zinc-50 shrink-0">
                     <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white text-[11px] font-semibold text-zinc-700 border border-zinc-200 shadow-2xs">
-                        <TerminalIcon className="w-3 h-3 text-[#FF6B00]" />{" "}
-                        Rivinity Terminal
+                        <TerminalIcon className="w-3 h-3 text-[#FF6B00]" /> Rivinity Terminal
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
                       <button
+                        type="button"
                         onClick={() => setTerminalOpen(false)}
                         className="p-1 text-zinc-400 hover:text-zinc-700 rounded transition-colors cursor-pointer border-0 outline-none bg-transparent"
                       >

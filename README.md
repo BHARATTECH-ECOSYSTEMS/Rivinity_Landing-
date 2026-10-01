@@ -98,8 +98,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 │   │   └── useSidebarState.tsx          # Sidebar open/close state hook
 │   ├── history/
 │   │   └── HistoryPage.tsx              # Conversation history browser
-│   ├── image-enhancer/
-│   │   └── ImageEnhancer.tsx            # AI image enhancer/upscaler tool
+│   ├── image-generation/
+│   │   └── ImageGenerator.tsx           # AI image generation studio (diffusion models)
 │   ├── marketplace/
 │   │   └── MarketplaceHome.tsx          # Integration and plugin marketplace
 │   ├── rivinity-lm/

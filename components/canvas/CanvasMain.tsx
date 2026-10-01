@@ -30,6 +30,7 @@ import {
   MessageSquare,
   PanelLeft,
   MoreHorizontal,
+  Upload,
   Brain,
   Loader2,
   Sparkles,
@@ -43,6 +44,11 @@ import {
   FolderX,
   Archive,
   Check,
+  Bot,
+  ScanSearch,
+  PenLine,
+  ImagePlus,
+  AudioLines,
 } from "lucide-react";
 import ChatMarkdown from "./ChatMarkdown";
 import { toast } from "sonner";
@@ -151,6 +157,17 @@ const tabTemplates = [
   { icon: BarChart3, label: "Big Data", kind: "dashboard" as TabKind },
   { icon: BookOpen, label: "Literature Review", kind: "chat" as TabKind },
   { icon: Wand2, label: "Write Anything", kind: "write" as TabKind },
+];
+
+/** Rivinity feature shortcuts shown as a grid of cards (Image-3 style). */
+const rivinityFeatures = [
+  { icon: Bot, label: "Rivinity Chat", kind: "chat" as TabKind },
+  { icon: Code, label: "Fullstack Builder", kind: "chat" as TabKind },
+  { icon: Layers, label: "Frontend Builder", kind: "chat" as TabKind },
+  { icon: ScanSearch, label: "Deep Search", kind: "chat" as TabKind },
+  { icon: PenLine, label: "Write Anything", kind: "write" as TabKind },
+  { icon: ImagePlus, label: "Image Enhancer", kind: "chat" as TabKind },
+  { icon: AudioLines, label: "Audio Lab", kind: "chat" as TabKind },
 ];
 
 const getTabIcon = (label: string) => {
@@ -526,171 +543,195 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           </button>
         </div>
 
-        {/* TEMPLATE SELECTION EXPANDABLE PANEL */}
-        <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            isAddingTab
-              ? cn(
-                  "max-h-[350px] opacity-100 border-t",
-                  isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
-                )
-              : "max-h-0 opacity-0"
-          }`}
-        >
+        {/* QUICK AI MODES PANEL */}
+        {isAddingTab && (
           <div
             className={cn(
-              isIncognito ? "bg-black/25" : "bg-gray-50/50 dark:bg-zinc-900/50",
-              isCompact ? "p-2.5" : "p-3.5 sm:p-4.5",
+              "border-t",
+              isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
             )}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+            <div
+              className={cn(
+                isIncognito ? "bg-black/25" : "bg-gray-50/50 dark:bg-zinc-900/50",
+                isCompact ? "p-2.5" : "p-3.5 sm:p-4.5",
+              )}
+            >
               <div
                 className={cn(
-                  "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1",
-                  isIncognito ? "text-zinc-400" : "text-gray-400 dark:text-zinc-500",
+                  "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1 mb-2",
+                  isIncognito ? "text-zinc-400" : "text-[#64748b]",
                 )}
               >
-                Research Tools
+                Quick AI Modes
               </div>
-              <input
-                value={newTabName}
-                onChange={(e) => setNewTabName(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && newTabName.trim()) {
-                    const customLabel = newTabName.trim();
-                    const currentTabObj = tabs.find((t) => t.id === activeTab);
-                    const hasMessages = currentTabObj && currentTabObj.messages.length > 0;
-
-                    if (hasMessages) {
-                      const newId = Date.now();
-                      const newTab: TabState = {
-                        id: newId,
-                        icon: getTabIcon(customLabel),
-                        label: customLabel,
-                        kind: getTabKind(customLabel),
-                        messages: [],
-                        draftInput: "",
-                        attachments: [],
-                      };
-                      setTabs((p) => [...p, newTab]);
-                      setActiveTab(newId);
-                      setInput("");
-                    } else {
-                      setTabs((p) =>
-                        p.map((t) =>
-                          t.id === activeTab
-                            ? {
-                                ...t,
-                                icon: getTabIcon(customLabel),
-                                label: customLabel,
-                                kind: getTabKind(customLabel),
-                              }
-                            : t,
-                        ),
-                      );
-                    }
-                    setIsAddingTab(false);
-                    setNewTabName("");
-                    textareaRef.current?.focus();
-                  }
-                }}
-                className={cn(
-                  "rounded-full outline-none transition-all focus:border-[#FF6B00]",
-                  isIncognito
-                    ? "bg-white/10 border border-white/15 text-white placeholder:text-zinc-400"
-                    : "bg-white dark:bg-zinc-800 border border-gray-200/90 dark:border-zinc-700 text-slate-800 dark:text-zinc-100 placeholder:text-slate-400",
-                  isCompact
-                    ? "w-full px-3 py-0.5 text-[12px]"
-                    : "w-full sm:w-44 px-3.5 py-1 text-[12.5px]",
-                )}
-                placeholder="Custom name..."
-              />
-            </div>
-            <div className="flex flex-col gap-1 max-h-[180px] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              {tabTemplates.map((template) => {
-                const isSelected = tabs.find((t) => t.id === activeTab)?.label === template.label;
-                return (
-                  <button
-                    key={template.label}
-                    type="button"
-                    onClick={() => {
-                      const currentTabObj = tabs.find((t) => t.id === activeTab);
-                      const hasMessages = currentTabObj && currentTabObj.messages.length > 0;
-
-                      if (hasMessages) {
-                        const newId = Date.now();
-                        const newTab: TabState = {
-                          id: newId,
-                          icon: template.icon,
-                          label: template.label,
-                          kind: template.kind,
-                          messages: [],
-                          draftInput: "",
-                          attachments: [],
-                        };
-                        setTabs((p) => [...p, newTab]);
-                        setActiveTab(newId);
-                        setInput("");
-                      } else {
-                        setTabs((p) =>
-                          p.map((t) =>
-                            t.id === activeTab
-                              ? {
-                                  ...t,
-                                  icon: template.icon,
-                                  label: template.label,
-                                  kind: template.kind,
-                                }
-                              : t,
-                          ),
-                        );
-                      }
-                      setIsAddingTab(false);
-                      textareaRef.current?.focus();
-                    }}
-                    className={cn(
-                      "flex items-center w-full rounded-xl border border-transparent bg-transparent transition-all group text-left cursor-pointer",
-                      isIncognito
-                        ? "hover:bg-white/10"
-                        : "hover:bg-white/80 dark:hover:bg-zinc-800/80",
-                      isCompact
-                        ? "gap-2.5 h-8 px-2.5"
-                        : "gap-3 h-9 sm:h-9.5 px-3",
-                    )}
-                  >
-                    <template.icon
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {rivinityFeatures.map((feature) => {
+                  const isSelected = tabs.find((t) => t.id === activeTab)?.label === feature.label;
+                  return (
+                    <button
+                      key={feature.label}
+                      type="button"
+                      onClick={() => {
+                        const currentTabObj = tabs.find((t) => t.id === activeTab);
+                        const hasMessages = currentTabObj && currentTabObj.messages.length > 0;
+                        if (hasMessages) {
+                          const newId = Date.now();
+                          const newTab: TabState = {
+                            id: newId,
+                            icon: feature.icon,
+                            label: feature.label,
+                            kind: feature.kind,
+                            messages: [],
+                            draftInput: "",
+                            attachments: [],
+                          };
+                          setTabs((p) => [...p, newTab]);
+                          setActiveTab(newId);
+                          setInput("");
+                        } else {
+                          setTabs((p) =>
+                            p.map((t) =>
+                              t.id === activeTab
+                                ? { ...t, icon: feature.icon, label: feature.label, kind: feature.kind }
+                                : t,
+                            ),
+                          );
+                        }
+                        setIsAddingTab(false);
+                        textareaRef.current?.focus();
+                      }}
                       className={cn(
-                        "shrink-0 transition-colors",
+                        "flex items-center gap-2.5 p-2 rounded-xl text-left border cursor-pointer",
                         isSelected
-                          ? "text-[#FF6B00]"
+                          ? "bg-orange-50 border-[#FF6B00]/40 dark:bg-orange-900/10 dark:border-[#FF6B00]/30"
                           : isIncognito
-                            ? "text-zinc-400 group-hover:text-[#FF6B00]"
-                            : "text-slate-500 dark:text-zinc-400 group-hover:text-[#FF6B00]",
-                        isCompact ? "w-3.5 h-3.5" : "w-4 h-4",
-                      )}
-                      strokeWidth={2}
-                    />
-                    <div
-                      className={cn(
-                        "font-semibold transition-colors truncate",
-                        isSelected
-                          ? "text-[#FF6B00]"
-                          : isIncognito
-                            ? "text-zinc-200 group-hover:text-white"
-                            : "text-slate-800 dark:text-zinc-200 group-hover:text-[#FF6B00]",
-                        isCompact
-                          ? "text-[12.5px]"
-                          : "text-[13.5px]",
+                            ? "bg-white/5 border-white/10 hover:bg-white/10"
+                            : "bg-white hover:bg-[#f1f5f9] border-[#e2e8f0] dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700",
                       )}
                     >
-                      {template.label}
-                    </div>
-                  </button>
-                );
-              })}
+                      <div
+                        className={cn(
+                          "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                          isSelected
+                            ? "bg-orange-100 text-[#FF6B00] dark:bg-orange-900/20"
+                            : isIncognito
+                              ? "bg-white/10 text-zinc-300"
+                              : "bg-slate-100 text-slate-900 dark:bg-zinc-700 dark:text-zinc-200",
+                        )}
+                      >
+                        <feature.icon className="w-4 h-4" aria-hidden="true" strokeWidth={2} />
+                      </div>
+                      <div
+                        className={cn(
+                          "text-[12px] font-semibold truncate",
+                          isSelected
+                            ? "text-[#FF6B00]"
+                            : isIncognito
+                              ? "text-zinc-200"
+                              : "text-[#0f172a] dark:text-zinc-100",
+                        )}
+                      >
+                        {feature.label}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* SKILLS PANEL */}
+        {skillPickerOpen && (
+          <div
+            className={cn(
+              "border-t",
+              isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
+            )}
+          >
+            <div className={cn(isIncognito ? "bg-black/25" : "bg-[#f8fafc] dark:bg-zinc-900/60")}>
+              <div
+                className={cn(
+                  "flex items-center gap-3 px-4 py-2.5 border-b",
+                  isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
+                )}
+              >
+                <div
+                  className={cn(
+                    "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider shrink-0",
+                    isIncognito ? "text-zinc-400" : "text-[#64748b]",
+                  )}
+                >
+                  Skills
+                </div>
+                <input
+                  value={skillQuery}
+                  onChange={(e) => setSkillQuery(e.target.value)}
+                  placeholder="Search skills to run…"
+                  className={cn(
+                    "bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-[13px] flex-1 min-w-0",
+                    isIncognito
+                      ? "text-white placeholder:text-zinc-500"
+                      : "text-[#1C1C1C] dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500",
+                  )}
+                />
+                <span className="text-[12px] text-gray-400 dark:text-zinc-500 shrink-0">
+                  {filteredSkills.length} available
+                </span>
+              </div>
+              <div className="max-h-[216px] overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#e2e8f0_transparent]">
+                {filteredSkills.length === 0 ? (
+                  <div className="py-6 text-center text-[13px] text-gray-400 dark:text-zinc-500">
+                    No skills found matching &ldquo;{skillQuery}&rdquo;
+                  </div>
+                ) : (
+                  filteredSkills.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => onRunSkill(s.id)}
+                      className={cn(
+                        "bg-transparent w-full text-left px-4 py-[17px] flex items-center justify-between gap-4 cursor-pointer border-b last:border-0",
+                        isIncognito
+                          ? "hover:bg-white/10 border-white/10"
+                          : "hover:bg-white dark:hover:bg-zinc-800 border-gray-100 dark:border-zinc-800/40",
+                      )}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div
+                          className={cn(
+                            "text-[13px] font-bold truncate",
+                            isIncognito ? "text-zinc-100" : "text-slate-900 dark:text-zinc-100",
+                          )}
+                        >
+                          {s.name}
+                        </div>
+                        <div
+                          className={cn(
+                            "text-[11.5px] font-normal leading-relaxed mt-0.5 truncate",
+                            isIncognito ? "text-zinc-400" : "text-slate-500 dark:text-zinc-400",
+                          )}
+                        >
+                          {s.summary}
+                        </div>
+                      </div>
+                      <span
+                        className={cn(
+                          "text-[10px] uppercase tracking-[0.1em] font-extrabold text-[#FF6B00] border border-[#FF6B00]/70 px-2.5 py-0.5 rounded-full shrink-0",
+                          isIncognito ? "bg-white/10" : "bg-white dark:bg-zinc-900",
+                        )}
+                      >
+                        {s.category}
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
 
         {/* ATTACHMENTS HORIZONTAL PREVIEW & SKELETON LOADER FRAME */}
         {attachments && attachments.length > 0 && (
@@ -975,101 +1016,10 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           </div>
         </div>
       </div>
-
-      {/* SKILL PICKER POPOVER */}
-      {skillPickerOpen && (
-        <div
-          ref={popoverRef}
-          className="absolute left-0 right-0 bottom-full mb-2.5 z-50 animate-in fade-in zoom-in-95 duration-150"
-        >
-          <div
-            className={cn(
-              "rounded-2xl border shadow-2xl overflow-hidden",
-              isIncognito
-                ? "bg-[#22242a] border-white/15 text-white"
-                : "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800",
-            )}
-          >
-            <div
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 border-b",
-                isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
-              )}
-            >
-              <Wand2
-                className="w-5 h-5 text-[#FF5500] shrink-0"
-                strokeWidth={2.2}
-              />
-              <input
-                autoFocus
-                value={skillQuery}
-                onChange={(e) => setSkillQuery(e.target.value)}
-                placeholder="Search skills to run…"
-                className={cn(
-                  "bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-[14.5px] flex-1",
-                  isIncognito
-                    ? "text-white placeholder:text-zinc-500"
-                    : "text-[#1C1C1C] dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500",
-                )}
-              />
-              <span className="text-[12.5px] text-gray-400 shrink-0">
-                {filteredSkills.length} available
-              </span>
-            </div>
-            <div className="max-h-[310px] overflow-y-auto py-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              {filteredSkills.length === 0 ? (
-                <div className="py-6 text-center text-[13.5px] text-gray-400 dark:text-zinc-500">
-                  No skills found matching &ldquo;{skillQuery}&rdquo;
-                </div>
-              ) : (
-                filteredSkills.map((s) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => onRunSkill(s.id)}
-                    className={cn(
-                      "bg-transparent w-full text-left px-5 py-3 transition-colors flex items-center justify-between gap-4 group cursor-pointer border-b last:border-0",
-                      isIncognito
-                        ? "hover:bg-white/10 border-white/10"
-                        : "hover:bg-slate-50/80 dark:hover:bg-zinc-800/60 border-gray-100 dark:border-zinc-800/40",
-                    )}
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div
-                        className={cn(
-                          "text-[13.5px] sm:text-[14px] font-bold group-hover:text-[#FF6B00] transition-colors truncate",
-                          isIncognito ? "text-zinc-100" : "text-slate-900 dark:text-zinc-100",
-                        )}
-                      >
-                        {s.name}
-                      </div>
-                      <div
-                        className={cn(
-                          "text-[12px] sm:text-[12.5px] font-normal leading-relaxed mt-0.5 truncate",
-                          isIncognito ? "text-zinc-400" : "text-slate-500 dark:text-zinc-400",
-                        )}
-                      >
-                        {s.summary}
-                      </div>
-                    </div>
-                    <span
-                      className={cn(
-                        "text-[10px] sm:text-[10.5px] uppercase tracking-[0.1em] font-extrabold text-[#FF6B00] border border-[#FF6B00]/70 px-3 py-0.5 rounded-full shrink-0 shadow-2xs",
-                        isIncognito ? "bg-white/10" : "bg-white dark:bg-zinc-900",
-                      )}
-                    >
-                      {s.category}
-                    </span>
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
+
 
 const ChatThinkingIndicator: React.FC = () => {
   return (
@@ -2483,28 +2433,27 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
       {/* Top-right Actions (Share, More Options) when conversation has started */}
       {!isEmpty && (
-        <div className="absolute top-4 sm:top-6 right-4 sm:right-8 z-30 flex items-center gap-1.5" ref={chatMenuRef}>
+        <div className="absolute top-1 sm:top-2 right-1 sm:right-3 z-30 flex items-center gap-5" ref={chatMenuRef}>
           <button
             type="button"
             onClick={handleShare}
-            className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xs border border-gray-200/80 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800 px-2.5 py-1 rounded-full text-[12px] font-medium text-[#3C4043] dark:text-zinc-300 hover:text-[#1F1F1F] transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs"
+            className="flex items-center gap-2 rounded-xl border-0 bg-transparent px-3 py-2 text-sm font-medium text-slate-950 transition-colors hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800"
             title="Share"
           >
-            <Share2 className="w-3.5 h-3.5 text-[#5F6368] dark:text-zinc-400" />
-            <span className="hidden sm:inline">Share</span>
+            <Upload className="h-5 w-5" strokeWidth={2} />
+            <span>Share</span>
           </button>
 
           <button
             type="button"
             onClick={() => setChatMenuOpen((prev) => !prev)}
             className={cn(
-              "p-1.5 rounded-full flex items-center justify-center transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xs border border-gray-200/80 dark:border-zinc-800 shadow-xs text-[#5F6368] hover:text-[#1F1F1F] dark:text-zinc-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800",
-              chatMenuOpen && "bg-gray-100 dark:bg-zinc-800 text-[#1F1F1F] dark:text-white",
+              "flex items-center justify-center rounded-xl border-0 bg-transparent p-2 text-slate-950 transition-colors hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800",
+              chatMenuOpen && "bg-gray-100 dark:bg-zinc-800",
             )}
-            title="More options"
             aria-label="More options"
           >
-            <MoreHorizontal className="w-4 h-4" strokeWidth={2} />
+            <MoreHorizontal className="h-5 w-5" strokeWidth={2} />
           </button>
 
           {/* Dropdown Menu Popup (Light Mode Style) */}
@@ -2554,11 +2503,11 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
       )}
 
       {!isEmpty && (
-        <div className="absolute inset-0 pointer-events-none select-none z-0 flex items-center justify-center">
+        <div className="absolute inset-0 pointer-events-none select-none z-0 flex items-center justify-center overflow-hidden">
           <img
             src="/watermark.png"
             alt=""
-            className="w-[360px] h-[360px] sm:w-[480px] sm:h-[480px] md:w-[580px] md:h-[580px] lg:w-[660px] lg:h-[660px] max-w-[90vw] sm:max-w-none object-contain opacity-[0.05] dark:opacity-[0.04]"
+            className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[460px] md:h-[460px] lg:w-[520px] lg:h-[520px] object-contain opacity-[0.055] dark:opacity-[0.05]"
           />
         </div>
       )}
@@ -2849,7 +2798,16 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
             </div>
           ) : (
             <div className="relative flex-1 min-h-full flex flex-col items-center justify-center w-full px-4 sm:px-8 py-6 sm:py-8 my-auto">
-              <div className="w-full max-w-[700px] mx-auto flex flex-col items-center justify-center mb-4 sm:mb-6">
+              <div className="absolute inset-0 pointer-events-none select-none z-0 flex items-center justify-center overflow-hidden">
+                <img
+                  src="/watermark.png"
+                  alt=""
+                  draggable={false}
+                  decoding="async"
+                  className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[460px] md:h-[460px] lg:w-[520px] lg:h-[520px] object-contain opacity-[0.055] dark:opacity-[0.05]"
+                />
+              </div>
+              <div className="relative z-10 w-full max-w-[700px] mx-auto flex flex-col items-center justify-center mb-4 sm:mb-6">
                 <ChatEmptyState />
               </div>
 
@@ -2884,7 +2842,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
             </div>
           )
         ) : (
-          <div className="w-full max-w-[860px] mx-auto px-4 sm:px-8 pt-6 sm:pt-8 pb-8 space-y-4 sm:space-y-6 flex flex-col items-center">
+          <div className="w-full max-w-[860px] mx-auto px-4 sm:px-8 pt-16 sm:pt-24 pb-8 space-y-4 sm:space-y-6 flex flex-col items-center">
             {messages.map((msg) => (
               <div
                 key={msg.id}

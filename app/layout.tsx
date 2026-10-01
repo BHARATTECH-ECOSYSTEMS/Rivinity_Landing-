@@ -83,7 +83,7 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('rivinity_sidebar_open');var closed=s==='false'||(s===null&&window.innerWidth<768);if(closed){document.documentElement.setAttribute('data-sidebar-closed','');}}catch(e){}})();`,
+            __html: `(function(){try{var s=localStorage.getItem('rivinity_sidebar_open');var closed=window.innerWidth<768||s==='false';if(closed){document.documentElement.setAttribute('data-sidebar-closed','');}}catch(e){}})();`,
           }}
         />
       </head>

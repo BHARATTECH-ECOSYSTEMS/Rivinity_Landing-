@@ -179,7 +179,7 @@ export default function AIPodcastView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -206,10 +206,10 @@ export default function AIPodcastView() {
         </div>
       </div>
 
-      {/* MAIN BODY */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
-          {/* AI PODCAST CREATOR */}
+          {}
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -234,9 +234,9 @@ export default function AIPodcastView() {
             </div>
           </div>
 
-          {/* AUDIO PLAYER & WAVEFORM SKELETON */}
+          {}
           <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-gradient-to-b from-white to-slate-50/50 dark:from-zinc-900 dark:to-zinc-900/60 p-6 sm:p-8 shadow-sm space-y-6">
-            {/* EPISODE TITLE INFO */}
+            {}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-1">
                 <div className="text-[11px] font-bold uppercase tracking-widest text-[#FF6B00]">
@@ -252,7 +252,7 @@ export default function AIPodcastView() {
               </div>
             </div>
 
-            {/* LIVE WAVEFORM VISUALIZER SKELETON */}
+            {}
             <div className="flex items-center justify-center gap-1 sm:gap-1.5 h-16 sm:h-20 bg-slate-100/60 dark:bg-zinc-800/40 rounded-2xl px-4 overflow-hidden border border-slate-200/60 dark:border-zinc-800">
               {[
                 35, 65, 80, 45, 90, 100, 75, 40, 60, 85, 95, 50, 70, 45, 30, 80, 90,
@@ -275,7 +275,7 @@ export default function AIPodcastView() {
               })}
             </div>
 
-            {/* PROGRESS BAR & TIME */}
+            {}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-[11.5px] font-mono text-slate-500 dark:text-zinc-400">
                 <span>{formatTime(currentTime)}</span>
@@ -297,9 +297,9 @@ export default function AIPodcastView() {
               </div>
             </div>
 
-            {/* CONTROLS ROW */}
+            {}
             <div className="flex items-center justify-between pt-2">
-              {/* SPEED SELECTOR */}
+              {}
               <div className="flex items-center gap-1">
                 {[1.0, 1.25, 1.5].map((spd) => (
                   <button
@@ -317,7 +317,7 @@ export default function AIPodcastView() {
                 ))}
               </div>
 
-              {/* PLAYBACK CORE BUTTONS */}
+              {}
               <div className="flex items-center gap-3">
                 <button
                   type="button"
@@ -352,7 +352,7 @@ export default function AIPodcastView() {
                 </button>
               </div>
 
-              {/* ACTION BUTTON */}
+              {}
               <div className="flex items-center gap-1.5">
                 <button
                   type="button"
@@ -366,7 +366,7 @@ export default function AIPodcastView() {
             </div>
           </div>
 
-          {/* DUAL SPEAKER TRANSCRIPT SKELETON */}
+          {}
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 space-y-4 shadow-xs">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-3">
               <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-[#FF6B00]">

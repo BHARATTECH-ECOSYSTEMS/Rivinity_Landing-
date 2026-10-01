@@ -4,16 +4,10 @@ import { useState } from "react";
 import {
   Swords,
   Send,
-  ThumbsUp,
-  ThumbsDown,
   RotateCcw,
-  Sparkles,
-  Timer,
-  CheckCircle2,
   Shield,
-  Award,
   Scale,
-  Flame,
+  
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -101,7 +95,7 @@ export default function DebateView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -132,11 +126,11 @@ export default function DebateView() {
         )}
       </div>
 
-      {/* MAIN CONTENT */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
           {!started ? (
-            /* MOTION SELECTION SKELETON */
+            
             <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm space-y-6">
               <div>
                 <div className="text-[11px] font-bold uppercase tracking-widest text-[#FF6B00]">
@@ -147,7 +141,7 @@ export default function DebateView() {
                 </div>
               </div>
 
-              {/* STANCE PICKER */}
+              {}
               <div className="space-y-2">
                 <div className="text-[12px] font-semibold text-slate-700 dark:text-zinc-300">
                   Your Proposition Stance:
@@ -181,7 +175,7 @@ export default function DebateView() {
                 </div>
               </div>
 
-              {/* TOPIC SELECTION */}
+              {}
               <div className="space-y-3">
                 <div className="text-[12px] font-semibold text-slate-700 dark:text-zinc-300">
                   Select Featured Motion:
@@ -204,9 +198,9 @@ export default function DebateView() {
               </div>
             </div>
           ) : (
-            /* ACTIVE DEBATE STREAM SKELETON */
+            
             <div className="space-y-5">
-              {/* TOPIC BANNER */}
+              {}
               <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 p-4 flex flex-wrap items-center justify-between gap-2">
                 <div className="space-y-0.5">
                   <div className="text-[10px] uppercase font-bold text-[#FF6B00]">Active Motion</div>
@@ -217,7 +211,7 @@ export default function DebateView() {
                 </span>
               </div>
 
-              {/* MESSAGES */}
+              {}
               <div className="space-y-4">
                 {messages.map((msg) => {
                   const isUser = msg.role === "user";
@@ -247,7 +241,7 @@ export default function DebateView() {
                           {msg.content}
                         </div>
 
-                        {/* JUDGE CRITIQUE / FALLACY SKELETON */}
+                        {}
                         {!isUser && msg.fallacyCheck && (
                           <div className="pt-2 border-t border-slate-100 dark:border-zinc-800 space-y-1 text-[11.5px]">
                             <div className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
@@ -267,7 +261,7 @@ export default function DebateView() {
                 })}
               </div>
 
-              {/* INPUT BAR */}
+              {}
               <div className="pt-2">
                 <div className="flex items-center gap-2 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3.5 py-2 shadow-sm focus-within:border-[#FF6B00]">
                   <input

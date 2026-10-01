@@ -33,18 +33,6 @@ export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
   });
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const [isDesktop, setIsDesktop] = useState<boolean>(() => {
-    if (typeof window !== "undefined") return window.innerWidth >= 1024;
-    return true;
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   useEffect(() => {
     if (forceNight) {
@@ -114,53 +102,13 @@ export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
         </div>
       )}
 
-      {/* Background Mandala Watermark - Perfectly centered vertically and horizontally */}
-      <div
-        className="absolute pointer-events-none select-none z-0 flex items-center justify-center overflow-visible"
-        style={{
-          top: "50%",
-          left: "50%",
-          transform: "translate3d(-50%, -50%, 0)",
-          willChange: "transform",
-          backfaceVisibility: "hidden",
-          contain: "layout paint",
-        }}
-      >
-        {/* Soft Ambient Moonlit Halo (Dark Mode only) */}
-        {showNightAtmosphere && isDarkMode && (
-          <div
-            className="absolute rounded-full pointer-events-none transition-all duration-300"
-            style={{
-              width: isDesktop ? "650px" : "390px",
-              height: isDesktop ? "650px" : "390px",
-              background:
-                "radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(255, 85, 0, 0.03) 40%, transparent 70%)",
-              transform: "translateZ(0)",
-            }}
-          />
-        )}
-
-        <img
-          src="/watermark.png"
-          alt=""
-          draggable={false}
-          decoding="async"
-          loading="eager"
-          className="w-[360px] h-[360px] sm:w-[480px] sm:h-[480px] md:w-[580px] md:h-[580px] lg:w-[660px] lg:h-[660px] max-w-[90vw] sm:max-w-none object-contain pointer-events-none select-none transition-all duration-300 opacity-[0.055] dark:opacity-[0.05]"
-          style={{
-            transform: "translateZ(0)",
-            WebkitTransform: "translateZ(0)",
-          }}
-        />
-      </div>
-
       {/* Foreground Content - Centered cleanly */}
       <div 
         className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto px-4"
       >
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight leading-tight text-center w-full">
+        <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight leading-tight text-center w-full">
           How can I help you today?
-        </h2>
+        </div>
       </div>
     </div>
   );

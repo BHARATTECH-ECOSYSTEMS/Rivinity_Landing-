@@ -701,7 +701,7 @@ export const HistoryPage: React.FC = () => {
     } else if (item.category === "AUDIO") {
       router.push("/audio-lab");
     } else if (item.category === "IMAGE") {
-      router.push("/image-enhancer");
+      router.push("/image-generation");
     } else {
       router.push("/chat");
     }
@@ -1098,7 +1098,7 @@ export const HistoryPage: React.FC = () => {
     } else if (activeCategory === "AUDIO") {
       router.push("/audio-lab");
     } else if (activeCategory === "IMAGE") {
-      router.push("/image-enhancer");
+      router.push("/image-generation");
     } else {
       router.push("/chat");
     }

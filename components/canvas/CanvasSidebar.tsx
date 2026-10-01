@@ -16,7 +16,6 @@ import {
   Bot,
   Box,
   Store,
-  BarChart2,
   History,
   Users,
   Settings,
@@ -28,6 +27,7 @@ import {
   ChevronDown,
   ChevronRight,
   HelpCircle,
+  LogIn,
   LogOut,
   X,
   Plus,
@@ -50,26 +50,6 @@ type NavItem = {
   path?: string;
   badge?: string;
 };
-
-const UpgradeArrowIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
-  className = "w-4.5 h-4.5",
-  ...props
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2.2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    {...props}
-  >
-    <path d="M12 2.5L2.5 11H7.5V19.5C7.5 20.6 8.4 21.5 9.5 21.5H14.5C15.6 21.5 16.5 20.6 16.5 19.5V11H21.5L12 2.5Z" />
-    <path d="M10 14L12 12L14 14" />
-    <path d="M10 17.5L12 15.5L14 17.5" />
-  </svg>
-);
 
 /** Credit segment type for multi-arc ring */
 type CreditSegment = {
@@ -215,12 +195,6 @@ const menuItems: NavItem[] = [
     path: "/marketplace",
   },
   {
-    id: "analytics",
-    label: "Analytics",
-    icon: BarChart2,
-    path: "/analytics",
-  },
-  {
     id: "history",
     label: "History",
     icon: History,
@@ -242,10 +216,10 @@ const productItems: NavItem[] = [
     path: "/rivinitylm",
   },
   {
-    id: "image-enhancer",
-    label: "Image Enhancer",
+    id: "image-generation",
+    label: "Image Generation",
     icon: Sparkles,
-    path: "/image-enhancer",
+    path: "/image-generation",
   },
   {
     id: "audio-lab",
@@ -291,7 +265,13 @@ function findActiveId(pathname: string): string {
   if (pathname === "/analytics") return "analytics";
   if (pathname === "/history") return "history";
   if (pathname === "/rivinity-lm" || pathname === "/rivinitylm") return "rivinity-lm";
-  if (pathname === "/image-enhancer" || pathname === "/imageenhancer") return "image-enhancer";
+  if (
+    pathname === "/image-generation" ||
+    pathname === "/imagegeneration" ||
+    pathname === "/image-enhancer" ||
+    pathname === "/imageenhancer"
+  )
+    return "image-generation";
   if (pathname === "/audio-lab" || pathname === "/audiolab") return "audio-lab";
   if (pathname === "/app-builder" || pathname === "/appbuilder") return "app-builder";
   if (pathname === "/prompt-to-video") return "prompt-to-video";
@@ -402,19 +382,6 @@ const CanvasSidebar = ({
 
       {/* Divider */}
       <div className="h-px bg-slate-200 dark:bg-white/[0.08] my-1 mx-1" />
-
-      {/* Upgrade plan */}
-      <button
-        type="button"
-        onClick={() => {
-          setUserMenuOpen(false);
-          router.push("/checkout");
-        }}
-        className="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-[13.5px] font-medium text-slate-700 dark:text-zinc-200 bg-transparent border-0 hover:bg-slate-100 dark:hover:bg-white/[0.08] hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer text-left"
-      >
-        <UpgradeArrowIcon className="w-4.5 h-4.5 text-slate-500 dark:text-zinc-400 shrink-0" />
-        <span>Upgrade plan</span>
-      </button>
 
       {/* Settings */}
       <button
@@ -575,12 +542,12 @@ const CanvasSidebar = ({
             ? "transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
             : "transition-none"
         } ${
-          isSettledCollapsed ? "overflow-visible" : "overflow-hidden"
+          isSettledCollapsed || isOpen ? "overflow-visible" : "overflow-hidden"
         } ${
           isOpen ? "w-[260px]" : "w-[68px]"
         }`}
       >
-        <div className={`relative w-full h-full ${isSettledCollapsed ? "overflow-visible" : "overflow-hidden"}`}>
+        <div className={`relative w-full h-full ${isSettledCollapsed || isOpen ? "overflow-visible" : "overflow-hidden"}`}>
           {/* COLLAPSED STATE */}
           <div
             data-sidebar-collapsed="true"
@@ -696,7 +663,7 @@ const CanvasSidebar = ({
                   className="group/tooltip relative w-10 h-10 flex items-center justify-center rounded-full bg-[#FF6B00] hover:bg-[#E66000] text-white transition-all duration-150 cursor-pointer shadow-sm"
                   aria-label="Login"
                 >
-                  <LogOut className="w-5 h-5 rotate-180" strokeWidth={2} />
+                  <LogIn className="w-5 h-5" strokeWidth={2} />
                   <span className="pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 z-[100] whitespace-nowrap rounded-full bg-[#18181b] dark:bg-[#212121] text-white px-3.5 py-1.5 text-[13px] font-medium shadow-2xl border border-white/10 opacity-0 group-hover/tooltip:opacity-100 transition-all duration-150 scale-95 group-hover/tooltip:scale-100 select-none">
                     Login
                   </span>
@@ -782,7 +749,7 @@ const CanvasSidebar = ({
 
               {/* PRODUCTS Section */}
               {visibleProductItems.length > 0 && (
-                <div className="mt-3 pt-1">
+                <div className={`mt-3 pt-1 ${pathname === "/" || pathname === "/dashboard" ? "hidden lg:block" : ""}`}>
                   <button
                     type="button"
                     onClick={() => setProductsOpen((v) => !v)}
@@ -835,31 +802,48 @@ const CanvasSidebar = ({
               {isAuthenticated ? (
                 <>
                   {userMenuOpen && renderUserDropdownMenu(false)}
-                  <button
-                    type="button"
-                    onClick={() => setUserMenuOpen((prev) => !prev)}
-                    className={`w-full px-2 py-1.5 rounded-xl flex items-center justify-between transition-colors cursor-pointer text-left group ${
-                      userMenuOpen
-                        ? "bg-slate-100 dark:bg-white/[0.08]"
-                        : "hover:bg-slate-100 dark:hover:bg-white/[0.06]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                      <CreditRing segments={creditSegments} size={36} strokeWidth={2.5} tooltipSide="top" hideTooltip={userMenuOpen}>
-                        <div className="w-[27px] h-[27px] rounded-full !bg-[#FF6B00] text-white flex items-center justify-center text-[10.5px] font-bold shadow-xs">
-                          {displayInitials}
+                  <div className="flex items-center gap-1 rounded-2xl bg-[#F3F6FA] p-1 dark:bg-white/[0.06]">
+                    <button
+                      type="button"
+                      onClick={() => setUserMenuOpen((prev) => !prev)}
+                      className="min-w-0 flex-1 cursor-pointer rounded-xl border-0 bg-transparent px-2 py-1.5 text-left transition-opacity hover:opacity-80"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        <CreditRing segments={creditSegments} size={36} strokeWidth={2.5} tooltipSide="top" hideTooltip={userMenuOpen}>
+                          <div className="w-[27px] h-[27px] rounded-full !bg-[#FF6B00] text-white flex items-center justify-center text-[10.5px] font-bold shadow-xs">
+                            {displayInitials}
+                          </div>
+                        </CreditRing>
+                        <div className="flex flex-col min-w-0 text-left">
+                          <span className="text-xs font-semibold text-[#0f172a] dark:text-zinc-200 truncate">
+                            {displayName}
+                          </span>
+                          <span className="text-[10.5px] text-[#64748b] dark:text-zinc-400 truncate">
+                            {displayPlan}
+                          </span>
                         </div>
-                      </CreditRing>
-                      <div className="flex flex-col min-w-0 text-left">
-                        <span className="text-xs font-semibold text-[#0f172a] dark:text-zinc-200 truncate">
-                          {displayName}
-                        </span>
-                        <span className="text-[10.5px] text-[#64748b] dark:text-zinc-400 truncate">
-                          {displayPlan}
-                        </span>
                       </div>
-                    </div>
-                  </button>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        router.push("/plans-and-credits");
+                        closeOnMobile();
+                      }}
+                      aria-label="Plans and Credits"
+                      className="group/tooltip relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-0 bg-transparent text-slate-600 dark:text-zinc-300"
+                    >
+                      <svg aria-hidden="true" viewBox="0 0 48 48" className="h-6 w-6" fill="none">
+                        <circle cx="24" cy="24" r="21" stroke="currentColor" strokeWidth="4.5" />
+                        <circle cx="24" cy="24" r="13.5" stroke="currentColor" strokeWidth="4.5" />
+                        <path d="M24 16.5C27.2 21 27 21.2 31.5 24C27 26.8 27.2 27 24 31.5C20.8 27 21 26.8 16.5 24C21 21.2 20.8 21 24 16.5Z" fill="currentColor" />
+                      </svg>
+                      <span className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-[100] -translate-y-1/2 whitespace-nowrap rounded-full border border-white/10 bg-[#18181b] px-3.5 py-1.5 text-[13px] font-medium text-white opacity-0 shadow-2xl transition-all duration-150 group-hover/tooltip:scale-100 group-hover/tooltip:opacity-100 group-focus-visible/tooltip:opacity-100 scale-95">
+                        Plans and Credits
+                      </span>
+                    </button>
+                  </div>
                 </>
               ) : (
                 <button
@@ -867,7 +851,7 @@ const CanvasSidebar = ({
                   onClick={() => openAuth("login")}
                   className="w-full px-3 py-2.5 rounded-2xl flex items-center justify-center gap-2.5 bg-[#FF6B00] hover:bg-[#E66000] text-white font-semibold text-[14px] transition-all duration-150 cursor-pointer shadow-sm border-0 select-none"
                 >
-                  <LogOut className="w-4.5 h-4.5 rotate-180" strokeWidth={2.2} />
+                  <LogIn className="w-4.5 h-4.5" strokeWidth={2.2} />
                   <span>Login</span>
                 </button>
               )}

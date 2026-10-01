@@ -27,15 +27,20 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 
   // Sync from localStorage / screen width on client mount (post-hydration)
   useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+
+    if (isMobile) {
+      globalSidebarState = false;
+      setSidebarOpenState(false);
+      return;
+    }
+
     try {
       const saved = localStorage.getItem(SIDEBAR_STORAGE_KEY);
       if (saved !== null) {
         const val = saved === "true";
         globalSidebarState = val;
         setSidebarOpenState(val);
-      } else if (window.innerWidth < 768) {
-        globalSidebarState = false;
-        setSidebarOpenState(false);
       } else if (globalSidebarState !== null) {
         setSidebarOpenState(globalSidebarState);
       }
@@ -52,15 +57,19 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 
   // Handle window resize and cross-tab storage changes
   useEffect(() => {
+    let wasDesktop = window.innerWidth >= 768;
+
     const handleResize = () => {
-      if (window.innerWidth < 768) {
+      const isDesktop = window.innerWidth >= 768;
+      if (wasDesktop && !isDesktop) {
         setSidebarOpenState(false);
       }
+      wasDesktop = isDesktop;
     };
 
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === SIDEBAR_STORAGE_KEY && e.newValue !== null) {
-        const val = e.newValue === "true";
+        const val = window.innerWidth >= 768 && e.newValue === "true";
         globalSidebarState = val;
         setSidebarOpenState(val);
       }

@@ -2,20 +2,13 @@
 
 import { useState } from "react";
 import {
-  Send,
-  Paperclip,
   Loader2,
   Copy,
-  ThumbsUp,
-  ThumbsDown,
-  Share2,
-  RefreshCw,
   Volume2,
   Sparkles,
   BookOpen,
   Check,
   Bookmark,
-  ExternalLink,
   MessageSquare,
   Flame,
 } from "lucide-react";
@@ -135,7 +128,7 @@ export default function ContextualChatView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* TOP SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -162,9 +155,9 @@ export default function ContextualChatView() {
         </div>
       </div>
 
-      {/* CONTENT AREA */}
+      {}
       <div className="flex min-h-0 flex-1 gap-6 overflow-hidden px-3 sm:px-6 py-4">
-        {/* MAIN CHAT STREAM */}
+        {}
         <div className="flex min-w-0 flex-1 flex-col justify-between">
           <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-5 [scrollbar-width:thin]">
             <div className="mx-auto w-full max-w-[840px] space-y-5 pb-6">
@@ -184,7 +177,7 @@ export default function ContextualChatView() {
                           : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100 shadow-xs rounded-bl-xs"
                       }`}
                     >
-                      {/* ROLE HEADER */}
+                      {}
                       <div className="flex items-center justify-between gap-3 mb-2">
                         <div className="flex items-center gap-1.5 text-[11.5px] font-semibold opacity-90">
                           {isUser ? (
@@ -231,7 +224,7 @@ export default function ContextualChatView() {
                         )}
                       </div>
 
-                      {/* MESSAGE CONTENT */}
+                      {}
                       {message.thinking ? (
                         <div className="flex items-center gap-2.5 py-2 text-slate-500 dark:text-zinc-400 text-xs">
                           <Loader2 className="h-4 w-4 animate-spin text-[#FF6B00]" />
@@ -243,7 +236,7 @@ export default function ContextualChatView() {
                         </div>
                       )}
 
-                      {/* KEY TAKEAWAYS SKELETON / FORMAT */}
+                      {}
                       {message.keyTakeaways && message.keyTakeaways.length > 0 && (
                         <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800">
                           <div className="text-[11px] font-semibold uppercase tracking-wider text-[#FF6B00] mb-2 flex items-center gap-1.5">
@@ -263,7 +256,7 @@ export default function ContextualChatView() {
                         </div>
                       )}
 
-                      {/* CITATIONS BADGES */}
+                      {}
                       {message.citations && message.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap items-center gap-1.5">
                           <span className="text-[10px] text-slate-400 dark:text-zinc-500 font-medium">Sources:</span>
@@ -285,7 +278,7 @@ export default function ContextualChatView() {
             </div>
           </div>
 
-          {/* QUICK PROMPT CHIPS */}
+          {}
           <div className="pt-2">
             <div className="mx-auto w-full max-w-[840px] flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none]">
               {[

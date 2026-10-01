@@ -54,11 +54,17 @@ const SidebarShell = ({ children }: SidebarShellProps) => {
       <div className="flex-1 flex flex-col min-w-0 w-full h-full relative overflow-hidden">
         {/* Toggle open button on mobile only when collapsed */}
         <button
-          onClick={() => setSidebarOpen(true)}
-          className={`absolute top-3 left-3 z-30 w-8 h-8 rounded-full glass border border-glass shadow-float items-center justify-center text-muted-foreground/60 hover:text-foreground/80 hover:shadow-glow-accent transition-all duration-200 cursor-pointer ${
+          type="button"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            setSidebarOpen(true);
+          }}
+          className={`absolute top-3 left-3 z-[60] h-11 w-11 rounded-full glass border border-glass shadow-float items-center justify-center text-muted-foreground/60 hover:text-foreground/80 hover:shadow-glow-accent transition-colors duration-200 cursor-pointer ${
             transitionsReady && !sidebarOpen ? "flex md:hidden" : "hidden"
           }`}
           aria-label="Open sidebar"
+          aria-expanded={sidebarOpen}
         >
           <PanelLeft className="w-4 h-4" />
         </button>

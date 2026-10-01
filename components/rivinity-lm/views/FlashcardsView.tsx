@@ -2,17 +2,13 @@
 
 import { useState } from "react";
 import {
-  RotateCcw,
   ChevronLeft,
   ChevronRight,
   Sparkles,
   Check,
-  X,
   Shuffle,
   Layers,
-  Flame,
-  Brain,
-  Award,
+
   Eye,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -155,7 +151,7 @@ export default function FlashcardsView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -186,10 +182,10 @@ export default function FlashcardsView() {
         </div>
       </div>
 
-      {/* CONTENT BODY */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[800px] space-y-5">
-          {/* AI GENERATOR BOX */}
+          {}
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -214,7 +210,7 @@ export default function FlashcardsView() {
             </div>
           </div>
 
-          {/* PROGRESS & STATS BAR */}
+          {}
           <div className="flex items-center justify-between text-[12px] font-medium text-slate-500 dark:text-zinc-400">
             <div className="flex items-center gap-2">
               <span>
@@ -230,7 +226,7 @@ export default function FlashcardsView() {
             </div>
           </div>
 
-          {/* PROGRESS BAR */}
+          {}
           <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-zinc-800 overflow-hidden">
             <div
               className="h-full bg-[#FF6B00] transition-all duration-300 rounded-full"
@@ -238,12 +234,12 @@ export default function FlashcardsView() {
             />
           </div>
 
-          {/* 3D INTERACTIVE FLASHCARD FORMAT SKELETON */}
+          {}
           <div
             onClick={() => setFlipped(!flipped)}
             className="group relative min-h-[300px] sm:min-h-[340px] cursor-pointer rounded-3xl border-2 border-slate-200/90 dark:border-zinc-800 bg-gradient-to-b from-white to-slate-50/50 dark:from-zinc-900 dark:to-zinc-900/60 p-6 sm:p-10 shadow-md hover:border-[#FF6B00]/40 transition-all flex flex-col justify-between"
           >
-            {/* CARD TOP STATUS */}
+            {}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
@@ -262,7 +258,7 @@ export default function FlashcardsView() {
               </div>
             </div>
 
-            {/* CARD CENTER CONTENT */}
+            {}
             <div className="my-auto py-6 text-center">
               {!flipped ? (
                 <div className="text-lg sm:text-xl md:text-2xl font-semibold text-slate-900 dark:text-zinc-100 leading-snug">
@@ -274,7 +270,7 @@ export default function FlashcardsView() {
                 </div>
               )}
 
-              {/* HINT IF AVAILABLE */}
+              {}
               {!flipped && currentCard.hint && (
                 <div className="mt-4">
                   {showHint ? (
@@ -298,14 +294,14 @@ export default function FlashcardsView() {
               )}
             </div>
 
-            {/* CARD BOTTOM BAR */}
+            {}
             <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-zinc-800 text-[11.5px] text-slate-400 dark:text-zinc-500">
               <span>{flipped ? "Back" : "Front"}</span>
               <span className="font-mono">#{currentCard.id}</span>
             </div>
           </div>
 
-          {/* CONTROLS BAR */}
+          {}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
             <button
               type="button"

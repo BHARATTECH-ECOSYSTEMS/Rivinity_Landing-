@@ -1,6 +1,14 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import {
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+  type ComponentType,
+  type FC,
+  type SVGProps,
+} from "react";
 import Link from "next/link";
 import {
   Settings as SettingsIcon,
@@ -11,7 +19,6 @@ import {
   CreditCard,
   Database,
   HardDrive,
-  ShieldCheck,
   LockKeyhole,
   Users,
   LifeBuoy,
@@ -25,15 +32,11 @@ import {
   KeyRound,
   ShieldQuestion,
   ExternalLink,
-  Plus,
   Search,
   RotateCw,
   Ban,
   Copy,
-  MoreHorizontal,
-  Code2,
-  GitBranch,
-  Clock,
+  ChevronLeft,
 } from "lucide-react";
 import {
   Dialog,
@@ -50,7 +53,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 
-type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+type IconType = ComponentType<SVGProps<SVGSVGElement>>;
 
 const CustomSwitch = ({
   checked,
@@ -104,7 +107,7 @@ const linkedPages: { to: string; label: string; icon: IconType }[] = [
   { to: "/settings/api-keys", label: "API keys", icon: KeyRound },
 ];
 
-const BrandIcons: Record<string, React.FC<{ className?: string }>> = {
+const BrandIcons: Record<string, FC<{ className?: string }>> = {
   hubspot: ({ className = "w-5 h-5" }) => (
     <svg viewBox="0 0 24 24" fill="none" className={className}>
       <circle cx="12" cy="12" r="10" fill="#FF7A59" fillOpacity="0.15" />
@@ -363,14 +366,30 @@ const INITIAL_API_KEYS: ApiKeyItem[] = [
   },
 ];
 
+const accentSwatch: Record<string, string> = {
+  Default: "#71717a",
+  Indigo: "#6366f1",
+  Rose: "#f43f5e",
+  Emerald: "#10b981",
+  Amber: "#f59e0b",
+};
+
 const ApiKeysView = () => {
   const [apiKeys, setApiKeys] = useState<ApiKeyItem[]>(INITIAL_API_KEYS);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
 
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard?.writeText(text);
     setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 1800);
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    copyTimeoutRef.current = setTimeout(() => setCopiedId(null), 1800);
   };
 
   const handleRotate = (id: string) => {
@@ -405,15 +424,15 @@ const ApiKeysView = () => {
             key={k.id}
             className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-2.5 flex items-center justify-between gap-2"
           >
-            <div className="flex items-center gap-2.5 min-w-0">
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <div className="w-7 h-7 rounded-md bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
                 <KeyRound className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-400" />
               </div>
               <div className="min-w-0">
-                <div className="text-[12.5px] font-semibold text-zinc-900 dark:text-white leading-tight">
+                <div className="text-[12.5px] font-semibold text-zinc-900 dark:text-white leading-tight truncate">
                   {k.name}
                 </div>
-                <div className="text-[11px] text-zinc-400 font-mono">
+                <div className="text-[11px] text-zinc-400 font-mono truncate">
                   {fullKeyString}
                 </div>
               </div>
@@ -422,7 +441,7 @@ const ApiKeysView = () => {
             <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={() => handleCopy(k.id, fullKeyString)}
-                className="p-1 rounded-md border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 cursor-pointer"
+                className="p-1.5 sm:p-1 rounded-md border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 cursor-pointer"
                 title="Copy API Key"
               >
                 {isCopied ? (
@@ -434,7 +453,7 @@ const ApiKeysView = () => {
 
               <button
                 onClick={() => handleRotate(k.id)}
-                className="p-1 rounded-md border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 cursor-pointer"
+                className="p-1.5 sm:p-1 rounded-md border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 cursor-pointer"
                 title="Rotate Key"
               >
                 <RotateCw className="w-3.5 h-3.5" />
@@ -443,7 +462,7 @@ const ApiKeysView = () => {
               {!k.isRevoked && (
                 <button
                   onClick={() => handleRevoke(k.id)}
-                  className="p-1 rounded-md border border-rose-200 dark:border-rose-800 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 cursor-pointer"
+                  className="p-1.5 sm:p-1 rounded-md border border-rose-200 dark:border-rose-800 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950 cursor-pointer"
                   title="Revoke Key"
                 >
                   <Ban className="w-3.5 h-3.5" />
@@ -472,21 +491,26 @@ const IntegrationsView = () => {
     );
   };
 
+  const enabledCount = useMemo(
+    () => items.reduce((n, i) => n + (i.enabled ? 1 : 0), 0),
+    [items],
+  );
+
   const filteredItems = useMemo(() => {
-    return items.filter((item) => {
-      return (
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return items;
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q),
+    );
   }, [items, searchQuery]);
 
   return (
     <div className="w-full space-y-3 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
-      {/* Compact Top Bar */}
-      <div className="flex items-center justify-between gap-2 pb-2 border-b border-zinc-200 dark:border-zinc-800">
-        <div className="flex items-center gap-1 p-0.5 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-2 border-b border-zinc-200 dark:border-zinc-800">
+        <div className="flex items-center gap-1 p-0.5 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 self-start">
           <button
             onClick={() => setActiveTab("connected")}
             className={`px-2.5 py-1 rounded-md text-[11.5px] font-medium transition-all cursor-pointer ${
@@ -495,7 +519,7 @@ const IntegrationsView = () => {
                 : "text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
             }`}
           >
-            Connected ({items.filter((i) => i.enabled).length})
+            Connected ({enabledCount})
           </button>
           <button
             onClick={() => setActiveTab("api-keys")}
@@ -510,7 +534,7 @@ const IntegrationsView = () => {
         </div>
 
         {activeTab === "connected" && (
-          <div className="relative w-44">
+          <div className="relative w-full sm:w-44">
             <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400" />
             <Input
               type="text"
@@ -531,49 +555,48 @@ const IntegrationsView = () => {
         )}
       </div>
 
-      {activeTab === "api-keys" ? (
+      <div className={activeTab === "api-keys" ? undefined : "hidden"}>
         <ApiKeysView />
-      ) : (
-        /* Streamlined Integration List */
-        <div className="space-y-2">
-          {filteredItems.map((item) => {
-            const IconComponent = BrandIcons[item.iconKey] || BrandIcons.github;
+      </div>
 
-            return (
-              <div
-                key={item.id}
-                className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-2.5 flex items-center justify-between gap-3 hover:bg-zinc-50/60 dark:hover:bg-zinc-800/40 transition-colors"
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center shrink-0">
-                    <IconComponent className="w-4.5 h-4.5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <div className="text-[13px] font-semibold text-zinc-900 dark:text-white leading-tight">
-                        {item.name}
-                      </div>
-                      <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-medium">
-                        {item.category}
-                      </span>
-                    </div>
-                    <div className="text-[11.5px] text-zinc-500 truncate mt-0.5 max-w-[280px]">
-                      {item.description}
-                    </div>
-                  </div>
+      <div className={activeTab === "connected" ? "space-y-2" : "hidden"}>
+        {filteredItems.map((item) => {
+          const IconComponent = BrandIcons[item.iconKey] || BrandIcons.github;
+
+          return (
+            <div
+              key={item.id}
+              className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-2.5 flex items-center justify-between gap-2 sm:gap-3 hover:bg-zinc-50/60 dark:hover:bg-zinc-800/40 transition-colors"
+            >
+              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                <div className="w-8 h-8 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center shrink-0">
+                  <IconComponent className="w-4.5 h-4.5" />
                 </div>
-
-                <div className="shrink-0 flex items-center gap-2">
-                  <CustomSwitch
-                    checked={item.enabled}
-                    onCheckedChange={() => handleToggle(item.id)}
-                  />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="text-[13px] font-semibold text-zinc-900 dark:text-white leading-tight">
+                      {item.name}
+                    </div>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-zinc-100 dark:bg-zinc-800 text-zinc-500 font-medium">
+                      {item.category}
+                    </span>
+                  </div>
+                  <div className="text-[11.5px] text-zinc-500 truncate mt-0.5 max-w-full sm:max-w-[280px]">
+                    {item.description}
+                  </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
-      )}
+
+              <div className="shrink-0 flex items-center gap-2">
+                <CustomSwitch
+                  checked={item.enabled}
+                  onCheckedChange={() => handleToggle(item.id)}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
@@ -593,21 +616,21 @@ const SelectRow = ({
   onChange,
   swatch,
 }: SelectRowProps) => (
-  <div className="flex items-center justify-between py-3 border-b border-zinc-200 dark:border-zinc-800">
-    <span className="text-[13px] text-zinc-900 dark:text-white font-medium">
+  <div className="flex items-center justify-between gap-3 py-3 border-b border-zinc-200 dark:border-zinc-800">
+    <span className="text-[13px] text-zinc-900 dark:text-white font-medium min-w-0 shrink">
       {label}
     </span>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 text-[12px] text-zinc-900 dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 cursor-pointer">
+        <button className="flex items-center gap-2 text-[12px] text-zinc-900 dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 cursor-pointer shrink-0 max-w-[55%] sm:max-w-none">
           {swatch && (
             <span
               className="w-2.5 h-2.5 rounded-full shrink-0"
               style={{ background: swatch }}
             />
           )}
-          <span className="font-medium">{value}</span>
-          <ChevronDown className="w-3 h-3 text-zinc-400" />
+          <span className="font-medium truncate">{value}</span>
+          <ChevronDown className="w-3 h-3 text-zinc-400 shrink-0" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -651,7 +674,7 @@ const ToggleRow = ({
   checked,
   onChange,
 }: ToggleRowProps) => (
-  <div className="flex items-center justify-between gap-4 py-3 border-b border-zinc-200 dark:border-zinc-800">
+  <div className="flex items-center justify-between gap-3 sm:gap-4 py-3 border-b border-zinc-200 dark:border-zinc-800">
     <div className="min-w-0 flex-1 pr-2">
       <div className="text-[13px] text-zinc-900 dark:text-white font-medium leading-snug">
         {label}
@@ -675,8 +698,8 @@ const SettingsDialog = ({
 }) => {
   const [section, setSection] = useState("general");
   const [sidebarSearch, setSidebarSearch] = useState("");
+  const [mobileShowContent, setMobileShowContent] = useState(false);
 
-  // General
   const [appearance, setAppearance] = useState("Light");
   const [contrast, setContrast] = useState("Normal");
   const [accent, setAccent] = useState("Default");
@@ -684,49 +707,43 @@ const SettingsDialog = ({
   const [higherIntel, setHigherIntel] = useState(true);
   const [dictation, setDictation] = useState(true);
 
-  // Notifications
   const [pushNotif, setPushNotif] = useState(true);
   const [emailNotif, setEmailNotif] = useState(false);
   const [soundNotif, setSoundNotif] = useState(true);
   const [tasksNotif, setTasksNotif] = useState(true);
 
-  // Personalization
   const [memory, setMemory] = useState(true);
   const [followUp, setFollowUp] = useState(true);
   const [creativity, setCreativity] = useState([60]);
 
-  // Voice
   const [voiceModel, setVoiceModel] = useState("Aurora");
   const [autoSend, setAutoSend] = useState(false);
 
-  // Data
   const [improve, setImprove] = useState(true);
   const [chatHistory, setChatHistory] = useState(true);
 
-  // Security
   const [twoFA, setTwoFA] = useState(false);
 
-  const accentSwatch: Record<string, string> = {
-    Default: "#71717a",
-    Indigo: "#6366f1",
-    Rose: "#f43f5e",
-    Emerald: "#10b981",
-    Amber: "#f59e0b",
-  };
+  useEffect(() => {
+    if (!open) setMobileShowContent(false);
+  }, [open]);
 
   const filteredSections = useMemo(() => {
-    if (!sidebarSearch.trim()) return sections;
-    return sections.filter((s) =>
-      s.label.toLowerCase().includes(sidebarSearch.toLowerCase()),
-    );
+    const q = sidebarSearch.toLowerCase().trim();
+    if (!q) return sections;
+    return sections.filter((s) => s.label.toLowerCase().includes(q));
   }, [sidebarSearch]);
 
   const filteredLinkedPages = useMemo(() => {
-    if (!sidebarSearch.trim()) return linkedPages;
-    return linkedPages.filter((p) =>
-      p.label.toLowerCase().includes(sidebarSearch.toLowerCase()),
-    );
+    const q = sidebarSearch.toLowerCase().trim();
+    if (!q) return linkedPages;
+    return linkedPages.filter((p) => p.label.toLowerCase().includes(q));
   }, [sidebarSearch]);
+
+  const handleSectionSelect = (id: string) => {
+    setSection(id);
+    setMobileShowContent(true);
+  };
 
   const renderSection = () => {
     switch (section) {
@@ -816,11 +833,11 @@ const SettingsDialog = ({
               onChange={setFollowUp}
             />
             <div className="py-4 border-b border-zinc-200 dark:border-zinc-800">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-2 gap-2">
                 <div className="text-[13px] text-zinc-900 dark:text-white font-medium">
                   Model Temperature / Creativity
                 </div>
-                <span className="text-[12px] text-zinc-500 font-mono">
+                <span className="text-[12px] text-zinc-500 font-mono shrink-0">
                   {creativity[0]}%
                 </span>
               </div>
@@ -856,7 +873,7 @@ const SettingsDialog = ({
       case "billing":
         return (
           <div className="space-y-3 pt-1">
-            <div className="rounded-xl p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs flex items-center justify-between">
+            <div className="rounded-xl p-3 sm:p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <div className="text-[11px] uppercase tracking-wider text-zinc-500 font-semibold">
                   Active Plan
@@ -868,20 +885,20 @@ const SettingsDialog = ({
                   Renews on Oct 14, 2026
                 </div>
               </div>
-              <button className="px-3.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer">
+              <button className="px-3.5 py-1.5 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer self-start sm:self-auto shrink-0">
                 Manage Subscription
               </button>
             </div>
-            <div className="rounded-xl p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs flex items-center justify-between">
-              <div>
+            <div className="rounded-xl p-3 sm:p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs flex items-center justify-between gap-3">
+              <div className="min-w-0">
                 <div className="text-[13px] font-semibold text-zinc-900 dark:text-white">
                   Payment Method
                 </div>
-                <div className="text-[12px] text-zinc-500 mt-0.5 font-mono">
+                <div className="text-[12px] text-zinc-500 mt-0.5 font-mono truncate">
                   Visa ending in •••• 4242
                 </div>
               </div>
-              <button className="text-[12px] text-zinc-900 dark:text-zinc-100 hover:underline font-medium cursor-pointer">
+              <button className="text-[12px] text-zinc-900 dark:text-zinc-100 hover:underline font-medium cursor-pointer shrink-0">
                 Edit
               </button>
             </div>
@@ -902,8 +919,8 @@ const SettingsDialog = ({
               checked={chatHistory}
               onChange={setChatHistory}
             />
-            <div className="flex items-center justify-between py-3.5 border-b border-zinc-200 dark:border-zinc-800">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-3.5 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="min-w-0">
                 <div className="text-[13px] text-zinc-900 dark:text-white font-medium">
                   Export Workspace Data
                 </div>
@@ -911,12 +928,12 @@ const SettingsDialog = ({
                   Download a JSON archive of your account data.
                 </div>
               </div>
-              <button className="text-[12px] px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-zinc-200 cursor-pointer">
+              <button className="text-[12px] px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-zinc-200 cursor-pointer self-start sm:self-auto shrink-0">
                 Export Data
               </button>
             </div>
-            <div className="flex items-center justify-between py-3.5">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-3.5">
+              <div className="min-w-0">
                 <div className="text-[13px] text-rose-600 font-medium">
                   Purge All Conversations
                 </div>
@@ -924,7 +941,7 @@ const SettingsDialog = ({
                   Permanently delete stored history across devices.
                 </div>
               </div>
-              <button className="flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-400 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer">
+              <button className="flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-400 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer self-start sm:self-auto shrink-0">
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete</span>
               </button>
@@ -934,8 +951,8 @@ const SettingsDialog = ({
       case "storage":
         return (
           <div className="space-y-3 pt-1">
-            <div className="rounded-xl p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs">
-              <div className="flex items-center justify-between mb-2">
+            <div className="rounded-xl p-3 sm:p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
                 <div>
                   <div className="text-[13px] font-semibold text-zinc-900 dark:text-white">
                     Workspace Storage
@@ -944,7 +961,7 @@ const SettingsDialog = ({
                     Documents, vector embeddings, and media uploads.
                   </div>
                 </div>
-                <span className="text-[12px] font-mono font-medium text-zinc-900 dark:text-white">
+                <span className="text-[12px] font-mono font-medium text-zinc-900 dark:text-white shrink-0">
                   3.2 GB / 50 GB
                 </span>
               </div>
@@ -973,19 +990,19 @@ const SettingsDialog = ({
               <div className="text-[11.5px] text-zinc-500 mb-3">
                 Ensure your new password contains at least 8 characters.
               </div>
-              <div className="flex items-center gap-2 max-w-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 max-w-sm">
                 <Input
                   type="password"
                   placeholder="New password"
                   className="h-8 text-[12px] bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
                 />
-                <button className="px-3 py-1.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer">
+                <button className="px-3 py-1.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer shrink-0 self-start sm:self-auto">
                   Update
                 </button>
               </div>
             </div>
-            <div className="flex items-center justify-between py-3.5">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-3.5">
+              <div className="min-w-0">
                 <div className="text-[13px] font-medium text-zinc-900 dark:text-white">
                   Active Sessions
                 </div>
@@ -993,7 +1010,7 @@ const SettingsDialog = ({
                   Revoke access from unknown devices.
                 </div>
               </div>
-              <button className="text-[12px] px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-zinc-200 cursor-pointer">
+              <button className="text-[12px] px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-zinc-200 cursor-pointer self-start sm:self-auto shrink-0">
                 View All
               </button>
             </div>
@@ -1023,12 +1040,12 @@ const SettingsDialog = ({
               Designate a trusted collaborator to help verify account recovery
               if you lose access.
             </div>
-            <div className="flex items-center gap-2 max-w-md">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 max-w-md">
               <Input
                 placeholder="colleague@domain.com"
                 className="h-8 text-[12px] bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
               />
-              <button className="px-3.5 py-1.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer">
+              <button className="px-3.5 py-1.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer shrink-0 self-start sm:self-auto">
                 Add
               </button>
             </div>
@@ -1038,20 +1055,20 @@ const SettingsDialog = ({
         return (
           <div className="w-full">
             <div className="flex items-center gap-3.5 py-3 border-b border-zinc-200 dark:border-zinc-800">
-              <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-900 dark:text-white font-bold text-base">
+              <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-900 dark:text-white font-bold text-base shrink-0">
                 TT
               </div>
-              <div>
-                <div className="text-[15px] font-semibold text-zinc-900 dark:text-white leading-tight">
+              <div className="min-w-0">
+                <div className="text-[15px] font-semibold text-zinc-900 dark:text-white leading-tight truncate">
                   Tushar Trivedi
                 </div>
-                <div className="text-[12px] text-zinc-500">
+                <div className="text-[12px] text-zinc-500 truncate">
                   tushar@rivinity.ai
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-between py-3 border-b border-zinc-200 dark:border-zinc-800">
-              <div>
+            <div className="flex items-center justify-between gap-3 py-3 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="min-w-0">
                 <div className="text-[13px] font-medium text-zinc-900 dark:text-white">
                   Workspace Handle
                 </div>
@@ -1059,12 +1076,12 @@ const SettingsDialog = ({
                   Public handle for mentions and shares.
                 </div>
               </div>
-              <span className="text-[12.5px] font-mono text-zinc-500">
+              <span className="text-[12.5px] font-mono text-zinc-500 shrink-0">
                 @tushar
               </span>
             </div>
-            <div className="flex items-center justify-between py-3">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-3">
+              <div className="min-w-0">
                 <div className="text-[13px] font-medium text-zinc-900 dark:text-white">
                   Sign Out
                 </div>
@@ -1072,7 +1089,7 @@ const SettingsDialog = ({
                   End session on this machine.
                 </div>
               </div>
-              <button className="flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer">
+              <button className="flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer self-start sm:self-auto shrink-0">
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign out</span>
               </button>
@@ -1091,12 +1108,12 @@ const SettingsDialog = ({
             ].map(([action, keys]) => (
               <div
                 key={action}
-                className="flex items-center justify-between py-2.5 border-b border-zinc-200 dark:border-zinc-800"
+                className="flex items-center justify-between gap-3 py-2.5 border-b border-zinc-200 dark:border-zinc-800"
               >
-                <span className="text-[13px] text-zinc-900 dark:text-white font-medium">
+                <span className="text-[13px] text-zinc-900 dark:text-white font-medium min-w-0">
                   {action}
                 </span>
-                <kbd className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 font-mono text-zinc-600 dark:text-zinc-400">
+                <kbd className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 font-mono text-zinc-600 dark:text-zinc-400 shrink-0">
                   {keys}
                 </kbd>
               </div>
@@ -1112,15 +1129,18 @@ const SettingsDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 overflow-hidden flex flex-col border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-2xl bg-white dark:bg-zinc-950 max-w-[740px] w-[90vw] h-[640px]">
+      <DialogContent className="p-0 overflow-hidden flex flex-col border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-none sm:rounded-2xl bg-white dark:bg-zinc-950 w-full max-w-full h-[100dvh] sm:max-w-[740px] sm:w-[90vw] sm:h-[640px] sm:max-h-[90vh]">
         <DialogTitle className="sr-only">Settings</DialogTitle>
         <DialogDescription className="sr-only">
           Manage workspace configurations and preferences.
         </DialogDescription>
 
-        <div className="flex flex-1 overflow-hidden">
-          {/* Left Navigation Sidebar */}
-          <div className="w-[210px] shrink-0 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex flex-col h-full overflow-y-auto [&::-webkit-scrollbar]:hidden">
+        <div className="flex flex-1 overflow-hidden min-h-0">
+          <div
+            className={`${
+              mobileShowContent ? "hidden" : "flex"
+            } md:flex w-full md:w-[210px] shrink-0 border-r-0 md:border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex-col h-full overflow-y-auto [&::-webkit-scrollbar]:hidden`}
+          >
             <div className="px-3.5 pt-4 pb-3 border-b border-zinc-200 dark:border-zinc-800 space-y-2.5">
               <div className="text-[14px] font-semibold text-zinc-900 dark:text-white tracking-tight px-1">
                 Preferences
@@ -1153,8 +1173,8 @@ const SettingsDialog = ({
                 return (
                   <button
                     key={s.id}
-                    onClick={() => setSection(s.id)}
-                    className={`w-full h-8 px-2.5 rounded-lg flex items-center gap-2.5 text-[12.5px] transition-all cursor-pointer ${
+                    onClick={() => handleSectionSelect(s.id)}
+                    className={`w-full h-9 md:h-8 px-2.5 rounded-lg flex items-center gap-2.5 text-[12.5px] transition-all cursor-pointer ${
                       active
                         ? "bg-slate-200/80 dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-semibold shadow-2xs"
                         : "bg-white dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-100"
@@ -1187,7 +1207,7 @@ const SettingsDialog = ({
                         key={p.to}
                         href={p.to}
                         onClick={() => onOpenChange(false)}
-                        className="w-full h-8 px-2.5 rounded-lg flex items-center gap-2.5 text-[12.5px] bg-white dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-100 transition-colors"
+                        className="w-full h-9 md:h-8 px-2.5 rounded-lg flex items-center gap-2.5 text-[12.5px] bg-white dark:bg-zinc-950 text-zinc-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-100 transition-colors"
                       >
                         <Icon
                           className="w-3.5 h-3.5 shrink-0 text-zinc-400"
@@ -1205,19 +1225,37 @@ const SettingsDialog = ({
             </div>
           </div>
 
-          {/* Right Main Content Area */}
-          <div className="flex-1 overflow-y-auto h-full bg-white dark:bg-zinc-950 px-6 py-5 [scrollbar-width:thin]">
-            <div className="w-full">
+          <div
+            className={`${
+              mobileShowContent ? "flex" : "hidden"
+            } md:flex flex-1 flex-col overflow-hidden min-h-0 h-full bg-white dark:bg-zinc-950`}
+          >
+            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5 [scrollbar-width:thin]">
+              <div className="w-full">
               <div className="mb-4 pb-3 border-b border-zinc-200 dark:border-zinc-800">
-                <div className="text-[18px] font-bold tracking-tight text-zinc-900 dark:text-white">
-                  {activeLabel}
-                </div>
-                <div className="text-[12.5px] text-zinc-500 mt-0.5">
-                  Configure and customize your {activeLabel.toLowerCase()}{" "}
-                  preferences.
+              <div className="flex items-start gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setMobileShowContent(false)}
+                  className="md:hidden flex items-center justify-center p-1 -ml-1 mt-0.5 rounded-md text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer shrink-0"
+                  aria-label="Back to settings list"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[18px] font-bold tracking-tight text-zinc-900 dark:text-white leading-tight">
+                    {activeLabel}
+                  </div>
+                  <div className="text-[12.5px] text-zinc-500 mt-0.5">
+                    Configure and customize your {activeLabel.toLowerCase()}{" "}
+                    preferences.
+                  </div>
                 </div>
               </div>
-              {renderSection()}
+            </div>
+            
+                {renderSection()}
+              </div>
             </div>
           </div>
         </div>

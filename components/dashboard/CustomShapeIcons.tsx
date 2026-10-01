@@ -103,7 +103,7 @@ export const AudioLabShapeIcon = ({ className = "w-6 h-6" }: { className?: strin
   </svg>
 );
 
-export const ImageEnhancerShapeIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
+export const ImageGenerationShapeIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -126,6 +126,8 @@ export const ImageEnhancerShapeIcon = ({ className = "w-6 h-6" }: { className?: 
     />
   </svg>
 );
+
+export const ImageEnhancerShapeIcon = ImageGenerationShapeIcon;
 
 export const AppBuilderShapeIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
   <svg

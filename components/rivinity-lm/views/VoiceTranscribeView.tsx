@@ -123,7 +123,7 @@ export default function VoiceTranscribeView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -154,10 +154,10 @@ export default function VoiceTranscribeView() {
         </div>
       </div>
 
-      {/* MAIN BODY */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
-          {/* LIVE RECORDING CONTROLLER SKELETON */}
+          {}
           <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4 w-full sm:w-auto">
               <button
@@ -186,7 +186,7 @@ export default function VoiceTranscribeView() {
               </div>
             </div>
 
-            {/* LIVE AUDIO WAVE SKELETON */}
+            {}
             {recording && (
               <div className="flex items-center gap-1 h-8 bg-red-500/10 px-3 rounded-xl border border-red-500/20">
                 {[40, 80, 100, 60, 90, 70, 45, 85, 95, 60].map((h, i) => (
@@ -211,7 +211,7 @@ export default function VoiceTranscribeView() {
             </div>
           </div>
 
-          {/* AUTO-EXTRACTED KEY TAKEAWAYS FORMAT */}
+          {}
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-orange-500/5 dark:bg-orange-500/10 p-4 sm:p-5 space-y-2.5">
             <div className="flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wider text-[#FF6B00]">
               <Sparkles className="h-4 w-4" />
@@ -230,7 +230,7 @@ export default function VoiceTranscribeView() {
             </div>
           </div>
 
-          {/* SEARCH & SEGMENTS STREAM */}
+          {}
           <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 space-y-4 shadow-sm">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800 pb-4">
               <div className="flex items-center gap-2">
@@ -240,7 +240,7 @@ export default function VoiceTranscribeView() {
                 </div>
               </div>
 
-              {/* SEARCH SEGMENTS */}
+              {}
               <div className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/60 px-3 py-1.5 w-full sm:w-64">
                 <Search className="h-3.5 w-3.5 text-slate-400" />
                 <input
@@ -253,7 +253,7 @@ export default function VoiceTranscribeView() {
               </div>
             </div>
 
-            {/* SPEAKER SEGMENT BLOCKS */}
+            {}
             <div className="space-y-3 pt-1">
               {filteredSegments.map((segment, idx) => (
                 <div

@@ -9,7 +9,7 @@ const models = [
   { label: "Rivinity Builder", route: "/app-builder", icon: Layout, meta: "v1.8 · 64k ctx" },
   { label: "Audio Lab", route: "/audio-lab", icon: AudioWaveform, meta: "v1.2 · Studio" },
   { label: "RivinityLM", route: "/rivinity-lm", icon: GraduationCap, meta: "v2.0 · 200k ctx" },
-  { label: "Image Enhancer", route: "/image-enhancer", icon: ImageIcon, meta: "v1.5 · Vision" },
+  { label: "Image Generation", route: "/image-generation", icon: ImageIcon, meta: "v2.0 · Diffusion" },
 ];
 
 interface Props {

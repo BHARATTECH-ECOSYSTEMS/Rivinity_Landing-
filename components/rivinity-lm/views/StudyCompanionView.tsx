@@ -3,18 +3,12 @@
 import { useState, useEffect } from "react";
 import {
   Bot,
-  Send,
   Target,
   Flame,
-  Trophy,
-  CheckCircle2,
-  Sparkles,
   Timer,
   Play,
   Pause,
   RotateCcw,
-  BookOpen,
-  Coffee,
   Check,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -99,7 +93,7 @@ export default function StudyCompanionView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -126,12 +120,12 @@ export default function StudyCompanionView() {
         </div>
       </div>
 
-      {/* MAIN LAYOUT */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
-          {/* POMODORO & GOALS TOP STRIP */}
+          {}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {/* POMODORO SPRINT */}
+            {}
             <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 shadow-xs flex items-center justify-between">
               <div>
                 <div className="text-[10.5px] uppercase font-bold text-slate-400 dark:text-zinc-500 tracking-wider flex items-center gap-1.5">
@@ -167,7 +161,7 @@ export default function StudyCompanionView() {
               </div>
             </div>
 
-            {/* MILESTONES PROGRESS */}
+            {}
             <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 shadow-xs flex items-center justify-between">
               <div>
                 <div className="text-[10.5px] uppercase font-bold text-slate-400 dark:text-zinc-500 tracking-wider flex items-center gap-1.5">
@@ -198,7 +192,7 @@ export default function StudyCompanionView() {
             </div>
           </div>
 
-          {/* COMPANION CONVERSATION STREAM */}
+          {}
           <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-sm space-y-4">
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#FF6B00] border-b border-slate-100 dark:border-zinc-800 pb-2">
               Mentor Dialogue

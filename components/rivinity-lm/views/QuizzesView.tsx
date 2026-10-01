@@ -157,7 +157,7 @@ export default function QuizzesView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -186,10 +186,10 @@ export default function QuizzesView() {
         </div>
       </div>
 
-      {/* CONTENT AREA */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[800px] space-y-5">
-          {/* AI QUIZ GENERATOR PROMPT */}
+          {}
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -216,7 +216,7 @@ export default function QuizzesView() {
 
           {!completed ? (
             <div className="space-y-5">
-              {/* PROGRESS BAR */}
+              {}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-[12px] font-medium text-slate-500 dark:text-zinc-400">
                   <span>
@@ -232,13 +232,13 @@ export default function QuizzesView() {
                 </div>
               </div>
 
-              {/* QUIZ QUESTION SKELETON CARD */}
+              {}
               <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm space-y-6">
                 <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-zinc-100 leading-snug">
                   {question.question}
                 </div>
 
-                {/* OPTIONS GRID */}
+                {}
                 <div className="space-y-3">
                   {question.options.map((option, idx) => {
                     const isSelected = selected === idx;
@@ -280,7 +280,7 @@ export default function QuizzesView() {
                   })}
                 </div>
 
-                {/* HINT TOGGLE */}
+                {}
                 {!answered && (
                   <div className="pt-2">
                     {showHint ? (
@@ -300,7 +300,7 @@ export default function QuizzesView() {
                   </div>
                 )}
 
-                {/* EXPLANATION SKELETON BOX */}
+                {}
                 {showExplanation && (
                   <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-slate-50/70 dark:bg-zinc-800/50 p-4 space-y-1.5 animate-in fade-in duration-200">
                     <div className="flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wider text-[#FF6B00]">
@@ -314,7 +314,7 @@ export default function QuizzesView() {
                 )}
               </div>
 
-              {/* ACTION FOOTER */}
+              {}
               {answered && (
                 <div className="flex justify-end pt-2">
                   <button
@@ -329,7 +329,7 @@ export default function QuizzesView() {
               )}
             </div>
           ) : (
-            /* COMPLETION CARD */
+            
             <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 sm:p-12 text-center shadow-md space-y-6">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/10 text-[#FF6B00]">
                 <Award className="h-8 w-8" strokeWidth={2.2} />

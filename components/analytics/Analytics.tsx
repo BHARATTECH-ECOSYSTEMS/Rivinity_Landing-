@@ -19,6 +19,7 @@ interface Breakpoints {
 const DIFeasibilityDashboardComponent: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<string>("2025");
   const [showBenefit, setShowBenefit] = useState<boolean>(true);
+  const [isCompactView, setIsCompactView] = useState<boolean>(false);
 
   // Container measurement for dynamic panel resizing with rAF and breakpoint comparison
   // Prevents re-rendering during split drag unless responsive breakpoint is actually crossed
@@ -124,11 +125,17 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
         ref={containerRef}
         className={cn(
           "w-full flex flex-col bg-white dark:bg-zinc-900 border-0 shadow-none",
-          isNarrow
-            ? "p-4 sm:p-6 space-y-6"
-            : isStacked
-              ? "p-6 sm:p-7 space-y-7"
-              : "p-7 sm:p-9 lg:p-10 space-y-8",
+          isCompactView
+            ? isNarrow
+              ? "p-3 space-y-4"
+              : isStacked
+                ? "p-4 sm:p-5 space-y-5"
+                : "p-6 sm:p-8 space-y-6"
+            : isNarrow
+              ? "p-4 sm:p-6 space-y-6"
+              : isStacked
+                ? "p-6 sm:p-7 space-y-7"
+                : "p-7 sm:p-9 lg:p-10 space-y-8",
         )}
       >
         {/* Top Header Row with Controls */}
@@ -164,10 +171,18 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
             {/* Top Right Layout Toggle Button */}
             <button
               type="button"
-              className="p-1.5 rounded-lg border border-gray-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-800 text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-white shadow-xs hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
-              title="Panel options"
+              onClick={() => setIsCompactView((current) => !current)}
+              aria-label={isCompactView ? "Use comfortable layout" : "Use compact layout"}
+              aria-pressed={isCompactView}
+              className={cn(
+                "p-1.5 rounded-lg border border-gray-200/80 dark:border-zinc-800 text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-white shadow-xs transition-colors cursor-pointer",
+                isCompactView
+                  ? "bg-gray-100 dark:bg-zinc-700"
+                  : "bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700",
+              )}
+              title={isCompactView ? "Use comfortable layout" : "Use compact layout"}
             >
-              <PanelRight className="w-4 h-4" />
+              <PanelRight className={cn("w-4 h-4 transition-transform", isCompactView && "rotate-180")} />
             </button>
           </div>
         </div>

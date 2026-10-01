@@ -4,18 +4,10 @@ import { useState } from "react";
 import {
   FileText,
   Sparkles,
-  Download,
-  Share2,
-  Plus,
-  ChevronDown,
   Check,
-  Search,
   BookOpen,
   Copy,
-  Printer,
   Bookmark,
-  Layers,
-  ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -152,7 +144,7 @@ export default function SmartNotesView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -183,10 +175,10 @@ export default function SmartNotesView() {
         </div>
       </div>
 
-      {/* MAIN CONTENT */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
-          {/* GENERATE PROMPT BAR */}
+          {}
           <div className="mb-5 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -211,9 +203,9 @@ export default function SmartNotesView() {
             </div>
           </div>
 
-          {/* CORNELL NOTE FORMAT SKELETON */}
+          {}
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden">
-            {/* TITLE & METADATA BAR */}
+            {}
             <div className="border-b border-slate-200 dark:border-zinc-800 bg-slate-50/70 dark:bg-zinc-800/40 p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -232,9 +224,9 @@ export default function SmartNotesView() {
               </div>
             </div>
 
-            {/* CORNELL TWO-COLUMN BODY */}
+            {}
             <div className="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-zinc-800">
-              {/* LEFT COLUMN: CUES & QUESTIONS (4 cols) */}
+              {}
               <div className="md:col-span-4 p-5 bg-slate-50/30 dark:bg-zinc-900/30 space-y-6">
                 <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 flex items-center gap-1.5">
                   <Bookmark className="h-3.5 w-3.5 text-[#FF6B00]" />
@@ -262,7 +254,7 @@ export default function SmartNotesView() {
                 ))}
               </div>
 
-              {/* RIGHT COLUMN: DETAILED NOTES (8 cols) */}
+              {}
               <div className="md:col-span-8 p-5 space-y-6">
                 <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 flex items-center gap-1.5">
                   <BookOpen className="h-3.5 w-3.5 text-[#FF6B00]" />
@@ -282,7 +274,7 @@ export default function SmartNotesView() {
               </div>
             </div>
 
-            {/* CORNELL FOOTER: SUMMARY BLOCK */}
+            {}
             <div className="border-t border-slate-200 dark:border-zinc-800 bg-orange-500/5 dark:bg-orange-500/10 p-5">
               <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[#FF6B00] mb-2">
                 <Sparkles className="h-3.5 w-3.5" />

@@ -4,16 +4,10 @@ import { useState } from "react";
 import {
   BarChart3,
   Upload,
-  Send,
-  Table,
-  PieChart,
-  TrendingUp,
-  Download,
   Sparkles,
   FileSpreadsheet,
   Search,
-  Check,
-  ArrowUpRight,
+  
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -65,7 +59,7 @@ export default function DataAnalystView() {
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {/* SUB-HEADER */}
+      {}
       <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
@@ -96,10 +90,10 @@ export default function DataAnalystView() {
         </div>
       </div>
 
-      {/* MAIN BODY */}
+      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
-          {/* STATS TILES SKELETON */}
+          {}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {metrics.map((m, idx) => (
               <div
@@ -126,7 +120,7 @@ export default function DataAnalystView() {
             ))}
           </div>
 
-          {/* AI NATURAL LANGUAGE QUERY BAR */}
+          {}
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs space-y-2">
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -158,7 +152,7 @@ export default function DataAnalystView() {
             )}
           </div>
 
-          {/* CHART VISUALIZER SKELETON */}
+          {}
           <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800 pb-3">
               <div>
@@ -170,7 +164,7 @@ export default function DataAnalystView() {
                 </div>
               </div>
 
-              {/* CHART TYPE BUTTONS */}
+              {}
               <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800 p-1 rounded-xl">
                 <button
                   type="button"
@@ -197,7 +191,7 @@ export default function DataAnalystView() {
               </div>
             </div>
 
-            {/* BARS SKELETON */}
+            {}
             <div className="h-48 sm:h-56 flex items-end justify-between gap-1.5 sm:gap-3 pt-4 px-2">
               {chartData.map((val, idx) => (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
@@ -216,7 +210,7 @@ export default function DataAnalystView() {
             </div>
           </div>
 
-          {/* TABULAR DATASET SKELETON */}
+          {}
           <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 sm:p-6 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
@@ -238,7 +232,7 @@ export default function DataAnalystView() {
               </div>
             </div>
 
-            {/* TABLE */}
+            {}
             <div className="overflow-x-auto [scrollbar-width:thin]">
               <table className="w-full text-left text-[12.5px]">
                 <thead>
