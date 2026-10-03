@@ -1,26 +1,31 @@
 @import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
 @layer theme, base, components, utilities;
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@config "../tailwind.config.js";
-
 @theme {
   /* ============================================
-     FONTS (PDF Page 10, 24)
+     FONTS (PDF Page 10, 24, FIX-02)
      ============================================ */
-  --font-display: "General Sans", "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --font-body: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* ============================================
-     COLOR PALETTE (PDF Page 11, 12, 20, 24)
-     Max 5-6 core colors, dark slate text (no pure black)
+     COLOR PALETTE (PDF FIX-02)
+     Single source of truth for the brand orange
      ============================================ */
-  --color-primary: #FF6B00;
-  --color-primary-hover: #E66000;
+  --color-brand-50: #FFF4ED;
+  --color-brand-100: #FFE6D5;
+  --color-brand-500: #FF5A1F; /* canonical brand orange */
+  --color-brand-600: #E54D15; /* hover */
+  --color-brand-700: #C43F0F;
+
+  --color-primary: #FF5A1F;
+  --color-primary-hover: #E54D15;
   --color-text: #0f172a;
   --color-text-secondary: #64748b;
   --color-text-muted: #94a3b8;
@@ -607,4 +612,21 @@ html[data-sidebar-closed] [data-sidebar-aside],
 html[data-sidebar-closed] [data-sidebar-expanded],
 html[data-sidebar-closed] [data-sidebar-collapsed] {
   transition: none !important;
+}
+
+/* ============================================
+   ACCESSIBILITY: REDUCED MOTION (PDF FIX-01)
+   Framer-motion JS animations are handled separately (FIX-09).
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

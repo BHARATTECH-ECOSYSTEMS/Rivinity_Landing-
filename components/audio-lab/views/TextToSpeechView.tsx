@@ -54,9 +54,22 @@ const emotions = [
 const defaultScript =
   "Bring your attention to the crown of your head... Notice any sensations there. Slowly let your awareness travel down to your forehead, your eyes, and your jaw. If you notice any tension, imagine it softening with each breath.";
 
-export default function TextToSpeechView() {
-  const [text, setText] = useState(defaultScript);
+interface TextToSpeechViewProps {
+  initialPrompt?: string;
+}
+
+export default function TextToSpeechView({ initialPrompt }: TextToSpeechViewProps = {}) {
+  const [text, setText] = useState(initialPrompt || defaultScript);
   const [selectedVoice, setSelectedVoice] = useState(voices[0]);
+
+  useEffect(() => {
+    if (initialPrompt && initialPrompt.trim()) {
+      setText(initialPrompt.trim());
+      setHasGenerated(true);
+      setIsPlaying(true);
+      toast.success("Voice narration generated!");
+    }
+  }, [initialPrompt]);
   const [voiceDropdownOpen, setVoiceDropdownOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(28);

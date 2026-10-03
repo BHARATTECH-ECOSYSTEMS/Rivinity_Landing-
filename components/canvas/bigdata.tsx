@@ -13,8 +13,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<string>("2025");
   const [showBenefit, setShowBenefit] = useState<boolean>(true);
 
-  // Container measurement for dynamic panel resizing with rAF and breakpoint comparison
-  // Prevents re-rendering during split drag unless responsive breakpoint is actually crossed
   const containerRef = useRef<HTMLDivElement>(null);
   const [breakpoints, setBreakpoints] = useState<Breakpoints>({
     isNarrow: false,
@@ -46,7 +44,7 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
             prev.isStacked === isStacked &&
             prev.isTiny === isTiny
           ) {
-            return prev; // Same reference -> abort React re-render!
+            return prev; 
           }
           return { isNarrow, isStacked, isTiny };
         });
@@ -62,12 +60,11 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
 
   const { isNarrow, isStacked, isTiny } = breakpoints;
 
-  // Exact data values & colors (Scale: 0 to 3 Billion)
   const barData = useMemo(() => [
-    { role: "Executives", width: "12.8%", color: "#bbf416" }, // Lime
-    { role: "Managers", width: "47.3%", color: "#ff7700" },   // Orange
-    { role: "Technical", width: "76.7%", color: "#00d2f7" },  // Cyan
-    { role: "Non-Technical", width: "95.0%", color: "#00b050" } // Emerald Green
+    { role: "Executives", width: "12.8%", color: "#bbf416" }, 
+    { role: "Managers", width: "47.3%", color: "#ff7700" },   
+    { role: "Technical", width: "76.7%", color: "#00d2f7" },  
+    { role: "Non-Technical", width: "95.0%", color: "#00b050" } 
   ], []);
 
   const ticks = useMemo(() => [
@@ -79,7 +76,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
     { label: "$3B", pct: 100 },
   ], []);
 
-  // Helper function to generate clean SVG arc paths for donut chart with gaps
   const createDonutArc = useCallback((
     cx: number,
     cy: number,
@@ -101,10 +97,8 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
   }, []);
 
   return (
-    // 1. SOFT BACKDROP FRAME: Matches Canva Main background color seamlessly
     <div className="w-full h-full p-2 sm:p-2.5 lg:p-3 bg-white dark:bg-zinc-950 flex flex-col min-w-0 min-h-0 overflow-hidden select-none">
       
-      {/* 2. THE FLOATING CANVAS CARD: Looks completely distinct and elevated with rounded corners & shadow */}
       <div
         ref={containerRef}
         className={cn(
@@ -113,7 +107,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
         )}
       >
         
-        {/* Top Header Row with Controls */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
           <div className={cn(
             "font-bold text-gray-900 dark:text-white tracking-tight",
@@ -137,7 +130,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
               <ChevronDown className="w-3.5 h-3.5 text-gray-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
-            {/* Top Right Layout Toggle Button */}
             <button
               type="button"
               className="p-1.5 rounded-lg border border-gray-200/80 bg-white dark:bg-zinc-800 text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:white shadow-2xs hover:bg-gray-50 transition-colors cursor-pointer"
@@ -148,12 +140,10 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
           </div>
         </div>
 
-        {/* 4 KPI Metrics Header Row */}
         <div className={cn(
           "grid items-start pt-1 pb-1",
           isStacked ? "grid-cols-2 gap-4 sm:gap-6" : "grid-cols-4 gap-0"
         )}>
-          {/* KPI 1: Annual Turnover Cost */}
           <div className={cn("min-w-0", !isStacked && "pr-4 lg:pr-6")}>
             <div className="text-xs sm:text-[13px] text-gray-600 dark:text-zinc-400 font-normal truncate">
               Annual Turnover Cost
@@ -177,7 +167,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
             </div>
           </div>
 
-          {/* KPI 2: Baseline Turnover Rate */}
           <div className={cn(
             "min-w-0",
             !isStacked && "px-4 lg:px-6 border-l border-gray-200/80 dark:border-zinc-800"
@@ -198,7 +187,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
             </div>
           </div>
 
-          {/* KPI 3: D&I Program Cost */}
           <div className={cn(
             "min-w-0",
             !isStacked && "px-4 lg:px-6 border-l border-gray-200/80 dark:border-zinc-800"
@@ -219,7 +207,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
             </div>
           </div>
 
-          {/* KPI 4: Break-Even Improvement */}
           <div className={cn(
             "min-w-0",
             !isStacked && "pl-4 lg:pl-6 border-l border-gray-200/80 dark:border-zinc-800"
@@ -240,20 +227,17 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
 
         <div className="w-full border-t border-gray-200/60 dark:border-zinc-800" />
 
-        {/* Row 2: Turnover Cost Breakdown & Workforce Composition */}
         <div className={cn(
           "grid items-start",
           isStacked ? "grid-cols-1 gap-8 sm:gap-10" : "grid-cols-2 gap-10"
         )}>
           
-          {/* Turnover Cost Breakdown */}
           <div className="w-full min-w-0">
             <div className="text-[15px] sm:text-[16px] font-bold text-gray-900 dark:text-white mb-5 sm:mb-6">
               Turnover Cost Breakdown
             </div>
 
             <div className="relative">
-              {/* Vertical Gridlines spanning behind the bars */}
               <div className={cn(
                 "absolute top-0 bottom-7 right-0 pointer-events-none",
                 isNarrow ? "left-20 sm:left-24" : "left-24 sm:left-28"
@@ -268,7 +252,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                 <div className="absolute top-0 bottom-0 left-0 w-[1px] bg-gray-200 dark:bg-zinc-700" />
               </div>
 
-              {/* Horizontal Bar Rows */}
               <div className="space-y-3.5 sm:space-y-4 relative z-10 pb-2">
                 {barData.map((item) => (
                   <div key={item.role} className="flex items-center">
@@ -293,7 +276,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                 ))}
               </div>
 
-              {/* X-Axis Ticks */}
               <div className={cn(
                 "relative",
                 isNarrow ? "pl-20 sm:pl-24" : "pl-24 sm:pl-28"
@@ -320,7 +302,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
             </div>
           </div>
 
-          {/* Workforce Composition - Responsive Donut & Legend */}
           <div className={cn(
             "w-full min-w-0",
             !isStacked && "border-l border-gray-200/70 dark:border-zinc-800 pl-10"
@@ -330,13 +311,11 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 mt-3">
-              {/* Donut Graphic */}
               <div className={cn(
                 "relative shrink-0 flex items-center justify-center",
                 isNarrow ? "w-36 h-36 sm:w-40 sm:h-40" : "w-44 h-44"
               )}>
                 <svg viewBox="0 0 100 100" className="w-full h-full">
-                  {/* Non-technical (Green) */}
                   <path
                     d={createDonutArc(50, 50, 37, 182, 434)}
                     fill="none"
@@ -345,7 +324,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                     strokeLinecap="butt"
                   />
 
-                  {/* Executives (Lime) */}
                   <path
                     d={createDonutArc(50, 50, 37, 80, 98)}
                     fill="none"
@@ -354,7 +332,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                     strokeLinecap="butt"
                   />
 
-                  {/* Managers (Orange) */}
                   <path
                     d={createDonutArc(50, 50, 37, 104, 125)}
                     fill="none"
@@ -363,7 +340,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                     strokeLinecap="butt"
                   />
 
-                  {/* Technical (Cyan) */}
                   <path
                     d={createDonutArc(50, 50, 37, 131, 175)}
                     fill="none"
@@ -373,7 +349,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                   />
                 </svg>
 
-                {/* Center Counter */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                   <span className={cn(
                     "font-extrabold text-gray-900 dark:text-white leading-none",
@@ -387,7 +362,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right Side Legend */}
               <div className="space-y-2 text-xs sm:text-[13px] min-w-[130px]">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full shrink-0 bg-[#bbf416]" />
@@ -416,13 +390,11 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
 
         <div className="w-full border-t border-gray-200/60 dark:border-zinc-800" />
 
-        {/* Row 3: Budget Breakdown & ROI Scenario Modeling */}
         <div className={cn(
           "grid items-start pb-6",
           isStacked ? "grid-cols-1 gap-8 sm:gap-10" : "grid-cols-12 gap-10"
         )}>
           
-          {/* Budget Breakdown */}
           <div className={cn("w-full min-w-0", !isStacked ? "col-span-5" : "col-span-1")}>
             <div className="text-[15px] sm:text-[16px] font-bold text-gray-900 dark:text-white mb-3">
               Budget Breakdown
@@ -434,7 +406,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                 isNarrow ? "w-36 h-36 sm:w-40 sm:h-40" : "w-44 h-44"
               )}>
                 <svg viewBox="0 0 100 100" className="w-full h-full">
-                  {/* 75% Dark Blue Sector */}
                   <path
                     d="M 50 50 L 50 96 A 46 46 0 1 1 96 50 Z"
                     fill="#0077e6"
@@ -442,7 +413,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                     strokeWidth="2.5"
                     className="dark:stroke-zinc-950"
                   />
-                  {/* 25% Light Blue Sector */}
                   <path
                     d="M 50 50 L 96 50 A 46 46 0 0 1 50 96 Z"
                     fill="#7ec2fb"
@@ -453,7 +423,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                 </svg>
               </div>
 
-              {/* Bottom Legends Centered */}
               <div className="mt-4 sm:mt-5 space-y-1.5 text-xs sm:text-[13px] flex flex-col items-center">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#0077e6]" />
@@ -469,7 +438,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
             </div>
           </div>
 
-          {/* ROI & Scenario Modeling */}
           <div className={cn(
             "w-full min-w-0",
             !isStacked ? "col-span-7 border-l border-gray-200/70 dark:border-zinc-800 pl-10" : "col-span-1"
@@ -497,10 +465,8 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
               </div>
             </div>
 
-            {/* SVG Plot */}
             <div className="relative w-full pt-4">
               <div className={cn("flex items-stretch", isNarrow ? "h-36 sm:h-40" : "h-44 sm:h-48")}>
-                {/* Y-Axis labels with Rotated 'Savings' Text */}
                 <div className="flex flex-col justify-between text-[10px] sm:text-[11px] text-gray-400 dark:text-zinc-500 pr-2.5 sm:pr-3 pb-6 text-right shrink-0 select-none relative pl-2">
                   <span className="absolute -left-3 top-1/2 -rotate-90 -translate-y-1/2 text-[8.5px] sm:text-[9px] text-gray-400 dark:text-zinc-500 tracking-wider">
                     Savings
@@ -512,7 +478,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                   <span>$0B</span>
                 </div>
 
-                {/* Plot Canvas */}
                 <div className="relative flex-1 h-full pb-6 min-w-0">
                   <div className="absolute inset-0 pb-6 flex flex-col justify-between pointer-events-none">
                     <div className="border-b border-dashed border-gray-200/80 dark:border-zinc-800 w-full" />
@@ -522,7 +487,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                     <div className="border-b border-gray-300 dark:border-zinc-700 w-full" />
                   </div>
 
-                  {/* Red Dashed Break-even Line */}
                   <div
                     className="absolute left-0 right-0 z-10 flex items-center pointer-events-none"
                     style={{ top: "54.5%" }}
@@ -533,7 +497,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                     <div className="flex-1 border-b border-dashed border-red-500" />
                   </div>
 
-                  {/* SVG Shading & Curve */}
                   <svg
                     viewBox="0 0 600 240"
                     preserveAspectRatio="none"
@@ -565,7 +528,6 @@ const DIFeasibilityDashboardComponent: React.FC = () => {
                 </div>
               </div>
 
-              {/* X-Axis Percentage Ticks */}
               <div className="pl-8 sm:pl-12 flex justify-between text-[10px] sm:text-[11px] text-gray-400 dark:text-zinc-500 select-none">
                 <span>0%</span>
                 <span>2%</span>

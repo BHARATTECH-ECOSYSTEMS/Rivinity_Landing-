@@ -6,13 +6,9 @@ import {
   Pause,
   SkipBack,
   SkipForward,
-  Volume2,
   Sparkles,
-  Clock,
   Users,
-  Mic2,
   Radio,
-  Share2,
   Download,
   ListMusic,
   Headphones,
@@ -114,50 +110,52 @@ export default function AIPodcastView() {
         setCurrentTime((prev) => {
           if (prev >= selectedEpisode.durationSeconds) {
             setIsPlaying(false);
-            return 0;
+            return selectedEpisode.durationSeconds;
           }
           return prev + 1;
         });
       }, 1000 / playbackSpeed);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, selectedEpisode, playbackSpeed]);
+  }, [isPlaying, playbackSpeed, selectedEpisode.durationSeconds]);
 
-  const formatTime = (secs: number) => {
-    const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60);
+  const formatSeconds = (sec: number) => {
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-  };
-
   const handleGenerate = () => {
-    if (!topic.trim() || generating) return;
+    if (!topic.trim()) return;
     setGenerating(true);
 
     setTimeout(() => {
       const newEp: Episode = {
         id: Date.now(),
-        title: `${topic.trim()}: The Complete Breakdown`,
-        topic: topic.trim(),
-        duration: "12:00",
-        durationSeconds: 720,
-        hosts: "Rivinity AI Co-Hosts (Alex & Jordan)",
+        title: `${topic.trim()}: A Comprehensive Conversation`,
+        topic: "Custom AI Topic",
+        duration: "12:15",
+        durationSeconds: 735,
+        hosts: "Rivinity AI Host & Guest Scholar",
         status: "ready",
         transcript: [
           {
-            speaker: "Alex",
+            speaker: "Rivinity Host",
             role: "Host",
             time: "00:00",
-            text: `Welcome to our special podcast session exploring ${topic.trim()}. We're breaking down everything you need to know in under 15 minutes.`,
+            text: `Welcome to this special audio exploration of ${topic.trim()}. Today we dissect the nuances, practical implementations, and underlying concepts.`,
           },
           {
-            speaker: "Jordan",
+            speaker: "Guest Scholar",
             role: "Expert",
-            time: "00:20",
-            text: `That's right, Alex. Let's start with the foundational concepts and build up to real-world applications and exam strategies.`,
+            time: "00:30",
+            text: "Excited to dive in! The essential foundation begins with understanding foundational mechanics before advancing toward synthesis.",
+          },
+          {
+            speaker: "Rivinity Host",
+            role: "Host",
+            time: "01:10",
+            text: "Let us walk through concrete examples so listeners can test their intuitive grasp.",
           },
         ],
       };
@@ -166,34 +164,36 @@ export default function AIPodcastView() {
       setSelectedEpisode(newEp);
       setCurrentTime(0);
       setIsPlaying(false);
-      setTopic("");
       setGenerating(false);
-      toast.success("AI Podcast Episode generated!");
-    }, 1500);
+      setTopic("");
+      toast.success("AI Podcast Episode synthesized!");
+    }, 2200);
   };
 
-  const progressPercent = Math.min(
-    100,
-    Math.round((currentTime / selectedEpisode.durationSeconds) * 100)
-  );
+  const handleDownload = () => {
+    toast.success("Downloading synthesized audio transcript as MP3...");
+  };
+
+  const cycleSpeed = () => {
+    const speeds = [1.0, 1.25, 1.5, 2.0];
+    const nextIdx = (speeds.indexOf(playbackSpeed) + 1) % speeds.length;
+    setPlaybackSpeed(speeds[nextIdx]);
+    toast.info(`Playback speed: ${speeds[nextIdx]}x`);
+  };
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {}
-      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+    <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full overflow-hidden bg-[#f8fafc] dark:bg-zinc-950 font-sans">
+      <div className="px-4 sm:px-6 py-3.5 border-b border-slate-200/80 dark:border-zinc-800 bg-[#f8fafc]/80 dark:bg-zinc-900/70 backdrop-blur-md flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
-            <Radio className="h-4 w-4" strokeWidth={2.2} />
+          <div className="p-2 rounded-xl bg-orange-500/10 text-[#FF6B00]">
+            <Radio className="h-5 w-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2 text-[14px] font-semibold text-slate-900 dark:text-zinc-100">
-              <span>AI Podcast Studio</span>
-              <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-semibold text-[#FF6B00]">
-                Synthetic Voice
-              </span>
+            <div className="text-sm sm:text-base font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-2">
+              <span>AI Audio Deep Dive Podcast</span>
             </div>
-            <div className="text-[11px] text-slate-500 dark:text-zinc-400">
-              Transform lecture notes and topics into two-host conversational podcasts
+            <div className="text-xs text-slate-500 dark:text-zinc-400">
+              Two-host conversational podcasts generated from your textbooks & study topics
             </div>
           </div>
         </div>
@@ -206,10 +206,8 @@ export default function AIPodcastView() {
         </div>
       </div>
 
-      {}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
-        <div className="mx-auto w-full max-w-[840px] space-y-5">
-          {}
+      <div className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="mx-auto w-full max-w-[840px] space-y-4">
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -226,7 +224,7 @@ export default function AIPodcastView() {
                 type="button"
                 onClick={handleGenerate}
                 disabled={generating || !topic.trim()}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#FF6B00] px-4 py-2 text-[12.5px] font-semibold text-white hover:bg-[#E66000] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#FF6B00] px-4 py-2 text-[12.5px] font-semibold text-white hover:bg-[#E66000] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 cursor-pointer"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>{generating ? "Synthesizing Audio..." : "Generate Episode"}</span>
@@ -234,15 +232,35 @@ export default function AIPodcastView() {
             </div>
           </div>
 
-          {}
-          <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-gradient-to-b from-white to-slate-50/50 dark:from-zinc-900 dark:to-zinc-900/60 p-6 sm:p-8 shadow-sm space-y-6">
-            {}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
+            <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400 shrink-0">Episodes:</span>
+            {episodes.map((ep) => (
+              <button
+                key={ep.id}
+                type="button"
+                onClick={() => {
+                  setSelectedEpisode(ep);
+                  setCurrentTime(0);
+                  setIsPlaying(false);
+                }}
+                className={`px-3 py-1 rounded-xl text-xs font-medium shrink-0 border transition-all cursor-pointer ${
+                  selectedEpisode.id === ep.id
+                    ? "bg-[#FF6B00] text-white border-[#FF6B00] shadow-xs"
+                    : "bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-800 hover:border-slate-300"
+                }`}
+              >
+                {ep.title.length > 28 ? `${ep.title.slice(0, 28)}…` : ep.title}
+              </button>
+            ))}
+          </div>
+
+          <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-gradient-to-b from-white to-slate-50/50 dark:from-zinc-900 dark:to-zinc-900/60 p-5 sm:p-8 shadow-sm space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-1">
                 <div className="text-[11px] font-bold uppercase tracking-widest text-[#FF6B00]">
                   {selectedEpisode.topic}
                 </div>
-                <div className="text-xl font-bold text-slate-900 dark:text-zinc-100">
+                <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-zinc-100">
                   {selectedEpisode.title}
                 </div>
                 <div className="text-[12px] text-slate-500 dark:text-zinc-400 flex items-center gap-2">
@@ -252,72 +270,55 @@ export default function AIPodcastView() {
               </div>
             </div>
 
-            {}
             <div className="flex items-center justify-center gap-1 sm:gap-1.5 h-16 sm:h-20 bg-slate-100/60 dark:bg-zinc-800/40 rounded-2xl px-4 overflow-hidden border border-slate-200/60 dark:border-zinc-800">
               {[
                 35, 65, 80, 45, 90, 100, 75, 40, 60, 85, 95, 50, 70, 45, 30, 80, 90,
                 65, 40, 55, 95, 75, 60, 40, 70, 85, 60, 45, 80, 90, 65, 50, 35, 70,
               ].map((val, idx) => {
-                const isPassed = (idx / 34) * 100 <= progressPercent;
+                const isBarActive = (idx / 34) * selectedEpisode.durationSeconds <= currentTime;
                 return (
                   <div
                     key={idx}
-                    className={`w-1 sm:w-1.5 rounded-full transition-all duration-300 ${
-                      isPassed
+                    className={`w-1 sm:w-1.5 rounded-full transition-all duration-150 ${
+                      isBarActive
                         ? "bg-[#FF6B00]"
-                        : "bg-slate-300 dark:bg-zinc-700 opacity-60"
-                    } ${isPlaying ? "animate-pulse" : ""}`}
+                        : "bg-slate-300 dark:bg-zinc-700"
+                    }`}
                     style={{
-                      height: isPlaying ? `${Math.max(15, (val * (idx % 2 === 0 ? 1 : 0.8)))}%` : `${val}%`,
+                      height: `${val}%`,
+                      transform: isPlaying && isBarActive ? `scaleY(${0.7 + Math.random() * 0.5})` : "none",
                     }}
                   />
                 );
               })}
             </div>
 
-            {}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-[11.5px] font-mono text-slate-500 dark:text-zinc-400">
-                <span>{formatTime(currentTime)}</span>
+            <div className="space-y-2">
+              <input
+                type="range"
+                min={0}
+                max={selectedEpisode.durationSeconds}
+                value={currentTime}
+                onChange={(e) => setCurrentTime(Number(e.target.value))}
+                className="w-full h-1.5 bg-slate-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-[#FF6B00]"
+              />
+              <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-zinc-400">
+                <span>{formatSeconds(currentTime)}</span>
                 <span>{selectedEpisode.duration}</span>
-              </div>
-              <div
-                onClick={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const clickX = e.clientX - rect.left;
-                  const newPercent = clickX / rect.width;
-                  setCurrentTime(Math.round(newPercent * selectedEpisode.durationSeconds));
-                }}
-                className="h-2 w-full rounded-full bg-slate-200 dark:bg-zinc-800 cursor-pointer overflow-hidden"
-              >
-                <div
-                  className="h-full bg-[#FF6B00] rounded-full transition-all duration-150"
-                  style={{ width: `${progressPercent}%` }}
-                />
               </div>
             </div>
 
-            {}
-            <div className="flex items-center justify-between pt-2">
-              {}
-              <div className="flex items-center gap-1">
-                {[1.0, 1.25, 1.5].map((spd) => (
-                  <button
-                    key={spd}
-                    type="button"
-                    onClick={() => setPlaybackSpeed(spd)}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
-                      playbackSpeed === spd
-                        ? "bg-[#FF6B00] text-white"
-                        : "bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700"
-                    }`}
-                  >
-                    {spd}x
-                  </button>
-                ))}
+            <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-100 dark:border-zinc-800">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={cycleSpeed}
+                  className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors"
+                >
+                  {playbackSpeed}x
+                </button>
               </div>
 
-              {}
               <div className="flex items-center gap-3">
                 <button
                   type="button"
@@ -330,8 +331,8 @@ export default function AIPodcastView() {
 
                 <button
                   type="button"
-                  onClick={togglePlay}
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FF6B00] text-white shadow-md hover:bg-[#E66000] active:scale-95 transition-all"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="h-12 w-12 rounded-full bg-[#FF6B00] hover:bg-[#E66000] text-white flex items-center justify-center shadow-md active:scale-95 transition-all"
                 >
                   {isPlaying ? (
                     <Pause className="h-5 w-5 fill-current" />
@@ -343,7 +344,9 @@ export default function AIPodcastView() {
                 <button
                   type="button"
                   onClick={() =>
-                    setCurrentTime((t) => Math.min(selectedEpisode.durationSeconds, t + 15))
+                    setCurrentTime((t) =>
+                      Math.min(selectedEpisode.durationSeconds, t + 15)
+                    )
                   }
                   className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 transition-colors"
                   title="Forward 15 seconds"
@@ -352,11 +355,10 @@ export default function AIPodcastView() {
                 </button>
               </div>
 
-              {}
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => toast.success("Episode added to study queue")}
+                  onClick={handleDownload}
                   className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-[11.5px] font-medium text-slate-700 dark:text-zinc-300 hover:border-[#FF6B00]/40 transition-colors"
                 >
                   <Download className="h-3.5 w-3.5" />
@@ -366,8 +368,7 @@ export default function AIPodcastView() {
             </div>
           </div>
 
-          {}
-          <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 space-y-4 shadow-xs">
+          <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-5 space-y-4 shadow-xs">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-3">
               <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-[#FF6B00]">
                 <ListMusic className="h-4 w-4" />
@@ -382,7 +383,7 @@ export default function AIPodcastView() {
               {selectedEpisode.transcript.map((line, idx) => (
                 <div
                   key={idx}
-                  className="rounded-xl border border-slate-100 dark:border-zinc-800/80 bg-slate-50/50 dark:bg-zinc-800/40 p-3.5 space-y-1"
+                  className="rounded-xl border border-slate-100 dark:border-zinc-800/80 bg-slate-50/50 dark:bg-zinc-800/40 p-3 sm:p-3.5 space-y-1"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

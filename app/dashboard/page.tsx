@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useAuthModal } from "@/components/auth/auth-context";
 import SidebarShell from "@/components/canvas/SidebarShell";
 import Preloader from "@/components/Preloader";
-import { motion, AnimatePresence } from "framer-motion";
-import type { Variants } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   Search,
   Image as ImageIcon,
@@ -13,36 +12,31 @@ import {
   MessageSquare,
   Globe,
   Layout,
-  Database,
   AudioWaveform,
-  GraduationCap,
   Plus,
-  ArrowRight,
   ArrowUpRight,
   ChevronRight,
   ChevronDown,
-  MoreHorizontal,
   MoreVertical,
   Film,
-  Flame,
   Wand2,
   Layers,
   HatGlasses,
   Paperclip,
   Mic,
   Sparkles,
-  X,
   Video,
   Terminal,
   Play,
-  Download,
-  Copy,
   Share2,
   FolderClosed,
   Bot,
-  Clapperboard,
   BarChart2,
   ShoppingBag,
+  Code,
+  X,
+  ImagePlus,
+  AudioLines,
   type LucideIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -50,6 +44,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { SKILLS } from "@/lib/skillsCatalog";
 import rivinityLogo from "@/components/assets/Rivinity Logo.png";
+
 const logoSrc =
   typeof rivinityLogo === "string" ? rivinityLogo : rivinityLogo.src;
 
@@ -63,30 +58,27 @@ const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.06, delayChildren: 0.04 },
+    transition: { staggerChildren: 0.05, delayChildren: 0.03 },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
   visible: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
-/* 
-  CREATIVE TOOLS DEFINITION (10 Small Square Glassmorphic Boxes, 5 per row)
-*/
 const CREATIVE_TOOLS = [
   {
     id: "edit-studio",
     title: "Edit Studio",
     icon: Video,
     path: "/chat",
-    bg: "rgba(255, 145, 77, 0.14)", // Light pastel orange glass
+    bg: "rgba(255, 145, 77, 0.14)",
     border: "rgba(255, 145, 77, 0.35)",
   },
   {
@@ -94,7 +86,7 @@ const CREATIVE_TOOLS = [
     title: "Audio Lab",
     icon: Mic,
     path: "/audio-lab",
-    bg: "rgba(180, 140, 255, 0.14)", // Light pastel purple glass
+    bg: "rgba(180, 140, 255, 0.14)",
     border: "rgba(180, 140, 255, 0.35)",
   },
   {
@@ -102,7 +94,7 @@ const CREATIVE_TOOLS = [
     title: "Image Generation",
     icon: Sparkles,
     path: "/image-generation",
-    bg: "rgba(255, 148, 194, 0.14)", // Light pastel pink glass
+    bg: "rgba(255, 148, 194, 0.14)",
     border: "rgba(255, 148, 194, 0.35)",
   },
   {
@@ -110,7 +102,7 @@ const CREATIVE_TOOLS = [
     title: "App Builder",
     icon: Layers,
     path: "/app-builder",
-    bg: "rgba(255, 215, 64, 0.15)", // Light pastel yellow glass
+    bg: "rgba(255, 215, 64, 0.15)",
     border: "rgba(255, 215, 64, 0.35)",
   },
   {
@@ -118,7 +110,7 @@ const CREATIVE_TOOLS = [
     title: "Deep Search",
     icon: Search,
     path: "/chat",
-    bg: "rgba(125, 185, 255, 0.14)", // Light pastel blue glass
+    bg: "rgba(125, 185, 255, 0.14)",
     border: "rgba(125, 185, 255, 0.35)",
   },
   {
@@ -126,7 +118,7 @@ const CREATIVE_TOOLS = [
     title: "Doc Synthesizer",
     icon: FileText,
     path: "/chat",
-    bg: "rgba(95, 215, 160, 0.14)", // Light pastel mint glass
+    bg: "rgba(95, 215, 160, 0.14)",
     border: "rgba(95, 215, 160, 0.35)",
   },
   {
@@ -134,7 +126,7 @@ const CREATIVE_TOOLS = [
     title: "Marketplace",
     icon: ShoppingBag,
     path: "/marketplace",
-    bg: "rgba(244, 114, 182, 0.14)", // Light pastel rose glass
+    bg: "rgba(244, 114, 182, 0.14)",
     border: "rgba(244, 114, 182, 0.35)",
   },
   {
@@ -142,7 +134,7 @@ const CREATIVE_TOOLS = [
     title: "RivinityLM",
     icon: Bot,
     path: "/rivinity-lm",
-    bg: "rgba(251, 146, 60, 0.14)", // Light pastel peach glass
+    bg: "rgba(251, 146, 60, 0.14)",
     border: "rgba(251, 146, 60, 0.35)",
   },
   {
@@ -150,7 +142,7 @@ const CREATIVE_TOOLS = [
     title: "Knowledge Base",
     icon: FolderClosed,
     path: "/knowledge-base",
-    bg: "rgba(45, 212, 191, 0.14)", // Light pastel teal glass
+    bg: "rgba(45, 212, 191, 0.14)",
     border: "rgba(45, 212, 191, 0.35)",
   },
   {
@@ -158,14 +150,11 @@ const CREATIVE_TOOLS = [
     title: "Analytics",
     icon: BarChart2,
     path: "/analytics",
-    bg: "rgba(165, 180, 252, 0.14)", // Light pastel periwinkle glass
+    bg: "rgba(165, 180, 252, 0.14)",
     border: "rgba(165, 180, 252, 0.35)",
   },
 ];
 
-/* 
-  CONTINUE WORKING FOLDERS & ASSETS SYSTEM
-*/
 export type ContinueWorkingType =
   | "Chat"
   | "App"
@@ -199,7 +188,7 @@ const WORKING_FOLDERS: WorkingCategoryFolder[] = [
     id: "Chat",
     title: "Chat",
     icon: MessageSquare,
-    svgFill: "rgba(255, 145, 86, 0.95)", // Pastel light orange
+    svgFill: "rgba(255, 145, 86, 0.95)",
     bgFront: "bg-gradient-to-b from-[#FFA87D] via-[#FF8E52] to-[#FF7535]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(255,117,53,0.25)]",
@@ -208,7 +197,7 @@ const WORKING_FOLDERS: WorkingCategoryFolder[] = [
     id: "App",
     title: "App",
     icon: Layout,
-    svgFill: "rgba(247, 115, 158, 0.95)", // Pastel light pink
+    svgFill: "rgba(247, 115, 158, 0.95)",
     bgFront: "bg-gradient-to-b from-[#FB8CB3] via-[#F76497] to-[#F14681]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(241,70,129,0.25)]",
@@ -217,7 +206,7 @@ const WORKING_FOLDERS: WorkingCategoryFolder[] = [
     id: "Audio",
     title: "Audio",
     icon: Mic,
-    svgFill: "rgba(139, 92, 246, 0.95)", // Pastel light purple
+    svgFill: "rgba(139, 92, 246, 0.95)",
     bgFront: "bg-gradient-to-b from-[#A78BFA] via-[#8B5CF6] to-[#7C3AED]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(124,58,237,0.25)]",
@@ -226,7 +215,7 @@ const WORKING_FOLDERS: WorkingCategoryFolder[] = [
     id: "Image",
     title: "Image",
     icon: ImageIcon,
-    svgFill: "rgba(52, 211, 153, 0.95)", // Pastel light green
+    svgFill: "rgba(52, 211, 153, 0.95)",
     bgFront: "bg-gradient-to-b from-[#6EE7B7] via-[#34D399] to-[#10B981]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(16,185,129,0.25)]",
@@ -235,7 +224,7 @@ const WORKING_FOLDERS: WorkingCategoryFolder[] = [
     id: "Video",
     title: "Video",
     icon: Film,
-    svgFill: "rgba(59, 130, 246, 0.95)", // Pastel light blue
+    svgFill: "rgba(59, 130, 246, 0.95)",
     bgFront: "bg-gradient-to-b from-[#70BAFF] via-[#3B82F6] to-[#2563EB]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(37,99,235,0.25)]",
@@ -244,7 +233,7 @@ const WORKING_FOLDERS: WorkingCategoryFolder[] = [
     id: "Doc",
     title: "Doc",
     icon: FileText,
-    svgFill: "rgba(251, 191, 36, 0.95)", // Pastel light yellow
+    svgFill: "rgba(251, 191, 36, 0.95)",
     bgFront: "bg-gradient-to-b from-[#FDE68A] via-[#FBBF24] to-[#F59E0B]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(245,158,11,0.25)]",
@@ -446,15 +435,24 @@ const ALL_WORKING_ASSETS: Record<ContinueWorkingType, WorkingAsset[]> = {
   ],
 };
 
-/* 
-  MAIN DASHBOARD COMPONENT
-*/
+const QUICK_AI_MODES = [
+  { icon: Bot, label: "Rivinity Chat" },
+  { icon: Code, label: "Fullstack Builder" },
+  { icon: Layers, label: "Frontend Builder" },
+  { icon: Search, label: "Deep Search" },
+  { icon: Wand2, label: "Write Anything" },
+  { icon: ImagePlus, label: "Image Enhancer" },
+  { icon: AudioLines, label: "Audio Lab" },
+];
+
 export default function DashboardPage() {
   const [showPreloader, setShowPreloader] = useState(false);
 
   useEffect(() => {
     try {
-      const hasShownPreloader = sessionStorage.getItem("rivinity_dashboard_preloader_shown");
+      const hasShownPreloader = sessionStorage.getItem(
+        "rivinity_dashboard_preloader_shown",
+      );
       if (hasShownPreloader) return;
       sessionStorage.setItem("rivinity_dashboard_preloader_shown", "true");
     } catch {}
@@ -464,7 +462,9 @@ export default function DashboardPage() {
 
   return (
     <>
-      {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
+      {showPreloader && (
+        <Preloader onComplete={() => setShowPreloader(false)} />
+      )}
       <SidebarShell>
         <DashboardContent />
       </SidebarShell>
@@ -475,15 +475,48 @@ export default function DashboardPage() {
 const DashboardContent = () => {
   const router = useRouter();
   const { isAuthenticated, openAuth } = useAuthModal();
-  const navigate = (path: string) => router.push(path);
+  const navigate = useCallback((path: string) => router.push(path), [router]);
+
   const [selectedWorkingFolder, setSelectedWorkingFolder] =
     useState<ContinueWorkingType | null>("Chat");
   const [workingSearchQuery, setWorkingSearchQuery] = useState("");
   const [isWorkingSelectionMode, setIsWorkingSelectionMode] = useState(false);
-  const [selectedWorkingAssetIds, setSelectedWorkingAssetIds] = useState<Set<string>>(new Set());
-  const [activeWorkingMenuId, setActiveWorkingMenuId] = useState<string | null>(null);
+  const [selectedWorkingAssetIds, setSelectedWorkingAssetIds] = useState<
+    Set<string>
+  >(new Set());
+  const [activeWorkingMenuId, setActiveWorkingMenuId] = useState<string | null>(
+    null,
+  );
+  const workingTableRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!activeWorkingMenuId) return;
+    const handleClickOutside = () => setActiveWorkingMenuId(null);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [activeWorkingMenuId]);
+
+  const handleFolderClick = useCallback((folderId: ContinueWorkingType) => {
+    setSelectedWorkingFolder((prev) => {
+      const next = prev === folderId ? null : folderId;
+      if (next && typeof window !== "undefined" && window.innerWidth < 1024) {
+        setTimeout(() => {
+          workingTableRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 150);
+      }
+      return next;
+    });
+    setWorkingSearchQuery("");
+    setSelectedWorkingAssetIds(new Set());
+    setIsWorkingSelectionMode(false);
+    setActiveWorkingMenuId(null);
+  }, []);
 
   const [promptInput, setPromptInput] = useState("");
+  const [selectedAiMode, setSelectedAiMode] = useState<string | null>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isWebSearchActive, setIsWebSearchActive] = useState(false);
   const [isIncognito, setIsIncognito] = useState(false);
@@ -492,46 +525,31 @@ const DashboardContent = () => {
   const [isAddingTools, setIsAddingTools] = useState(false);
   const [skillPickerOpen, setSkillPickerOpen] = useState(false);
   const [skillQuery, setSkillQuery] = useState("");
-  const popoverRef = useRef<HTMLDivElement>(null);
-  const skillButtonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        skillPickerOpen &&
-        popoverRef.current &&
-        !popoverRef.current.contains(e.target as Node) &&
-        skillButtonRef.current &&
-        !skillButtonRef.current.contains(e.target as Node)
-      ) {
-        setSkillPickerOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, [skillPickerOpen]);
-
-  const filteredSkills = SKILLS.filter((s) => {
-    const q = skillQuery.toLowerCase();
-    return (
-      s.name.toLowerCase().includes(q) ||
-      s.summary.toLowerCase().includes(q) ||
-      s.category.toLowerCase().includes(q)
+  const filteredSkills = useMemo(() => {
+    const q = skillQuery.trim().toLowerCase();
+    if (!q) return SKILLS;
+    return SKILLS.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.summary.toLowerCase().includes(q) ||
+        s.category.toLowerCase().includes(q),
     );
-  });
+  }, [skillQuery]);
 
-  const workingAssets = selectedWorkingFolder
-    ? (ALL_WORKING_ASSETS[selectedWorkingFolder] || []).filter((item) => {
-        const query = workingSearchQuery.trim().toLowerCase();
-        return (
-          !query ||
-          item.name.toLowerCase().includes(query) ||
-          item.subtitle.toLowerCase().includes(query)
-        );
-      })
-    : [];
+  const workingAssets = useMemo(() => {
+    if (!selectedWorkingFolder) return [];
+    const list = ALL_WORKING_ASSETS[selectedWorkingFolder] || [];
+    const query = workingSearchQuery.trim().toLowerCase();
+    if (!query) return list;
+    return list.filter(
+      (item) =>
+        item.name.toLowerCase().includes(query) ||
+        item.subtitle.toLowerCase().includes(query),
+    );
+  }, [selectedWorkingFolder, workingSearchQuery]);
 
-  const handleNewWorkingAsset = () => {
+  const handleNewWorkingAsset = useCallback(() => {
     if (!selectedWorkingFolder) return;
     const newPaths: Record<ContinueWorkingType, string> = {
       Chat: "/chat",
@@ -542,36 +560,100 @@ const DashboardContent = () => {
       Doc: "/chat",
     };
     navigate(newPaths[selectedWorkingFolder]);
-  };
+  }, [selectedWorkingFolder, navigate]);
 
-  const toggleWorkingAssetSelection = (assetId: string) => {
+  const toggleWorkingAssetSelection = useCallback((assetId: string) => {
     setSelectedWorkingAssetIds((current) => {
       const next = new Set(current);
       if (next.has(assetId)) next.delete(assetId);
       else next.add(assetId);
       return next;
     });
-  };
+  }, []);
 
-  const handleSend = (textToSend?: string) => {
-    const finalPrompt = (
-      textToSend !== undefined ? textToSend : promptInput
-    ).trim();
-    if (!finalPrompt) return;
+  const handleSend = useCallback(
+    (textToSend?: string) => {
+      const finalPrompt = (
+        textToSend !== undefined ? textToSend : promptInput
+      ).trim();
+      if (!finalPrompt) return;
 
-    if (!isAuthenticated) {
+      const isBuilder =
+        selectedAiMode === "Fullstack Builder" ||
+        selectedAiMode === "Frontend Builder" ||
+        /\[Mode:\s*(Fullstack Builder|Frontend Builder)\]/i.test(finalPrompt);
+
+      if (isBuilder) {
+        const cleanPrompt = finalPrompt
+          .replace(/\[Mode:\s*(Fullstack Builder|Frontend Builder)\]/gi, "")
+          .trim();
+        const mode =
+          selectedAiMode ||
+          (finalPrompt.toLowerCase().includes("frontend")
+            ? "Frontend Builder"
+            : "Fullstack Builder");
+        try {
+          sessionStorage.setItem(
+            "rivinity_pending_builder_prompt",
+            cleanPrompt || finalPrompt,
+          );
+          sessionStorage.setItem("rivinity_pending_builder_mode", mode);
+        } catch {}
+        router.push("/app-builder");
+        return;
+      }
+
+      const isImage =
+        selectedAiMode === "Image Enhancer" ||
+        /\[Mode:\s*(Image Enhancer)\]/i.test(finalPrompt);
+
+      if (isImage) {
+        const cleanPrompt = finalPrompt
+          .replace(/\[Mode:\s*(Image Enhancer)\]/gi, "")
+          .trim();
+        try {
+          sessionStorage.setItem(
+            "rivinity_pending_image_prompt",
+            cleanPrompt || finalPrompt,
+          );
+        } catch {}
+        router.push("/image-generation");
+        return;
+      }
+
+      const isAudio =
+        selectedAiMode === "Audio Lab" ||
+        /\[Mode:\s*(Audio Lab)\]/i.test(finalPrompt);
+
+      if (isAudio) {
+        const cleanPrompt = finalPrompt
+          .replace(/\[Mode:\s*(Audio Lab)\]/gi, "")
+          .trim();
+        try {
+          sessionStorage.setItem(
+            "rivinity_pending_audio_prompt",
+            cleanPrompt || finalPrompt,
+          );
+        } catch {}
+        router.push("/audio-lab");
+        return;
+      }
+
+      if (!isAuthenticated) {
+        try {
+          sessionStorage.setItem("rivinity_pending_prompt", finalPrompt);
+        } catch {}
+        openAuth("signup");
+        return;
+      }
+
       try {
         sessionStorage.setItem("rivinity_pending_prompt", finalPrompt);
       } catch {}
-      openAuth("signup");
-      return;
-    }
-
-    try {
-      sessionStorage.setItem("rivinity_pending_prompt", finalPrompt);
-    } catch {}
-    router.push("/chat");
-  };
+      router.push("/chat");
+    },
+    [promptInput, isAuthenticated, openAuth, router, selectedAiMode],
+  );
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -592,48 +674,43 @@ const DashboardContent = () => {
   };
 
   return (
-    <div className="w-full h-screen max-h-screen flex-1 min-h-0 flex flex-col overflow-hidden bg-[#F8FAFC] text-[#0f172a] selection:bg-[#FF6B00]/20 antialiased">
-      {/* MAIN SCROLLABLE CONTENT */}
+    <div className="w-full h-screen max-h-screen flex-1 min-h-0 flex flex-col overflow-hidden bg-[#F8FAFC] dark:bg-zinc-950 text-[#0f172a] dark:text-zinc-100 selection:bg-[#FF6B00]/20 antialiased">
       <div className="flex-1 min-h-0 overflow-y-auto">
         <motion.main
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-10 pb-24"
+          className="max-w-6xl mx-auto px-3.5 sm:px-6 md:px-8 py-5 sm:py-7 md:py-8 flex flex-col gap-6 sm:gap-8 md:gap-9 pb-20 sm:pb-24"
         >
-          {/* HERO / CENTRALIZED PROMPT BOX */}
           <motion.section
             variants={itemVariants}
-            className="w-full max-w-[860px] mx-auto flex flex-col items-center justify-center text-center pt-0 relative z-40"
+            className="w-full max-w-[860px] mx-auto flex flex-col items-center justify-center text-center pt-0 relative z-10"
           >
-            {/* Company Logo */}
-            <div className="mb-4 sm:mb-5 flex items-center justify-center">
+            <div className="mb-3 sm:mb-4 md:mb-5 flex items-center justify-center">
               <img
                 src={logoSrc}
                 onError={(e) => {
                   e.currentTarget.src = "/watermark.png";
                 }}
                 alt="Rivinity Logo"
-                className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-[0_8px_28px_rgba(255,107,0,0.38)] select-none hover:scale-105 transition-transform duration-300"
+                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 object-contain drop-shadow-[0_8px_24px_rgba(255,107,0,0.35)] select-none hover:scale-105 transition-transform duration-300"
                 draggable={false}
               />
             </div>
 
-            <div className="text-3xl md:text-4xl font-semibold tracking-tight text-[#0f172a] mb-4 sm:mb-5 leading-tight font-display text-center">
+            <div className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-[#0f172a] dark:text-white mb-3 sm:mb-4 md:mb-5 leading-tight font-display text-center">
               What will you craft today?
             </div>
 
-            {/* Centralized Prompt Composer */}
             <div
               className={cn(
-                "w-full max-w-[700px] mx-auto relative z-40 transition-all duration-300",
+                "w-full max-w-[700px] mx-auto relative z-10 transition-all duration-300",
                 isIncognito &&
-                  "p-2 sm:p-2.5 rounded-[26px] bg-slate-100/85 dark:bg-zinc-800/60 backdrop-blur-2xl border border-slate-300 dark:border-zinc-600 shadow-[0_12px_40px_rgba(0,0,0,0.08)]",
+                  "p-2 sm:p-2.5 rounded-[22px] sm:rounded-[26px] bg-slate-100/85 dark:bg-zinc-800/60 backdrop-blur-2xl border border-slate-300 dark:border-zinc-600 shadow-[0_12px_40px_rgba(0,0,0,0.08)]",
               )}
             >
-              {/* INCOGNITO MODE TOP GLASS HEADER */}
               {isIncognito && (
-                <div className="px-3.5 sm:px-4 pt-1 pb-2 text-[12px] select-none text-slate-600 dark:text-zinc-300 font-medium tracking-tight animate-in fade-in duration-200 text-left">
+                <div className="px-3 sm:px-4 pt-1 pb-2 text-[11px] sm:text-[12px] select-none text-slate-600 dark:text-zinc-300 font-medium tracking-tight animate-in fade-in duration-200 text-left">
                   Incognito Mode Active &bull; Chats will not be saved to history
                 </div>
               )}
@@ -644,104 +721,81 @@ const DashboardContent = () => {
                   isIncognito
                     ? "bg-[#22242a] dark:bg-[#1c1e24] rounded-[20px] border border-white/10 dark:border-zinc-700/60 shadow-xl text-white"
                     : cn(
-                        "bg-white border-slate-200 shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:border-slate-400",
-                        isInputFocused && "border-slate-400 ring-2 ring-slate-400/20",
+                        "bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800 shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)] hover:border-slate-400 dark:hover:border-zinc-600",
+                        isInputFocused &&
+                          "border-slate-400 dark:border-zinc-500 ring-2 ring-slate-400/20 dark:ring-zinc-500/20",
                       ),
                 )}
               >
-                {/* QUICK AI MODES PANEL */}
                 {isAddingTools && (
                   <div
                     className={cn(
                       "border-b",
-                      isIncognito ? "border-white/10 bg-black/25" : "border-[#e2e8f0] bg-[#f8fafc]",
+                      isIncognito
+                        ? "border-white/10 bg-black/25"
+                        : "border-[#e2e8f0] dark:border-zinc-800 bg-[#f8fafc] dark:bg-zinc-900/60",
                     )}
                   >
-                    <div className="p-3 sm:p-4">
+                    <div className="p-2.5 sm:p-3.5 md:p-4">
                       <div
                         className={cn(
-                          "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider px-1 mb-2",
-                          isIncognito ? "text-zinc-400" : "text-[#64748b]",
+                          "text-[10.5px] sm:text-[11.5px] font-bold uppercase tracking-wider px-1 mb-2",
+                          isIncognito ? "text-zinc-400" : "text-[#64748b] dark:text-zinc-400",
                         )}
                       >
                         Quick AI Modes
                       </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {[
-                          {
-                            icon: Bot,
-                            label: "Rivinity Chat",
-                          },
-                          {
-                            icon: Terminal,
-                            label: "Fullstack Builder",
-                          },
-                          {
-                            icon: Layout,
-                            label: "Frontend Builder",
-                          },
-                          {
-                            icon: Search,
-                            label: "Deep Search",
-                          },
-                          {
-                            icon: Wand2,
-                            label: "Write Anything",
-                          },
-                          {
-                            icon: Sparkles,
-                            label: "Image Enhancer",
-                          },
-                          {
-                            icon: AudioWaveform,
-                            label: "Audio Lab",
-                          },
-                        ].map((tool) => (
-                          <button
-                            type="button"
-                            key={tool.label}
-                            onClick={() => {
-                              setIsAddingTools(false);
-                              setPromptInput((prev) =>
-                                prev
-                                  ? `${prev} [Mode: ${tool.label}]`
-                                  : `[Mode: ${tool.label}] `,
-                              );
-                              textareaRef.current?.focus();
-                            }}
-                            className={cn(
-                              "flex items-center gap-2.5 p-2 rounded-xl text-left border cursor-pointer",
-                              isIncognito
-                                ? "bg-white/5 hover:bg-white/10 border-white/10 text-white"
-                                : "bg-white hover:bg-[#f1f5f9] border-[#e2e8f0]",
-                            )}
-                          >
-                            <div
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2">
+                        {QUICK_AI_MODES.map((tool) => {
+                          const isSelected = selectedAiMode === tool.label;
+                          return (
+                            <button
+                              type="button"
+                              key={tool.label}
+                              onClick={() => {
+                                setIsAddingTools(false);
+                                setSelectedAiMode(tool.label);
+                                textareaRef.current?.focus();
+                              }}
                               className={cn(
-                                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                                isIncognito
-                                  ? "bg-white/10 text-white"
-                                  : "bg-slate-100 text-slate-900",
+                                "flex items-center gap-2 p-1.5 sm:p-2 rounded-xl text-left border cursor-pointer transition-colors",
+                                isSelected
+                                  ? "bg-orange-50 border-[#FF6B00]/40 dark:bg-orange-900/10 dark:border-[#FF6B00]/30"
+                                  : isIncognito
+                                    ? "bg-white/5 hover:bg-white/10 border-white/10 text-white"
+                                    : "bg-white dark:bg-zinc-800 hover:bg-[#f1f5f9] dark:hover:bg-zinc-700/60 border-[#e2e8f0] dark:border-zinc-700",
                               )}
                             >
-                              <tool.icon className="w-4 h-4" />
-                            </div>
+                              <div
+                                className={cn(
+                                  "w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0",
+                                  isSelected
+                                    ? "bg-orange-100 text-[#FF6B00] dark:bg-orange-900/20"
+                                    : isIncognito
+                                      ? "bg-white/10 text-white"
+                                      : "bg-slate-100 dark:bg-zinc-700 text-slate-900 dark:text-white",
+                                )}
+                              >
+                                <tool.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              </div>
                             <div
                               className={cn(
-                                "text-[12px] font-semibold truncate",
-                                isIncognito ? "text-zinc-200" : "text-[#0f172a]",
+                                "text-[11.5px] sm:text-[12px] font-semibold truncate",
+                                isIncognito
+                                  ? "text-zinc-200"
+                                  : "text-[#0f172a] dark:text-white",
                               )}
                             >
                               {tool.label}
                             </div>
                           </button>
-                        ))}
+                        );
+                      })}
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* SKILLS PANEL */}
                 {skillPickerOpen && (
                   <div
                     className={cn(
@@ -749,16 +803,24 @@ const DashboardContent = () => {
                       isIncognito ? "border-white/10" : "border-[#e2e8f0]",
                     )}
                   >
-                    <div className={cn(isIncognito ? "bg-black/25" : "bg-[#f8fafc] dark:bg-zinc-900/60")}>
+                    <div
+                      className={cn(
+                        isIncognito
+                          ? "bg-black/25"
+                          : "bg-[#f8fafc] dark:bg-zinc-900/60",
+                      )}
+                    >
                       <div
                         className={cn(
-                          "flex items-center gap-3 px-4 py-2.5 border-b",
-                          isIncognito ? "border-white/10" : "border-gray-100 dark:border-zinc-800",
+                          "flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 border-b",
+                          isIncognito
+                            ? "border-white/10"
+                            : "border-gray-100 dark:border-zinc-800",
                         )}
                       >
                         <div
                           className={cn(
-                            "text-[11px] sm:text-[12px] font-bold uppercase tracking-wider shrink-0",
+                            "text-[10.5px] sm:text-[11.5px] font-bold uppercase tracking-wider shrink-0",
                             isIncognito ? "text-zinc-400" : "text-[#64748b]",
                           )}
                         >
@@ -770,19 +832,19 @@ const DashboardContent = () => {
                           onChange={(e) => setSkillQuery(e.target.value)}
                           placeholder="Search skills to run…"
                           className={cn(
-                            "bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-[13px] flex-1 min-w-0",
+                            "bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-xs sm:text-[13px] flex-1 min-w-0",
                             isIncognito
                               ? "text-white placeholder:text-zinc-500"
                               : "text-[#1C1C1C] dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500",
                           )}
                         />
-                        <span className="text-[12px] text-gray-400 dark:text-zinc-500 shrink-0">
+                        <span className="text-[11px] sm:text-[12px] text-gray-400 dark:text-zinc-500 shrink-0">
                           {filteredSkills.length} available
                         </span>
                       </div>
-                      <div className="max-h-[216px] overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#e2e8f0_transparent]">
+                      <div className="max-h-[190px] sm:max-h-[220px] overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#e2e8f0_transparent]">
                         {filteredSkills.length === 0 ? (
-                          <div className="py-6 text-center text-[13px] text-gray-400 dark:text-zinc-500">
+                          <div className="py-6 text-center text-xs sm:text-[13px] text-gray-400 dark:text-zinc-500">
                             No skills found matching &ldquo;{skillQuery}&rdquo;
                           </div>
                         ) : (
@@ -796,7 +858,7 @@ const DashboardContent = () => {
                                 handleSend(`Run skill: ${s.name}`);
                               }}
                               className={cn(
-                                "bg-transparent w-full text-left px-4 py-[17px] flex items-center justify-between gap-4 cursor-pointer border-b last:border-0",
+                                "bg-transparent w-full text-left px-3.5 sm:px-4 py-3 sm:py-3.5 flex items-center justify-between gap-3 sm:gap-4 cursor-pointer border-b last:border-0",
                                 isIncognito
                                   ? "hover:bg-white/10 border-white/10"
                                   : "hover:bg-white dark:hover:bg-zinc-800 border-gray-100 dark:border-zinc-800/40",
@@ -805,16 +867,20 @@ const DashboardContent = () => {
                               <div className="min-w-0 flex-1">
                                 <div
                                   className={cn(
-                                    "text-[13px] font-bold truncate",
-                                    isIncognito ? "text-zinc-100" : "text-slate-900 dark:text-zinc-100",
+                                    "text-xs sm:text-[13px] font-bold truncate",
+                                    isIncognito
+                                      ? "text-zinc-100"
+                                      : "text-slate-900 dark:text-zinc-100",
                                   )}
                                 >
                                   {s.name}
                                 </div>
                                 <div
                                   className={cn(
-                                    "text-[11.5px] font-normal leading-relaxed mt-0.5 truncate",
-                                    isIncognito ? "text-zinc-400" : "text-slate-500 dark:text-zinc-400",
+                                    "text-[11px] sm:text-[11.5px] font-normal leading-relaxed mt-0.5 truncate",
+                                    isIncognito
+                                      ? "text-zinc-400"
+                                      : "text-slate-500 dark:text-zinc-400",
                                   )}
                                 >
                                   {s.summary}
@@ -822,8 +888,10 @@ const DashboardContent = () => {
                               </div>
                               <span
                                 className={cn(
-                                  "text-[10px] uppercase tracking-[0.1em] font-extrabold text-[#FF6B00] border border-[#FF6B00]/70 px-2.5 py-0.5 rounded-full shrink-0",
-                                  isIncognito ? "bg-white/10" : "bg-white dark:bg-zinc-900",
+                                  "text-[9px] sm:text-[10px] uppercase tracking-[0.08em] font-extrabold text-[#FF6B00] border border-[#FF6B00]/70 px-2 py-0.5 rounded-full shrink-0",
+                                  isIncognito
+                                    ? "bg-white/10"
+                                    : "bg-white dark:bg-zinc-900",
                                 )}
                               >
                                 {s.category}
@@ -836,8 +904,24 @@ const DashboardContent = () => {
                   </div>
                 )}
 
-                {/* Textarea Input */}
-                <div className="px-3.5 sm:px-4.5 pt-2.5 pb-0">
+                {selectedAiMode && (
+                  <div className="px-3 sm:px-4.5 pt-2 pb-0 flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] sm:text-[12px] font-semibold bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[#FF6B00]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] animate-pulse" />
+                      {selectedAiMode}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedAiMode(null)}
+                        className="hover:text-orange-800 dark:hover:text-orange-200 ml-0.5 cursor-pointer"
+                        title="Remove mode"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  </div>
+                )}
+
+                <div className="px-3 sm:px-4.5 pt-2 sm:pt-2.5 pb-0">
                   <textarea
                     ref={textareaRef}
                     value={promptInput}
@@ -856,18 +940,17 @@ const DashboardContent = () => {
                     }
                     rows={1}
                     className={cn(
-                      "w-full bg-transparent font-sans text-[14.5px] font-normal leading-normal focus:outline-none focus-visible:outline-none focus-visible:ring-0 resize-none border-none outline-none shadow-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden min-h-[26px]",
+                      "w-full bg-transparent font-sans text-sm sm:text-[14.5px] font-normal leading-normal focus:outline-none focus-visible:outline-none focus-visible:ring-0 resize-none border-none outline-none shadow-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden min-h-[26px]",
                       isIncognito
                         ? "text-white placeholder:text-zinc-500"
-                        : "text-[#0f172a] placeholder:text-[#94a3b8]",
+                        : "text-[#0f172a] dark:text-white placeholder:text-[#94a3b8] dark:placeholder:text-zinc-500",
                     )}
                     style={{ outline: "none" }}
                   />
                 </div>
 
-                {/* Bottom Action Controls */}
-                <div className="flex items-center justify-between w-full px-3 sm:px-4 pb-2 pt-0.5">
-                  <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+                <div className="flex items-center justify-between w-full px-2.5 sm:px-4 pb-2 pt-0.5 gap-1">
+                  <div className="flex items-center gap-0.5 sm:gap-1.5 min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-0.5">
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
@@ -875,11 +958,11 @@ const DashboardContent = () => {
                         "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 bg-transparent",
                         isIncognito
                           ? "text-zinc-400 hover:text-white hover:!bg-white/10"
-                          : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                          : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:!bg-slate-100 dark:hover:!bg-zinc-800",
                       )}
                       title="Attach file"
                     >
-                      <Paperclip className="w-4 h-4 shrink-0" strokeWidth={2} />
+                      <Paperclip className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={2} />
                     </button>
                     <input
                       type="file"
@@ -913,11 +996,11 @@ const DashboardContent = () => {
                             : "!bg-orange-50 text-[#FF6B00]"
                           : isIncognito
                             ? "text-zinc-400 hover:text-white hover:!bg-white/10"
-                            : "hover:bg-slate-100 text-slate-500 hover:text-slate-900",
+                            : "hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white",
                       )}
                       title="Add tool / mode"
                     >
-                      <Plus className="w-4 h-4 shrink-0" strokeWidth={2.2} />
+                      <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={2.2} />
                     </button>
 
                     <button
@@ -931,7 +1014,7 @@ const DashboardContent = () => {
                             : "!bg-orange-50 text-[#FF6B00]"
                           : isIncognito
                             ? "text-zinc-400 hover:text-white hover:!bg-white/10"
-                            : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                            : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:!bg-slate-100 dark:hover:!bg-zinc-800",
                       )}
                       title={
                         isWebSearchActive
@@ -939,7 +1022,7 @@ const DashboardContent = () => {
                           : "Search web (Click to enable)"
                       }
                     >
-                      <Globe className="w-4 h-4 shrink-0" strokeWidth={2} />
+                      <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={2} />
                     </button>
 
                     <button
@@ -957,18 +1040,18 @@ const DashboardContent = () => {
                             : "!bg-orange-50 text-[#FF6B00]"
                           : isIncognito
                             ? "text-zinc-400 hover:text-white hover:!bg-white/10"
-                            : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                            : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:!bg-slate-100 dark:hover:!bg-zinc-800",
                       )}
                       title="Skills"
                     >
                       <Wand2
                         className={cn(
-                          "w-4 h-4 shrink-0 transition-colors",
+                          "w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-colors",
                           skillPickerOpen
                             ? "text-[#FF6B00]"
                             : isIncognito
                               ? "text-zinc-400"
-                              : "text-slate-500",
+                              : "text-slate-500 dark:text-zinc-400",
                         )}
                         strokeWidth={2}
                       />
@@ -993,7 +1076,7 @@ const DashboardContent = () => {
                         "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0",
                         isIncognito
                           ? "!bg-white/20 text-white shadow-xs ring-1 ring-white/30"
-                          : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                          : "bg-transparent text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:!bg-slate-100 dark:hover:!bg-zinc-800",
                       )}
                       title={
                         isIncognito
@@ -1001,7 +1084,7 @@ const DashboardContent = () => {
                           : "Incognito mode (Don't save chat history)"
                       }
                     >
-                      <HatGlasses className="w-4 h-4 shrink-0" strokeWidth={2} />
+                      <HatGlasses className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={2} />
                     </button>
                   </div>
 
@@ -1013,11 +1096,11 @@ const DashboardContent = () => {
                         "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0 bg-transparent",
                         isIncognito
                           ? "text-zinc-400 hover:text-white hover:!bg-white/10"
-                          : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100",
+                          : "text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:!bg-slate-100 dark:hover:!bg-zinc-800",
                       )}
                       title="Voice input"
                     >
-                      <Mic className="w-4 h-4 shrink-0" strokeWidth={2} />
+                      <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={2} />
                     </button>
 
                     <button
@@ -1025,7 +1108,7 @@ const DashboardContent = () => {
                       onClick={() => handleSend()}
                       disabled={!promptInput.trim()}
                       className={cn(
-                        "w-8 h-8 rounded-full flex items-center justify-center shrink-0 cursor-pointer transition-all",
+                        "w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 cursor-pointer transition-all",
                         promptInput.trim()
                           ? "!bg-[#FF6B00] hover:!bg-[#E66000] text-white shadow-[0_2px_8px_rgba(255,107,0,0.30)] active:scale-95"
                           : isIncognito
@@ -1036,8 +1119,12 @@ const DashboardContent = () => {
                     >
                       <ArrowUpRight
                         className={cn(
-                          "w-4.5 h-4.5 shrink-0",
-                          promptInput.trim() ? "text-white" : isIncognito ? "text-white/40" : "text-white",
+                          "w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0",
+                          promptInput.trim()
+                            ? "text-white"
+                            : isIncognito
+                              ? "text-white/40"
+                              : "text-white",
                         )}
                         strokeWidth={2.4}
                       />
@@ -1045,54 +1132,47 @@ const DashboardContent = () => {
                   </div>
                 </div>
               </div>
-
-
             </div>
 
-            {/* Disclaimer */}
-            <div className="text-[11.5px] sm:text-[12px] text-gray-400 dark:text-zinc-500 text-center mt-2.5 sm:mt-3 select-none">
+            <div className="text-[11px] sm:text-[12px] text-gray-400 dark:text-zinc-500 text-center mt-2.5 sm:mt-3 select-none">
               Rivinity can make mistakes. Check important info.
             </div>
           </motion.section>
 
-          {/* 4. CONSOLIDATED 'CREATIVE TOOLS' GRID */}
           <motion.section
             variants={itemVariants}
-            className="w-full space-y-3.5 sm:space-y-4"
+            className="w-full space-y-3 sm:space-y-4"
           >
             <div className="flex items-end justify-between gap-4">
               <div>
-                <div className="text-xl sm:text-2xl font-semibold tracking-tight text-[#0f172a] font-display">
+                <div className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-[#0f172a] dark:text-white font-display">
                   Creative Tools
-                </div>
-                <div className="text-xs sm:text-sm text-[#64748b] mt-0.5">
-                  Consolidated production studio generators engineered for
-                  professional AI workflows
                 </div>
               </div>
             </div>
 
-            {/* 10 Square Glassmorphic Boxes (5 per row, full width edge-to-edge with generous middle spacing) */}
-            <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-5 lg:gap-6 xl:gap-7">
+            <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
               {CREATIVE_TOOLS.map((tool) => {
                 const Icon = tool.icon;
                 return (
                   <motion.div
                     key={tool.id}
-                    whileHover={{ y: -3, scale: 1.025, transition: springTransition }}
+                    whileHover={{
+                      y: -3,
+                      scale: 1.025,
+                      transition: springTransition,
+                    }}
                     whileTap={{ scale: 0.975 }}
                     onClick={() => navigate(tool.path)}
                     style={{
                       backgroundColor: tool.bg,
                       borderColor: tool.border,
                     }}
-                    className="relative aspect-[1/0.88] overflow-hidden rounded-[18px] sm:rounded-[22px] p-3.5 sm:p-4 lg:p-4 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
+                    className="relative aspect-[1/0.92] sm:aspect-[1/0.88] overflow-hidden rounded-[16px] sm:rounded-[20px] md:rounded-[22px] p-3 sm:p-4 flex flex-col justify-between cursor-pointer backdrop-blur-xl border shadow-[0_6px_20px_rgba(0,0,0,0.025),inset_0_1px_1px_rgba(255,255,255,0.7)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07),inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all duration-300 select-none group"
                   >
-                    {/* Glass inner gradient reflection */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent pointer-events-none rounded-[18px] sm:rounded-[22px]" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 dark:from-white/10 via-white/10 to-transparent pointer-events-none rounded-[16px] sm:rounded-[20px] md:rounded-[22px]" />
 
-                    {/* Rivinity Logo at Bottom-Right Corner on Hover */}
-                    <div className="absolute -bottom-5 -right-5 sm:-bottom-6 sm:-right-6 w-20 h-20 sm:w-24 sm:h-24 pointer-events-none opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 ease-out z-0">
+                    <div className="absolute -bottom-5 -right-5 sm:-bottom-6 sm:-right-6 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 pointer-events-none opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300 ease-out z-0">
                       <img
                         src={logoSrc}
                         onError={(e) => {
@@ -1104,15 +1184,13 @@ const DashboardContent = () => {
                       />
                     </div>
 
-                    {/* Top: Tool Name / Words */}
-                    <div className="relative z-10 text-[14px] sm:text-[15px] lg:text-[16px] font-bold text-slate-900 tracking-tight leading-snug font-display">
+                    <div className="relative z-10 text-[13px] sm:text-[14.5px] md:text-[15.5px] font-bold text-slate-900 dark:text-white tracking-tight leading-snug font-display line-clamp-2">
                       {tool.title}
                     </div>
 
-                    {/* Bottom: Normal Icon on Bottom Left Side */}
-                    <div className="relative z-10 mt-auto pt-2 flex items-end justify-start">
+                    <div className="relative z-10 mt-auto pt-1.5 sm:pt-2 flex items-end justify-start">
                       <Icon
-                        className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-slate-700 group-hover:text-slate-900 transition-transform duration-300 group-hover:scale-110"
+                        className="w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-slate-700 dark:text-zinc-200 group-hover:text-slate-900 dark:group-hover:text-white transition-transform duration-300 group-hover:scale-110"
                         strokeWidth={1.8}
                       />
                     </div>
@@ -1122,32 +1200,27 @@ const DashboardContent = () => {
             </div>
           </motion.section>
 
-          {/* 5. 'CONTINUE WORKING' FOLDER SYSTEM */}
           <motion.section
             variants={itemVariants}
-            className="w-full space-y-4 sm:space-y-5"
+            className="w-full space-y-3.5 sm:space-y-4 md:space-y-5 mt-2 sm:mt-4 md:mt-6"
           >
             <div className="flex items-end justify-between gap-4">
               <div>
-                <div className="text-xl sm:text-2xl font-semibold tracking-tight text-[#0f172a] font-display">
+                <div className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight text-[#0f172a] dark:text-white font-display">
                   Continue Working
-                </div>
-                <div className="text-xs sm:text-sm text-[#64748b] mt-0.5">
-                  Streamlined asset access for your active production files and sessions
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => navigate("/history")}
-                className="text-xs font-semibold text-[#64748b] hover:text-[#0f172a] flex items-center gap-1 cursor-pointer bg-transparent border-0 p-0"
+                className="text-xs font-semibold text-[#64748b] dark:text-zinc-400 hover:text-[#0f172a] dark:hover:text-white flex items-center gap-1 cursor-pointer bg-transparent border-0 p-0"
               >
                 <span>Full History</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {/* 6 Interactive Category Folders: Chat, App, Audio, Image, Video, Doc */}
-            <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-4.5 pt-5 pb-1">
+            <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-7 sm:gap-x-4 sm:gap-y-6 lg:gap-4.5 pt-5 pb-1">
               {WORKING_FOLDERS.map((folder) => {
                 const Icon = folder.icon;
                 const isSelected = selectedWorkingFolder === folder.id;
@@ -1156,22 +1229,15 @@ const DashboardContent = () => {
                 return (
                   <motion.div
                     key={folder.id}
-                    whileHover={{ y: -3, scale: 1.02, transition: springTransition }}
+                    whileHover={{
+                      y: -3,
+                      scale: 1.02,
+                      transition: springTransition,
+                    }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() =>
-                      {
-                        setSelectedWorkingFolder((prev) =>
-                          prev === folder.id ? null : folder.id,
-                        );
-                        setWorkingSearchQuery("");
-                        setSelectedWorkingAssetIds(new Set());
-                        setIsWorkingSelectionMode(false);
-                        setActiveWorkingMenuId(null);
-                      }
-                    }
-                    className="group relative w-full flex flex-col cursor-pointer select-none aspect-[4/2.75] min-h-[96px] sm:min-h-[105px]"
+                    onClick={() => handleFolderClick(folder.id)}
+                    className="group relative w-full flex flex-col cursor-pointer select-none aspect-[4/2.75] min-h-[90px] sm:min-h-[100px] md:min-h-[105px]"
                   >
-                    {/* 1. BACK FOLDER LAYER with tab */}
                     <div className="absolute inset-0 pointer-events-none drop-shadow-xs">
                       <svg
                         viewBox="0 0 200 160"
@@ -1185,14 +1251,17 @@ const DashboardContent = () => {
                       </svg>
                     </div>
 
-                    {/* 2. INNER WHITE DOCUMENT SHEET (Animates UP out of the folder when clicked!) */}
                     <motion.div
                       animate={{
                         y: isSelected ? -24 : 0,
                         opacity: isSelected ? 1 : 0.85,
                         scale: isSelected ? 1.02 : 1,
                       }}
-                      transition={{ type: "spring", stiffness: 420, damping: 24 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 420,
+                        damping: 24,
+                      }}
                       className="absolute top-[4px] sm:top-[6px] inset-x-2.5 sm:inset-x-3 h-14 bg-white rounded-t-md sm:rounded-t-lg shadow-[0_-4px_14px_rgba(0,0,0,0.08)] z-[2] border border-slate-200/90 p-1.5 flex flex-col justify-start pointer-events-none overflow-hidden"
                     >
                       <div className="w-8 sm:w-10 h-0.5 rounded-full bg-slate-300 mx-auto mt-0.5" />
@@ -1208,9 +1277,8 @@ const DashboardContent = () => {
                       )}
                     </motion.div>
 
-                    {/* 3. FRONT FROSTED GLASS POCKET */}
                     <div
-                      className={`relative z-[3] mt-[16px] sm:mt-[18px] w-full flex-1 rounded-lg sm:rounded-xl p-2.5 sm:p-3 flex flex-col justify-between backdrop-blur-xl ${folder.bgFront} ${folder.border} ${folder.shadow} ${
+                      className={`relative z-[3] mt-[15px] sm:mt-[18px] w-full flex-1 rounded-lg sm:rounded-xl p-2.5 sm:p-3 flex flex-col justify-between backdrop-blur-xl ${folder.bgFront} ${folder.border} ${folder.shadow} ${
                         isSelected
                           ? "shadow-xl -translate-y-1"
                           : "hover:-translate-y-0.5"
@@ -1219,22 +1287,20 @@ const DashboardContent = () => {
                       <div className="absolute -top-7 -right-7 w-16 h-16 bg-white/20 rounded-full blur-md pointer-events-none" />
                       <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/30 pointer-events-none rounded-lg" />
 
-                      {/* Header in Pocket */}
                       <div className="relative z-10 flex items-center justify-between">
                         <div className="flex items-center gap-1.5 min-w-0">
                           <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0 drop-shadow-xs" />
-                          <span className="text-[12px] sm:text-[13px] font-bold text-white tracking-tight drop-shadow-xs truncate">
+                          <span className="text-[11.5px] sm:text-[12.5px] md:text-[13px] font-bold text-white tracking-tight drop-shadow-xs truncate">
                             {folder.title}
                           </span>
                         </div>
-                        <span className="text-[9px] sm:text-[9.5px] font-bold bg-white/20 backdrop-blur-sm px-1.5 py-0.2 rounded-full border border-white/30 text-white shrink-0">
+                        <span className="text-[8.5px] sm:text-[9.5px] font-bold bg-white/20 backdrop-blur-sm px-1.5 py-0.2 rounded-full border border-white/30 text-white shrink-0">
                           {fileCount}
                         </span>
                       </div>
 
-                      {/* Footer in Pocket */}
                       <div className="relative z-10 pt-1 flex items-center justify-between">
-                        <span className="text-[9px] sm:text-[10px] font-medium text-white/90">
+                        <span className="text-[8.5px] sm:text-[9.5px] md:text-[10px] font-medium text-white/90">
                           {isSelected ? "Active Folder" : "Click to View"}
                         </span>
                         <ChevronDown
@@ -1249,44 +1315,54 @@ const DashboardContent = () => {
               })}
             </div>
 
-            {/* Selected Folder Works Table (Shows below when clicked!) */}
             <AnimatePresence mode="wait">
               {selectedWorkingFolder ? (
                 <motion.div
                   key={selectedWorkingFolder}
+                  ref={workingTableRef}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="w-full bg-white border border-[#e2e8f0] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+                  className="w-full bg-white dark:bg-zinc-900 border border-[#e2e8f0] dark:border-zinc-800 rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.2)] scroll-mt-6 sm:scroll-mt-8"
                 >
-                  <div className="flex flex-col gap-3 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-semibold text-slate-500">Active Category:</span>
-                      <span className={`rounded-full border px-3 py-1 text-xs font-bold tracking-wide ${WORKING_FOLDER_BADGES[selectedWorkingFolder]}`}>
+                  <div className="flex flex-col gap-2.5 border-b border-slate-100 dark:border-zinc-800 px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-zinc-400">
+                        Active Category:
+                      </span>
+                      <span
+                        className={`rounded-full border px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-bold tracking-wide ${WORKING_FOLDER_BADGES[selectedWorkingFolder]}`}
+                      >
                         {selectedWorkingFolder.toUpperCase()}
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <label className="relative min-w-0 flex-1 sm:w-52 sm:flex-none">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 dark:text-zinc-500" />
                         <input
                           type="search"
                           value={workingSearchQuery}
-                          onChange={(event) => setWorkingSearchQuery(event.target.value)}
+                          onChange={(event) =>
+                            setWorkingSearchQuery(event.target.value)
+                          }
                           placeholder={`Search ${selectedWorkingFolder.toLowerCase()}s...`}
-                          className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200"
+                          className="h-9 sm:h-10 w-full rounded-xl border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800/60 pl-8.5 pr-3 text-xs sm:text-sm text-slate-800 dark:text-zinc-100 outline-none placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:border-slate-300 dark:focus:border-zinc-600 focus:ring-2 focus:ring-slate-200 dark:focus:ring-zinc-700"
                         />
                       </label>
                       {isWorkingSelectionMode ? (
                         <>
-                          <span className="px-1 text-xs font-semibold text-slate-500">
+                          <span className="px-1 text-xs font-semibold text-slate-500 dark:text-zinc-400">
                             {selectedWorkingAssetIds.size} selected
                           </span>
                           <button
                             type="button"
-                            onClick={() => setSelectedWorkingAssetIds(new Set(workingAssets.map((item) => item.id)))}
-                            className="h-10 rounded-xl bg-slate-100 px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-200"
+                            onClick={() =>
+                              setSelectedWorkingAssetIds(
+                                new Set(workingAssets.map((item) => item.id)),
+                              )
+                            }
+                            className="h-9 sm:h-10 rounded-xl bg-slate-100 dark:bg-zinc-800 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 transition hover:bg-slate-200 dark:hover:bg-zinc-700"
                           >
                             Select all
                           </button>
@@ -1296,7 +1372,7 @@ const DashboardContent = () => {
                               setIsWorkingSelectionMode(false);
                               setSelectedWorkingAssetIds(new Set());
                             }}
-                            className="h-10 rounded-xl bg-slate-100 px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-200"
+                            className="h-9 sm:h-10 rounded-xl bg-slate-100 dark:bg-zinc-800 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 transition hover:bg-slate-200 dark:hover:bg-zinc-700"
                           >
                             Done
                           </button>
@@ -1306,14 +1382,14 @@ const DashboardContent = () => {
                           <button
                             type="button"
                             onClick={() => setIsWorkingSelectionMode(true)}
-                            className="h-10 rounded-xl bg-slate-100 px-4 text-sm font-semibold text-slate-800 transition hover:bg-slate-200"
+                            className="h-9 sm:h-10 rounded-xl bg-slate-100 dark:bg-zinc-800 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200 transition hover:bg-slate-200 dark:hover:bg-zinc-700"
                           >
                             Select
                           </button>
                           <button
                             type="button"
                             onClick={handleNewWorkingAsset}
-                            className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                            className="h-9 sm:h-10 rounded-xl bg-slate-900 dark:bg-white px-4 sm:px-5 text-xs sm:text-sm font-semibold text-white dark:text-zinc-900 transition hover:bg-slate-800 dark:hover:bg-zinc-100"
                           >
                             New
                           </button>
@@ -1322,10 +1398,11 @@ const DashboardContent = () => {
                     </div>
                   </div>
 
-                  <div className="divide-y divide-slate-100">
+                  <div className="divide-y divide-slate-100 dark:divide-zinc-800">
                     {workingAssets.length === 0 ? (
-                      <div className="px-6 py-12 text-center text-sm text-slate-500">
-                        No {selectedWorkingFolder.toLowerCase()} files match your search.
+                      <div className="px-4 sm:px-6 py-10 sm:py-12 text-center text-xs sm:text-sm text-slate-500 dark:text-zinc-400">
+                        No {selectedWorkingFolder.toLowerCase()} files match
+                        your search.
                       </div>
                     ) : (
                       workingAssets.map((item) => (
@@ -1344,18 +1421,21 @@ const DashboardContent = () => {
                           onKeyDown={(event) => {
                             if (event.key === "Enter" || event.key === " ") {
                               event.preventDefault();
-                              if (isWorkingSelectionMode) toggleWorkingAssetSelection(item.id);
+                              if (isWorkingSelectionMode)
+                                toggleWorkingAssetSelection(item.id);
                               else navigate(item.path);
                             }
                           }}
-                          className="grid grid-cols-[1fr_130px_48px] items-center px-5 py-3.5 transition-colors group cursor-pointer relative hover:bg-slate-50/80 dark:hover:bg-zinc-800/40"
+                          className="grid grid-cols-[1fr_80px_36px] sm:grid-cols-[1fr_130px_48px] items-center px-3.5 sm:px-5 py-3 sm:py-3.5 transition-colors group cursor-pointer relative hover:bg-slate-50/80 dark:hover:bg-zinc-800/40"
                         >
-                          <div className="flex items-center gap-3.5 min-w-0 pr-4">
+                          <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 pr-2 sm:pr-4">
                             {isWorkingSelectionMode && (
                               <input
                                 type="checkbox"
                                 checked={selectedWorkingAssetIds.has(item.id)}
-                                onChange={() => toggleWorkingAssetSelection(item.id)}
+                                onChange={() =>
+                                  toggleWorkingAssetSelection(item.id)
+                                }
                                 onClick={(event) => event.stopPropagation()}
                                 aria-label={`Select ${item.name}`}
                                 className="h-4 w-4 shrink-0 accent-slate-700"
@@ -1365,36 +1445,52 @@ const DashboardContent = () => {
                               {item.name}
                             </span>
                           </div>
-                          <span className="text-xs text-slate-500 dark:text-zinc-400 pl-2">
+                          <span className="text-[11px] sm:text-xs text-slate-500 dark:text-zinc-400 pl-1 sm:pl-2 truncate">
                             {item.modified}
                           </span>
-                          <div className="flex items-center justify-end pr-1 relative" onClick={(event) => event.stopPropagation()}>
+                          <div
+                            className="flex items-center justify-end pr-0.5 sm:pr-1 relative"
+                            onClick={(event) => event.stopPropagation()}
+                          >
                             <button
                               type="button"
                               title="More options"
                               aria-label={`More options for ${item.name}`}
-                              onClick={() => setActiveWorkingMenuId((current) => current === item.id ? null : item.id)}
+                              onClick={() =>
+                                setActiveWorkingMenuId((current) =>
+                                  current === item.id ? null : item.id,
+                                )
+                              }
                               className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </button>
                             {activeWorkingMenuId === item.id && (
-                              <div className="absolute right-0 top-full z-30 mt-1.5 w-44 rounded-xl border border-slate-200 bg-white p-1.5 text-left shadow-xl">
-                                <button type="button" onClick={() => { navigate(item.path); setActiveWorkingMenuId(null); }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
-                                  <Play className="h-4 w-4" /> Resume
+                              <div className="absolute right-0 top-full z-50 mt-1.5 w-36 sm:w-40 rounded-2xl border border-slate-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-1 text-left shadow-xl animate-in fade-in zoom-in-95 duration-100">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    navigate(item.path);
+                                    setActiveWorkingMenuId(null);
+                                  }}
+                                  className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer border-0"
+                                >
+                                  <Play className="h-3.5 w-3.5 text-slate-500 dark:text-zinc-400" /> Resume
                                 </button>
-                                <button type="button" onClick={() => { toast.success(`Exporting ${item.name}`); setActiveWorkingMenuId(null); }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
-                                  <Download className="h-4 w-4" /> Download
-                                </button>
-                                <button type="button" onClick={() => { toast.success(`Duplicated ${item.name} to workspace`); setActiveWorkingMenuId(null); }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
-                                  <Copy className="h-4 w-4" /> Duplicate
-                                </button>
-                                <button type="button" onClick={() => {
-                                  navigator.clipboard?.writeText(`${window.location.origin}${item.path}`);
-                                  toast.success(`Share link copied for ${item.name}`);
-                                  setActiveWorkingMenuId(null);
-                                }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">
-                                  <Share2 className="h-4 w-4" /> Share
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    navigator.clipboard?.writeText(
+                                      `${window.location.origin}${item.path}`,
+                                    );
+                                    toast.success(
+                                      `Share link copied for ${item.name}`,
+                                    );
+                                    setActiveWorkingMenuId(null);
+                                  }}
+                                  className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-zinc-200 bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer border-0"
+                                >
+                                  <Share2 className="h-3.5 w-3.5 text-slate-500 dark:text-zinc-400" /> Share
                                 </button>
                               </div>
                             )}
@@ -1410,16 +1506,17 @@ const DashboardContent = () => {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="w-full py-8 px-6 rounded-2xl border border-dashed border-slate-200 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center text-center shadow-xs"
+                  className="w-full py-7 sm:py-8 px-4 sm:px-6 rounded-2xl border border-dashed border-slate-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/40 backdrop-blur-sm flex flex-col items-center justify-center text-center shadow-xs"
                 >
-                  <div className="w-10 h-10 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center text-[#FF6B00] mb-2.5">
-                    <FolderClosed className="w-5 h-5" />
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-orange-50 dark:bg-orange-950/40 border border-orange-100 dark:border-orange-900/40 flex items-center justify-center text-[#FF6B00] mb-2 sm:mb-2.5">
+                    <FolderClosed className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                   </div>
-                  <div className="text-sm font-semibold text-slate-800">
+                  <div className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-zinc-200">
                     Click any folder above
                   </div>
-                  <div className="text-xs text-slate-500 mt-1 max-w-sm">
-                    Select Chat, App, Audio, Image, Video, or Doc to inspect and resume active production files.
+                  <div className="text-[11px] sm:text-xs text-slate-500 dark:text-zinc-400 mt-1 max-w-sm">
+                    Select Chat, App, Audio, Image, Video, or Doc to inspect and
+                    resume active production files.
                   </div>
                 </motion.div>
               )}

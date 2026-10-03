@@ -8,6 +8,73 @@ import Footer from "@/components/footer";
 import CtaSection from "@/components/sections/cta-section";
 import { TacticalHeroGraphic } from "@/components/government/TacticalHeroGraphic";
 
+/* ------------------------------------------------------------------ */
+/* Image 2 Exact Pixel Grid Mosaic Component                          */
+/* ------------------------------------------------------------------ */
+function PixelGridMosaic({ color }: { color: string }) {
+  // Exact cell positions extracted from Image 2 reference (22 cols x 4 rows)
+  const cells = [
+    // Row 0 (topmost floating pixels)
+    { col: 5, row: 0 },
+    { col: 14, row: 0 },
+    { col: 19, row: 0 },
+
+    // Row 1
+    { col: 3, row: 1 },
+    { col: 7, row: 1 },
+    { col: 9, row: 1 },
+    { col: 11, row: 1 },
+    { col: 13, row: 1 },
+    { col: 18, row: 1 },
+
+    // Row 2
+    { col: 1, row: 2 },
+    { col: 5, row: 2 },
+    { col: 8, row: 2 },
+    { col: 10, row: 2 },
+    { col: 12, row: 2 },
+    { col: 16, row: 2 },
+    { col: 18, row: 2 },
+    { col: 20, row: 2 },
+
+    // Row 3 (bottom row)
+    { col: 2, row: 3 },
+    { col: 4, row: 3 },
+    { col: 7, row: 3 },
+    { col: 9, row: 3 },
+    { col: 10, row: 3 },
+    { col: 13, row: 3 },
+    { col: 15, row: 3 },
+    { col: 16, row: 3 },
+  ];
+
+  const size = 25;
+  const pitch = 26.5;
+
+  return (
+    <div className="w-full h-20 sm:h-24 overflow-hidden relative mt-8 select-none pointer-events-none">
+      <svg
+        viewBox="0 0 580 110"
+        fill="none"
+        preserveAspectRatio="xMidYMax slice"
+        className="w-full h-full"
+      >
+        {cells.map((c, idx) => (
+          <rect
+            key={idx}
+            x={c.col * pitch + 4}
+            y={c.row * pitch + 3}
+            width={size}
+            height={size}
+            rx={2}
+            fill={color}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 export default function GovernmentPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900 selection:bg-orange-500/20 selection:text-orange-900">
@@ -89,7 +156,7 @@ export default function GovernmentPage() {
               </div>
 
               {/* Hero Sovereign Bento (3 Micro-Cards inspired by Image 1 UI) */}
-              <div className="mt-14 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 pb-2">
+              <div className="mt-28 sm:mt-32 lg:mt-36 grid grid-cols-1 md:grid-cols-3 gap-6 pb-2">
                 {/* Card 1: Concentric Striped Ring Pattern */}
                 <div className="relative flex flex-col bg-white rounded-2xl sm:rounded-3xl border border-gray-200/90 shadow-xs p-6 sm:p-8 min-h-[220px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md overflow-hidden group">
                   {/* Image 1 Pattern: Concentric Striped Circular Ring in bottom right */}
@@ -578,144 +645,54 @@ export default function GovernmentPage() {
               </p>
             </div>
 
-            {/* 3-Column Layout using Image 1 & Image 2 design synergy */}
+            {/* 3-Column Layout using Image 2 design in Orange, Pink, and Purple */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-3">
               {/* Scenario 01: Orange Theme */}
-              <div className="flex flex-col justify-between bg-[#FFF7ED] rounded-2xl sm:rounded-3xl border border-orange-200/90 shadow-xs p-6 sm:p-8 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                <div>
-                  <h3 className="text-xl font-bold text-[#111827] leading-snug">
+              <div className="flex flex-col justify-between bg-white rounded-2xl sm:rounded-3xl border border-orange-200/90 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden group">
+                <div className="p-6 sm:p-8 pb-0">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold uppercase tracking-wider bg-orange-50 text-orange-700 border border-orange-200/80">
+                    Scenario 01
+                  </span>
+                  <h3 className="mt-3.5 text-xl sm:text-2xl font-bold text-[#111827] tracking-tight leading-snug">
                     Forward Base &amp; Border Surveillance
                   </h3>
-
                   <p className="mt-3 text-sm text-[#4b5563] leading-relaxed">
-                    Real-time multi-sensor fusion (thermal FLIR, optical
-                    cameras, ground radar, and UAV telemetry streams) for
-                    automated perimeter defense along high-altitude
-                    line-of-actual-control sectors.
+                    Real-time multi-sensor fusion and automated perimeter defense for forward sectors with sub-15ms edge inference and zero external dependencies.
                   </p>
-
-                  <div className="mt-6 space-y-2.5">
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-orange-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Sub-15ms edge inference on low-power, ruggedized
-                        MIL-SPEC hardware.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-orange-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Zero reliance on commercial satellite backhauls or
-                        external APIs.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-orange-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Automated threat classification and encrypted VHF/UHF
-                        tactical radio alerts.
-                      </span>
-                    </div>
-                  </div>
                 </div>
+                <PixelGridMosaic color="#FB923C" />
               </div>
 
               {/* Scenario 02: Pink Theme */}
-              <div className="flex flex-col justify-between bg-[#FDF2F8] rounded-2xl sm:rounded-3xl border border-pink-200/90 shadow-xs p-6 sm:p-8 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                <div>
-                  <h3 className="text-xl font-bold text-[#111827] leading-snug">
+              <div className="flex flex-col justify-between bg-white rounded-2xl sm:rounded-3xl border border-pink-200/90 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden group">
+                <div className="p-6 sm:p-8 pb-0">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold uppercase tracking-wider bg-pink-50 text-pink-700 border border-pink-200/80">
+                    Scenario 02
+                  </span>
+                  <h3 className="mt-3.5 text-xl sm:text-2xl font-bold text-[#111827] tracking-tight leading-snug">
                     Multilingual Indic Signals Intelligence
                   </h3>
-
                   <p className="mt-3 text-sm text-[#4b5563] leading-relaxed">
-                    On-premise multi-dialect speech-to-text, translation, and
-                    named entity recognition across 22 scheduled Indian
-                    languages, border regional dialects, and adversarial
-                    communications.
+                    On-premise speech recognition, translation, and tactical COMINT extraction across 22 scheduled Indian languages and frontier dialects.
                   </p>
-
-                  <div className="mt-6 space-y-2.5">
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-pink-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Real-time voice intercept transcription and automated
-                        sentiment triage.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-pink-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Dialect-aware entity extraction for tactical COMINT
-                        intercept stations.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-pink-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Isolated on-premises weights without telemetry phoning
-                        home.
-                      </span>
-                    </div>
-                  </div>
                 </div>
+                <PixelGridMosaic color="#F472B6" />
               </div>
 
               {/* Scenario 03: Purple Theme */}
-              <div className="flex flex-col justify-between bg-[#FAF5FF] rounded-2xl sm:rounded-3xl border border-purple-200/90 shadow-xs p-6 sm:p-8 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
-                <div>
-                  <h3 className="text-xl font-bold text-[#111827] leading-snug">
+              <div className="flex flex-col justify-between bg-white rounded-2xl sm:rounded-3xl border border-purple-200/90 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden group">
+                <div className="p-6 sm:p-8 pb-0">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200/80">
+                    Scenario 03
+                  </span>
+                  <h3 className="mt-3.5 text-xl sm:text-2xl font-bold text-[#111827] tracking-tight leading-snug">
                     Extreme-Terrain Logistics &amp; Readiness
                   </h3>
-
                   <p className="mt-3 text-sm text-[#4b5563] leading-relaxed">
-                    Predictive maintenance, convoy route optimization, and
-                    munitions burn forecasting models calibrated for extreme
-                    climatic environments (Ladakh, Siachen, Thar, and
-                    Northeastern jungle sectors).
+                    Predictive maintenance, fleet readiness, and convoy route optimization calibrated for high-altitude, desert, and hostile combat climates.
                   </p>
-
-                  <div className="mt-6 space-y-2.5">
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-purple-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Heavy armour, aviation turbofan, and UAV battery
-                        degradation prediction.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-purple-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Winter-stocking optimization for forward logistics
-                        depots.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2 text-xs text-[#374151]">
-                      <span className="font-mono font-bold text-purple-600 mt-0.5">
-                        •
-                      </span>
-                      <span>
-                        Weather-resilient terrain passability and drone route
-                        calculating models.
-                      </span>
-                    </div>
-                  </div>
                 </div>
+                <PixelGridMosaic color="#A78BFA" />
               </div>
             </div>
           </div>
@@ -961,10 +938,7 @@ export default function GovernmentPage() {
         {/* =========================================================================
             SECTION 5: HIGH-ASSURANCE PROCUREMENT PROTOCOL (STREAMLINED & CLUTTER-FREE)
             ========================================================================= */}
-        <section
-          id="intake"
-          className="section py-20 sm:py-28 "
-        >
+        <section id="intake" className="section py-20 sm:py-28 ">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             {/* Section Header */}
             <div className="max-w-3xl mb-12 sm:mb-16">

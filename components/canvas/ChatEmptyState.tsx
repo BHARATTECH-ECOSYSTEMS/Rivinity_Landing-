@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 interface ChatEmptyStateProps {
-  /** Optional override to preview/test the night effect at any time */
   forceNight?: boolean;
 }
 
-// Background celestial stars for the night effect
 const STARS = [
   { top: "12%", left: "18%", size: 2, delay: "0s", duration: "3s" },
   { top: "16%", left: "78%", size: 2.5, delay: "0.8s", duration: "2.4s" },
@@ -21,7 +19,6 @@ const STARS = [
   { top: "24%", left: "68%", size: 2, delay: "1.9s", duration: "2.5s" },
 ];
 
-/** Clean empty state with background watermark and night atmosphere */
 export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
   const [isNight, setIsNight] = useState<boolean>(() => {
     if (forceNight) return true;
@@ -47,7 +44,6 @@ export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
     update();
     const interval = setInterval(update, 60000);
 
-    // Detect dark mode / night theme on documentElement
     const checkDark = () => {
       setIsDarkMode(
         document.documentElement.classList.contains("dark") ||
@@ -65,24 +61,17 @@ export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
     };
   }, [forceNight]);
 
-  // Night effect triggers when it's night time (9PM-5AM), when forceNight is set, or in dark mode
   const showNightAtmosphere = isNight || isDarkMode;
 
   return (
     <div className="relative flex flex-col items-center justify-center text-center select-none w-full mx-auto">
-      {/* Dynamic Keyframe Animations for the Night Effect */}
       <style>{`
         @keyframes starTwinkle {
           0%, 100% { opacity: 0.15; transform: scale(0.85); }
           50% { opacity: 0.95; transform: scale(1.3); filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9)); }
         }
-        @keyframes moonGlow {
-          0%, 100% { filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.5)); transform: scale(1); }
-          50% { filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.85)); transform: scale(1.04); }
-        }
       `}</style>
 
-      {/* Night Sky Twinkling Stars Effect (Dark Mode only) */}
       {showNightAtmosphere && isDarkMode && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 transition-opacity duration-1000 opacity-90 dark:opacity-100">
           {STARS.map((star, i) => (
@@ -102,11 +91,8 @@ export function ChatEmptyState({ forceNight = false }: ChatEmptyStateProps) {
         </div>
       )}
 
-      {/* Foreground Content - Centered cleanly */}
-      <div 
-        className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto px-4"
-      >
-        <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight leading-tight text-center w-full">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto px-4">
+        <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight text-center w-full">
           How can I help you today?
         </div>
       </div>

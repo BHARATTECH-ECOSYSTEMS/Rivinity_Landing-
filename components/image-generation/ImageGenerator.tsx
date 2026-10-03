@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import SidebarShell from "@/components/canvas/SidebarShell";
 import {
   Sparkles,
@@ -132,7 +132,6 @@ export default function ImageGenerator() {
     initialGallery[0],
   );
 
-  // Model parameters
   const [cfgScale, setCfgScale] = useState<number>(7.5);
   const [inferenceSteps, setInferenceSteps] = useState<number>(30);
   const [hiresFix, setHiresFix] = useState<boolean>(true);
@@ -141,71 +140,104 @@ export default function ImageGenerator() {
     "png",
   );
 
-  // State flags
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const handleGenerate = () => {
-    if (!prompt.trim()) {
-      toast.error("Please enter a prompt to generate an image.");
-      return;
-    }
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
-    setIsGenerating(true);
-    setProgress(0);
+  const generateWithPrompt = useCallback(
+    (promptText: string) => {
+      const targetPrompt = promptText.trim();
+      if (!targetPrompt) {
+        toast.error("Please enter a prompt to generate an image.");
+        return;
+      }
 
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
+      setPrompt(targetPrompt);
+      setIsGenerating(true);
+      setProgress(0);
+
+      if (intervalRef.current) clearInterval(intervalRef.current);
+
+      let currentProgress = 0;
+      intervalRef.current = setInterval(() => {
+        currentProgress += 20;
+        if (currentProgress >= 100) {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          intervalRef.current = null;
+          setProgress(100);
           setIsGenerating(false);
 
           const randomPresetImg =
             stylePresets[Math.floor(Math.random() * stylePresets.length)]
               .preview;
           const newGen: GenerationItem = {
-            id: `gen-${Date.now()}`,
+            id: `gen-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
             url: randomPresetImg.replace("&w=400", "&w=1200"),
             seed: Math.floor(Math.random() * 9000000) + 1000000,
-            prompt: prompt,
+            prompt: targetPrompt,
             aspectRatio: selectedRatio.label,
           };
 
-          setGallery((curr) => [newGen, ...curr.slice(0, 7)]);
+          setGallery((curr) => [
+            newGen,
+            ...curr.filter((c) => c.id !== newGen.id).slice(0, 7),
+          ]);
           setActiveImage(newGen);
           toast.success("Generation complete!");
-          return 100;
+        } else {
+          setProgress(currentProgress);
         }
-        return prev + 20;
-      });
-    }, 220);
-  };
+      }, 220);
+    },
+    [selectedRatio.label],
+  );
 
-  const handleRandomPrompt = () => {
+  const handleGenerate = useCallback(() => {
+    generateWithPrompt(prompt);
+  }, [generateWithPrompt, prompt]);
+
+  useEffect(() => {
+    try {
+      const pending = sessionStorage.getItem("rivinity_pending_image_prompt");
+      if (pending && pending.trim()) {
+        sessionStorage.removeItem("rivinity_pending_image_prompt");
+        generateWithPrompt(pending.trim());
+      }
+    } catch {}
+  }, [generateWithPrompt]);
+
+  const handleRandomPrompt = useCallback(() => {
     const random =
       samplePrompts[Math.floor(Math.random() * samplePrompts.length)];
     setPrompt(random);
     toast.info("Loaded surprise prompt!");
-  };
+  }, []);
 
-  const handleCopyPrompt = () => {
+  const handleCopyPrompt = useCallback(() => {
     navigator.clipboard.writeText(prompt);
     toast.success("Prompt copied to clipboard!");
-  };
+  }, [prompt]);
 
-  const handleDownload = () => {
+  const handleDownload = useCallback(() => {
     const link = document.createElement("a");
     link.href = activeImage.url;
     link.download = `rivinity-ai-${Date.now()}.${exportFormat}`;
     link.click();
     toast.success(`Downloading generation as .${exportFormat.toUpperCase()}`);
-  };
+  }, [activeImage.url, exportFormat]);
 
   return (
     <SidebarShell>
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full overflow-y-auto lg:overflow-hidden bg-slate-50/50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans [scrollbar-width:thin]">
-        <div className="w-full h-full max-w-none px-3 sm:px-5 lg:px-6 py-3 sm:py-3.5 flex flex-col space-y-3 pb-6 lg:pb-3 animate-in fade-in duration-200">
-          {/* HEADER SECTION */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full overflow-y-auto lg:overflow-hidden bg-[#f8fafc] dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans [scrollbar-width:thin]">
+        <div className="w-full h-full max-w-none px-3 sm:px-5 lg:px-6 py-3 sm:py-3.5 flex flex-col space-y-3 pb-8 lg:pb-3 animate-in fade-in duration-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 shrink-0">
             <div>
               <div className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
@@ -217,12 +249,11 @@ export default function ImageGenerator() {
               </div>
             </div>
 
-            {/* QUICK ACTIONS */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
               <button
                 type="button"
                 onClick={handleRandomPrompt}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-900 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-200 text-xs font-semibold border border-slate-200/90 dark:border-zinc-800 shadow-2xs transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-900 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-200 text-xs font-semibold border border-slate-200/90 dark:border-zinc-800 shadow-2xs transition-all cursor-pointer min-h-[34px]"
               >
                 <Dice5 className="w-3.5 h-3.5 text-slate-500" />
                 <span>Surprise Prompt</span>
@@ -232,7 +263,7 @@ export default function ImageGenerator() {
                 type="button"
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#FF6B00] hover:bg-[#e05e00] text-white text-xs font-semibold shadow-xs active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                className="flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#FF6B00] hover:bg-[#e05e00] text-white text-xs font-semibold shadow-xs active:scale-95 transition-all cursor-pointer disabled:opacity-50 min-h-[34px]"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>
@@ -242,13 +273,9 @@ export default function ImageGenerator() {
             </div>
           </div>
 
-          {/* WORKSPACE 2-COLUMN GRID */}
           <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-stretch">
-            {/* LEFT COLUMN: ACTIVE VIEWER & RECENT GENERATIONS */}
             <div className="lg:col-span-7 xl:col-span-8 flex flex-col space-y-3 min-h-0 h-full">
-              {/* MAIN DISPLAY CANVAS */}
-              <div className="flex-1 min-h-[340px] rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 p-3 sm:p-3.5 shadow-xs flex flex-col space-y-2.5">
-                {/* CANVAS TOOLBAR */}
+              <div className="flex-1 min-h-[260px] sm:min-h-[340px] rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 p-2.5 sm:p-3.5 shadow-xs flex flex-col space-y-2.5">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-zinc-800 shrink-0">
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded-lg bg-orange-500/10 text-[#FF6B00] text-[10.5px] font-bold tracking-wide">
@@ -279,21 +306,19 @@ export default function ImageGenerator() {
                   </div>
                 </div>
 
-                {/* IMAGE VIEWER */}
-                <div className="relative flex-1 w-full min-h-[280px] rounded-xl bg-slate-100 dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 overflow-hidden flex items-center justify-center select-none group">
+                <div className="relative flex-1 w-full min-h-[220px] sm:min-h-[280px] rounded-xl bg-slate-100 dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 overflow-hidden flex items-center justify-center select-none group">
                   <img
                     src={activeImage.url}
                     alt={activeImage.prompt}
                     className="w-full h-full object-contain pointer-events-none transition-transform duration-300 group-hover:scale-[1.01]"
                   />
 
-                  {/* ACTIVE PROMPT BOTTOM OVERLAY */}
-                  <div className="absolute bottom-2.5 inset-x-2.5 z-10 p-2.5 rounded-xl bg-black/75 backdrop-blur-md text-white text-[11px] leading-relaxed flex items-center justify-between gap-3 pointer-events-auto">
-                    <span className="truncate">{activeImage.prompt}</span>
+                  <div className="absolute bottom-2 inset-x-2 sm:bottom-2.5 sm:inset-x-2.5 z-10 p-2 sm:p-2.5 rounded-xl bg-black/80 backdrop-blur-md text-white text-[11px] leading-relaxed flex flex-col sm:flex-row sm:items-center justify-between gap-2 pointer-events-auto">
+                    <span className="truncate w-full">{activeImage.prompt}</span>
                     <button
                       type="button"
                       onClick={() => setPrompt(activeImage.prompt)}
-                      className="shrink-0 px-2 py-0.5 rounded-md bg-white/20 hover:bg-white/30 text-white text-[10px] font-semibold transition-colors cursor-pointer"
+                      className="self-end sm:self-auto shrink-0 px-2 py-1 sm:py-0.5 rounded-md bg-white/20 hover:bg-white/30 text-white text-[10px] font-semibold transition-colors cursor-pointer"
                     >
                       Remix Prompt
                     </button>
@@ -301,7 +326,6 @@ export default function ImageGenerator() {
                 </div>
               </div>
 
-              {/* GENERATION GALLERY BAR */}
               <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 p-2.5 sm:p-3 shadow-xs shrink-0">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-[10.5px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
@@ -318,11 +342,11 @@ export default function ImageGenerator() {
                 </div>
 
                 <div className="grid grid-cols-4 gap-2">
-                  {gallery.slice(0, 4).map((item) => {
+                  {gallery.slice(0, 4).map((item, idx) => {
                     const isCurrent = activeImage.id === item.id;
                     return (
                       <button
-                        key={item.id}
+                        key={`${item.id}-${idx}`}
                         type="button"
                         onClick={() => setActiveImage(item)}
                         className={cn(
@@ -347,9 +371,7 @@ export default function ImageGenerator() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: PROMPT ENGINE & GENERATOR CONTROLS */}
             <div className="lg:col-span-5 xl:col-span-4 flex flex-col space-y-3 min-h-0 h-full lg:overflow-y-auto [scrollbar-width:thin] pr-0.5">
-              {/* PROMPT INPUT CARD */}
               <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 p-3 sm:p-3.5 shadow-xs space-y-2 shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="text-[11.5px] font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
@@ -369,7 +391,6 @@ export default function ImageGenerator() {
                 </div>
               </div>
 
-              {/* ART STYLE PRESET SELECTOR */}
               <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 p-3 sm:p-3.5 shadow-xs space-y-2 shrink-0">
                 <div className="text-[11.5px] font-bold text-slate-800 dark:text-zinc-200 flex items-center justify-between">
                   <span>Visual Style Preset</span>
@@ -377,7 +398,7 @@ export default function ImageGenerator() {
                     Aesthetic Engine
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-1.5">
                   {stylePresets.map((style) => {
                     const isSelected = selectedStyle.id === style.id;
                     return (
@@ -414,7 +435,6 @@ export default function ImageGenerator() {
                 </div>
               </div>
 
-              {/* ASPECT RATIO & ENGINE CONFIG */}
               <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 p-3 sm:p-3.5 shadow-xs space-y-3 shrink-0">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-zinc-800">
                   <div className="text-[11.5px] font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
@@ -426,12 +446,11 @@ export default function ImageGenerator() {
                   </span>
                 </div>
 
-                {/* ASPECT RATIO BUTTONS */}
                 <div>
                   <div className="text-[11px] font-semibold text-slate-700 dark:text-zinc-300 mb-1">
                     Aspect Ratio
                   </div>
-                  <div className="grid grid-cols-4 gap-1.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                     {aspectRatios.map((ratio) => {
                       const isSelected = selectedRatio.label === ratio.label;
                       return (
@@ -458,9 +477,7 @@ export default function ImageGenerator() {
                   </div>
                 </div>
 
-                {/* DIFFUSION PARAMETERS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2.5 pt-0.5">
-                  {/* CFG Scale */}
                   <div className="space-y-0.5">
                     <div className="flex justify-between items-center text-[10.5px]">
                       <span className="font-semibold text-slate-700 dark:text-zinc-300">
@@ -477,11 +494,10 @@ export default function ImageGenerator() {
                       step={0.5}
                       value={cfgScale}
                       onChange={(e) => setCfgScale(Number(e.target.value))}
-                      className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-lg cursor-pointer accent-[#FF6B00]"
+                      className="w-full h-1.5 bg-slate-200 dark:bg-zinc-800 rounded-lg cursor-pointer accent-[#FF6B00]"
                     />
                   </div>
 
-                  {/* Sampling Steps */}
                   <div className="space-y-0.5">
                     <div className="flex justify-between items-center text-[10.5px]">
                       <span className="font-semibold text-slate-700 dark:text-zinc-300">
@@ -500,18 +516,17 @@ export default function ImageGenerator() {
                       onChange={(e) =>
                         setInferenceSteps(Number(e.target.value))
                       }
-                      className="w-full h-1 bg-slate-200 dark:bg-zinc-800 rounded-lg cursor-pointer accent-[#FF6B00]"
+                      className="w-full h-1.5 bg-slate-200 dark:bg-zinc-800 rounded-lg cursor-pointer accent-[#FF6B00]"
                     />
                   </div>
                 </div>
 
-                {/* FEATURE TOGGLES */}
                 <div className="grid grid-cols-2 gap-1.5 pt-1.5 border-t border-slate-100 dark:border-zinc-800">
                   <button
                     type="button"
                     onClick={() => setHiresFix(!hiresFix)}
                     className={cn(
-                      "flex items-center justify-between p-1.5 rounded-xl border text-left transition-all cursor-pointer",
+                      "flex items-center justify-between p-1.5 rounded-xl border text-left transition-all cursor-pointer min-h-[36px]",
                       hiresFix
                         ? "bg-slate-100 dark:bg-zinc-800 border-slate-300 dark:border-zinc-600 text-slate-900 dark:text-white"
                         : "bg-white dark:bg-zinc-900 border-slate-200/70 dark:border-zinc-800 text-slate-500",
@@ -522,13 +537,13 @@ export default function ImageGenerator() {
                     </div>
                     <div
                       className={cn(
-                        "w-3 h-3 rounded shrink-0 flex items-center justify-center",
+                        "w-3.5 h-3.5 rounded shrink-0 flex items-center justify-center",
                         hiresFix
                           ? "bg-[#FF6B00] text-white"
                           : "border border-slate-300",
                       )}
                     >
-                      {hiresFix && <Check className="w-2 h-2" />}
+                      {hiresFix && <Check className="w-2.5 h-2.5" />}
                     </div>
                   </button>
 
@@ -536,7 +551,7 @@ export default function ImageGenerator() {
                     type="button"
                     onClick={() => setFaceCorrection(!faceCorrection)}
                     className={cn(
-                      "flex items-center justify-between p-1.5 rounded-xl border text-left transition-all cursor-pointer",
+                      "flex items-center justify-between p-1.5 rounded-xl border text-left transition-all cursor-pointer min-h-[36px]",
                       faceCorrection
                         ? "bg-slate-100 dark:bg-zinc-800 border-slate-300 dark:border-zinc-600 text-slate-900 dark:text-white"
                         : "bg-white dark:bg-zinc-900 border-slate-200/70 dark:border-zinc-800 text-slate-500",
@@ -547,19 +562,18 @@ export default function ImageGenerator() {
                     </div>
                     <div
                       className={cn(
-                        "w-3 h-3 rounded shrink-0 flex items-center justify-center",
+                        "w-3.5 h-3.5 rounded shrink-0 flex items-center justify-center",
                         faceCorrection
                           ? "bg-[#FF6B00] text-white"
                           : "border border-slate-300",
                       )}
                     >
-                      {faceCorrection && <Check className="w-2 h-2" />}
+                      {faceCorrection && <Check className="w-2.5 h-2.5" />}
                     </div>
                   </button>
                 </div>
               </div>
 
-              {/* EXPORT & DOWNLOAD BAR */}
               <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 p-3 sm:p-3.5 shadow-xs space-y-2.5 shrink-0">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-semibold text-slate-700 dark:text-zinc-300">
@@ -587,7 +601,7 @@ export default function ImageGenerator() {
                 <button
                   type="button"
                   onClick={handleDownload}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-[#FF6B00] hover:bg-[#e05e00] text-white text-xs font-semibold shadow-xs active:scale-95 transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#FF6B00] hover:bg-[#e05e00] text-white text-xs font-semibold shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download Artwork (.{exportFormat.toUpperCase()})</span>
@@ -597,7 +611,6 @@ export default function ImageGenerator() {
           </div>
         </div>
 
-        {/* GENERATION PROGRESS MODAL OVERLAY */}
         {isGenerating && (
           <div className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
             <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-6 w-full max-w-sm flex flex-col items-center text-center shadow-xl space-y-4 animate-in zoom-in-95 duration-150">
@@ -608,7 +621,7 @@ export default function ImageGenerator() {
                 <div className="text-sm font-bold text-slate-900 dark:text-white">
                   Synthesizing Artwork with Diffusion
                 </div>
-                <div className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+                <div className="text-[11.5px] text-slate-500 dark:text-zinc-400 mt-1">
                   Sampling latent noise vectors and rendering stylistic
                   details...
                 </div>

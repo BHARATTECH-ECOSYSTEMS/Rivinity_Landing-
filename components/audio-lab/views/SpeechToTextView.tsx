@@ -96,7 +96,12 @@ const initialTranscript: TranscriptSegment[] = [
   },
 ];
 
-export default function SpeechToTextView() {
+interface SpeechToTextViewProps {
+  initialPrompt?: string;
+  initialFile?: File | null;
+}
+
+export default function SpeechToTextView({ initialPrompt, initialFile }: SpeechToTextViewProps = {}) {
   const [activeMode, setActiveMode] = useState<"record" | "upload">("upload");
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -106,11 +111,21 @@ export default function SpeechToTextView() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [diarization, setDiarization] = useState(true);
   const [smartPunctuation, setSmartPunctuation] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(initialPrompt || "");
   const [activeTab, setActiveTab] = useState<"transcript" | "summary" | "actions">("transcript");
-  const [uploadedFile, setUploadedFile] = useState<string | null>("team_sprint_sync.wav");
+  const [uploadedFile, setUploadedFile] = useState<string | null>(initialFile?.name || "team_sprint_sync.wav");
   const [playingSegmentId, setPlayingSegmentId] = useState<number | null>(null);
   const [liveWaveform, setLiveWaveform] = useState<number[]>(Array(40).fill(12));
+
+  useEffect(() => {
+    if (initialFile) {
+      setUploadedFile(initialFile.name);
+      setActiveMode("upload");
+    }
+    if (initialPrompt) {
+      setSearchQuery(initialPrompt);
+    }
+  }, [initialFile, initialPrompt]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recordingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);

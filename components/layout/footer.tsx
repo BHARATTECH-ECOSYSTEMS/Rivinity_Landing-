@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 
 /* ------------------------------------------------------------------ */
@@ -36,11 +37,13 @@ const riseItem: Variants = {
 };
 
 /* Explicit style helper to guarantee hover effect despite global CSS overrides */
-const linkStyle = "text-gray-500 hover:!text-gray-900 transition-colors duration-200 cursor-pointer text-xs sm:text-sm";
-const socialStyle = "text-gray-400 hover:!text-gray-900 transition-colors duration-200 cursor-pointer p-1";
+const linkStyle =
+  "text-gray-500 hover:!text-gray-900 transition-colors duration-200 cursor-pointer text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 rounded";
+const socialStyle =
+  "text-gray-400 hover:!text-gray-900 transition-colors duration-200 cursor-pointer p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 rounded-full";
 
 /* ------------------------------------------------------------------ */
-/* Footer Component                                                   */
+/* Footer Component (FIX-04)                                          */
 /* ------------------------------------------------------------------ */
 
 export default function Footer() {
@@ -53,14 +56,14 @@ export default function Footer() {
         viewport={{ once: true, amount: 0.1 }}
         className="w-full"
       >
-        {/* Main Grid Content */}
+        {/* Main Grid Content - md:grid-cols-3 lg:grid-cols-6 for tablet comfort */}
         <div className="container">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-x-6 gap-y-6 sm:gap-x-8 sm:gap-y-8 md:gap-x-6 lg:gap-x-8 items-start">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-6 sm:gap-x-8 sm:gap-y-8 md:gap-x-6 lg:gap-x-8 items-start">
             {/* Brand Column */}
-            <motion.div variants={riseItem} className="col-span-2 sm:col-span-3 md:col-span-2">
-              <a href="/" className="text-xl font-bold text-gray-900">
+            <motion.div variants={riseItem} className="col-span-2 sm:col-span-3 md:col-span-3 lg:col-span-2">
+              <Link href="/" className="text-xl font-bold text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 rounded">
                 Rivinity
-              </a>
+              </Link>
               <p className="text-gray-500 text-xs sm:text-sm mt-2 sm:mt-3 max-w-xs leading-relaxed">
                 Empowering humanity with intelligent productivity. Build, deploy, and scale with AI.
               </p>
@@ -112,29 +115,29 @@ export default function Footer() {
               <h4 className="font-semibold text-xs sm:text-sm text-gray-900 mb-2 sm:mb-3">Product</h4>
               <ul className="space-y-1.5 sm:space-y-2 p-0 m-0 list-none">
                 <li>
-                  <a href="/ai-chat" className={linkStyle}>
+                  <Link href="/chat" className={linkStyle}>
                     AI Chat
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/app-builder" className={linkStyle}>
+                  <Link href="/app-builder" className={linkStyle}>
                     App Builder
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/agents" className={linkStyle}>
-                    Agents
-                  </a>
+                  <Link href="/rivinity-lm" className={linkStyle}>
+                    RivinityLM
+                  </Link>
                 </li>
                 <li>
-                  <a href="/pricing" className={linkStyle}>
+                  <Link href="/pricing" className={linkStyle}>
                     Pricing
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/enterprise" className={linkStyle}>
+                  <Link href="/enterprise" className={linkStyle}>
                     Enterprise
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </motion.div>
@@ -144,24 +147,24 @@ export default function Footer() {
               <h4 className="font-semibold text-xs sm:text-sm text-gray-900 mb-2 sm:mb-3">Company</h4>
               <ul className="space-y-1.5 sm:space-y-2 p-0 m-0 list-none">
                 <li>
-                  <a href="/about" className={linkStyle}>
+                  <Link href="/about" className={linkStyle}>
                     About
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/blog" className={linkStyle}>
+                  <Link href="/blog" className={linkStyle}>
                     Blog
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/careers" className={linkStyle}>
+                  <Link href="/careers" className={linkStyle}>
                     Careers
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/research" className={linkStyle}>
+                  <Link href="/research" className={linkStyle}>
                     Research
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </motion.div>
@@ -171,24 +174,24 @@ export default function Footer() {
               <h4 className="font-semibold text-xs sm:text-sm text-gray-900 mb-2 sm:mb-3">Resources</h4>
               <ul className="space-y-1.5 sm:space-y-2 p-0 m-0 list-none">
                 <li>
-                  <a href="/docs" className={linkStyle}>
+                  <Link href="/docs" className={linkStyle}>
                     Documentation
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/apireference" className={linkStyle}>
+                  <Link href="/apireference" className={linkStyle}>
                     API Reference
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/changelog" className={linkStyle}>
+                  <Link href="/changelog" className={linkStyle}>
                     Changelog
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/status" className={linkStyle}>
+                  <Link href="/status" className={linkStyle}>
                     Status
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </motion.div>
@@ -198,50 +201,50 @@ export default function Footer() {
               <h4 className="font-semibold text-xs sm:text-sm text-gray-900 mb-2 sm:mb-3">Legal</h4>
               <ul className="space-y-1.5 sm:space-y-2 p-0 m-0 list-none">
                 <li>
-                  <a href="/privacy" className={linkStyle}>
+                  <Link href="/privacy" className={linkStyle}>
                     Privacy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/terms" className={linkStyle}>
+                  <Link href="/terms" className={linkStyle}>
                     Terms
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/security" className={linkStyle}>
+                  <Link href="/security" className={linkStyle}>
                     Security
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/compliance" className={linkStyle}>
+                  <Link href="/compliance" className={linkStyle}>
                     Compliance
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </motion.div>
           </div>
 
-          {/* Bottom Copyright Bar (Above the Watermark) with clearly visible divider line */}
+          {/* Bottom Copyright Bar with clearly visible divider line */}
           <motion.div
             variants={riseItem}
             className="border-t border-slate-200 mt-8 sm:mt-10 md:mt-12 pt-4 sm:pt-5 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-400"
           >
             <div className="m-0 text-center sm:text-left">© 2026 Rivinity, Inc. All rights reserved.</div>
             <div className="flex items-center gap-4">
-              <a
+              <Link
                 href="/status"
-                className="inline-flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-medium transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 rounded"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>All Systems Operational</span>
-              </a>
+              </Link>
               <span className="text-gray-200 hidden sm:inline">|</span>
               <div className="hidden sm:block text-center sm:text-right">Made with care in India</div>
             </div>
           </motion.div>
         </div>
 
-        {/* Responsive Watermark Typography SVG at end of page, cut off at bottom by less than half */}
+        {/* Responsive Watermark Typography SVG */}
         <motion.div
           variants={riseItem}
           className="container w-full overflow-hidden select-none pointer-events-none mt-4 sm:mt-5 md:mt-6"

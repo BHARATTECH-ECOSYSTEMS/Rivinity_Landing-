@@ -153,7 +153,7 @@ export function CtaSection({
                   <Link
                     href={buttonHref}
                     style={{ color: "#ffffff" }}
-                    className="w-full sm:w-auto min-h-[44px] px-8 py-3 rounded-full bg-[#0f172a] hover:bg-slate-800 !text-white text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group font-semibold text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+                    className="w-full sm:w-auto min-h-[44px] px-8 py-3 rounded-full bg-[#0f172a] hover:bg-slate-800 !text-white text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group font-semibold text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2"
                   >
                     <span className="!text-white text-white font-semibold" style={{ color: "#ffffff" }}>{buttonText || "Start Building"}</span>
                     <ArrowUpRight className="w-4 h-4 !text-white text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" style={{ color: "#ffffff", stroke: "#ffffff" }} />
@@ -163,7 +163,7 @@ export function CtaSection({
                 type="button"
                     onClick={handleAction}
                     style={{ color: "#ffffff" }}
-                    className="w-full sm:w-auto min-h-[44px] px-8 py-3 rounded-full bg-[#0f172a] hover:bg-slate-800 !text-white text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group font-semibold text-sm focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+                    className="w-full sm:w-auto min-h-[44px] px-8 py-3 rounded-full bg-[#0f172a] hover:bg-slate-800 !text-white text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer group font-semibold text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2"
               >
                     <span className="!text-white text-white font-semibold" style={{ color: "#ffffff" }}>{buttonText || "Start Building"}</span>
                     <ArrowUpRight className="w-4 h-4 !text-white text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" style={{ color: "#ffffff", stroke: "#ffffff" }} />
@@ -172,7 +172,7 @@ export function CtaSection({
 
               <Link
                   href="/docs"
-                  className="w-full sm:w-auto min-h-[44px] px-7 py-3 rounded-full bg-white/95 hover:bg-white text-slate-800 border border-slate-200 shadow-xs hover:border-slate-300 hover:bg-slate-50 transition-all font-medium text-sm flex items-center justify-center gap-2 group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+                  className="w-full sm:w-auto min-h-[44px] px-7 py-3 rounded-full bg-white/95 hover:bg-white text-slate-800 border border-slate-200 shadow-xs hover:border-slate-300 hover:bg-slate-50 transition-all font-medium text-sm flex items-center justify-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2"
               >
                   <span>View Documentation</span>
                   <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-slate-800 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
@@ -216,7 +216,7 @@ export function CtaSection({
                 type="button"
                 onClick={executePrimary}
                 style={{ color: "#ffffff" }}
-                className="w-full sm:w-auto min-h-[44px] px-8 py-3.5 rounded-xl sm:rounded-2xl bg-[#0f172a] hover:bg-slate-800 !text-white text-white text-sm font-semibold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
+                className="w-full sm:w-auto min-h-[44px] px-8 py-3.5 rounded-xl sm:rounded-2xl bg-[#0f172a] hover:bg-slate-800 !text-white text-white text-sm font-semibold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
               >
                 <span className="!text-white text-white font-semibold" style={{ color: "#ffffff" }}>{mainText}</span>
                 <ArrowUpRight className="w-4 h-4 !text-white text-white shrink-0" style={{ color: "#ffffff", stroke: "#ffffff" }} />
@@ -225,7 +225,7 @@ export function CtaSection({
               <Link
                 href={mainHref}
                 style={{ color: "#ffffff" }}
-                className="w-full sm:w-auto min-h-[44px] px-8 py-3.5 rounded-xl sm:rounded-2xl bg-[#0f172a] hover:bg-slate-800 !text-white text-white text-sm font-semibold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
+                className="w-full sm:w-auto min-h-[44px] px-8 py-3.5 rounded-xl sm:rounded-2xl bg-[#0f172a] hover:bg-slate-800 !text-white text-white text-sm font-semibold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
               >
                 <span className="!text-white text-white font-semibold" style={{ color: "#ffffff" }}>{mainText}</span>
                 <ArrowUpRight className="w-4 h-4 !text-white text-white shrink-0" style={{ color: "#ffffff", stroke: "#ffffff" }} />
@@ -239,7 +239,7 @@ export function CtaSection({
                   type="button"
                   onClick={onSecondaryClick}
                   style={{ color: "#1e293b" }}
-                  className="w-full sm:w-auto min-h-[44px] px-7 py-3.5 rounded-xl sm:rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 !text-slate-800 text-slate-800 text-sm font-semibold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+                  className="w-full sm:w-auto min-h-[44px] px-7 py-3.5 rounded-xl sm:rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 !text-slate-800 text-slate-800 text-sm font-semibold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
                 >
                   <span className="!text-slate-800 text-slate-800 font-semibold" style={{ color: "#1e293b" }}>{secondaryText}</span>
                   <ArrowUpRight className="w-4 h-4 !text-slate-500 text-slate-500 shrink-0" style={{ color: "#64748b", stroke: "#64748b" }} />
@@ -248,7 +248,7 @@ export function CtaSection({
                 <Link
                   href={secondaryHref || "/contact"}
                   style={{ color: "#1e293b" }}
-                  className="w-full sm:w-auto min-h-[44px] px-7 py-3.5 rounded-xl sm:rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 !text-slate-800 text-slate-800 text-sm font-semibold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+                  className="w-full sm:w-auto min-h-[44px] px-7 py-3.5 rounded-xl sm:rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 hover:border-slate-400 !text-slate-800 text-slate-800 text-sm font-semibold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
                 >
                   <span className="!text-slate-800 text-slate-800 font-semibold" style={{ color: "#1e293b" }}>{secondaryText}</span>
                   <ArrowUpRight className="w-4 h-4 !text-slate-500 text-slate-500 shrink-0" style={{ color: "#64748b", stroke: "#64748b" }} />

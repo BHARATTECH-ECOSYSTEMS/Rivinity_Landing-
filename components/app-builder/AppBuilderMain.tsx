@@ -62,8 +62,9 @@ const STARS = [
 
 const deriveProjectName = (prompt: string) => {
   const cleaned = prompt
+    .replace(/\[Mode:\s*[^\]]+\]/gi, "")
     .replace(
-      /^(build|create|make|design|generate|launch)\s+(me\s+)?(a|an|the)?\s*/i,
+      /^(build|create|make|design|generate|launch|develop)\s+(me\s+)?(a|an|the)?\s*/i,
       "",
     )
     .trim();
@@ -151,50 +152,60 @@ export default function AppBuilderMain() {
     }
   }, [input]);
 
-  const handleRenameTab = (tabId: number) => {
-    if (editingName.trim()) {
-      setTabs((prev) =>
-        prev.map((t) =>
-          t.id === tabId ? { ...t, label: editingName.trim() } : t,
-        ),
-      );
-    }
-    setEditingTabId(null);
-  };
+  const handleRenameTab = useCallback(
+    (tabId: number) => {
+      if (editingName.trim()) {
+        setTabs((prev) =>
+          prev.map((t) =>
+            t.id === tabId ? { ...t, label: editingName.trim() } : t,
+          ),
+        );
+      }
+      setEditingTabId(null);
+    },
+    [editingName],
+  );
 
-  const addTab = () => {
-    const availableIndex = tabs.length - defaultTabs.length;
-    if (availableIndex >= tabTemplates.length) {
+  const addTab = useCallback(() => {
+    setTabs((prev) => {
+      const availableIndex = prev.length - defaultTabs.length;
+      if (availableIndex >= tabTemplates.length) {
+        const newId = Date.now();
+        const newTab: Tab = {
+          id: newId,
+          icon: Layout,
+          label: `App ${prev.length + 1}`,
+        };
+        setActiveTab(newId);
+        return [...prev, newTab];
+      }
+      const template = tabTemplates[availableIndex];
       const newId = Date.now();
       const newTab: Tab = {
         id: newId,
-        icon: Layout,
-        label: `App ${tabs.length + 1}`,
+        icon: template.icon,
+        label: template.label,
       };
-      setTabs((prev) => [...prev, newTab]);
       setActiveTab(newId);
-      return;
-    }
-    const template = tabTemplates[availableIndex];
-    const newTab: Tab = {
-      id: Date.now(),
-      icon: template.icon,
-      label: template.label,
-    };
-    setTabs((prev) => [...prev, newTab]);
-    setActiveTab(newTab.id);
-  };
+      return [...prev, newTab];
+    });
+  }, []);
 
-  const closeTab = (id: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (tabs.length <= 1) return;
-    const idx = tabs.findIndex((t) => t.id === id);
-    if (activeTab === id) {
-      const next = tabs[idx + 1] || tabs[idx - 1];
-      setActiveTab(next.id);
-    }
-    setTabs((prev) => prev.filter((t) => t.id !== id));
-  };
+  const closeTab = useCallback(
+    (id: number, e: React.MouseEvent) => {
+      e.stopPropagation();
+      setTabs((prev) => {
+        if (prev.length <= 1) return prev;
+        const idx = prev.findIndex((t) => t.id === id);
+        if (activeTab === id) {
+          const next = prev[idx + 1] || prev[idx - 1];
+          if (next) setActiveTab(next.id);
+        }
+        return prev.filter((t) => t.id !== id);
+      });
+    },
+    [activeTab],
+  );
 
   const pushMessage = useCallback((text: string) => {
     setMessages((prev) => [
@@ -216,7 +227,22 @@ export default function AppBuilderMain() {
     }, 700);
   }, []);
 
-  const handleSend = () => {
+  useEffect(() => {
+    try {
+      const pendingPrompt = sessionStorage.getItem("rivinity_pending_builder_prompt");
+      const pendingMode = sessionStorage.getItem("rivinity_pending_builder_mode");
+      if (pendingPrompt && pendingPrompt.trim()) {
+        sessionStorage.removeItem("rivinity_pending_builder_prompt");
+        sessionStorage.removeItem("rivinity_pending_builder_mode");
+        const title = deriveProjectName(pendingPrompt.trim());
+        setProjectName(title);
+        setWorkbenchOpen(true);
+        pushMessage(pendingPrompt.trim());
+      }
+    } catch {}
+  }, [pushMessage]);
+
+  const handleSend = useCallback(() => {
     if (!input.trim()) return;
     if (!workbenchOpen) {
       setProjectName(deriveProjectName(input));
@@ -224,7 +250,7 @@ export default function AppBuilderMain() {
     }
     pushMessage(input);
     setInput("");
-  };
+  }, [input, workbenchOpen, pushMessage]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -256,7 +282,7 @@ export default function AppBuilderMain() {
   const showNightAtmosphere = isDarkMode || isNight;
 
   return (
-    <div className="relative flex-1 flex flex-col min-w-0 min-h-0 bg-white dark:bg-zinc-950 overflow-hidden h-full">
+    <div className="relative flex-1 flex flex-col min-w-0 min-h-0 bg-[#f8fafc] dark:bg-zinc-950 overflow-hidden h-full">
       <style>{`
         @keyframes starTwinkle {
           0%, 100% { opacity: 0.15; transform: scale(0.85); }
@@ -310,11 +336,17 @@ export default function AppBuilderMain() {
         <img
           src="/watermark.png"
           alt=""
+          width={520}
+          height={520}
           draggable={false}
           decoding="async"
           loading="eager"
           className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[460px] md:h-[460px] lg:w-[520px] lg:h-[520px] object-contain pointer-events-none select-none transition-all duration-300 opacity-[0.055] dark:opacity-[0.05]"
           style={{
+            maxWidth: "min(520px, 80vw)",
+            maxHeight: "min(520px, 80vh)",
+            width: "100%",
+            height: "auto",
             transform: "translateZ(0)",
             WebkitTransform: "translateZ(0)",
           }}

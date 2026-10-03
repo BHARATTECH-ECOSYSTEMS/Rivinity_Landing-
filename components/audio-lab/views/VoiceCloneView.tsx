@@ -49,7 +49,11 @@ interface ClonedVoice {
   avatarColor: string;
 }
 
-export default function VoiceCloneView() {
+interface VoiceCloneViewProps {
+  initialPrompt?: string;
+}
+
+export default function VoiceCloneView({ initialPrompt }: VoiceCloneViewProps = {}) {
   const [activeTab, setActiveTab] = useState<"clone" | "morph" | "library">("clone");
   const [voiceName, setVoiceName] = useState("My Studio Voice");
   const [voiceDescription, setVoiceDescription] = useState("Authentic personal voice clone for narration and videos");
@@ -65,8 +69,15 @@ export default function VoiceCloneView() {
   const [isPlayingOriginal, setIsPlayingOriginal] = useState(false);
   const [isPlayingTransformed, setIsPlayingTransformed] = useState(false);
   const [transformText, setTransformText] = useState(
+    initialPrompt ||
     "Welcome to Rivinity Audio Lab. This demonstrates real-time voice timbre morphing and neural cloning."
   );
+
+  useEffect(() => {
+    if (initialPrompt) {
+      setTransformText(initialPrompt);
+    }
+  }, [initialPrompt]);
 
   /* Audio Sliders */
   const [pitchShift, setPitchShift] = useState(4);

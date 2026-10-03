@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Check, Plus } from "lucide-react";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 import FaqSection from "@/components/sections/faq-section";
 import CtaSection from "@/components/sections/cta-section";
 import { useAuthModal } from "@/components/auth/auth-context";
@@ -158,13 +158,14 @@ export default function PricingPage() {
               </p>
             </div>
 
-            {/* Toggle */}
+            {/* Toggle (FIX-10: aria-pressed added) */}
             <div className="mb-10 sm:mb-12 flex justify-center">
               <div className="inline-flex items-center rounded-xl bg-gray-100 p-1 border border-slate-200">
                 <button
                   type="button"
+                  aria-pressed={!yearly}
                   onClick={() => setYearly(false)}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition cursor-pointer ${
+                  className={`rounded-lg px-4 py-2 text-sm font-medium transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] ${
                     !yearly
                       ? "bg-white text-[#0f172a] shadow-xs"
                       : "text-[#64748b] hover:text-[#0f172a]"
@@ -174,15 +175,16 @@ export default function PricingPage() {
                 </button>
                 <button
                   type="button"
+                  aria-pressed={yearly}
                   onClick={() => setYearly(true)}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition cursor-pointer ${
+                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] ${
                     yearly
                       ? "bg-white text-[#0f172a] shadow-xs"
                       : "text-[#64748b] hover:text-[#0f172a]"
                   }`}
                 >
                   Yearly
-                  <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-semibold text-[#FF6B00]">
+                  <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-semibold text-[#FF5A1F]">
                     Up to 20% off
                   </span>
                 </button>
@@ -198,13 +200,13 @@ export default function PricingPage() {
                   key={plan.name}
                   className={`pricing-card relative flex flex-col justify-between rounded-2xl bg-white border p-6 xl:p-7 transition-all hover:shadow-md ${
                     plan.highlighted
-                      ? "featured border-2 border-[#FF6B00] shadow-md"
+                      ? "featured border-2 border-[#FF5A1F] shadow-md"
                       : "border-slate-200"
                   }`}
                 >
                   {/* Badge */}
                   {plan.badge && (
-                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF6B00] px-3 py-1 text-xs font-semibold text-white tracking-wide shadow-xs">
+                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF5A1F] px-3 py-1 text-xs font-semibold text-white tracking-wide shadow-xs">
                       {plan.badge}
                     </span>
                   )}
@@ -256,7 +258,7 @@ export default function PricingPage() {
                               ) : (
                                 <Check
                                   size={15}
-                                  className="shrink-0 text-[#FF6B00] stroke-[3] mt-0.5"
+                                  className="shrink-0 text-[#FF5A1F] stroke-[3] mt-0.5"
                                 />
                               )}
                               <span className="text-xs xl:text-sm text-[#374151]">
@@ -269,14 +271,14 @@ export default function PricingPage() {
                     </ul>
                   </div>
 
-                  {/* CTA Button */}
+                  {/* CTA Button (FIX-10: focus-visible:outline-none + unified #FF5A1F) */}
                   <div className="mt-8 pt-2">
                     {plan.custom ? (
                       <Link
                         href={plan.cta.href}
-                        className={`flex items-center justify-center min-h-[44px] w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 ${
+                        className={`flex items-center justify-center min-h-[44px] w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2 ${
                           plan.highlighted
-                            ? "bg-[#FF6B00] text-white hover:bg-[#e66000] shadow-xs"
+                            ? "bg-[#FF5A1F] text-white hover:bg-[#E54D15] shadow-xs"
                             : "bg-gray-100 text-[#0f172a] hover:bg-gray-200 border border-gray-200"
                         }`}
                       >
@@ -286,9 +288,9 @@ export default function PricingPage() {
                       <button
                         type="button"
                         onClick={() => openAuth("signup")}
-                        className={`flex items-center justify-center min-h-[44px] w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 ${
+                        className={`flex items-center justify-center min-h-[44px] w-full rounded-xl py-2.5 xl:py-3 text-center text-xs xl:text-sm font-semibold transition cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2 ${
                           plan.highlighted
-                            ? "bg-[#FF6B00] text-white hover:bg-[#e66000] shadow-xs"
+                            ? "bg-[#FF5A1F] text-white hover:bg-[#E54D15] shadow-xs"
                             : "bg-gray-100 text-[#0f172a] hover:bg-gray-200 border border-gray-200"
                         }`}
                       >

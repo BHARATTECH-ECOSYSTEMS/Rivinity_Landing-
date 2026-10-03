@@ -502,7 +502,7 @@ export function HowItWorks() {
                       type="button"
                       onClick={() => scrollToStep(idx)}
                       className={cn(
-                        "flex items-center justify-center min-h-[44px] px-4 sm:px-6 md:px-7 py-2 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2",
+                        "flex items-center justify-center min-h-[44px] px-4 sm:px-6 md:px-7 py-2 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold tracking-wider transition-all duration-300 active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2",
                         isCurrent
                           ? "bg-[#0f172a] text-white shadow-xl scale-110"
                           : "bg-white text-slate-700 border border-slate-200 shadow-xs hover:border-slate-400 hover:text-slate-900 hover:scale-105",

@@ -78,7 +78,6 @@ export default function FlashcardsView() {
   const [showHint, setShowHint] = useState(false);
   const [topic, setTopic] = useState("");
   const [generating, setGenerating] = useState(false);
-  const [activeTab, setActiveTab] = useState<"study" | "deck">("study");
 
   const currentCard = cards[currentIndex] || cards[0];
   const masteredCount = cards.filter((c) => c.mastered).length;
@@ -150,9 +149,8 @@ export default function FlashcardsView() {
   };
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {}
-      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+    <div className="flex h-full min-h-0 w-full flex-col bg-[#f8fafc] dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans">
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-[#f8fafc]/80 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
             <Layers className="h-4 w-4" strokeWidth={2.2} />
@@ -174,7 +172,7 @@ export default function FlashcardsView() {
           <button
             type="button"
             onClick={shuffleDeck}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 text-[11.5px] font-medium text-slate-700 dark:text-zinc-300 hover:border-[#FF6B00]/40 transition-colors"
+            className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 text-[11.5px] font-medium text-slate-700 dark:text-zinc-300 hover:border-[#FF6B00]/40 transition-colors cursor-pointer"
           >
             <Shuffle className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Shuffle Deck</span>
@@ -182,10 +180,8 @@ export default function FlashcardsView() {
         </div>
       </div>
 
-      {}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
-        <div className="mx-auto w-full max-w-[800px] space-y-5">
-          {}
+      <div className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="mx-auto w-full max-w-[800px] space-y-4">
           <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -202,7 +198,7 @@ export default function FlashcardsView() {
                 type="button"
                 onClick={generateFlashcards}
                 disabled={generating || !topic.trim()}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#FF6B00] px-4 py-2 text-[12.5px] font-semibold text-white hover:bg-[#E66000] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-[#FF6B00] px-4 py-2 text-[12.5px] font-semibold text-white hover:bg-[#E66000] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0 cursor-pointer"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>{generating ? "Generating..." : "Create Cards"}</span>
@@ -210,7 +206,6 @@ export default function FlashcardsView() {
             </div>
           </div>
 
-          {}
           <div className="flex items-center justify-between text-[12px] font-medium text-slate-500 dark:text-zinc-400">
             <div className="flex items-center gap-2">
               <span>
@@ -226,7 +221,6 @@ export default function FlashcardsView() {
             </div>
           </div>
 
-          {}
           <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-zinc-800 overflow-hidden">
             <div
               className="h-full bg-[#FF6B00] transition-all duration-300 rounded-full"
@@ -234,12 +228,10 @@ export default function FlashcardsView() {
             />
           </div>
 
-          {}
           <div
             onClick={() => setFlipped(!flipped)}
-            className="group relative min-h-[300px] sm:min-h-[340px] cursor-pointer rounded-3xl border-2 border-slate-200/90 dark:border-zinc-800 bg-gradient-to-b from-white to-slate-50/50 dark:from-zinc-900 dark:to-zinc-900/60 p-6 sm:p-10 shadow-md hover:border-[#FF6B00]/40 transition-all flex flex-col justify-between"
+            className="group relative min-h-[260px] sm:min-h-[340px] cursor-pointer rounded-3xl border-2 border-slate-200/90 dark:border-zinc-800 bg-gradient-to-b from-white to-slate-50/50 dark:from-zinc-900 dark:to-zinc-900/60 p-5 sm:p-10 shadow-md hover:border-[#FF6B00]/40 transition-all flex flex-col justify-between"
           >
-            {}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
@@ -258,19 +250,17 @@ export default function FlashcardsView() {
               </div>
             </div>
 
-            {}
-            <div className="my-auto py-6 text-center">
+            <div className="my-auto py-4 sm:py-6 text-center">
               {!flipped ? (
-                <div className="text-lg sm:text-xl md:text-2xl font-semibold text-slate-900 dark:text-zinc-100 leading-snug">
+                <div className="text-base sm:text-xl md:text-2xl font-semibold text-slate-900 dark:text-zinc-100 leading-snug">
                   {currentCard.front}
                 </div>
               ) : (
-                <div className="text-base sm:text-lg text-slate-800 dark:text-zinc-200 leading-relaxed font-sans max-w-xl mx-auto">
+                <div className="text-sm sm:text-base md:text-lg text-slate-800 dark:text-zinc-200 leading-relaxed font-sans max-w-xl mx-auto">
                   {currentCard.back}
                 </div>
               )}
 
-              {}
               {!flipped && currentCard.hint && (
                 <div className="mt-4">
                   {showHint ? (
@@ -284,7 +274,7 @@ export default function FlashcardsView() {
                         e.stopPropagation();
                         setShowHint(true);
                       }}
-                      className="inline-flex items-center gap-1 text-[11.5px] text-slate-400 hover:text-[#FF6B00] transition-colors"
+                      className="inline-flex items-center gap-1 text-[11.5px] text-slate-400 hover:text-[#FF6B00] transition-colors cursor-pointer"
                     >
                       <Eye className="h-3.5 w-3.5" />
                       <span>Reveal hint</span>
@@ -294,19 +284,17 @@ export default function FlashcardsView() {
               )}
             </div>
 
-            {}
             <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-zinc-800 text-[11.5px] text-slate-400 dark:text-zinc-500">
               <span>{flipped ? "Back" : "Front"}</span>
               <span className="font-mono">#{currentCard.id}</span>
             </div>
           </div>
 
-          {}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
             <button
               type="button"
               onClick={prevCard}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-[12.5px] font-medium text-slate-700 dark:text-zinc-300 hover:border-[#FF6B00]/40 transition-colors shadow-xs"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-2.5 text-[12.5px] font-medium text-slate-700 dark:text-zinc-300 hover:border-[#FF6B00]/40 transition-colors shadow-xs cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
               <span>Previous</span>
@@ -316,7 +304,7 @@ export default function FlashcardsView() {
               <button
                 type="button"
                 onClick={() => toggleMastered(currentCard.id)}
-                className={`flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-[12.5px] font-semibold transition-all ${
+                className={`flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-[12.5px] font-semibold transition-all cursor-pointer ${
                   currentCard.mastered
                     ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
                     : "bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700"
@@ -330,7 +318,7 @@ export default function FlashcardsView() {
             <button
               type="button"
               onClick={nextCard}
-              className="flex items-center gap-1.5 rounded-xl bg-[#FF6B00] px-4 py-2.5 text-[12.5px] font-semibold text-white hover:bg-[#E66000] transition-colors shadow-xs"
+              className="flex items-center gap-1.5 rounded-xl bg-[#FF6B00] px-4 py-2.5 text-[12.5px] font-semibold text-white hover:bg-[#E66000] transition-colors shadow-xs cursor-pointer"
             >
               <span>Next</span>
               <ChevronRight className="h-4 w-4" />

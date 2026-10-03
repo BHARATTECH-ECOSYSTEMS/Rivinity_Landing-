@@ -37,6 +37,9 @@ import {
   Ban,
   Copy,
   ChevronLeft,
+  Sun,
+  Moon,
+  Monitor,
 } from "lucide-react";
 import {
   Dialog,
@@ -52,6 +55,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { useTheme, type ThemeMode } from "@/components/theme/ThemeProvider";
 
 type IconType = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -635,7 +640,7 @@ const SelectRow = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="min-w-[150px] p-1 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-md"
+        className="z-[300] min-w-[150px] p-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-lg"
       >
         {options.map((opt) => {
           const isSelected = opt === value;
@@ -700,12 +705,14 @@ const SettingsDialog = ({
   const [sidebarSearch, setSidebarSearch] = useState("");
   const [mobileShowContent, setMobileShowContent] = useState(false);
 
-  const [appearance, setAppearance] = useState("Light");
+  const { theme, setTheme } = useTheme();
   const [contrast, setContrast] = useState("Normal");
   const [accent, setAccent] = useState("Default");
   const [language, setLanguage] = useState("English");
   const [higherIntel, setHigherIntel] = useState(true);
   const [dictation, setDictation] = useState(true);
+
+  const appearance = theme.charAt(0).toUpperCase() + theme.slice(1);
 
   const [pushNotif, setPushNotif] = useState(true);
   const [emailNotif, setEmailNotif] = useState(false);
@@ -723,6 +730,10 @@ const SettingsDialog = ({
   const [chatHistory, setChatHistory] = useState(true);
 
   const [twoFA, setTwoFA] = useState(false);
+  const [safeSearch, setSafeSearch] = useState(true);
+  const [requirePin, setRequirePin] = useState(false);
+  const [trustedEmail, setTrustedEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
     if (!open) setMobileShowContent(false);
@@ -750,12 +761,55 @@ const SettingsDialog = ({
       case "general":
         return (
           <div className="w-full">
-            <SelectRow
-              label="Appearance"
-              value={appearance}
-              options={["Light", "Dark", "System"]}
-              onChange={setAppearance}
-            />
+            {/* Appearance theme selector with direct interactive buttons */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="min-w-0">
+                <span className="text-[13px] text-zinc-900 dark:text-white font-medium block">
+                  Appearance
+                </span>
+                <span className="text-[11.5px] text-zinc-500 dark:text-zinc-400 block mt-0.5">
+                  Select workspace theme for dashboard and tools
+                </span>
+              </div>
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-zinc-100 dark:bg-zinc-800/90 border border-zinc-200 dark:border-zinc-700/80 shrink-0 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setTheme("light")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all cursor-pointer ${
+                    theme === "light"
+                      ? "bg-white text-zinc-900 shadow-xs font-semibold border border-zinc-200/80"
+                      : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                  }`}
+                >
+                  <Sun className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Light</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTheme("dark")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all cursor-pointer ${
+                    theme === "dark"
+                      ? "bg-zinc-900 text-white shadow-xs font-semibold border border-zinc-700"
+                      : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                  }`}
+                >
+                  <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>Dark</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTheme("system")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium transition-all cursor-pointer ${
+                    theme === "system"
+                      ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white shadow-xs font-semibold border border-zinc-200 dark:border-zinc-700"
+                      : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                  }`}
+                >
+                  <Monitor className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>System</span>
+                </button>
+              </div>
+            </div>
             <SelectRow
               label="Contrast"
               value={contrast}
@@ -928,7 +982,11 @@ const SettingsDialog = ({
                   Download a JSON archive of your account data.
                 </div>
               </div>
-              <button className="text-[12px] px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-zinc-200 cursor-pointer self-start sm:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => toast.success("Workspace data archive initiated. Downloading JSON...")}
+                className="text-[12px] px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-zinc-200 cursor-pointer self-start sm:self-auto shrink-0"
+              >
                 Export Data
               </button>
             </div>
@@ -941,7 +999,11 @@ const SettingsDialog = ({
                   Permanently delete stored history across devices.
                 </div>
               </div>
-              <button className="flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-400 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer self-start sm:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => toast.error("All local cached conversations purged")}
+                className="flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-950 dark:text-rose-400 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 transition-colors cursor-pointer self-start sm:self-auto shrink-0"
+              >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete</span>
               </button>
@@ -993,10 +1055,27 @@ const SettingsDialog = ({
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 max-w-sm">
                 <Input
                   type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="New password"
                   className="h-8 text-[12px] bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
                 />
-                <button className="px-3 py-1.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer shrink-0 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!newPassword.trim()) {
+                      toast.error("Please enter a new password");
+                      return;
+                    }
+                    if (newPassword.length < 8) {
+                      toast.error("Password must be at least 8 characters");
+                      return;
+                    }
+                    toast.success("Password updated successfully");
+                    setNewPassword("");
+                  }}
+                  className="px-3 py-1.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer shrink-0 self-start sm:self-auto"
+                >
                   Update
                 </button>
               </div>
@@ -1010,7 +1089,11 @@ const SettingsDialog = ({
                   Revoke access from unknown devices.
                 </div>
               </div>
-              <button className="text-[12px] px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-zinc-200 cursor-pointer self-start sm:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => toast.info("Active session list refreshed")}
+                className="text-[12px] px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-zinc-200 cursor-pointer self-start sm:self-auto shrink-0"
+              >
                 View All
               </button>
             </div>
@@ -1022,14 +1105,14 @@ const SettingsDialog = ({
             <ToggleRow
               label="Safe Search & Filter"
               description="Restrict explicit or mature responses."
-              checked={true}
-              onChange={() => {}}
+              checked={safeSearch}
+              onChange={setSafeSearch}
             />
             <ToggleRow
               label="Require PIN for Upgrades"
               description="Prevent unexpected tier changes."
-              checked={false}
-              onChange={() => {}}
+              checked={requirePin}
+              onChange={setRequirePin}
             />
           </div>
         );
@@ -1042,10 +1125,24 @@ const SettingsDialog = ({
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 max-w-md">
               <Input
+                type="email"
+                value={trustedEmail}
+                onChange={(e) => setTrustedEmail(e.target.value)}
                 placeholder="colleague@domain.com"
                 className="h-8 text-[12px] bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700"
               />
-              <button className="px-3.5 py-1.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer shrink-0 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!trustedEmail.trim()) {
+                    toast.error("Please enter an email address");
+                    return;
+                  }
+                  toast.success(`Invitation sent to ${trustedEmail.trim()}`);
+                  setTrustedEmail("");
+                }}
+                className="px-3.5 py-1.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[12px] font-medium hover:opacity-90 transition-opacity cursor-pointer shrink-0 self-start sm:self-auto"
+              >
                 Add
               </button>
             </div>
@@ -1129,7 +1226,7 @@ const SettingsDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 overflow-hidden flex flex-col border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-none sm:rounded-2xl bg-white dark:bg-zinc-950 w-full max-w-full h-[100dvh] sm:max-w-[740px] sm:w-[90vw] sm:h-[640px] sm:max-h-[90vh]">
+      <DialogContent className="p-0 overflow-hidden flex flex-col border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-none sm:rounded-2xl bg-white dark:bg-zinc-950 w-full max-w-full h-[100dvh] sm:max-w-[740px] sm:w-[90vw] sm:h-[640px] sm:max-h-[90vh] z-[200]">
         <DialogTitle className="sr-only">Settings</DialogTitle>
         <DialogDescription className="sr-only">
           Manage workspace configurations and preferences.
@@ -1141,7 +1238,7 @@ const SettingsDialog = ({
               mobileShowContent ? "hidden" : "flex"
             } md:flex w-full md:w-[210px] shrink-0 border-r-0 md:border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex-col h-full overflow-y-auto [&::-webkit-scrollbar]:hidden`}
           >
-            <div className="px-3.5 pt-4 pb-3 border-b border-zinc-200 dark:border-zinc-800 space-y-2.5">
+            <div className="px-3.5 pr-12 md:pr-3.5 pt-4 pb-3 border-b border-zinc-200 dark:border-zinc-800 space-y-2.5">
               <div className="text-[14px] font-semibold text-zinc-900 dark:text-white tracking-tight px-1">
                 Preferences
               </div>
@@ -1232,7 +1329,7 @@ const SettingsDialog = ({
           >
             <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5 [scrollbar-width:thin]">
               <div className="w-full">
-              <div className="mb-4 pb-3 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="mb-4 pb-3 border-b border-zinc-200 dark:border-zinc-800 pr-10 sm:pr-0">
               <div className="flex items-start gap-1.5">
                 <button
                   type="button"

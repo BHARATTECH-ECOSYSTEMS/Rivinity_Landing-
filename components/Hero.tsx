@@ -63,7 +63,7 @@ type Product = {
 
 const PRODUCTS: Product[] = [
   { id: "website", label: "Website Builder", icon: Globe, accent: "#7CC1E4", reply: "Spinning up a fresh site canvas." },
-  { id: "agent", label: "Agent Studio", icon: Bot, accent: "#B48BFF", reply: "Designing your autonomous agent." },
+  { id: "agent", label: "Agent Playground", icon: Bot, accent: "#B48BFF", reply: "Designing your autonomous agent." },
   { id: "chat", label: "AI Chat", icon: Sparkles, accent: "#FFB199", reply: "Opening a new intelligent conversation." },
   { id: "video", label: "Prompt to Video", icon: Video, accent: "#FF8A5C", reply: "Great choice. Let's create your video." },
   { id: "image", label: "Image Studio", icon: ImageIcon, accent: "#F7A8C8", reply: "Warming up the image canvas." },
@@ -111,12 +111,14 @@ export function Hero() {
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const reduce = useReducedMotion();
 
-  // Rotating placeholder prompts
+  // Rotating placeholder prompts (FIX-09: paused when document is hidden)
   useEffect(() => {
     if (input) return;
     const id = setInterval(() => {
-      setPlaceholderIdx((i) => (i + 1) % ROTATING_PROMPTS.length);
-    }, 2600);
+      if (!document.hidden) {
+        setPlaceholderIdx((i) => (i + 1) % ROTATING_PROMPTS.length);
+      }
+    }, 3200);
     return () => clearInterval(id);
   }, [input]);
 
@@ -174,14 +176,14 @@ export function Hero() {
           <Link
             href="/dashboard"
             style={{ color: "#ffffff" }}
-            className="group inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-[#0f172a] !text-white text-white text-sm font-semibold hover:bg-[#1e293b] shadow-[0_4px_16px_rgba(15,23,42,0.14)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.22)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+            className="group inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-[#0f172a] !text-white text-white text-sm font-semibold hover:bg-[#1e293b] shadow-[0_4px_16px_rgba(15,23,42,0.14)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.22)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2"
           >
             <span className="!text-white text-white font-semibold" style={{ color: "#ffffff" }}>Start Building</span>
             <ArrowUpRight className="w-4 h-4 !text-white text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" style={{ color: "#ffffff", stroke: "#ffffff" }} />
           </Link>
           <Link
             href="/docs"
-            className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-white/95 hover:bg-white text-slate-800 text-sm font-medium border border-slate-200 shadow-xs hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-full bg-white/95 hover:bg-white text-slate-800 text-sm font-medium border border-slate-200 shadow-xs hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2"
           >
             <span>View Documentation</span>
             <ArrowUpRight className="w-4 h-4 text-slate-500" />
@@ -196,7 +198,7 @@ export function Hero() {
             reduce={!!reduce}
             petals={[
               { label: "Website Builder", onSelect: () => submit("Website Builder") },
-              { label: "Agent Studio", onSelect: () => submit("Agent Studio") },
+              { label: "Agent Playground", onSelect: () => submit("Agent Playground") },
               { label: "Image Studio", onSelect: () => submit("Image Studio") },
               { label: "Prompt to Video", onSelect: () => submit("Prompt to Video") },
               { label: "Deep Research", onSelect: () => submit("Deep Research") },
@@ -502,17 +504,18 @@ function Composer({
             onChange={(e) => setInput(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            className="w-full h-11 bg-transparent outline-none border-0 text-[14px] text-ink placeholder:text-transparent"
+            placeholder="Ask Rivinity anything or describe an agent..."
+            className="w-full h-11 bg-transparent outline-none border-0 text-[14px] text-ink placeholder:text-neutral-400 placeholder:opacity-0 focus:placeholder:opacity-100 transition-opacity"
             aria-label="Ask Rivinity"
           />
-          {!input && (
-            <div className="pointer-events-none absolute inset-0 flex items-center text-[13.5px] sm:text-[14px] text-ink-muted">
+          {!input && !focused && (
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center text-[13.5px] sm:text-[14px] text-ink-muted">
               <span className="mr-2 text-neutral-400 font-normal shrink-0">Try prompt:</span>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={placeholder}
                   initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: focused ? 0.35 : 0.8, y: 0 }}
+                  animate={{ opacity: 0.8, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.35 }}
                   className="text-neutral-700 font-medium truncate"

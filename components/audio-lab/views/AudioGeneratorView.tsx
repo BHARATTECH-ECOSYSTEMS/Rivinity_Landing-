@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Play,
   Pause,
@@ -47,8 +47,12 @@ const presets = [
   { id: "footsteps", label: "Footsteps on Gravel", category: "urban", duration: "6s", prompt: "Slow deliberate footsteps walking across dry crisp gravel stones in a quiet alley" },
 ];
 
-export default function AudioGeneratorView() {
-  const [prompt, setPrompt] = useState("");
+interface AudioGeneratorViewProps {
+  initialPrompt?: string;
+}
+
+export default function AudioGeneratorView({ initialPrompt }: AudioGeneratorViewProps = {}) {
+  const [prompt, setPrompt] = useState(initialPrompt || "");
   const [duration, setDuration] = useState(8);
   const [influence, setInfluence] = useState(85);
   const [isLoopable, setIsLoopable] = useState(false);
@@ -92,6 +96,28 @@ export default function AudioGeneratorView() {
       loop: true,
     },
   ]);
+
+  useEffect(() => {
+    if (initialPrompt && initialPrompt.trim()) {
+      setPrompt(initialPrompt.trim());
+      setGeneratedSounds((prev) => {
+        if (prev.some((s) => s.prompt === initialPrompt.trim())) return prev;
+        return [
+          {
+            id: `gen-${Date.now()}`,
+            prompt: initialPrompt.trim(),
+            category: "Custom FX",
+            duration: `${duration}s`,
+            playing: true,
+            liked: false,
+            loop: false,
+          },
+          ...prev,
+        ];
+      });
+      toast.success("Sound effect generated!");
+    }
+  }, [initialPrompt, duration]);
 
   const filteredPresets = useMemo(
     () =>

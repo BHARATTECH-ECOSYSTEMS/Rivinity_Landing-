@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -38,72 +39,38 @@ import {
 interface AgentCard {
   id: string;
   title: string;
-  role: string;
-  badge: string;
   description: string;
-  metrics: string;
-  icon: React.ComponentType<{ className?: string }>;
-  tags: string[];
-  samplePrompt: string;
-  theme: "orange";
+  image: string;
 }
 
 const AGENTS: AgentCard[] = [
   {
     id: "tutor",
     title: "Socratic AI Tutor",
-    role: "24/7 Personalized Student Guide",
-    badge: "Active • Sub-40ms",
     description:
-      "Guides students step-by-step through complex problem sets using Socratic dialogue without revealing direct answers prematurely.",
-    metrics: "94% Concept Retention",
-    icon: Brain,
-    tags: ["STEM & Humanities", "LaTeX & Code", "Adaptive Hinting"],
-    samplePrompt:
-      "Explain Dijkstra's algorithm step-by-step using an intuitive city subway network analogy.",
-    theme: "orange",
+      "Step-by-step guidance through complex problem sets with adaptive hints.",
+    image: "/images/education/agent-yellow.jpg",
   },
   {
     id: "curriculum",
     title: "Curriculum Architect",
-    role: "Syllabus & Problem-Set Generator",
-    badge: "Accredited Standards",
     description:
-      "Synthesizes 16-week semester syllabi, interactive lesson plans, coding exercises, and lecture slide outlines in seconds.",
-    metrics: "12x Faster Course Prep",
-    icon: BookOpen,
-    tags: ["ABET / AACSB Ready", "Custom Rubrics", "Prerequisite Mapping"],
-    samplePrompt:
-      "Generate a 4-week module on Distributed Consensus algorithms with weekly lab challenges.",
-    theme: "orange",
+      "Generates accredited syllabi, lesson plans, and exercises in seconds.",
+    image: "/images/education/agent-pink.jpg",
   },
   {
     id: "grader",
     title: "Instant Rubric Grader",
-    role: "Automated Feedback & AST Analysis",
-    badge: "Canvas & Moodle Synced",
     description:
-      "Evaluates student code, essays, and mathematical proofs against instructor rubrics with actionable, line-by-line feedback.",
-    metrics: "99.2% Rubric Alignment",
-    icon: FileCheck2,
-    tags: ["AST Code Testing", "Plagiarism Defense", "Formative Critique"],
-    samplePrompt:
-      "Analyze this Python sorting algorithm for edge cases and time complexity adherence.",
-    theme: "orange",
+      "Line-by-line feedback and rubric grading for code, essays, and proofs.",
+    image: "/images/education/agent-purple.jpg",
   },
   {
     id: "retention",
     title: "Retention Sentinel",
-    role: "Early Warning & Student Care",
-    badge: "Predictive Analytics",
     description:
-      "Tracks engagement drops and comprehension bottlenecks in real-time, proactively alerting teaching assistants before exams.",
-    metrics: "+38% Course Completion",
-    icon: BarChart3,
-    tags: ["Bottleneck Alerts", "Intervention Flags", "Cohort Trends"],
-    samplePrompt:
-      "Flag students struggling with Week 3 Recursion and draft individualized review material.",
-    theme: "orange",
+      "Real-time alerts on student bottlenecks and engagement drops before exams.",
+    image: "/images/education/agent-green.jpg",
   },
 ];
 
@@ -589,20 +556,12 @@ export default function EducationPage() {
     <div className="w-full relative overflow-x-clip flex flex-col items-start bg-white text-[#0f172a] selection:bg-orange-100 selection:text-orange-900">
       <Header />
 
-      <main className="w-full bg-white">
+      <main className="w-full pt-20 sm:pt-24 md:pt-28 flex-1 bg-white">
         {/* =========================================================
             SECTION 1: HERO SECTION (Pure White, No Gradients)
         ========================================================= */}
-        <section className="relative w-full pt-28 sm:pt-32 md:pt-36 pb-12 sm:pb-16 md:pb-24 overflow-hidden bg-white">
+        <section className="relative w-full pt-20 sm:pt-28 pb-12 sm:pb-16 md:pb-24 overflow-hidden bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-            {/* Pill Tag with Solid Orange Dot */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-700 mb-6 shadow-2xs"
-            ></motion.div>
-
             {/* Main Headline (Clean solid typography) */}
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -707,7 +666,7 @@ export default function EducationPage() {
                   <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
                   <div className="hidden sm:flex items-center gap-1.5 ml-4 px-3 py-1 rounded-md bg-white border border-slate-200/80 text-[11px] font-mono text-slate-500">
                     <Lock className="w-3 h-3 text-[#FF6B00]" />
-                    <span>rivinity.edu/cs106a/agent-studio</span>
+                    <span>rivinity.edu/cs106a/agent-playground</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-medium text-slate-600">
@@ -733,10 +692,6 @@ export default function EducationPage() {
                           CS 106A
                         </span>
                       </div>
-                      <span className="text-[10px] px-1.5 py-0.5 bg-orange-50 text-orange-800 border border-orange-200/80 rounded font-mono font-medium flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] animate-pulse" />
-                        LIVE
-                      </span>
                     </div>
 
                     {/* Nav Items with Skeletons */}
@@ -788,7 +743,6 @@ export default function EducationPage() {
                         <Zap className="w-3 h-3 text-[#FF6B00] fill-[#FF6B00]" />
                         <span>Academic Agent</span>
                       </div>
-                      <span className="w-2 h-2 rounded-full bg-[#FF6B00] animate-pulse" />
                     </div>
                     <div className="space-y-1.5">
                       <div className="w-full h-2 bg-slate-200 rounded animate-pulse" />
@@ -814,7 +768,6 @@ export default function EducationPage() {
                       <div className="w-56 sm:w-72 h-2.5 bg-slate-100 rounded animate-pulse" />
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-orange-800 font-medium bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200/70">
-                      <div className="w-2 h-2 rounded-full bg-[#FF6B00] animate-pulse" />
                       <span>Canvas 2-Way Sync</span>
                     </div>
                   </div>
@@ -920,17 +873,6 @@ export default function EducationPage() {
                         <div className="w-12 h-2 bg-slate-200/60 rounded animate-pulse" />
                       </div>
                     </div>
-                  </div>
-
-                  {/* Bottom Tool Sync Bar */}
-                  <div className="flex flex-wrap items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-100">
-                    <span className="font-medium text-slate-500">
-                      Connected to Stanford CS Course Repo • Auto-grades on git
-                      push
-                    </span>
-                    <span className="text-[#FF6B00] font-semibold cursor-pointer hover:underline">
-                      View Full Lecture Workflow →
-                    </span>
                   </div>
                 </div>
               </div>
@@ -1046,118 +988,52 @@ export default function EducationPage() {
         {/* =========================================================
             SECTION 3: AGENT HIERARCHY TREE (Solid Badges & Colors)
         ========================================================= */}
-        <section className="w-full py-12 sm:py-16 md:py-24 bg-white relative overflow-hidden">
+        <section className="w-full py-16 sm:py-20 md:py-24 bg-white relative overflow-hidden">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
+            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0f172a] leading-tight font-display">
                 Run Smarter Courses. With Education AI Agents.
               </h2>
               <p className="mt-3 text-sm sm:text-base text-slate-600 max-w-xl mx-auto">
                 Specialized autonomous agents coordinated by a centralized
-                academic orchestrator that honors instructor guidelines and
-                FERPA privacy.
+                academic orchestrator that honors instructor guidelines.
               </p>
             </div>
 
-            {/* Central Top Orchestrator Node (Solid Orange Accent) */}
-            <div className="flex flex-col items-center">
-              <div className="px-6 py-3.5 rounded-2xl bg-white border-2 border-slate-200 shadow-md text-center text-slate-900 font-bold text-sm sm:text-base z-10 relative group hover:border-orange-400 transition-colors">
-                <div className="text-xs text-[#FF6B00] font-mono font-semibold uppercase tracking-wider">
-                  Core Router
-                </div>
-                <div>Rivinity Academic Orchestrator</div>
-              </div>
-
-              {/* Connecting Tree Lines to 4 Bottom Boxes */}
-              <div className="w-full hidden lg:flex flex-col items-center">
-                {/* Vertical stem from Router */}
-                <div className="w-0.5 h-8 bg-slate-300 -mb-[1px] relative z-10" />
-
-                {/* Horizontal branch bar and 4 vertical drop lines directly into cards */}
-                <div className="w-full relative h-8">
-                  <div className="grid grid-cols-4 gap-5 w-full h-full">
-                    {/* Column 1 Dropdown */}
-                    <div className="relative h-full flex justify-center">
-                      {/* Horizontal branch from center to Col 2 */}
-                      <div className="absolute top-0 left-1/2 -right-[21px] h-0.5 bg-slate-300" />
-                      {/* Junction dot */}
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#FF6B00] z-20" />
-                      {/* Vertical line dropping into card */}
-                      <div className="w-0.5 h-[calc(100%+1px)] bg-slate-300" />
+            {/* 4 Agent Cards in Image 2 Style */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+              {AGENTS.map((agent) => {
+                return (
+                  <div
+                    key={agent.id}
+                    className="group rounded-2xl border border-slate-200/90 bg-white shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col text-left"
+                  >
+                    {/* Top Aesthetic Banner with Gentle Blur */}
+                    <div className="relative w-full h-44 sm:h-48 overflow-hidden bg-slate-100">
+                      <Image
+                        src={agent.image}
+                        alt={agent.title}
+                        fill
+                        className="object-cover blur-[10px] scale-110 group-hover:scale-115 transition-transform duration-500"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      />
                     </div>
 
-                    {/* Column 2 Dropdown */}
-                    <div className="relative h-full flex justify-center">
-                      {/* Horizontal branch across Col 2 and gap to Col 3 */}
-                      <div className="absolute top-0 left-0 -right-[21px] h-0.5 bg-slate-300" />
-                      {/* Junction dot */}
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#FF6B00] z-20" />
-                      {/* Vertical line dropping into card */}
-                      <div className="w-0.5 h-[calc(100%+1px)] bg-slate-300" />
-                    </div>
+                    {/* Card Content */}
+                    <div className="p-6 sm:p-7 flex flex-col flex-1 bg-white">
+                      {/* Card Title */}
+                      <h3 className="text-xl font-bold text-slate-900 mb-2 font-display tracking-tight">
+                        {agent.title}
+                      </h3>
 
-                    {/* Column 3 Dropdown */}
-                    <div className="relative h-full flex justify-center">
-                      {/* Horizontal branch across Col 3 and gap to Col 4 */}
-                      <div className="absolute top-0 left-0 -right-[21px] h-0.5 bg-slate-300" />
-                      {/* Junction dot */}
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#FF6B00] z-20" />
-                      {/* Vertical line dropping into card */}
-                      <div className="w-0.5 h-[calc(100%+1px)] bg-slate-300" />
-                    </div>
-
-                    {/* Column 4 Dropdown */}
-                    <div className="relative h-full flex justify-center">
-                      {/* Horizontal branch from left edge to center */}
-                      <div className="absolute top-0 left-0 w-1/2 h-0.5 bg-slate-300" />
-                      {/* Junction dot */}
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#FF6B00] z-20" />
-                      {/* Vertical line dropping into card */}
-                      <div className="w-0.5 h-[calc(100%+1px)] bg-slate-300" />
+                      {/* Minimal Necessary Text */}
+                      <p className="text-sm text-slate-600 leading-relaxed">
+                        {agent.description}
+                      </p>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Mobile / Tablet Connector fallback */}
-              <div className="w-full flex lg:hidden flex-col items-center mb-6">
-                <div className="w-0.5 h-8 bg-slate-300" />
-                <div className="w-2.5 h-2.5 rounded-full bg-[#FF6B00]" />
-              </div>
-
-              {/* 4 Agent Cards with Clean Orange Theme */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
-                {AGENTS.map((agent) => {
-                  return (
-                    <div
-                      key={agent.id}
-                      className="rounded-2xl p-5 border border-slate-200 bg-white hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between text-left"
-                    >
-                      <div>
-                        <h4 className="text-base font-bold text-slate-900 mb-1">
-                          {agent.title}
-                        </h4>
-                        <div className="text-xs font-medium mb-2.5 text-orange-700">
-                          {agent.role}
-                        </div>
-
-                        <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                          {agent.description}
-                        </p>
-                      </div>
-
-                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <span className="text-slate-400 text-[11px]">
-                          Impact Metric:
-                        </span>
-                        <span className="font-mono font-bold text-slate-800">
-                          {agent.metrics}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -1261,29 +1137,29 @@ export default function EducationPage() {
               </p>
             </div>
 
-            {/* Monthly / Annual Toggle with Clean Solid Active State */}
-            <div className="inline-flex items-center p-1 rounded-full bg-slate-100 border border-slate-200 mb-12 shadow-2xs">
+            {/* Monthly / Yearly Toggle (Image 1 Style) */}
+            <div className="inline-flex items-center p-1.5 rounded-2xl bg-[#EEF2F6] border border-slate-200/80 mb-12 shadow-2xs">
               <button
                 onClick={() => setBillingPeriod("monthly")}
-                className={`px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                   billingPeriod === "monthly"
-                    ? "bg-[#0f172a] text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-white text-slate-900 shadow-xs font-bold"
+                    : "text-slate-500 hover:text-slate-800"
                 }`}
               >
                 Monthly
               </button>
               <button
                 onClick={() => setBillingPeriod("annual")}
-                className={`px-5 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 cursor-pointer ${
                   billingPeriod === "annual"
-                    ? "bg-[#0f172a] text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-white text-slate-900 shadow-xs font-bold"
+                    : "text-slate-500 hover:text-slate-800"
                 }`}
               >
-                <span>Annual</span>
-                <span className="text-[10px] bg-[#FF6B00] px-1.5 py-0.2 rounded-full text-white font-mono">
-                  Save 20%
+                <span>Yearly</span>
+                <span className="text-xs font-semibold text-[#FF6B00] bg-[#FFF4EC] px-2.5 py-0.5 rounded-full border border-orange-100/70">
+                  Up to 20% off
                 </span>
               </button>
             </div>
@@ -1339,7 +1215,7 @@ export default function EducationPage() {
               {/* Plan 2: Department & Campus (Orange Accent) */}
               <div className="rounded-3xl border-2 border-orange-400 bg-white p-7 sm:p-8 flex flex-col justify-between shadow-xl relative ring-4 ring-orange-400/10">
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-[#FF6B00] text-white font-bold text-[10px] tracking-wider uppercase shadow-xs">
-                  Most Popular for Colleges
+                  Most Popular
                 </div>
 
                 <div>

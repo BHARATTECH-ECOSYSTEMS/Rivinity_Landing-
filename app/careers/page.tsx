@@ -604,11 +604,11 @@ export default function CareersPage() {
           {/* ================================================================
               SECTION 3: HOW WE ENGINEER SYSTEMS (4 Oval Cards - Image 2 Style)
               ================================================================ */}
-          <section id="philosophy" className="section-sm scroll-mt-32">
-            <div className="p-8 sm:p-12">
+          <section id="philosophy" className="scroll-mt-32 py-10 sm:py-14">
+            <div className="px-4 sm:px-8">
               {/* Section Header */}
-              <div className="max-w-2xl mb-12">
-                <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-950 tracking-tight mb-3">
+              <div className="max-w-2xl mb-8 sm:mb-10">
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-950 tracking-tight mb-2.5">
                   How We Engineer Systems
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
@@ -617,16 +617,16 @@ export default function CareersPage() {
                 </p>
               </div>
 
-              {/* 4 Vertical Oval Cards (Image 2 Design in Light Theme, No Arrows, No Numbering, Uniform Style, Hover: Bigger) */}
+              {/* 4 Vertical Oval Cards (Compact, Proportional Spacing) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 items-stretch">
                 {OVAL_SYSTEMS.map((card) => (
                   <div
                     key={card.id}
-                    className="relative rounded-[9999px] min-h-[450px] sm:min-h-[480px] pt-12 sm:pt-14 pb-8 sm:pb-10 px-6 sm:px-7 flex flex-col justify-between items-center text-center transition-all duration-300 ease-out hover:scale-105 cursor-pointer select-none bg-gray-50/70 hover:bg-white border border-gray-200/90 hover:border-gray-300 text-gray-950 shadow-xs hover:shadow-md"
+                    className="relative rounded-[9999px] py-10 sm:py-12 px-6 flex flex-col items-center justify-center text-center transition-all duration-300 ease-out hover:scale-105 cursor-pointer select-none bg-gray-50/70 hover:bg-white border border-gray-200/90 hover:border-gray-300 text-gray-950 shadow-xs hover:shadow-md"
                   >
-                    {/* Upper/Center Content: Title + Subtitle */}
-                    <div className="my-auto py-4 space-y-2.5 max-w-[190px]">
-                      <h3 className="text-lg sm:text-xl font-bold tracking-tight leading-snug !text-gray-950">
+                    {/* Title + Subtitle */}
+                    <div className="space-y-1.5 max-w-[190px]">
+                      <h3 className="text-base sm:text-lg font-bold tracking-tight leading-snug !text-gray-950">
                         {card.title}
                       </h3>
                       <p className="text-xs font-medium tracking-wide !text-gray-500">
@@ -634,13 +634,13 @@ export default function CareersPage() {
                       </p>
                     </div>
 
-                    {/* Bottom Content: Divider + Description */}
-                    <div className="w-full space-y-4">
-                      <div className="w-2/3 mx-auto border-t border-gray-200" />
-                      <p className="text-[11px] sm:text-xs leading-relaxed max-w-[175px] mx-auto !text-gray-600">
-                        {card.desc}
-                      </p>
-                    </div>
+                    {/* Divider */}
+                    <div className="w-14 my-5 sm:my-6 border-t border-gray-200" />
+
+                    {/* Description */}
+                    <p className="text-[11px] sm:text-xs leading-relaxed max-w-[170px] !text-gray-600">
+                      {card.desc}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -765,26 +765,9 @@ export default function CareersPage() {
                   <h3 className="text-lg sm:text-xl font-bold !text-gray-950 mb-2.5 tracking-tight">
                     {step.title}
                   </h3>
-                  <p className="text-xs sm:text-sm !text-gray-700 leading-relaxed mb-6">
+                  <p className="text-xs sm:text-sm !text-gray-700 leading-relaxed">
                     {step.desc}
                   </p>
-
-                  {/* Highlights / Signal Checklist */}
-                  <div className="space-y-2 pt-4 border-t border-gray-950/10">
-                    {step.highlights.map((item) => (
-                      <div
-                        key={item}
-                        className="flex items-start text-xs !text-gray-700 leading-snug"
-                      >
-                        <span
-                          className={`mr-2 font-bold select-none ${step.bulletColor}`}
-                        >
-                          •
-                        </span>
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               ))}
             </div>

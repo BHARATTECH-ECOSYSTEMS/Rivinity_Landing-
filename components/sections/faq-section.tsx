@@ -92,14 +92,14 @@ export function FaqSection({
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                   aria-expanded={isOpen}
-                  className="flex w-full items-center justify-between gap-4 py-5 text-left bg-transparent min-h-[44px] transition-colors sm:py-6 cursor-pointer rounded-lg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+                  className="flex w-full items-center justify-between gap-4 py-5 text-left bg-transparent min-h-[44px] transition-colors sm:py-6 cursor-pointer rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2"
                 >
-                  <span className="text-base font-semibold text-[#0f172a] group-hover:text-[#FF6B00] transition-colors sm:text-lg">
+                  <span className="text-base font-semibold text-[#0f172a] group-hover:text-[#FF5A1F] transition-colors sm:text-lg">
                     {questionText}
                   </span>
                   <span
                     className={`flex h-6 w-6 shrink-0 items-center justify-center text-[#0f172a] transition-transform duration-200 ${
-                      isOpen ? "rotate-45 text-[#FF6B00]" : ""
+                      isOpen ? "rotate-45 text-[#FF5A1F]" : ""
                     }`}
                     aria-hidden="true"
                   >

@@ -33,7 +33,7 @@ type DropdownSection = {
 
 type FeaturedItem = {
   label: string;
-  href: string;
+  href?: string;
   icon: LucideIcon;
   description: string;
   badge?: string;
@@ -48,14 +48,14 @@ type NavItem =
   | { label: string; href: string; type: "link" }
   | { label: string; type: "dropdown"; variant?: "sections"; sections: DropdownSection[] }
   | {
-    label: string;
-    type: "dropdown";
-    variant: "platform";
-    featured: FeaturedItem[];
-    categories: CategoryGroup[];
-  };
+      label: string;
+      type: "dropdown";
+      variant: "platform";
+      featured: FeaturedItem[];
+      categories: CategoryGroup[];
+    };
 
-// ---------- Nav data ----------
+// ---------- Nav data (Verified against canonical routes - FIX-03) ----------
 
 const navItems: NavItem[] = [
   {
@@ -65,19 +65,19 @@ const navItems: NavItem[] = [
     featured: [
       {
         label: "AI Chat",
-        href: "/products/ai-chat",
+        href: "/chat",
         icon: MessageSquare,
         description: "Talk to your data and workflows",
       },
       {
-        label: "Agent Studio",
-        href: "/products/agent-studio",
+        label: "Agent Playground",
+        href: "/agent-playground",
         icon: Bot,
-        description: "Build and deploy custom agents",
+        description: "Build, simulate, and test autonomous agents",
       },
       {
         label: "RivinityLM",
-        href: "/products/rivinitylm",
+        href: "/rivinity-lm",
         icon: Sparkles,
         description: "Your own fine-tuned model",
       },
@@ -89,14 +89,14 @@ const navItems: NavItem[] = [
       },
       {
         label: "RivinityCloud",
-        href: "/products/cloud",
+        href: "",
         icon: Cloud,
         description: "Managed infra for your agents",
         badge: "Coming soon",
       },
       {
         label: "Supernova",
-        href: "/products/supernova",
+        href: "",
         icon: Zap,
         description: "Next-gen orchestration engine",
         badge: "Coming soon",
@@ -106,33 +106,35 @@ const navItems: NavItem[] = [
       {
         label: "Build",
         items: [
-          { label: "Agent", href: "/products/agent" },
-          { label: "Design", href: "/design" },
-          { label: "Database", href: "/products/database" },
+          { label: "App Builder", href: "/app-builder" },
+          { label: "Knowledge Base", href: "/knowledge-base" },
         ],
       },
       {
         label: "Automate",
         items: [
-          { label: "Publish", href: "/products/deployments" },
+          { label: "Marketplace", href: "/marketplace" },
           { label: "Integrations", href: "/docs" },
         ],
       },
       {
         label: "Create",
-        items: [{ label: "Mobile", href: "/products/mobile" }],
+        items: [
+          { label: "Audio Lab", href: "/audio-lab" },
+          { label: "Image Generation", href: "/image-generation" },
+        ],
       },
       {
         label: "Understand",
         items: [
-          { label: "Analytics", href: "/products/analytics" },
-          { label: "Observability", href: "/products/observability" },
+          { label: "Analytics", href: "/analytics" },
+          { label: "API Reference", href: "/apireference" },
         ],
       },
       {
         label: "Govern",
         items: [
-          { label: "Guardrails", href: "/products/guardrails" },
+          { label: "Security", href: "/security" },
           { label: "Compliance", href: "/compliance" },
         ],
       },
@@ -152,7 +154,7 @@ const navItems: NavItem[] = [
           {
             label: "Government & Defense",
             href: "/government",
-            description: "FedRAMP-ready deployments for public sector teams",
+            description: "Sovereign, air-gapped AI deployments",
           },
           {
             label: "Cybersecurity",
@@ -173,19 +175,7 @@ const navItems: NavItem[] = [
       },
     ],
   },
-  {
-    label: "Research",
-    type: "dropdown",
-    sections: [
-      {
-        items: [
-          { label: "Research", href: "/research", description: "Advancing foundational AI architecture" },
-          { label: "Blog", href: "/blog", description: "Product updates, engineering deep dives" },
-          { label: "Rivinity Academy", href: "/academy", description: "Guides, tutorials, and certifications" },
-        ],
-      },
-    ],
-  },
+  { label: "Research", href: "/research", type: "link" },
   { label: "Pricing", href: "/pricing", type: "link" },
   {
     label: "Company",
@@ -193,16 +183,26 @@ const navItems: NavItem[] = [
     sections: [
       {
         items: [
-          { label: "About Us", href: "/about", description: "Our mission, leadership, and global team" },
-          { label: "Careers", href: "/careers", description: "Join our fast-growing global team" },
-          { label: "Contact", href: "/contact", description: "Talk with our product specialists" },
+          {
+            label: "About Us",
+            href: "/about",
+            description: "Our mission, leadership, and global team",
+          },
+          {
+            label: "Careers",
+            href: "/careers",
+            description: "Join our fast-growing global team",
+          },
+          {
+            label: "Contact",
+            href: "/contact",
+            description: "Talk with our product specialists",
+          },
         ],
       },
     ],
   },
 ];
-
-
 
 // ---------- Platform flagship panel ----------
 
@@ -223,21 +223,36 @@ function PlatformDropdownPanel({
           Core Products
         </div>
         <div className="grid grid-cols-3 gap-x-4 gap-y-1.5">
-          {featured.map((product) => (
-            <Link
-              key={product.label}
-              href={product.href}
-              onClick={onNavigate}
-              className="group flex items-center justify-between rounded-lg px-2.5 py-2 text-[13px] font-medium text-neutral-800 hover:text-black hover:bg-neutral-100/70 transition-colors"
-            >
-              <span className="truncate">{product.label}</span>
-              {product.badge && (
-                <span className="shrink-0 ml-2 text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 font-semibold border border-neutral-200/60">
-                  {product.badge}
-                </span>
-              )}
-            </Link>
-          ))}
+          {featured.map((product) =>
+            product.href ? (
+              <Link
+                key={product.label}
+                href={product.href}
+                onClick={onNavigate}
+                className="group flex items-center justify-between rounded-lg px-2.5 py-2.5 text-[13px] font-medium text-neutral-800 hover:text-black hover:bg-neutral-100/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
+              >
+                <span className="truncate">{product.label}</span>
+                {product.badge && (
+                  <span className="shrink-0 ml-2 text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-500 font-semibold border border-neutral-200/60">
+                    {product.badge}
+                  </span>
+                )}
+              </Link>
+            ) : (
+              <span
+                key={product.label}
+                aria-disabled="true"
+                className="flex items-center justify-between rounded-lg px-2.5 py-2.5 text-[13px] font-medium text-neutral-400 cursor-not-allowed select-none"
+              >
+                <span className="truncate">{product.label}</span>
+                {product.badge && (
+                  <span className="shrink-0 ml-2 text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-400 font-semibold border border-neutral-200/60">
+                    {product.badge}
+                  </span>
+                )}
+              </span>
+            )
+          )}
         </div>
       </div>
 
@@ -258,7 +273,7 @@ function PlatformDropdownPanel({
                     <Link
                       href={link.href}
                       onClick={onNavigate}
-                      className="block rounded-md px-2 py-1 text-[13px] font-normal text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100/60 transition-colors"
+                      className="block rounded-md px-2 py-1 text-[13px] font-normal text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
                     >
                       {link.label}
                     </Link>
@@ -295,7 +310,7 @@ function RegularDropdownPanel({
             <Link
               key={sub.label}
               href={sub.href}
-              className="group flex items-center rounded-xl px-3 py-2 text-xs font-semibold text-neutral-800 transition-colors hover:bg-neutral-50 hover:text-[#FF5A1F]"
+              className="group flex items-center rounded-xl px-3 py-2 text-xs font-semibold text-neutral-800 transition-colors hover:bg-neutral-50 hover:text-[#FF5A1F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
               onClick={onNavigate}
             >
               <span>{sub.label}</span>
@@ -343,6 +358,21 @@ export default function Header() {
     };
   }, []);
 
+  // FIX-03 Change 4: mobile drawer scroll lock + outside click listener
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onPointerDown = (e: PointerEvent) => {
+      if (!(e.target as HTMLElement).closest("header")) setMobileOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [mobileOpen]);
+
   return (
     <header className="fixed top-3 sm:top-4 inset-x-0 z-50 px-4 sm:px-6 lg:px-8 pointer-events-none">
       <motion.div
@@ -350,15 +380,16 @@ export default function Header() {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ backgroundColor: "#ffffff" }}
-        className={`pointer-events-auto mx-auto flex h-[60px] sm:h-[66px] max-w-7xl items-center justify-between px-5 sm:px-8 rounded-full border border-neutral-200/80 bg-white transition-all duration-300 ${scrolled
-          ? "shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
-          : "shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
-          }`}
+        className={`pointer-events-auto mx-auto flex h-[60px] sm:h-[66px] max-w-7xl items-center justify-between px-5 sm:px-8 rounded-full border border-neutral-200/80 bg-white transition-all duration-300 ${
+          scrolled
+            ? "shadow-[0_10px_35px_rgba(0,0,0,0.12)]"
+            : "shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
+        }`}
       >
         {/* Left: Logo & Nav Items */}
         <div className="flex items-center gap-6 lg:gap-8">
           {/* Logo */}
-          <Link href="/" className="group flex items-center shrink-0 py-1">
+          <Link href="/" className="group flex items-center shrink-0 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 rounded-full">
             <motion.div
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
@@ -386,7 +417,7 @@ export default function Header() {
                   key={item.label}
                   href={item.href}
                   style={{ color: "#404040" }}
-                  className="appearance-none border-0 outline-none bg-transparent inline-flex items-center justify-center rounded-full px-3.5 py-2 text-sm font-medium hover:!text-neutral-950 hover:bg-neutral-100 transition-colors select-none"
+                  className="inline-flex items-center justify-center rounded-full px-3.5 py-2.5 text-sm font-medium hover:!text-neutral-950 hover:bg-neutral-100 transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
                 >
                   <span>{item.label}</span>
                 </Link>
@@ -400,21 +431,26 @@ export default function Header() {
                 >
                   <button
                     type="button"
+                    aria-expanded={openDropdown === item.label}
+                    aria-haspopup="true"
+                    onFocus={() => setOpenDropdown(item.label)}
                     onClick={() =>
                       setOpenDropdown(openDropdown === item.label ? null : item.label)
                     }
                     style={{ color: openDropdown === item.label ? "#0a0a0a" : "#404040" }}
-                    className={`appearance-none border-0 outline-none inline-flex items-center justify-center gap-1 rounded-full px-3.5 py-2 text-sm font-medium transition-colors cursor-pointer select-none ${openDropdown === item.label
-                      ? "bg-neutral-100 !text-neutral-950"
-                      : "bg-transparent hover:!text-neutral-950 hover:bg-neutral-100"
-                      }`}
+                    className={`inline-flex items-center justify-center gap-1 rounded-full px-3.5 py-2.5 text-sm font-medium transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60 ${
+                      openDropdown === item.label
+                        ? "bg-neutral-100 !text-neutral-950"
+                        : "bg-transparent hover:!text-neutral-950 hover:bg-neutral-100"
+                    }`}
                   >
                     <span>{item.label}</span>
                     <ChevronDown
                       size={14}
                       style={{ color: openDropdown === item.label ? "#0a0a0a" : "#737373" }}
-                      className={`transition-transform duration-200 ${openDropdown === item.label ? "rotate-180" : ""
-                        }`}
+                      className={`transition-transform duration-200 ${
+                        openDropdown === item.label ? "rotate-180" : ""
+                      }`}
                     />
                   </button>
 
@@ -459,7 +495,7 @@ export default function Header() {
           <Link
             href="/docs"
             style={{ color: "#404040" }}
-            className="appearance-none border-0 outline-none bg-transparent inline-flex items-center justify-center rounded-full px-3.5 py-2 text-sm font-medium hover:!text-neutral-950 hover:bg-neutral-100 transition-colors select-none"
+            className="inline-flex items-center justify-center rounded-full px-3.5 py-2.5 text-sm font-medium hover:!text-neutral-950 hover:bg-neutral-100 transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
           >
             <span>Docs</span>
           </Link>
@@ -469,25 +505,35 @@ export default function Header() {
             type="button"
             onClick={() => openAuth("signin")}
             style={{ color: "#404040" }}
-            className="appearance-none border-0 outline-none bg-transparent inline-flex items-center justify-center rounded-full px-3.5 py-2 text-sm font-medium hover:!text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer select-none"
+            className="inline-flex items-center justify-center rounded-full px-3.5 py-2.5 text-sm font-medium hover:!text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
           >
             <span>Sign in</span>
           </motion.button>
-          <Link
-            href="/dashboard"
+          {/* FIX-03 Change 5: Get Started triggers signup modal consistently */}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            type="button"
+            onClick={() => {
+              setMobileOpen(false);
+              openAuth("signup");
+            }}
             style={{ color: "#ffffff" }}
-            className="relative inline-flex items-center justify-center px-5 py-2 text-sm font-semibold !text-white text-white rounded-full bg-gradient-to-r from-[#FF5A1F] to-[#FF7A45] hover:from-[#E54D15] hover:to-[#FF5A1F] shadow-[0_2px_10px_rgba(255,90,31,0.28)] hover:shadow-[0_4px_16px_rgba(255,90,31,0.4)] active:scale-95 transition-all duration-200 cursor-pointer select-none"
+            className="relative inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold !text-white text-white rounded-full bg-gradient-to-r from-[#FF5A1F] to-[#FF7A45] hover:from-[#E54D15] hover:to-[#FF5A1F] shadow-[0_2px_10px_rgba(255,90,31,0.28)] hover:shadow-[0_4px_16px_rgba(255,90,31,0.4)] transition-all duration-200 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
           >
-            <span className="!text-white text-white" style={{ color: "#ffffff" }}>Get Started</span>
-          </Link>
+            <span className="!text-white text-white" style={{ color: "#ffffff" }}>
+              Get Started
+            </span>
+          </motion.button>
         </div>
 
         {/* Mobile Menu Button */}
         <div className="flex items-center gap-2 lg:hidden">
           <button
-            className="rounded-full p-2 text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer"
+            className="rounded-full p-2 text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle mobile menu"
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -511,7 +557,7 @@ export default function Header() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="rounded-xl px-3 py-2.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors"
+                    className="rounded-xl px-3 py-2.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
                     onClick={() => setMobileOpen(false)}
                   >
                     {item.label}
@@ -528,7 +574,7 @@ export default function Header() {
               <div className="mt-3 flex flex-col gap-2 border-t border-neutral-100 pt-3">
                 <Link
                   href="/docs"
-                  className="appearance-none bg-transparent rounded-xl px-3 py-2 text-center text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
+                  className="rounded-xl px-3 py-2 text-center text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
                   onClick={() => setMobileOpen(false)}
                 >
                   Docs
@@ -539,18 +585,24 @@ export default function Header() {
                     setMobileOpen(false);
                     openAuth("signin");
                   }}
-                  className="appearance-none border-0 outline-none bg-transparent rounded-xl px-3 py-2 text-center text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors cursor-pointer"
+                  className="rounded-xl px-3 py-2 text-center text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
                 >
                   Sign in
                 </button>
-                <Link
-                  href="/dashboard"
-                  onClick={() => setMobileOpen(false)}
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  type="button"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    openAuth("signup");
+                  }}
                   style={{ color: "#ffffff" }}
-                  className="rounded-full bg-[#FF5A1F] hover:bg-[#E54D15] px-4 py-2.5 text-center text-xs font-semibold !text-white text-white shadow-md transition-all active:scale-95 cursor-pointer block"
+                  className="rounded-full bg-[#FF5A1F] hover:bg-[#E54D15] px-4 py-2.5 text-center text-xs font-semibold !text-white text-white shadow-md transition-all cursor-pointer block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
                 >
-                  <span className="!text-white text-white" style={{ color: "#ffffff" }}>Get Started</span>
-                </Link>
+                  <span className="!text-white text-white" style={{ color: "#ffffff" }}>
+                    Get Started
+                  </span>
+                </motion.button>
               </div>
             </div>
           </motion.div>
@@ -573,14 +625,16 @@ function MobileAccordion({
     <div>
       <button
         type="button"
-        className="appearance-none border-0 outline-none bg-transparent flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors cursor-pointer"
+        aria-expanded={open}
+        className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
         onClick={() => setOpen((v) => !v)}
       >
         {item.label}
         <ChevronDown
           size={14}
-          className={`text-neutral-500 transition-transform duration-200 ${open ? "rotate-180" : ""
-            }`}
+          className={`text-neutral-500 transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
         />
       </button>
       <AnimatePresence>
@@ -598,21 +652,36 @@ function MobileAccordion({
                   <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
                     Core Products
                   </span>
-                  {item.featured.map((product) => (
-                    <Link
-                      key={product.label}
-                      href={product.href}
-                      className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-neutral-800 hover:bg-neutral-100 hover:text-black transition-colors"
-                      onClick={onNavigate}
-                    >
-                      <span>{product.label}</span>
-                      {product.badge && (
-                        <span className="text-[9px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600 font-medium">
-                          {product.badge}
-                        </span>
-                      )}
-                    </Link>
-                  ))}
+                  {item.featured.map((product) =>
+                    product.href ? (
+                      <Link
+                        key={product.label}
+                        href={product.href}
+                        className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-neutral-800 hover:bg-neutral-100 hover:text-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
+                        onClick={onNavigate}
+                      >
+                        <span>{product.label}</span>
+                        {product.badge && (
+                          <span className="text-[9px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-600 font-medium">
+                            {product.badge}
+                          </span>
+                        )}
+                      </Link>
+                    ) : (
+                      <span
+                        key={product.label}
+                        aria-disabled="true"
+                        className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-neutral-400 cursor-not-allowed select-none"
+                      >
+                        <span>{product.label}</span>
+                        {product.badge && (
+                          <span className="text-[9px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-neutral-100 text-neutral-400 font-medium">
+                            {product.badge}
+                          </span>
+                        )}
+                      </span>
+                    )
+                  )}
                 </div>
 
                 {item.categories.map((category) =>
@@ -625,7 +694,7 @@ function MobileAccordion({
                         <Link
                           key={link.label}
                           href={link.href}
-                          className="block rounded-lg px-3 py-1.5 text-xs text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100"
+                          className="block rounded-lg px-3 py-1.5 text-xs text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
                           onClick={onNavigate}
                         >
                           {link.label}
@@ -648,7 +717,7 @@ function MobileAccordion({
                       <Link
                         key={sub.label}
                         href={sub.href}
-                        className="block rounded-lg px-3 py-1.5 text-xs text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100"
+                        className="block rounded-lg px-3 py-1.5 text-xs text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/60"
                         onClick={onNavigate}
                       >
                         {sub.label}

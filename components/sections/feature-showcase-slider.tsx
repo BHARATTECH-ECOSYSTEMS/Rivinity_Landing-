@@ -89,10 +89,10 @@ const SKELETON_FEATURES: FeatureItem[] = [
     ),
   },
 
-  // 2. Agent Studio
+  // 2. Agent Playground
   {
-    id: "agent-studio",
-    title: "Agent Studio",
+    id: "agent-playground",
+    title: "Agent Playground",
     subtitle: "Build, customize, and deploy AI agents for any workflow.",
     icon: Bot,
     iconColor: "text-indigo-600",
@@ -616,93 +616,6 @@ const SKELETON_FEATURES: FeatureItem[] = [
   },
 ];
 
-/* ==========================================================================
-   FEATURE THEMES & ACCENTS
-========================================================================== */
-
-const FEATURE_ACCENTS: Record<
-  string,
-  { ring: string; border: string; glow: string; badgeBg: string; text: string }
-> = {
-  "website-builder": {
-    ring: "ring-2 ring-blue-500/35",
-    border: "border-blue-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(59,130,246,0.22)]",
-    badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
-    text: "text-blue-600",
-  },
-  "agent-studio": {
-    ring: "ring-2 ring-indigo-500/35",
-    border: "border-indigo-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(99,102,241,0.22)]",
-    badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
-    text: "text-indigo-600",
-  },
-  "ai-chat": {
-    ring: "ring-2 ring-orange-500/35",
-    border: "border-orange-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(251,146,60,0.22)]",
-    badgeBg: "bg-orange-50 text-orange-700 border-orange-200",
-    text: "text-orange-600",
-  },
-  "prompt-to-video": {
-    ring: "ring-2 ring-rose-500/35",
-    border: "border-rose-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(244,63,94,0.22)]",
-    badgeBg: "bg-rose-50 text-rose-700 border-rose-200",
-    text: "text-rose-600",
-  },
-  "image-studio": {
-    ring: "ring-2 ring-emerald-500/35",
-    border: "border-emerald-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(16,185,129,0.22)]",
-    badgeBg: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    text: "text-emerald-600",
-  },
-  "audio-lab": {
-    ring: "ring-2 ring-amber-500/35",
-    border: "border-amber-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(245,158,11,0.22)]",
-    badgeBg: "bg-amber-50 text-amber-700 border-amber-200",
-    text: "text-amber-600",
-  },
-  "deep-research": {
-    ring: "ring-2 ring-cyan-500/35",
-    border: "border-cyan-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(6,182,212,0.22)]",
-    badgeBg: "bg-cyan-50 text-cyan-700 border-cyan-200",
-    text: "text-cyan-600",
-  },
-  "workflow-automation": {
-    ring: "ring-2 ring-violet-500/35",
-    border: "border-violet-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(139,92,246,0.22)]",
-    badgeBg: "bg-violet-50 text-violet-700 border-violet-200",
-    text: "text-violet-600",
-  },
-  "ai-coding": {
-    ring: "ring-2 ring-sky-500/35",
-    border: "border-sky-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(14,165,233,0.22)]",
-    badgeBg: "bg-sky-50 text-sky-700 border-sky-200",
-    text: "text-sky-600",
-  },
-  "document-studio": {
-    ring: "ring-2 ring-teal-500/35",
-    border: "border-teal-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(20,184,166,0.22)]",
-    badgeBg: "bg-teal-50 text-teal-700 border-teal-200",
-    text: "text-teal-600",
-  },
-  "rivinity-lm": {
-    ring: "ring-2 ring-purple-500/35",
-    border: "border-purple-400",
-    glow: "shadow-[0_20px_50px_-12px_rgba(168,85,247,0.22)]",
-    badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
-    text: "text-purple-600",
-  },
-};
-
 export function FeatureShowcaseSlider() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mobileScrollRef = useRef<HTMLDivElement>(null);
@@ -808,7 +721,7 @@ export function FeatureShowcaseSlider() {
       <div className="block md:hidden w-full bg-[#fafbfc] py-10 px-4 border-b border-slate-100">
         {/* Mobile Header */}
         <div className="text-center max-w-sm mx-auto mb-6">
-          <h2 className="text-2xl font-extrabold tracking-tight text-slate-950 leading-tight">
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-950 leading-[1.2] py-0.5">
             One platform. Every intelligent capability.
           </h2>
           <p className="mt-2 text-xs text-slate-600 leading-relaxed font-normal">
@@ -828,15 +741,7 @@ export function FeatureShowcaseSlider() {
           }}
         >
           {SKELETON_FEATURES.map((feature, idx) => {
-            const Icon = feature.icon;
             const isCurrent = mobileStep === idx;
-            const accent = FEATURE_ACCENTS[feature.id] || {
-              ring: "ring-2 ring-indigo-400/40",
-              border: "border-indigo-300",
-              glow: "shadow-lg",
-              badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
-              text: "text-indigo-600",
-            };
 
             return (
               <div
@@ -844,23 +749,16 @@ export function FeatureShowcaseSlider() {
                 onClick={() => scrollMobileTo(idx)}
                 className={`snap-center shrink-0 w-[84vw] max-w-[315px] h-[395px] flex flex-col justify-between rounded-3xl bg-white p-5 transition-all duration-300 ${
                   isCurrent
-                    ? `${accent.border} ${accent.ring} ${accent.glow} shadow-md`
+                    ? "border-slate-400 ring-2 ring-slate-300/70 shadow-lg shadow-slate-200/50"
                     : "border border-slate-200/85 shadow-xs opacity-95"
                 }`}
               >
-                {/* CARD TOP: Header with Icon + Title + Subtitle */}
-                <div className="w-full text-left space-y-2">
+                {/* CARD TOP: Header with Title + Subtitle */}
+                <div className="w-full text-left space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${feature.iconBg} ${feature.iconColor}`}
-                      >
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <h3 className="text-[15px] font-bold text-slate-950 tracking-tight leading-none">
-                        {feature.title}
-                      </h3>
-                    </div>
+                    <h3 className="text-[16px] font-bold text-slate-950 tracking-tight leading-snug">
+                      {feature.title}
+                    </h3>
                     <span className="text-[10px] font-mono font-medium text-slate-400">
                       {String(idx + 1).padStart(2, "0")}/
                       {String(SKELETON_FEATURES.length).padStart(2, "0")}
@@ -927,10 +825,10 @@ export function FeatureShowcaseSlider() {
         style={{ height: "300vh" }}
       >
         {/* Sticky Viewport Stage */}
-        <div className="sticky top-0 h-[100dvh] min-h-[580px] max-h-[1080px] w-full flex flex-col justify-center py-8 sm:py-12 md:py-14 overflow-hidden select-none">
+        <div className="sticky top-0 h-[100dvh] min-h-[600px] max-h-[1080px] w-full flex flex-col justify-center pt-28 sm:pt-32 md:pt-32 pb-8 sm:pb-12 overflow-hidden select-none">
           {/* 1. Header Area */}
-          <div className="text-center max-w-3xl mx-auto px-4 shrink-0">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 leading-tight">
+          <div className="text-center max-w-3xl mx-auto px-4 shrink-0 pt-2 pb-1">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 leading-[1.2] sm:leading-[1.16] py-1">
               One platform. Every intelligent capability.
             </h2>
             <p className="mt-2.5 text-xs sm:text-sm md:text-base text-slate-600 max-w-xl mx-auto font-normal">
@@ -953,15 +851,7 @@ export function FeatureShowcaseSlider() {
                 className="flex items-center will-change-transform"
               >
                 {SKELETON_FEATURES.map((feature, idx) => {
-                  const Icon = feature.icon;
                   const isCurrent = activeStep === idx;
-                  const accent = FEATURE_ACCENTS[feature.id] || {
-                    ring: "ring-2 ring-indigo-400/40",
-                    border: "border-indigo-300",
-                    glow: "shadow-lg",
-                    badgeBg: "bg-indigo-50 text-indigo-700 border-indigo-200",
-                    text: "text-indigo-600",
-                  };
 
                   return (
                     <div
@@ -974,19 +864,14 @@ export function FeatureShowcaseSlider() {
                       }}
                       className={`shrink-0 flex flex-col justify-between will-change-transform rounded-3xl bg-white p-5 cursor-pointer transition-all duration-300 ${
                         isCurrent
-                          ? `${accent.border} ${accent.ring} ${accent.glow} scale-[1.03] z-20`
+                          ? "border-slate-400 ring-2 ring-slate-300/70 shadow-[0_16px_36px_-10px_rgba(71,85,105,0.18)] scale-[1.03] z-20"
                           : "border border-slate-200/85 shadow-xs opacity-75 hover:opacity-100 hover:scale-[1.01] hover:border-slate-300 hover:shadow-md z-10"
                       }`}
                     >
-                      {/* CARD TOP: Header with Icon + Title + Subtitle */}
-                      <div className="w-full text-left space-y-2">
-                        <div className="flex items-center gap-2.5">
-                          <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${feature.iconBg} ${feature.iconColor}`}
-                          >
-                            <Icon className="w-4 h-4" />
-                          </div>
-                          <h3 className="text-[16px] font-bold text-slate-950 tracking-tight leading-none">
+                      {/* CARD TOP: Header with Title + Subtitle */}
+                      <div className="w-full text-left space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-[17px] font-bold text-slate-950 tracking-tight leading-snug">
                             {feature.title}
                           </h3>
                         </div>

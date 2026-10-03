@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import SidebarShell from "@/components/canvas/SidebarShell";
@@ -8,15 +8,11 @@ import { toast } from "sonner";
 import {
   MessageSquare,
   Layout,
-  AudioWaveform,
   ImageIcon,
-  Video,
   FileText,
   Mic,
   Film,
   Plus,
-  Play,
-  Download,
   Copy,
   FolderPlus,
   Rocket,
@@ -24,26 +20,18 @@ import {
   X,
   Search,
   ChevronDown,
-  ChevronUp,
   Folder,
-  Layers,
   MoreVertical,
-  ExternalLink,
   Sparkles,
   Code2,
   Shield,
   Briefcase,
   Trash2,
   Pencil,
-  ArrowRight,
   Pin,
   ChevronRight,
   FolderArchive,
 } from "lucide-react";
-
-// ============================================
-// Types
-// ============================================
 
 export type CategoryType = "CHAT" | "APP" | "AUDIO" | "IMAGE" | "VIDEO" | "DOC";
 
@@ -69,16 +57,12 @@ export type Workspace = {
   topic: string;
   description?: string;
   iconName: string;
-  bannerGradient: string; // Pastel banner gradient
+  bannerGradient: string;
   accentColor: string;
   updatedAtStr: string;
   status: string;
   createdAt: string;
 };
-
-// ============================================
-// Preloaded Seed Data with Pastel Colors (Image 2 Style)
-// ============================================
 
 const initialWorkspaces: Workspace[] = [
   {
@@ -87,7 +71,7 @@ const initialWorkspaces: Workspace[] = [
     topic: "Automate customer support email drafting & context-aware replies",
     description: "Automate customer support email drafting & context-aware replies",
     iconName: "Briefcase",
-    bannerGradient: "from-[#fed7aa] via-[#fbcfe8] to-[#fdba74]", // Pastel sunset orange/pink
+    bannerGradient: "from-[#fed7aa] via-[#fbcfe8] to-[#fdba74]",
     accentColor: "#f97316",
     updatedAtStr: "1 day ago",
     status: "Active",
@@ -99,7 +83,7 @@ const initialWorkspaces: Workspace[] = [
     topic: "Multi-agent orchestration, tool-calling & reasoning graphs",
     description: "Multi-agent orchestration, tool-calling & reasoning graphs",
     iconName: "Rocket",
-    bannerGradient: "from-[#ede9fe] via-[#ddd6fe] to-[#c084fc]", // Pastel purple/lavender
+    bannerGradient: "from-[#ede9fe] via-[#ddd6fe] to-[#c084fc]",
     accentColor: "#a855f7",
     updatedAtStr: "3 hours ago",
     status: "Active",
@@ -111,7 +95,7 @@ const initialWorkspaces: Workspace[] = [
     topic: "Campaign copywriting, interactive persona synthesis & social ads",
     description: "Campaign copywriting, interactive persona synthesis & social ads",
     iconName: "Sparkles",
-    bannerGradient: "from-[#fce7f3] via-[#fbcfe8] to-[#f472b6]", // Pastel pink/rose
+    bannerGradient: "from-[#fce7f3] via-[#fbcfe8] to-[#f472b6]",
     accentColor: "#ec4899",
     updatedAtStr: "Yesterday",
     status: "Active",
@@ -123,7 +107,7 @@ const initialWorkspaces: Workspace[] = [
     topic: "Next.js edge runtime, Redis idempotency keys & telemetry",
     description: "Next.js edge runtime, Redis idempotency keys & telemetry",
     iconName: "Code2",
-    bannerGradient: "from-[#e0f2fe] via-[#bae6fd] to-[#7dd3fc]", // Pastel sky blue
+    bannerGradient: "from-[#e0f2fe] via-[#bae6fd] to-[#7dd3fc]",
     accentColor: "#0284c7",
     updatedAtStr: "2 days ago",
     status: "Active",
@@ -135,7 +119,7 @@ const initialWorkspaces: Workspace[] = [
     topic: "Vendor MSA review, mutual NDAs & compliance verification",
     description: "Vendor MSA review, mutual NDAs & compliance verification",
     iconName: "Shield",
-    bannerGradient: "from-[#d1fae5] via-[#a7f3d0] to-[#6ee7b7]", // Pastel mint green
+    bannerGradient: "from-[#d1fae5] via-[#a7f3d0] to-[#6ee7b7]",
     accentColor: "#10b981",
     updatedAtStr: "4 days ago",
     status: "Active",
@@ -144,7 +128,6 @@ const initialWorkspaces: Workspace[] = [
 ];
 
 export const initialHistoryItems: HistoryItem[] = [
-  // CHAT items (Matching Image 2 exactly!)
   {
     id: "c1",
     name: "Autonomous Agent Orchestration Specs",
@@ -225,8 +208,6 @@ export const initialHistoryItems: HistoryItem[] = [
     cost: "$0.010",
     durationMs: 390,
   },
-
-  // APP items
   {
     id: "a1",
     name: "Next.js 15 SaaS Dashboard Wireframe",
@@ -249,250 +230,177 @@ export const initialHistoryItems: HistoryItem[] = [
     subtitle: "Redis lock mechanism & HMAC signature validation",
     category: "APP",
     workspaceId: "ws-infra",
-    modified: "Yesterday",
-    dateStr: "Sep 25, 2026",
+    modified: "5 hours ago",
+    dateStr: "Sep 26, 2026",
     prompt:
-      "Create an idempotent Stripe webhook receiver with automatic retry exponential backoff.",
+      "Write a robust Stripe webhook route in Next.js edge runtime with Redis mutex lock to prevent double execution.",
     response:
-      "Built secure webhook router with Redis distributed lock and event deduplication ledger.",
-    tokens: 16500,
-    cost: "$0.022",
-    durationMs: 1100,
+      "Exported route handler with crypto timing-safe verification and atomic redis SETNX keys.",
+    tokens: 22400,
+    cost: "$0.029",
+    durationMs: 1420,
   },
   {
     id: "a3",
-    name: "Cohort Retention Heatmap Component",
-    subtitle: "12-month churn rate visualization with SVG cells",
+    name: "FastAPI Vector Search Proxy",
+    subtitle: "Qdrant payload filter & cosine similarity rerank",
     category: "APP",
     workspaceId: "ws-agents",
     modified: "3 days ago",
     dateStr: "Sep 23, 2026",
-    prompt: "Develop an interactive 12-month cohort retention grid in React.",
+    prompt:
+      "Create a high-performance Python FastAPI endpoint for hybrid BM25 and vector semantic search.",
     response:
-      "Rendered interactive cohort table with color-coded retention brackets.",
-    tokens: 22000,
-    cost: "$0.030",
-    durationMs: 1450,
+      "Implemented hybrid search router with reciprocal rank fusion (RRF) and batch vectorization.",
+    tokens: 31200,
+    cost: "$0.038",
+    durationMs: 1890,
   },
-
-  // AUDIO items
   {
     id: "au1",
-    name: "Product Keynote Voiceover Audio",
-    subtitle: "Marcus executive narrative • 94s broadcast WAV master",
+    name: "Product Launch Keynote Narration",
+    subtitle: "Professional studio voiceover • 128kbps stereo MP3",
     category: "AUDIO",
     workspaceId: "ws-growth",
     modified: "4 hours ago",
     dateStr: "Sep 26, 2026",
     prompt:
-      "Synthesize confident, energetic English US voiceover for keynote slide deck.",
+      "Generate a confident, inspiring British voiceover for a 90-second product keynote video.",
     response:
-      "Rendered 94-second studio WAV master at 48kHz / 24-bit with -14 LUFS loudness.",
+      "Audio synthesized using FluidVoice-HD. Dual-channel output with subtle high-pass compression.",
     tokens: 4200,
-    cost: "$0.038",
-    durationMs: 3100,
+    cost: "$0.015",
+    durationMs: 3400,
   },
   {
     id: "au2",
-    name: "Podcast Intro Dynamic Mastering",
-    subtitle: "Dual-track EQ with 24-bit studio fidelity",
+    name: "Customer Onboarding Interactive Voice",
+    subtitle: "Conversational cadence • Low-latency streaming chunks",
     category: "AUDIO",
-    workspaceId: "ws-growth",
-    modified: "2 days ago",
-    dateStr: "Sep 24, 2026",
+    workspaceId: "ws-email",
+    modified: "Yesterday",
+    dateStr: "Sep 25, 2026",
     prompt:
-      "Master podcast intro theme music with ducking for voiceover narration.",
+      "Synthesize an inviting, friendly welcome greeting for user signup completion.",
     response:
-      "Exported mastered MP3/WAV stems with compression sidechaining applied.",
-    tokens: 5100,
-    cost: "$0.028",
-    durationMs: 2400,
+      "Audio stream generated: 'Welcome to Rivinity! Your workspace is ready.' Latency: 220ms.",
+    tokens: 1800,
+    cost: "$0.007",
+    durationMs: 1120,
   },
-  {
-    id: "au3",
-    name: "Multilingual Audio Stems",
-    subtitle: "Hindi & Spanish localized audio stems",
-    category: "AUDIO",
-    workspaceId: "ws-growth",
-    modified: "5 days ago",
-    dateStr: "Sep 21, 2026",
-    prompt:
-      "Translate and synthesize keynote voiceover into Hindi and Spanish neutral accents.",
-    response:
-      "Generated bilingual audio localized tracks with matched syllable timing.",
-    tokens: 8900,
-    cost: "$0.045",
-    durationMs: 3800,
-  },
-
-  // IMAGE items
   {
     id: "im1",
-    name: "4K UHD Product Hero Render",
-    subtitle: "Super-resolution diffusion • Specular highlight clarity",
+    name: "Minimalist Cyberpunk Workspace Visual",
+    subtitle: "1024x1024 photorealistic render • DCI-P3 gamut",
     category: "IMAGE",
     workspaceId: "ws-growth",
-    modified: "5 hours ago",
+    modified: "2 hours ago",
     dateStr: "Sep 26, 2026",
     prompt:
-      "Generate an ultra-modern 3D glassmorphic software dashboard interface floating over dark obsidian glass.",
+      "A serene minimalist engineering desk with glowing terminal screens, soft warm neon lighting, volumetric mist.",
     response:
-      "Rendered 3840x2160 UHD composition with ray-traced lighting and specular caustics.",
-    tokens: 1200,
+      "Image rendered with 4-step diffusion. High dynamic range with soft atmospheric bloom.",
+    tokens: 8500,
     cost: "$0.040",
     durationMs: 4200,
   },
   {
     id: "im2",
-    name: "App Store Feature Graphics",
-    subtitle: "Device mockup composite • Dark obsidian theme",
+    name: "Isometric Cloud Network Diagram",
+    subtitle: "Vector 3D illustration • Crisp lines and pastel colors",
     category: "IMAGE",
-    workspaceId: "ws-growth",
-    modified: "1 day ago",
-    dateStr: "Sep 25, 2026",
-    prompt: "Render high-contrast marketing cards for App Store showcase.",
-    response:
-      "Generated 3 assets in 16:9 aspect ratio ready for production export.",
-    tokens: 1100,
-    cost: "$0.035",
-    durationMs: 3900,
-  },
-  {
-    id: "im3",
-    name: "Brand Logo Vector Geometry",
-    subtitle: "Golden ratio symmetry & SVG vectors",
-    category: "IMAGE",
-    workspaceId: "ws-growth",
-    modified: "4 days ago",
-    dateStr: "Sep 22, 2026",
-    prompt:
-      "Generate minimalist geometric vector logomark representing continuous intelligence.",
-    response:
-      "Rendered SVG paths with golden ratio balance and responsive icon scales.",
-    tokens: 950,
-    cost: "$0.020",
-    durationMs: 2800,
-  },
-
-  // VIDEO items
-  {
-    id: "vi1",
-    name: "AI Agent Demo Explainer Reel",
-    subtitle: "60s kinetic typography & UI screen captures",
-    category: "VIDEO",
-    workspaceId: "ws-agents",
+    workspaceId: "ws-infra",
     modified: "6 hours ago",
     dateStr: "Sep 26, 2026",
     prompt:
-      "Generate a dynamic 60-second product demo video showing multi-agent reasoning in action.",
+      "Isometric 3D schematic of an edge AI infrastructure pipeline with Kubernetes pods and vector database clusters.",
     response:
-      "Created full 1080p MP4 render with synchronized voiceover and animated UI callouts.",
-    tokens: 12500,
-    cost: "$0.095",
-    durationMs: 6500,
-  },
-  {
-    id: "vi2",
-    name: "Customer Testimonial Highlights",
-    subtitle: "Multicam auto-cut & subtitle captions",
-    category: "VIDEO",
-    workspaceId: "ws-growth",
-    modified: "2 days ago",
-    dateStr: "Sep 24, 2026",
-    prompt:
-      "Auto-edit 15-minute customer interview down to 90 seconds of high-impact quotes.",
-    response:
-      "Edited reel produced with burned-in subtitles and branded lower thirds.",
-    tokens: 8400,
-    cost: "$0.060",
-    durationMs: 4800,
-  },
-  {
-    id: "vi3",
-    name: "Product Launch Teaser Video",
-    subtitle: "Omni Flash 1.1 motion render with soundtrack",
-    category: "VIDEO",
-    workspaceId: "ws-growth",
-    modified: "1 week ago",
-    dateStr: "Sep 19, 2026",
-    prompt:
-      "Produce 30-second teaser video with glitch transitions and cinematic audio buildup.",
-    response:
-      "Rendered teaser clip with custom EDM audio score and typography reveals.",
+      "Vector render generated with soft pastel accents and transparent isometric depth planes.",
     tokens: 9200,
-    cost: "$0.075",
-    durationMs: 5200,
-  },
-
-  // DOC items
-  {
-    id: "do1",
-    name: "Fault-Tolerant Quantum Benchmark Whitepaper",
-    subtitle: "Surface code error threshold synthesis across 12 vendors",
-    category: "DOC",
-    workspaceId: "ws-legal",
-    modified: "8 hours ago",
-    dateStr: "Sep 26, 2026",
-    prompt:
-      "Draft comprehensive executive whitepaper evaluating superconducting vs trapped-ion physical qubits.",
-    response:
-      "18-page whitepaper generated with LaTeX math formulations and vendor roadmap comparisons.",
-    tokens: 48290,
-    cost: "$0.048",
-    durationMs: 1200,
+    cost: "$0.040",
+    durationMs: 4500,
   },
   {
-    id: "do2",
-    name: "Q3 Financial Engineering Analysis",
-    subtitle: "Cohort ARR & net dollar retention breakdown",
-    category: "DOC",
-    workspaceId: "ws-legal",
-    modified: "Yesterday",
+    id: "v1",
+    name: "Hero Animation Loop for Landing Page",
+    subtitle: "4K 60fps WebM render • Seamless loop sequence",
+    category: "VIDEO",
+    workspaceId: "ws-growth",
+    modified: "1 day ago",
     dateStr: "Sep 25, 2026",
     prompt:
-      "Analyze trailing 12-month net dollar retention rates across top cloud enterprise software models.",
+      "Generate an abstract morphing 3D geometric orb with glowing synaptic pulses that loops seamlessly every 4 seconds.",
     response:
-      "Compiled comparative financial model with sensitivity tables and payback period charts.",
-    tokens: 24500,
-    cost: "$0.028",
-    durationMs: 980,
+      "Video stream completed. Encoded as H.265 / WebM with hardware accelerated alpha transparency.",
+    tokens: 24000,
+    cost: "$0.120",
+    durationMs: 8900,
   },
   {
-    id: "do3",
-    name: "Singular Value Decomposition Study Guide",
-    subtitle: "SVD proofs & PCA dimensionality reduction reference",
-    category: "DOC",
+    id: "v2",
+    name: "Agent Workflow Step-by-Step Walkthrough",
+    subtitle: "Screen recording synthesis with highlighted mouse paths",
+    category: "VIDEO",
     workspaceId: "ws-agents",
     modified: "3 days ago",
     dateStr: "Sep 23, 2026",
     prompt:
-      "Create structured flashcards and concise proofs for matrix decomposition and PCA projection.",
+      "Render an animated UI demo showing an AI agent analyzing telemetry, creating a git branch, and submitting a PR.",
     response:
-      "Formatted reference guide with geometric vector diagrams and step-by-step proofs.",
-    tokens: 18900,
-    cost: "$0.020",
-    durationMs: 760,
+      "Synthetic video walkthrough generated with cursor motion and syntax-highlighted code diff overlays.",
+    tokens: 32000,
+    cost: "$0.160",
+    durationMs: 12400,
+  },
+  {
+    id: "d1",
+    name: "Enterprise Security Audit Summary",
+    subtitle: "SOC-2 Type II Compliance verification report • 14 pages",
+    category: "DOC",
+    workspaceId: "ws-legal",
+    modified: "4 days ago",
+    dateStr: "Sep 22, 2026",
+    prompt:
+      "Compile an executive summary of third-party penetration testing results and encryption posture for SOC-2 auditors.",
+    response:
+      "Comprehensive report generated with zero high-severity findings, automated TLS 1.3 audit, and KMS key rotation logs.",
+    tokens: 28400,
+    cost: "$0.035",
+    durationMs: 2800,
+  },
+  {
+    id: "d2",
+    name: "Master Services Agreement (MSA) Redline",
+    subtitle: "Contract clauses, liability limits & data ownership terms",
+    category: "DOC",
+    workspaceId: "ws-legal",
+    modified: "5 days ago",
+    dateStr: "Sep 21, 2026",
+    prompt:
+      "Review enterprise software licensing agreement for IP indemnification, data retention limits, and SLA penalty clauses.",
+    response:
+      "Contract redlined with recommended edits: Added 99.95% uptime SLA credit table and explicit customer model training exclusions.",
+    tokens: 34100,
+    cost: "$0.042",
+    durationMs: 3100,
   },
 ];
 
-// Definition of Interactive Category Folders (Dashboard Colors & Styling)
-interface FolderConfig {
+export const folderConfigs: {
   key: CategoryType;
   label: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   svgFill: string;
   bgFront: string;
   border: string;
   shadow: string;
-}
-
-const folderConfigs: FolderConfig[] = [
+}[] = [
   {
     key: "CHAT",
     label: "Chat",
     icon: MessageSquare,
-    svgFill: "rgba(255, 145, 86, 0.95)", // Pastel light orange
-    bgFront: "bg-gradient-to-b from-[#FFA87D] via-[#FF8E52] to-[#FF7535]",
+    svgFill: "rgba(255, 128, 77, 0.95)",
+    bgFront: "bg-gradient-to-b from-[#FFA87D] via-[#FF8547] to-[#FF7535]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(255,117,53,0.25)]",
   },
@@ -500,7 +408,7 @@ const folderConfigs: FolderConfig[] = [
     key: "APP",
     label: "App",
     icon: Layout,
-    svgFill: "rgba(247, 115, 158, 0.95)", // Pastel light pink
+    svgFill: "rgba(247, 115, 158, 0.95)",
     bgFront: "bg-gradient-to-b from-[#FB8CB3] via-[#F76497] to-[#F14681]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(241,70,129,0.25)]",
@@ -509,7 +417,7 @@ const folderConfigs: FolderConfig[] = [
     key: "AUDIO",
     label: "Audio",
     icon: Mic,
-    svgFill: "rgba(139, 92, 246, 0.95)", // Pastel light purple
+    svgFill: "rgba(139, 92, 246, 0.95)",
     bgFront: "bg-gradient-to-b from-[#A78BFA] via-[#8B5CF6] to-[#7C3AED]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(124,58,237,0.25)]",
@@ -518,7 +426,7 @@ const folderConfigs: FolderConfig[] = [
     key: "IMAGE",
     label: "Image",
     icon: ImageIcon,
-    svgFill: "rgba(52, 211, 153, 0.95)", // Pastel light green
+    svgFill: "rgba(52, 211, 153, 0.95)",
     bgFront: "bg-gradient-to-b from-[#6EE7B7] via-[#34D399] to-[#10B981]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(16,185,129,0.25)]",
@@ -527,7 +435,7 @@ const folderConfigs: FolderConfig[] = [
     key: "VIDEO",
     label: "Video",
     icon: Film,
-    svgFill: "rgba(59, 130, 246, 0.95)", // Pastel light blue
+    svgFill: "rgba(59, 130, 246, 0.95)",
     bgFront: "bg-gradient-to-b from-[#70BAFF] via-[#3B82F6] to-[#2563EB]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(37,99,235,0.25)]",
@@ -536,7 +444,7 @@ const folderConfigs: FolderConfig[] = [
     key: "DOC",
     label: "Doc",
     icon: FileText,
-    svgFill: "rgba(251, 191, 36, 0.95)", // Pastel light yellow
+    svgFill: "rgba(251, 191, 36, 0.95)",
     bgFront: "bg-gradient-to-b from-[#FDE68A] via-[#FBBF24] to-[#F59E0B]",
     border: "border-white/70",
     shadow: "shadow-[0_8px_24px_rgba(245,158,11,0.25)]",
@@ -546,7 +454,7 @@ const folderConfigs: FolderConfig[] = [
 export const categoryStyles: Record<
   CategoryType,
   {
-    icon: any;
+    icon: React.ComponentType<{ className?: string }>;
     badgeBg: string;
     iconBg: string;
     iconHoverBg: string;
@@ -601,7 +509,6 @@ export const STORAGE_WORKSPACES_KEY = "rivinity_workspaces_v4";
 export const STORAGE_HISTORY_KEY = "rivinity_history_v4";
 export const STORAGE_PINNED_KEY = "rivinity_pinned_items_v2";
 
-// Pastel color palette choices for creating new workspace
 const pastelPalettes = [
   {
     name: "Sunset Orange",
@@ -630,46 +537,39 @@ const pastelPalettes = [
   },
 ];
 
-// ============================================
-// Main Component
-// ============================================
-
 export const HistoryPage: React.FC = () => {
   const router = useRouter();
 
-  // Active Category Folder (Image 2)
   const [activeCategory, setActiveCategory] = useState<CategoryType>("CHAT");
-
-  // Selected Workspace Filter
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>("all");
-
-  // Pop Up: View Inside Workspace
-  const [viewingWorkspace, setViewingWorkspace] = useState<Workspace | null>(
-    null,
-  );
+  const [viewingWorkspace, setViewingWorkspace] = useState<Workspace | null>(null);
   const [expandedWsChatId, setExpandedWsChatId] = useState<string | null>(null);
-
-  // Pop Up: Add Chat into Workspace (Option to choose existing or create new)
   const [itemToAddToWs, setItemToAddToWs] = useState<HistoryItem | null>(null);
   const [addMode, setAddMode] = useState<"existing" | "new">("existing");
-
-  // Create Workspace Form State
   const [isCreateWsOpen, setIsCreateWsOpen] = useState(false);
   const [newWsName, setNewWsName] = useState("");
   const [newWsTopic, setNewWsTopic] = useState("");
   const [selectedPastelIndex, setSelectedPastelIndex] = useState(0);
-
-  // Rename Workspace State
   const [renamingWs, setRenamingWs] = useState<Workspace | null>(null);
   const [renameInput, setRenameInput] = useState("");
+  const [inspectingItem, setInspectingItem] = useState<HistoryItem | null>(null);
 
-  // Inspector Modal for prompt/response
-  const [inspectingItem, setInspectingItem] = useState<HistoryItem | null>(
-    null,
-  );
+  const [workspaces, setWorkspaces] = useState<Workspace[]>(initialWorkspaces);
+  const [historyItems, setHistoryItems] = useState<HistoryItem[]>(initialHistoryItems);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Navigate to chat or appropriate workspace tool with active payload
-  const handleOpenItem = (item: HistoryItem) => {
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+  const [openMenuUpward, setOpenMenuUpward] = useState(false);
+  const [pinnedItemIds, setPinnedItemIds] = useState<Set<string>>(new Set());
+  const [selectedItemIds, setSelectedItemIds] = useState<Set<string>>(new Set());
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [renamingItemId, setRenamingItemId] = useState<string | null>(null);
+  const [renameItemTitle, setRenameItemTitle] = useState("");
+  const [itemToDelete, setItemToDelete] = useState<HistoryItem | null>(null);
+  const [workspaceToDelete, setWorkspaceToDelete] = useState<Workspace | null>(null);
+
+  const handleOpenItem = useCallback((item: HistoryItem) => {
     try {
       const chatPayload = {
         id: item.id,
@@ -687,10 +587,7 @@ export const HistoryPage: React.FC = () => {
           },
         ],
       };
-      sessionStorage.setItem(
-        "rivinity_active_chat",
-        JSON.stringify(chatPayload),
-      );
+      sessionStorage.setItem("rivinity_active_chat", JSON.stringify(chatPayload));
       localStorage.setItem("rivinity_active_chat", JSON.stringify(chatPayload));
     } catch {}
 
@@ -705,31 +602,8 @@ export const HistoryPage: React.FC = () => {
     } else {
       router.push("/chat");
     }
-  };
+  }, [router]);
 
-  // Data persistence
-  const [workspaces, setWorkspaces] = useState<Workspace[]>(initialWorkspaces);
-  const [historyItems, setHistoryItems] =
-    useState<HistoryItem[]>(initialHistoryItems);
-  const [isHydrated, setIsHydrated] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  // 3-dot Action Menu State & Pinned/Selected Items
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
-  const [openMenuUpward, setOpenMenuUpward] = useState(false);
-  const [pinnedItemIds, setPinnedItemIds] = useState<Set<string>>(new Set());
-  const [selectedItemIds, setSelectedItemIds] = useState<Set<string>>(
-    new Set(),
-  );
-  const [isSelectionMode, setIsSelectionMode] = useState(false);
-  const [renamingItemId, setRenamingItemId] = useState<string | null>(null);
-  const [renameItemTitle, setRenameItemTitle] = useState("");
-  const [itemToDelete, setItemToDelete] = useState<HistoryItem | null>(null);
-  const [workspaceToDelete, setWorkspaceToDelete] = useState<Workspace | null>(
-    null,
-  );
-
-  // Close 3-dot menu on click outside
   useEffect(() => {
     const handleClickOutside = () => setActiveMenuId(null);
     if (activeMenuId) {
@@ -738,7 +612,6 @@ export const HistoryPage: React.FC = () => {
     }
   }, [activeMenuId]);
 
-  // Keyboard escape handler for menu, delete popup and selection mode
   useEffect(() => {
     if (
       !activeMenuId &&
@@ -763,7 +636,6 @@ export const HistoryPage: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeMenuId, itemToDelete, workspaceToDelete, isSelectionMode]);
 
-  // Restore state safely on client mount (prevent SSR hydration mismatch)
   useEffect(() => {
     try {
       const storedWs = localStorage.getItem(STORAGE_WORKSPACES_KEY);
@@ -821,7 +693,6 @@ export const HistoryPage: React.FC = () => {
     };
   }, []);
 
-  // Sync to local storage
   useEffect(() => {
     if (!isHydrated) return;
     try {
@@ -834,7 +705,6 @@ export const HistoryPage: React.FC = () => {
     } catch {}
   }, [workspaces, historyItems, pinnedItemIds, isHydrated]);
 
-  // Create Workspace Submission (standalone)
   const handleCreateWorkspace = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newWsName.trim()) {
@@ -865,7 +735,6 @@ export const HistoryPage: React.FC = () => {
     toast.success(`Workspace "${newWs.name}" created!`);
   };
 
-  // Add Chat to existing workspace
   const handleAddChatToExistingWs = (
     chatItem: HistoryItem,
     targetWsId: string,
@@ -882,7 +751,6 @@ export const HistoryPage: React.FC = () => {
     setItemToAddToWs(null);
   };
 
-  // Create workspace and add chat simultaneously
   const handleCreateWsAndAddChat = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newWsName.trim()) {
@@ -906,7 +774,6 @@ export const HistoryPage: React.FC = () => {
       createdAt: new Date().toISOString().split("T")[0],
     };
 
-    // Add workspace and assign chat
     setWorkspaces((prev) => [newWs, ...prev]);
     setHistoryItems((prev) =>
       prev.map((item) =>
@@ -920,7 +787,6 @@ export const HistoryPage: React.FC = () => {
     setNewWsTopic("");
   };
 
-  // Remove chat from workspace (reassign to default/unassigned)
   const handleRemoveChatFromWs = (chatId: string) => {
     setHistoryItems((prev) =>
       prev.map((item) =>
@@ -930,7 +796,6 @@ export const HistoryPage: React.FC = () => {
     toast.info("Removed chat from workspace");
   };
 
-  // Delete Workspace
   const handleDeleteWorkspace = (
     wsId: string,
     wsName: string,
@@ -974,7 +839,6 @@ export const HistoryPage: React.FC = () => {
     });
   };
 
-  // Save Renamed Workspace
   const handleSaveRename = (e: React.FormEvent) => {
     e.preventDefault();
     if (!renamingWs || !renameInput.trim()) return;
@@ -990,7 +854,6 @@ export const HistoryPage: React.FC = () => {
     setRenameInput("");
   };
 
-  // Filter items by active Category, Workspace, and Search
   const filteredItems = useMemo(() => {
     let list = historyItems.filter((item) => item.category === activeCategory);
 
@@ -1008,7 +871,6 @@ export const HistoryPage: React.FC = () => {
       );
     }
 
-    // Sort pinned items to the top
     return [...list].sort((a, b) => {
       const aPinned =
         pinnedItemIds.has(a.id) ||
@@ -1030,18 +892,11 @@ export const HistoryPage: React.FC = () => {
     pinnedItemIds,
   ]);
 
-  // Open selection mode
-  const handleStartSelection = () => {
-    setIsSelectionMode(true);
-  };
-
-  // Exit selection mode
   const handleExitSelection = () => {
     setIsSelectionMode(false);
     setSelectedItemIds(new Set());
   };
 
-  // Toggle selection for all visible items
   const handleToggleSelectAll = () => {
     setIsSelectionMode(true);
     if (
@@ -1060,8 +915,7 @@ export const HistoryPage: React.FC = () => {
     }
   };
 
-  // Toggle single item selection
-  const handleToggleItem = (id: string) => {
+  const handleToggleItem = useCallback((id: string) => {
     setSelectedItemIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -1071,9 +925,8 @@ export const HistoryPage: React.FC = () => {
       }
       return next;
     });
-  };
+  }, []);
 
-  // Batch delete selected items
   const handleDeleteSelected = () => {
     if (selectedItemIds.size === 0) return;
     const count = selectedItemIds.size;
@@ -1083,7 +936,6 @@ export const HistoryPage: React.FC = () => {
     toast.success(`Deleted ${count} item${count > 1 ? "s" : ""}`);
   };
 
-  // Launch fresh session based on active category
   const handleCreateNew = () => {
     try {
       sessionStorage.removeItem("rivinity_active_chat");
@@ -1104,7 +956,6 @@ export const HistoryPage: React.FC = () => {
     }
   };
 
-  // Count items per folder category
   const categoryCounts = useMemo(() => {
     const counts: Record<CategoryType, number> = {
       CHAT: 0,
@@ -1129,31 +980,20 @@ export const HistoryPage: React.FC = () => {
 
   return (
     <SidebarShell>
-      <div className="flex-1 flex flex-col h-full min-w-0 relative overflow-hidden bg-[#FAF9F7] dark:bg-[#09090B] text-slate-800 dark:text-zinc-100 font-sans selection:bg-[#FF6B00]/20 selection:text-[#FF6B00]">
+      <div className="flex-1 flex flex-col h-full min-w-0 relative overflow-hidden bg-[#f8fafc] dark:bg-[#09090B] text-slate-800 dark:text-zinc-100 font-sans selection:bg-[#FF6B00]/20 selection:text-[#FF6B00]">
         <main className="flex-1 h-full min-w-0 overflow-y-auto [scrollbar-width:thin] [-ms-overflow-style:none]">
-          <div className="max-w-[1240px] mx-auto px-4 sm:px-8 py-6 sm:py-8 space-y-7">
-
-            {/* =========================================================================
-                SECTION 2: WORKSPACES (IMAGE 2 STYLE WITH PASTEL COLORS & POP UP)
-                - Top banner with pastel sunset/scenic gradient (orange, pink, purple)
-                - Floating white ⋮ circle button
-                - Smooth white curved card cutting into the banner
-                - Subtitle: "1 day ago • Active"
-                - Title: Monospace font (e.g. "Email Responder")
-                - Clicking card opens Pop Up to see inside workspace!
-               ========================================================================= */}
+          <div className="max-w-[1240px] mx-auto px-3.5 sm:px-6 md:px-8 py-5 sm:py-8 space-y-6 sm:space-y-7">
             <div className="space-y-3.5">
-              {/* Section Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                   Workspaces
-                </div>
+                </h2>
 
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setIsCreateWsOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#FF6B00] hover:bg-[#E66000] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-95"
+                    className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl bg-[#FF6B00] hover:bg-[#E66000] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-95"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>New Workspace</span>
@@ -1161,9 +1001,7 @@ export const HistoryPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Workspace Cards Grid (Image 2 Style with Pastel Colors) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
-                {/* Workspace Cards (Image 2 layout: Top banner + floating ⋮ button + curved white card + monospace title) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-3.5">
                 {workspaces.map((ws) => {
                   const wsChats = historyItems.filter(
                     (i) => i.workspaceId === ws.id,
@@ -1174,27 +1012,23 @@ export const HistoryPage: React.FC = () => {
                     <div
                       key={ws.id}
                       onClick={() => setViewingWorkspace(ws)}
-                      className="rounded-2xl border border-slate-200/90 dark:border-zinc-800 hover:border-slate-300 transition-all cursor-pointer shadow-xs hover:shadow-lg overflow-hidden flex flex-col group relative bg-white dark:bg-zinc-900"
+                      className="rounded-2xl border border-slate-200/90 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 transition-all cursor-pointer shadow-xs hover:shadow-lg overflow-hidden flex flex-col group relative bg-white dark:bg-zinc-900"
                     >
-                      {/* Top Pastel Scenic Gradient Banner */}
                       <div
-                        className={`h-16 w-full bg-gradient-to-r ${ws.bannerGradient} relative`}
+                        className={`h-14 sm:h-16 w-full bg-gradient-to-r ${ws.bannerGradient} relative`}
                       />
 
-                      {/* Overlapping Curved White Card Container cutting into the banner */}
                       <div className="-mt-4 mx-0 rounded-t-2xl bg-white dark:bg-zinc-900 pt-3 px-3.5 pb-3 flex-1 flex flex-col justify-between z-10 border-t border-slate-100/60 dark:border-zinc-800">
                         <div>
-                          {/* Title Row with Rename & Delete Actions */}
-                          <div className="flex items-center justify-between gap-2.5">
+                          <div className="flex items-center justify-between gap-2">
                             <div
-                              className="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight truncate group-hover:text-[#FF6B00] transition-colors flex-1"
+                              className="text-sm font-bold text-slate-900 dark:text-white tracking-tight truncate group-hover:text-[#FF6B00] transition-colors flex-1"
                               title={ws.name}
                             >
                               {ws.name}
                             </div>
 
-                            {/* Quick Actions: Rename & Delete */}
-                            <div className="flex items-center gap-1.5 shrink-0">
+                            <div className="flex items-center gap-1 shrink-0">
                               <button
                                 type="button"
                                 title="Rename workspace"
@@ -1204,9 +1038,9 @@ export const HistoryPage: React.FC = () => {
                                   setRenameInput(ws.name);
                                 }}
                                 style={{ background: "transparent" }}
-                                className="w-7 h-7 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center justify-center transition-colors cursor-pointer"
+                                className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center justify-center transition-colors cursor-pointer"
                               >
-                                <Pencil className="w-3.5 h-3.5" />
+                                <Pencil className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                               </button>
                               <button
                                 type="button"
@@ -1216,20 +1050,18 @@ export const HistoryPage: React.FC = () => {
                                   setWorkspaceToDelete(ws);
                                 }}
                                 style={{ background: "transparent" }}
-                                className="w-7 h-7 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors cursor-pointer"
+                                className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center justify-center transition-colors cursor-pointer"
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                <Trash2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                               </button>
                             </div>
                           </div>
 
-                          {/* Workspace Description (div only) */}
-                          <div className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 mt-1.5 leading-relaxed">
+                          <div className="text-[11.5px] sm:text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 mt-1.5 leading-relaxed">
                             {ws.description || ws.topic || "Workspace for organizing related chats and generations."}
                           </div>
                         </div>
 
-                        {/* Footer row with count and quick popup link */}
                         <div className="mt-3 pt-2 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px]">
                           <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 font-semibold">
                             {count} {count === 1 ? "chat" : "chats"}
@@ -1245,18 +1077,12 @@ export const HistoryPage: React.FC = () => {
               </div>
             </div>
 
-            {/* =========================================================================
-                SECTION 3: IMAGE 2 - 3D FOLDER TABS & ACTIVE CATEGORY TABLE
-                With option to add chat into existing or new workspace!
-               ========================================================================= */}
-            <div className="space-y-4">
-              {/* Single Heading (no subheading/paragraph) */}
-              <h2 className="text-lg sm:text-xl mt-15 font-bold tracking-tight text-slate-900 dark:text-white">
+            <div className="space-y-3.5 sm:space-y-4">
+              <h2 className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white pt-2">
                 Continue working
               </h2>
 
-              {/* Row of Interactive Category Folders (Dashboard Colors & Click Animations) */}
-              <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-4.5 pt-4 pb-1">
+              <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-5 sm:gap-x-4 sm:gap-y-6 lg:gap-4 pt-3 pb-1">
                 {folderConfigs.map((folder) => {
                   const Icon = folder.icon;
                   const isActive = activeCategory === folder.key;
@@ -1275,10 +1101,19 @@ export const HistoryPage: React.FC = () => {
                         },
                       }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => setActiveCategory(folder.key)}
-                      className="group relative w-full flex flex-col cursor-pointer select-none aspect-[4/2.75] min-h-[96px] sm:min-h-[105px]"
+                      onClick={() => {
+                        setActiveCategory(folder.key);
+                        if (typeof window !== "undefined" && window.innerWidth < 1024) {
+                          setTimeout(() => {
+                            document.getElementById("history-category-table")?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                          }, 150);
+                        }
+                      }}
+                      className="group relative w-full flex flex-col cursor-pointer select-none aspect-[4/2.8] min-h-[92px] sm:min-h-[105px]"
                     >
-                      {/* 1. BACK FOLDER LAYER with tab */}
                       <div className="absolute inset-0 pointer-events-none drop-shadow-xs">
                         <svg
                           viewBox="0 0 200 160"
@@ -1292,10 +1127,9 @@ export const HistoryPage: React.FC = () => {
                         </svg>
                       </div>
 
-                      {/* 2. INNER WHITE DOCUMENT SHEET (Animates UP out of the folder when clicked!) */}
                       <motion.div
                         animate={{
-                          y: isActive ? -24 : 0,
+                          y: isActive ? -22 : 0,
                           opacity: isActive ? 1 : 0.85,
                           scale: isActive ? 1.02 : 1,
                         }}
@@ -1319,9 +1153,8 @@ export const HistoryPage: React.FC = () => {
                         )}
                       </motion.div>
 
-                      {/* 3. FRONT FROSTED GLASS POCKET */}
                       <div
-                        className={`relative z-[3] mt-[16px] sm:mt-[18px] w-full flex-1 rounded-lg sm:rounded-xl p-2.5 sm:p-3 flex flex-col justify-between backdrop-blur-xl ${folder.bgFront} ${folder.border} ${folder.shadow} ${
+                        className={`relative z-[3] mt-[15px] sm:mt-[18px] w-full flex-1 rounded-lg sm:rounded-xl p-2.5 sm:p-3 flex flex-col justify-between backdrop-blur-xl ${folder.bgFront} ${folder.border} ${folder.shadow} ${
                           isActive
                             ? "shadow-xl -translate-y-1"
                             : "hover:-translate-y-0.5"
@@ -1330,7 +1163,6 @@ export const HistoryPage: React.FC = () => {
                         <div className="absolute -top-7 -right-7 w-16 h-16 bg-white/20 rounded-full blur-md pointer-events-none" />
                         <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/30 pointer-events-none rounded-lg" />
 
-                        {/* Header in Pocket */}
                         <div className="relative z-10 flex items-center justify-between">
                           <div className="flex items-center gap-1.5 min-w-0">
                             <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white shrink-0 drop-shadow-xs" />
@@ -1343,7 +1175,6 @@ export const HistoryPage: React.FC = () => {
                           </span>
                         </div>
 
-                        {/* Footer in Pocket */}
                         <div className="relative z-10 pt-1 flex items-center justify-between">
                           <span className="text-[9px] sm:text-[10px] font-medium text-white/90">
                             {isActive ? "Active Folder" : "Click to View"}
@@ -1360,11 +1191,9 @@ export const HistoryPage: React.FC = () => {
                 })}
               </div>
 
-              {/* Active Category Content Table Card (Image 2 Layout) */}
-              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200/90 dark:border-zinc-800 shadow-xs relative">
-                {/* Table Header: "Active Category: [CHAT]" & Selection / Search controls (matching image) */}
-                <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800/80 rounded-t-2xl">
-                  <div className="flex items-center gap-3">
+              <div id="history-category-table" className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200/90 dark:border-zinc-800 shadow-xs relative scroll-mt-6 sm:scroll-mt-8">
+                <div className="p-3.5 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-zinc-800/80 rounded-t-2xl">
+                  <div className="flex items-center gap-2.5">
                     <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400">
                       Active Category:
                     </span>
@@ -1375,22 +1204,20 @@ export const HistoryPage: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-                    {/* Search input (always on the left) */}
-                    <div className="relative">
+                  <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                    <div className="relative flex-1 sm:flex-initial min-w-[150px]">
                       <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                       <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder={`Search ${activeCategory.toLowerCase()}s...`}
-                        className="h-8 pl-8 pr-3 text-xs rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]"
+                        className="h-8 pl-8 pr-3 w-full sm:w-52 text-xs rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#FF6B00]"
                       />
                     </div>
 
                     {isSelectionMode || selectedItemIds.size > 0 ? (
-                      /* Selection Mode Active: "0 selected", [Select all], (Delete), Close ✕ (New is hidden!) */
-                      <div className="flex items-center gap-2 sm:gap-2.5 animate-in fade-in duration-150">
+                      <div className="flex items-center gap-2 flex-wrap animate-in fade-in duration-150">
                         <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400">
                           {selectedItemIds.size} selected
                         </span>
@@ -1398,7 +1225,7 @@ export const HistoryPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={handleToggleSelectAll}
-                          className="h-8 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200/90 text-slate-800 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 text-xs sm:text-[13px] font-semibold border border-slate-200/80 dark:border-zinc-700 shadow-2xs transition-colors cursor-pointer"
+                          className="h-8 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 text-xs font-semibold border border-slate-200/80 dark:border-zinc-700 shadow-2xs transition-colors cursor-pointer"
                         >
                           {selectedItemIds.size === filteredItems.length &&
                           filteredItems.length > 0
@@ -1423,16 +1250,15 @@ export const HistoryPage: React.FC = () => {
                           onClick={handleExitSelection}
                           className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100/80 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
                         >
-                          <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          <X className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     ) : (
-                      /* Normal Mode: [Select] button + [New] button */
-                      <>
+                      <div className="flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => setIsSelectionMode(true)}
-                          className="h-8 px-4 rounded-xl bg-slate-100 hover:bg-slate-200/90 text-slate-800 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 text-xs sm:text-[13px] font-semibold border border-slate-200/80 dark:border-zinc-700 shadow-2xs transition-all cursor-pointer active:scale-95"
+                          className="h-8 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-200 text-xs font-semibold border border-slate-200/80 dark:border-zinc-700 shadow-2xs transition-all cursor-pointer active:scale-95"
                         >
                           Select
                         </button>
@@ -1440,19 +1266,18 @@ export const HistoryPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={handleCreateNew}
-                          className="h-8 px-4.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-zinc-100 dark:text-slate-900 text-xs sm:text-[13px] font-semibold shadow-xs transition-all cursor-pointer active:scale-95"
+                          className="h-8 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-zinc-100 dark:text-slate-900 text-xs font-semibold shadow-xs transition-all cursor-pointer active:scale-95"
                         >
                           New
                         </button>
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                {/* Table Content Rows */}
                 <div className="divide-y divide-slate-100 dark:divide-zinc-800/80">
                   {filteredItems.length === 0 ? (
-                    <div className="py-14 text-center space-y-2">
+                    <div className="py-12 sm:py-14 text-center space-y-2 px-4">
                       <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center mx-auto text-slate-400">
                         <Folder className="w-5 h-5" />
                       </div>
@@ -1479,7 +1304,7 @@ export const HistoryPage: React.FC = () => {
                       return (
                         <div
                           key={item.id}
-                          className="grid grid-cols-[1fr_130px_48px] items-center px-5 py-3.5 transition-colors group cursor-pointer relative hover:bg-slate-50/80 dark:hover:bg-zinc-800/40"
+                          className="flex sm:grid sm:grid-cols-[1fr_120px_40px] items-center justify-between px-3.5 sm:px-5 py-3 sm:py-3.5 transition-colors group cursor-pointer relative hover:bg-slate-50/80 dark:hover:bg-zinc-800/40 gap-2 sm:gap-3"
                           onClick={() => {
                             if (isSelectionMode || selectedItemIds.size > 0) {
                               handleToggleItem(item.id);
@@ -1488,8 +1313,7 @@ export const HistoryPage: React.FC = () => {
                             }
                           }}
                         >
-                          {/* Column 1: Checkbox (visible in selection mode) + NAME */}
-                          <div className="flex items-center gap-3.5 min-w-0 pr-4">
+                          <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
                             {(isSelectionMode || selectedItemIds.size > 0) && (
                               <button
                                 type="button"
@@ -1497,22 +1321,11 @@ export const HistoryPage: React.FC = () => {
                                   e.stopPropagation();
                                   handleToggleItem(item.id);
                                 }}
-                                className="w-[19px] h-[19px] min-w-[19px] min-h-[19px] rounded-md flex items-center justify-center transition-all cursor-pointer shrink-0 bg-white dark:bg-zinc-800 hover:border-slate-500"
-                                style={{
-                                  border: "1.5px solid #94a3b8",
-                                }}
+                                className="w-[18px] h-[18px] min-w-[18px] min-h-[18px] rounded-md flex items-center justify-center transition-all cursor-pointer shrink-0 bg-white dark:bg-zinc-800 hover:border-slate-500 border border-slate-400"
                                 aria-label={`Select ${item.name}`}
                               >
                                 {isSelected && (
-                                  <Check
-                                    className="stroke-[3] text-slate-900 dark:text-zinc-100 shrink-0"
-                                    style={{
-                                      width: 13,
-                                      height: 13,
-                                      minWidth: 13,
-                                      minHeight: 13,
-                                    }}
-                                  />
+                                  <Check className="w-3 h-3 stroke-[3] text-slate-900 dark:text-zinc-100 shrink-0" />
                                 )}
                               </button>
                             )}
@@ -1539,7 +1352,7 @@ export const HistoryPage: React.FC = () => {
                                     setRenamingItemId(null);
                                   }}
                                   onClick={(e) => e.stopPropagation()}
-                                  className="flex items-center gap-1.5"
+                                  className="flex items-center gap-1.5 flex-wrap"
                                 >
                                   <input
                                     type="text"
@@ -1548,7 +1361,7 @@ export const HistoryPage: React.FC = () => {
                                     onChange={(e) =>
                                       setRenameItemTitle(e.target.value)
                                     }
-                                    className="px-2 py-0.5 text-xs sm:text-[13px] font-bold rounded-md bg-white dark:bg-zinc-800 border border-[#FF6B00] text-slate-900 dark:text-white focus:outline-none"
+                                    className="px-2 py-0.5 text-xs font-bold rounded-md bg-white dark:bg-zinc-800 border border-[#FF6B00] text-slate-900 dark:text-white focus:outline-none"
                                   />
                                   <button
                                     type="submit"
@@ -1565,35 +1378,38 @@ export const HistoryPage: React.FC = () => {
                                   </button>
                                 </form>
                               ) : (
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white truncate">
-                                    {item.name}
-                                  </span>
-                                  {isPinned && (
-                                    <span
-                                      title="Pinned to top"
-                                      className="inline-flex items-center ml-0.5"
-                                    >
-                                      <Pin className="w-3.5 h-3.5 text-[#FF6B00] fill-[#FF6B00] rotate-45 shrink-0" />
+                                <div className="space-y-0.5 min-w-0">
+                                  <div className="flex items-center gap-1.5 min-w-0">
+                                    <span className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white truncate">
+                                      {item.name}
                                     </span>
-                                  )}
-                                  {itemWs && (
-                                    <span className="hidden sm:inline-flex items-center px-1.5 py-0.2 text-[9px] rounded-md bg-orange-50 dark:bg-orange-950/40 font-semibold text-[#FF6B00] border border-orange-200/50">
-                                      {itemWs.name}
-                                    </span>
-                                  )}
+                                    {isPinned && (
+                                      <span
+                                        title="Pinned to top"
+                                        className="inline-flex items-center shrink-0"
+                                      >
+                                        <Pin className="w-3 h-3 text-[#FF6B00] fill-[#FF6B00] rotate-45 shrink-0" />
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-2 text-[10.5px] text-slate-400 dark:text-zinc-500">
+                                    <span className="sm:hidden">{item.modified}</span>
+                                    {itemWs && (
+                                      <span className="inline-flex items-center px-1.5 py-0.2 rounded-md bg-orange-50 dark:bg-orange-950/40 font-semibold text-[#FF6B00] border border-orange-200/50 truncate max-w-[120px]">
+                                        {itemWs.name}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
                               )}
                             </div>
                           </div>
 
-                          {/* Column 2: MODIFIED */}
-                          <div className="text-xs text-slate-500 dark:text-zinc-400 pl-2">
+                          <div className="hidden sm:block text-xs text-slate-500 dark:text-zinc-400 truncate">
                             {item.modified}
                           </div>
 
-                          {/* Column 3: 3-DOTS ACTION MENU */}
-                          <div className="flex items-center justify-end pr-1 relative">
+                          <div className="flex items-center justify-end relative shrink-0">
                             <button
                               type="button"
                               title="More options"
@@ -1618,7 +1434,6 @@ export const HistoryPage: React.FC = () => {
                               <MoreVertical className="w-4 h-4" />
                             </button>
 
-                            {/* Contextual Popup Menu (Image 2 Style) */}
                             <AnimatePresence>
                               {activeMenuId === item.id && (
                                 <motion.div
@@ -1626,7 +1441,7 @@ export const HistoryPage: React.FC = () => {
                                   animate={{ opacity: 1, scale: 1, y: 0 }}
                                   exit={{ opacity: 0, scale: 0.95, y: openMenuUpward ? 4 : -4 }}
                                   transition={{
-                                    duration: 0.15,
+                                    duration: 0.12,
                                     ease: "easeOut",
                                   }}
                                   onClick={(e) => e.stopPropagation()}
@@ -1634,9 +1449,8 @@ export const HistoryPage: React.FC = () => {
                                     openMenuUpward
                                       ? "bottom-full mb-1.5 origin-bottom-right"
                                       : "top-full mt-1.5 origin-top-right"
-                                  } w-48 bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-100 rounded-2xl p-1.5 shadow-xl shadow-slate-200/80 dark:shadow-black/70 border border-slate-200/90 dark:border-zinc-800 z-50 select-none text-left`}
+                                  } w-48 max-w-[calc(100vw-2.5rem)] bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-100 rounded-2xl p-1.5 shadow-xl border border-slate-200/90 dark:border-zinc-800 z-50 select-none text-left`}
                                 >
-                                  {/* 1. Pin */}
                                   <div
                                     onClick={() => {
                                       const nowPinned = !isPinned;
@@ -1644,9 +1458,7 @@ export const HistoryPage: React.FC = () => {
                                         const next = new Set(prev);
                                         if (nowPinned) {
                                           next.add(item.id);
-                                          toast.success(
-                                            `Pinned "${item.name}" to top`,
-                                          );
+                                          toast.success(`Pinned "${item.name}" to top`);
                                         } else {
                                           next.delete(item.id);
                                           next.delete(item.name);
@@ -1663,53 +1475,50 @@ export const HistoryPage: React.FC = () => {
                                       );
                                       setActiveMenuId(null);
                                     }}
-                                    className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100/80 dark:hover:bg-zinc-800/80 transition-colors cursor-pointer"
+                                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                                   >
                                     <Pin
-                                      className={`w-4 h-4 stroke-[2] ${isPinned ? "text-[#FF6B00] fill-[#FF6B00]" : "text-slate-500 dark:text-zinc-400"}`}
+                                      className={`w-3.5 h-3.5 ${isPinned ? "text-[#FF6B00] fill-[#FF6B00]" : "text-slate-500 dark:text-zinc-400"}`}
                                     />
                                     <span>{isPinned ? "Unpin" : "Pin"}</span>
                                   </div>
 
-                                  {/* 2. Rename */}
                                   <div
                                     onClick={() => {
                                       setRenamingItemId(item.id);
                                       setRenameItemTitle(item.name);
                                       setActiveMenuId(null);
                                     }}
-                                    className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100/80 dark:hover:bg-zinc-800/80 transition-colors cursor-pointer"
+                                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                                   >
-                                    <Pencil className="w-4 h-4 stroke-[2] text-slate-500 dark:text-zinc-400" />
+                                    <Pencil className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
                                     <span>Rename</span>
                                   </div>
 
-                                  {/* 3. Add to workspace */}
                                   <div
                                     onClick={() => {
                                       setItemToAddToWs(item);
                                       setActiveMenuId(null);
                                     }}
-                                    className="flex items-center justify-between px-3 py-2 rounded-xl text-[13px] font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100/80 dark:hover:bg-zinc-800/80 transition-colors cursor-pointer"
+                                    className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                                   >
-                                    <div className="flex items-center gap-3">
-                                      <FolderArchive className="w-4 h-4 stroke-[2] text-slate-500 dark:text-zinc-400" />
+                                    <div className="flex items-center gap-2.5">
+                                      <FolderArchive className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
                                       <span>Add to workspace</span>
                                     </div>
-                                    <ChevronRight className="w-4 h-4 text-slate-400 dark:text-zinc-500" />
+                                    <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" />
                                   </div>
 
                                   <div className="my-1 h-[1px] bg-slate-100 dark:bg-zinc-800" />
 
-                                  {/* 4. Delete (Opens Confirmation Popup) */}
                                   <div
                                     onClick={() => {
                                       setItemToDelete(item);
                                       setActiveMenuId(null);
                                     }}
-                                    className="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
+                                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors cursor-pointer"
                                   >
-                                    <Trash2 className="w-4 h-4 stroke-[2] text-red-500 dark:text-red-400" />
+                                    <Trash2 className="w-3.5 h-3.5 text-red-500 dark:text-red-400" />
                                     <span>Delete</span>
                                   </div>
                                 </motion.div>
@@ -1726,40 +1535,30 @@ export const HistoryPage: React.FC = () => {
           </div>
         </main>
 
-        {/* =========================================================================
-            POP UP 1: VIEW INSIDE WORKSPACE (REDESIGNED)
-            - Clean pastel banner with workspace name
-            - "Filter Page" button removed (all workspace chats seen here)
-            - "Active" label removed
-            - Delete button fixed and styled cleanly
-            - Inspect button replaced with an expandable dropdown
-            - "Done" button removed
-           ========================================================================= */}
         <AnimatePresence>
           {viewingWorkspace && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+                className="w-full max-w-[95vw] sm:max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
               >
-                {/* Top Pastel Scenic Banner */}
                 <div
-                  className={`min-h-[6.5rem] bg-gradient-to-r ${viewingWorkspace.bannerGradient} p-5 flex items-start justify-between relative`}
+                  className={`min-h-[5.5rem] sm:min-h-[6.5rem] bg-gradient-to-r ${viewingWorkspace.bannerGradient} p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-3 relative`}
                 >
-                  <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xs px-4 py-2.5 rounded-2xl shadow-xs flex flex-col max-w-[80%]">
-                    <div className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">
+                  <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xs px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl shadow-xs flex flex-col max-w-full sm:max-w-[80%]">
+                    <div className="text-sm sm:text-lg font-bold text-slate-900 dark:text-white leading-tight truncate">
                       {viewingWorkspace.name}
                     </div>
                     {(viewingWorkspace.description || viewingWorkspace.topic) && (
-                      <div className="text-xs text-slate-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                      <div className="text-xs text-slate-500 dark:text-zinc-400 mt-1 leading-relaxed line-clamp-2">
                         {viewingWorkspace.description || viewingWorkspace.topic}
                       </div>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0 ml-3">
+                  <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
                     <button
                       type="button"
                       onClick={() => {
@@ -1770,7 +1569,7 @@ export const HistoryPage: React.FC = () => {
                         } catch {}
                         router.push(`/chat?workspace=${viewingWorkspace.id}`);
                       }}
-                      className="px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-zinc-900/90 hover:bg-white text-xs font-semibold text-slate-800 dark:text-zinc-100 shadow-xs flex items-center gap-1.5 transition-all border border-black/5 hover:border-black/10 cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-full bg-white/95 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-800 text-xs font-semibold text-slate-800 dark:text-zinc-100 dark:hover:text-white shadow-xs flex items-center gap-1.5 transition-all border border-black/5 hover:border-black/10 dark:border-white/10 dark:hover:border-white/20 cursor-pointer"
                     >
                       <MessageSquare className="w-3.5 h-3.5 text-[#FF6B00]" />
                       <span>Show in chat</span>
@@ -1782,15 +1581,14 @@ export const HistoryPage: React.FC = () => {
                         setViewingWorkspace(null);
                         setExpandedWsChatId(null);
                       }}
-                      className="w-8 h-8 rounded-full bg-white/90 dark:bg-zinc-900/90 flex items-center justify-center text-slate-600 hover:text-slate-900 cursor-pointer shadow-xs transition-colors shrink-0"
+                      className="w-8 h-8 rounded-full bg-white/90 dark:bg-zinc-900/90 hover:bg-white dark:hover:bg-zinc-800 flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white cursor-pointer shadow-xs transition-colors border border-black/5 dark:border-white/10 shrink-0"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
 
-                {/* Chats List Inside Workspace */}
-                <div className="p-5 overflow-y-auto flex-1 space-y-3 [scrollbar-width:thin]">
+                <div className="p-4 sm:p-5 overflow-y-auto flex-1 space-y-3 [scrollbar-width:thin]">
                   <div className="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-zinc-800">
                     <span className="text-xs font-bold text-slate-800 dark:text-zinc-200">
                       Chats in this Workspace (
@@ -1809,13 +1607,12 @@ export const HistoryPage: React.FC = () => {
                   {historyItems.filter(
                     (i) => i.workspaceId === viewingWorkspace.id,
                   ).length === 0 ? (
-                    <div className="py-12 text-center space-y-2 border border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl p-4">
+                    <div className="py-10 text-center space-y-2 border border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl p-4">
                       <div className="text-xs font-semibold text-slate-600 dark:text-zinc-400">
                         No chats added to this workspace yet
                       </div>
                       <div className="text-[11px] text-slate-400 max-w-xs mx-auto">
-                        Use the "Add to WS" button in the table below to add any
-                        chat into this space.
+                        Use the &quot;Add to workspace&quot; option in any chat menu to include items here.
                       </div>
                     </div>
                   ) : (
@@ -1827,19 +1624,16 @@ export const HistoryPage: React.FC = () => {
                         return (
                           <div
                             key={chat.id}
-                            className="p-3.5 rounded-xl border border-slate-200/80 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/40 transition-all"
+                            className="p-3 sm:p-3.5 rounded-xl border border-slate-200/80 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/40 transition-all"
                           >
-                            {/* Summary Row */}
-                            <div className="flex items-center justify-between gap-3">
-                              <div className="min-w-0">
+                            <div className="flex items-center justify-between gap-2.5">
+                              <div className="min-w-0 flex-1">
                                 <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
                                   {chat.name}
                                 </div>
                               </div>
 
-                              {/* Action Buttons: Dropdown Details & Fixed Delete */}
-                              <div className="flex items-center gap-2 shrink-0">
-                                {/* Dropdown Toggle Button (replaces Inspect popup) */}
+                              <div className="flex items-center gap-1.5 shrink-0">
                                 <button
                                   type="button"
                                   onClick={() =>
@@ -1850,7 +1644,7 @@ export const HistoryPage: React.FC = () => {
                                   className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
                                     isExpanded
                                       ? "bg-[#FF6B00] text-white shadow-xs"
-                                      : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300 hover:bg-slate-100"
+                                      : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:text-slate-900 dark:hover:text-white"
                                   }`}
                                 >
                                   <span>Details</span>
@@ -1859,7 +1653,6 @@ export const HistoryPage: React.FC = () => {
                                   />
                                 </button>
 
-                                {/* Fixed & Clean Delete Button */}
                                 <button
                                   type="button"
                                   onClick={() =>
@@ -1873,7 +1666,6 @@ export const HistoryPage: React.FC = () => {
                               </div>
                             </div>
 
-                            {/* Dropdown Content inside popup */}
                             <AnimatePresence>
                               {isExpanded && (
                                 <motion.div
@@ -1882,7 +1674,7 @@ export const HistoryPage: React.FC = () => {
                                   exit={{ opacity: 0, height: 0 }}
                                   className="mt-3 pt-3 border-t border-slate-200/70 dark:border-zinc-700/70 space-y-2.5 overflow-hidden"
                                 >
-                                  <div className="flex items-center gap-3 text-[11px] text-slate-400 dark:text-zinc-500">
+                                  <div className="flex items-center gap-3 text-[11px] text-slate-400 dark:text-zinc-500 flex-wrap">
                                     <span>
                                       Tokens:{" "}
                                       <strong className="text-slate-700 dark:text-zinc-300">
@@ -1931,9 +1723,7 @@ export const HistoryPage: React.FC = () => {
                                         navigator.clipboard.writeText(
                                           chat.prompt,
                                         );
-                                        toast.success(
-                                          "Prompt copied to clipboard!",
-                                        );
+                                        toast.success("Prompt copied to clipboard!");
                                       }}
                                       className="inline-flex items-center gap-1 bg-transparent text-[11px] font-semibold text-[#FF6B00] hover:underline cursor-pointer"
                                     >
@@ -1954,25 +1744,19 @@ export const HistoryPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* =========================================================================
-            POP UP 2: ADD CHAT INTO WORKSPACE (OPTION TO CREATE OR ADD EXISTING)
-            "option where user can add in workspace which option to create one
-            or add in the existing one"
-           ========================================================================= */}
         <AnimatePresence>
           {itemToAddToWs && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="w-full max-w-lg sm:max-w-xl bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl p-6 sm:p-7 space-y-5"
+                className="w-full max-w-[94vw] sm:max-w-xl bg-white dark:bg-zinc-900 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl p-5 sm:p-7 space-y-4 sm:space-y-5"
               >
-                {/* Header */}
                 <div className="flex items-center justify-between pb-3.5 border-b border-slate-100 dark:border-zinc-800">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#FF6B00] text-white flex items-center justify-center shadow-xs shrink-0">
-                      <FolderPlus className="w-4.5 h-4.5" />
+                    <div className="w-8 sm:w-9 h-8 sm:h-9 rounded-xl bg-[#FF6B00] text-white flex items-center justify-center shadow-xs shrink-0">
+                      <FolderPlus className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                     </div>
                     <div className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                       Add to Workspace
@@ -1988,7 +1772,6 @@ export const HistoryPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Mode Selector Tabs: Existing Workspace vs Create New */}
                 <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 dark:bg-zinc-800 rounded-xl text-xs font-bold">
                   <button
                     type="button"
@@ -2014,7 +1797,6 @@ export const HistoryPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Option 1: Existing Workspaces List */}
                 {addMode === "existing" ? (
                   <div className="space-y-2 max-h-[260px] overflow-y-auto [scrollbar-width:thin] pr-1">
                     <p className="text-xs text-slate-500 dark:text-zinc-400">
@@ -2036,7 +1818,6 @@ export const HistoryPage: React.FC = () => {
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            {/* Pastel Dot indicator */}
                             <div
                               className={`w-3.5 h-3.5 rounded-full bg-gradient-to-br ${ws.bannerGradient} shrink-0 ring-1 ring-black/10`}
                             />
@@ -2066,7 +1847,6 @@ export const HistoryPage: React.FC = () => {
                     })}
                   </div>
                 ) : (
-                  /* Option 2: Create New Workspace & Add Chat */
                   <form
                     onSubmit={handleCreateWsAndAddChat}
                     className="space-y-3.5"
@@ -2098,10 +1878,9 @@ export const HistoryPage: React.FC = () => {
                       />
                     </div>
 
-                    {/* Pastel Colors (Image 2 Style) */}
                     <div className="space-y-1">
                       <div className="text-xs font-semibold text-slate-700 dark:text-zinc-300">
-                        Choose Pastel Theme (Orange, Pink, Purple...)
+                        Choose Pastel Theme
                       </div>
                       <div className="grid grid-cols-5 gap-2">
                         {pastelPalettes.map((palette, idx) => {
@@ -2150,17 +1929,14 @@ export const HistoryPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* =========================================================================
-            MODAL: CREATE WORKSPACE (STANDALONE)
-           ========================================================================= */}
         <AnimatePresence>
           {isCreateWsOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="w-full max-w-md bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl p-6 space-y-4"
+                className="w-full max-w-[92vw] sm:max-w-md bg-white dark:bg-zinc-900 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl p-5 sm:p-6 space-y-4"
               >
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-zinc-800">
                   <div className="flex items-center gap-2.5">
@@ -2203,10 +1979,9 @@ export const HistoryPage: React.FC = () => {
                     />
                   </div>
 
-                  {/* Pastel Color Selector */}
                   <div className="space-y-1">
                     <div className="text-xs font-semibold text-slate-700 dark:text-zinc-300">
-                      Pastel Theme (Orange, Pink, Purple...)
+                      Pastel Theme
                     </div>
                     <div className="grid grid-cols-5 gap-2">
                       {pastelPalettes.map((palette, idx) => {
@@ -2254,17 +2029,14 @@ export const HistoryPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* =========================================================================
-            MODAL: RENAME WORKSPACE
-           ========================================================================= */}
         <AnimatePresence>
           {renamingWs && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl p-5 space-y-4"
+                className="w-full max-w-[92vw] sm:max-w-sm bg-white dark:bg-zinc-900 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl p-5 space-y-4"
               >
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-zinc-800">
                   <div className="flex items-center gap-2.5">
@@ -2321,17 +2093,14 @@ export const HistoryPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* =========================================================================
-            MODAL: INSPECT CHAT / FILE PAYLOAD
-           ========================================================================= */}
         <AnimatePresence>
           {inspectingItem && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl p-6 space-y-4 max-h-[85vh] flex flex-col"
+                className="w-full max-w-[94vw] sm:max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl p-5 sm:p-6 space-y-4 max-h-[85vh] flex flex-col"
               >
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-zinc-800">
                   <div className="flex items-center gap-3">
@@ -2365,7 +2134,7 @@ export const HistoryPage: React.FC = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto space-y-4 text-xs [scrollbar-width:thin]">
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     <div className="p-3 rounded-xl bg-slate-50 dark:bg-zinc-800/60 border border-slate-200/80 dark:border-zinc-800">
                       <span className="text-slate-400">Total Tokens</span>
                       <p className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">
@@ -2433,13 +2202,10 @@ export const HistoryPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* =========================================================================
-            MODAL: DELETE CONFIRMATION POPUP (Matching Screenshot, Light Theme, Divs Only)
-           ========================================================================= */}
         <AnimatePresence>
           {itemToDelete && (
             <div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs"
+              className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-xs"
               onClick={() => setItemToDelete(null)}
             >
               <motion.div
@@ -2448,13 +2214,13 @@ export const HistoryPage: React.FC = () => {
                 exit={{ opacity: 0, scale: 0.95, y: 8 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-2xl p-6"
+                className="w-full max-w-[92vw] sm:max-w-sm bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-2xl p-5 sm:p-6"
               >
                 <div className="text-base font-semibold text-slate-900 dark:text-white">
                   Delete chat?
                 </div>
 
-                <div className="text-sm text-slate-500 dark:text-zinc-400 mt-2">
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 mt-2">
                   Are you sure you want to delete this chat?
                 </div>
 
@@ -2462,7 +2228,7 @@ export const HistoryPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setItemToDelete(null)}
-                    className="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -2475,7 +2241,7 @@ export const HistoryPage: React.FC = () => {
                       toast.success(`Deleted "${itemToDelete.name}"`);
                       setItemToDelete(null);
                     }}
-                    className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#E11D48] hover:bg-[#BE123C] text-white shadow-xs border border-red-500/40 transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-[#E11D48] hover:bg-[#BE123C] text-white shadow-xs border border-red-500/40 transition-colors cursor-pointer"
                   >
                     Delete
                   </button>
@@ -2485,13 +2251,10 @@ export const HistoryPage: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* =========================================================================
-            MODAL: DELETE WORKSPACE CONFIRMATION POPUP (Matching Chat Delete Popup)
-           ========================================================================= */}
         <AnimatePresence>
           {workspaceToDelete && (
             <div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs"
+              className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/40 backdrop-blur-xs"
               onClick={() => setWorkspaceToDelete(null)}
             >
               <motion.div
@@ -2500,13 +2263,13 @@ export const HistoryPage: React.FC = () => {
                 exit={{ opacity: 0, scale: 0.95, y: 8 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-2xl p-6"
+                className="w-full max-w-[92vw] sm:max-w-sm bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-2xl p-5 sm:p-6"
               >
                 <div className="text-base font-semibold text-slate-900 dark:text-white">
                   Delete workspace?
                 </div>
 
-                <div className="text-sm text-slate-500 dark:text-zinc-400 mt-2">
+                <div className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 mt-2">
                   Are you sure you want to delete this workspace?
                 </div>
 
@@ -2514,7 +2277,7 @@ export const HistoryPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setWorkspaceToDelete(null)}
-                    className="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -2529,7 +2292,7 @@ export const HistoryPage: React.FC = () => {
                         setWorkspaceToDelete(null);
                       }
                     }}
-                    className="px-4 py-2 rounded-xl text-sm font-semibold bg-[#E11D48] hover:bg-[#BE123C] text-white shadow-xs border border-red-500/40 transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold bg-[#E11D48] hover:bg-[#BE123C] text-white shadow-xs border border-red-500/40 transition-colors cursor-pointer"
                   >
                     Delete
                   </button>

@@ -63,7 +63,11 @@ const RivinityLMRightPanel = ({ activeFeature, onFeatureChange }: Props) => {
               <Upload className="w-6 h-6 text-muted-foreground/25 mb-1.5" />
               <p className="text-[11px] text-muted-foreground/50">Drop PDFs, DOCX, or notes</p>
               <p className="text-[10px] text-muted-foreground/30 mt-0.5">AI will learn from your materials</p>
-              <button className="mt-3 px-4 py-1.5 rounded-lg text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/15 transition-colors cursor-pointer">
+              <button
+                type="button"
+                onClick={() => setUploadedFiles(["Lecture_Notes_Quantum_Physics.pdf", "World_History_StudyGuide.docx"])}
+                className="mt-3 px-4 py-1.5 rounded-lg text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/15 transition-colors cursor-pointer"
+              >
                 Browse Files
               </button>
             </div>
@@ -84,7 +88,6 @@ const RivinityLMRightPanel = ({ activeFeature, onFeatureChange }: Props) => {
         <RecentList items={recentItems} dense />
       </PanelSection>
 
-      {/* Study Stats */}
       <div className="mt-auto">
         <div className="glass rounded-2xl p-4 border border-glass">
           <div className="flex items-center gap-2 mb-3">

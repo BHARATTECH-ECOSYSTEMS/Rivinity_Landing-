@@ -5,7 +5,6 @@ import {
   GraduationCap,
   Clock,
   Play,
-
   Check,
   Award,
   Flag,
@@ -133,9 +132,8 @@ export default function ExamLabView() {
   const currentQ = questions[currentIdx] || questions[0];
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {}
-      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+    <div className="flex h-full min-h-0 w-full flex-col bg-[#f8fafc] dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-[#f8fafc]/80 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
             <GraduationCap className="h-4 w-4" strokeWidth={2.2} />
@@ -163,11 +161,9 @@ export default function ExamLabView() {
         )}
       </div>
 
-      {}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
         <div className="mx-auto w-full max-w-[840px] space-y-5">
           {!examStarted ? (
-            
             <div className="space-y-5">
               <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm space-y-5">
                 <div>
@@ -223,9 +219,7 @@ export default function ExamLabView() {
               </div>
             </div>
           ) : !examSubmitted ? (
-            
             <div className="space-y-5">
-              {}
               <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 shadow-xs">
                 <div className="flex items-center gap-1.5">
                   {questions.map((q, idx) => {
@@ -269,7 +263,6 @@ export default function ExamLabView() {
                 </div>
               </div>
 
-              {}
               <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 sm:p-8 shadow-sm space-y-6">
                 <div className="flex items-center justify-between text-[11.5px] text-slate-400 dark:text-zinc-500 font-medium">
                   <span>Question {currentIdx + 1} of {questions.length}</span>
@@ -307,7 +300,6 @@ export default function ExamLabView() {
                 </div>
               </div>
 
-              {}
               <div className="flex items-center justify-between pt-2">
                 <button
                   type="button"
@@ -338,7 +330,6 @@ export default function ExamLabView() {
               </div>
             </div>
           ) : (
-            
             <div className="rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 sm:p-10 shadow-md text-center space-y-6">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/10 text-[#FF6B00]">
                 <Award className="h-8 w-8" strokeWidth={2.2} />

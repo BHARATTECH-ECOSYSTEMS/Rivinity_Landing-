@@ -10,7 +10,6 @@ import {
   Check,
   Bookmark,
   MessageSquare,
-  Flame,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -46,13 +45,11 @@ export default function ContextualChatView() {
     },
   ]);
 
-  const [input, setInput] = useState("");
   const [isSpeakingId, setIsSpeakingId] = useState<number | null>(null);
   const [savedMessages, setSavedMessages] = useState<number[]>([]);
-  const [activeTopic, setActiveTopic] = useState<string | null>(null);
 
-  const handleSend = () => {
-    const trimmed = input.trim();
+  const handleSendPrompt = (text: string) => {
+    const trimmed = text.trim();
     if (!trimmed) return;
 
     const userMsg: Message = {
@@ -69,7 +66,6 @@ export default function ContextualChatView() {
     };
 
     setMessages((prev) => [...prev, userMsg, thinkingMsg]);
-    setInput("");
 
     setTimeout(() => {
       setMessages((prev) =>
@@ -127,9 +123,8 @@ export default function ContextualChatView() {
   };
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-white dark:bg-zinc-950 text-slate-900 dark:text-zinc-100">
-      {}
-      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
+    <div className="flex h-full min-h-0 w-full flex-col bg-[#f8fafc] dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans">
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 dark:border-zinc-800 bg-[#f8fafc]/80 dark:bg-zinc-900/70 px-4 sm:px-6 py-2.5 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00]">
             <MessageSquare className="h-4 w-4" strokeWidth={2.2} />
@@ -138,29 +133,27 @@ export default function ContextualChatView() {
             <div className="flex items-center gap-2 text-[14px] font-semibold text-slate-900 dark:text-zinc-100">
               <span>Contextual Chat</span>
               <span className="rounded-full bg-orange-500/10 dark:bg-orange-500/20 px-2 py-0.5 text-[10px] font-semibold text-[#FF6B00]">
-                Active Session
+                Pro Academic
               </span>
             </div>
-            <div className="text-[11px] text-slate-500 dark:text-zinc-400">
-              Interactive academic dialogue with instant reference tracking
-            </div>
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400">
+              Multi-source citation grounding with step-by-step reasoning
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900 px-3 py-1.5 text-[11px] font-medium text-slate-600 dark:text-zinc-300">
-            <Flame className="h-3.5 w-3.5 text-[#FF6B00]" />
-            <span>AI Reasoning Enabled</span>
-          </div>
+          <span className="flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800 px-2.5 py-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Grounding Active
+          </span>
         </div>
       </div>
 
-      {}
-      <div className="flex min-h-0 flex-1 gap-6 overflow-hidden px-3 sm:px-6 py-4">
-        {}
-        <div className="flex min-w-0 flex-1 flex-col justify-between">
-          <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-5 [scrollbar-width:thin]">
-            <div className="mx-auto w-full max-w-[840px] space-y-5 pb-6">
+      <div className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="mx-auto w-full max-w-[840px] space-y-4">
+          <div className="rounded-2xl border border-slate-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3.5 sm:p-5 shadow-xs">
+            <div className="space-y-4">
               {messages.map((message) => {
                 const isUser = message.role === "user";
                 const isSaved = savedMessages.includes(message.id);
@@ -168,30 +161,28 @@ export default function ContextualChatView() {
                 return (
                   <div
                     key={message.id}
-                    className={`flex ${isUser ? "justify-end" : "justify-start"} animate-in fade-in duration-200`}
+                    className={`flex items-start gap-3 ${isUser ? "justify-end" : "justify-start"}`}
                   >
+                    {!isUser && (
+                      <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 text-[#FF6B00] border border-orange-500/20">
+                        <Sparkles className="h-4 w-4" />
+                      </div>
+                    )}
+
                     <div
-                      className={`relative max-w-[92%] sm:max-w-[85%] rounded-2xl p-4 sm:p-5 transition-all ${
+                      className={`relative max-w-[92%] sm:max-w-[85%] rounded-2xl p-3.5 sm:p-4 text-xs sm:text-[13px] leading-relaxed transition-all shadow-xs ${
                         isUser
-                          ? "bg-[#FF6B00] text-white shadow-md rounded-br-xs"
-                          : "bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-zinc-100 shadow-xs rounded-bl-xs"
+                          ? "bg-slate-900 text-white dark:bg-zinc-100 dark:text-zinc-900 font-medium"
+                          : "border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-200"
                       }`}
                     >
-                      {}
-                      <div className="flex items-center justify-between gap-3 mb-2">
-                        <div className="flex items-center gap-1.5 text-[11.5px] font-semibold opacity-90">
-                          {isUser ? (
-                            <span>You</span>
-                          ) : (
-                            <span className="flex items-center gap-1 text-[#FF6B00]">
-                              <Sparkles className="h-3.5 w-3.5" />
-                              Rivinity AI
-                            </span>
-                          )}
-                        </div>
+                      <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-zinc-800">
+                        <span className="text-[11px] font-semibold text-slate-400 dark:text-zinc-400">
+                          {isUser ? "You" : "Rivinity Academic Assistant"}
+                        </span>
 
-                        {!isUser && !message.thinking && (
-                          <div className="flex items-center gap-1 text-slate-400 dark:text-zinc-500">
+                        {!isUser && (
+                          <div className="flex items-center gap-1 text-slate-400">
                             <button
                               type="button"
                               onClick={() => toggleBookmark(message.id)}
@@ -224,19 +215,17 @@ export default function ContextualChatView() {
                         )}
                       </div>
 
-                      {}
                       {message.thinking ? (
                         <div className="flex items-center gap-2.5 py-2 text-slate-500 dark:text-zinc-400 text-xs">
                           <Loader2 className="h-4 w-4 animate-spin text-[#FF6B00]" />
                           <span>Formulating academic response and verifying references...</span>
                         </div>
                       ) : (
-                        <div className="text-[13.5px] sm:text-[14px] leading-relaxed whitespace-pre-wrap font-sans">
+                        <div className="text-[13px] sm:text-[13.5px] leading-relaxed whitespace-pre-wrap font-sans">
                           {message.content}
                         </div>
                       )}
 
-                      {}
                       {message.keyTakeaways && message.keyTakeaways.length > 0 && (
                         <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800">
                           <div className="text-[11px] font-semibold uppercase tracking-wider text-[#FF6B00] mb-2 flex items-center gap-1.5">
@@ -256,7 +245,6 @@ export default function ContextualChatView() {
                         </div>
                       )}
 
-                      {}
                       {message.citations && message.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap items-center gap-1.5">
                           <span className="text-[10px] text-slate-400 dark:text-zinc-500 font-medium">Sources:</span>
@@ -278,7 +266,6 @@ export default function ContextualChatView() {
             </div>
           </div>
 
-          {}
           <div className="pt-2">
             <div className="mx-auto w-full max-w-[840px] flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none]">
               {[
@@ -291,9 +278,10 @@ export default function ContextualChatView() {
                   key={chip}
                   type="button"
                   onClick={() => {
-                    toast.info(`Prompt chip selected: "${chip}"`);
+                    handleSendPrompt(chip);
+                    toast.info(`Prompt chip sent: "${chip}"`);
                   }}
-                  className="shrink-0 rounded-full border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/60 px-2.5 py-1 text-[11px] text-slate-600 dark:text-zinc-400 hover:border-[#FF6B00]/50 hover:text-[#FF6B00] transition-colors"
+                  className="shrink-0 rounded-full border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/60 px-2.5 py-1 text-[11px] text-slate-600 dark:text-zinc-400 hover:border-[#FF6B00]/50 hover:text-[#FF6B00] transition-colors cursor-pointer"
                 >
                   + {chip}
                 </button>

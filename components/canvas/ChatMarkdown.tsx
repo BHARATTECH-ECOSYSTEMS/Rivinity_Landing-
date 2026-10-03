@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import { useState, type ReactNode } from "react";
+import React, { useState, type ReactNode } from "react";
 import { Check, Copy } from "lucide-react";
 import { safeUrl } from "@/lib/security";
 import "highlight.js/styles/github-dark.css";
@@ -28,25 +28,25 @@ function CodeBlock({ children, className }: { children: ReactNode; className?: s
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <pre className="overflow-x-auto text-[12.5px] leading-relaxed p-3.5 m-0">
+      <pre className="overflow-x-auto text-[12.5px] leading-relaxed p-3.5 m-0 [scrollbar-width:thin]">
         <code className={className}>{text}</code>
       </pre>
     </div>
   );
 }
 
-export default function ChatMarkdown({ content }: { content: string }) {
+function ChatMarkdownComponent({ content }: { content: string }) {
   return (
-    <div className="chat-md text-[14px] leading-relaxed text-foreground/85">
+    <div className="chat-md text-[14px] sm:text-[14.5px] leading-relaxed text-foreground/85 break-words">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[[rehypeHighlight, { detect: true, ignoreMissing: true }]]}
         urlTransform={safeUrl}
         components={{
-          h1: (p) => <div className="text-[20px] font-semibold tracking-tight mt-5 mb-2.5 first:mt-0" {...p} />,
-          h2: (p) => <div className="text-[17px] font-semibold tracking-tight mt-5 mb-2 first:mt-0" {...p} />,
-          h3: (p) => <div className="text-[15px] font-semibold mt-4 mb-1.5 first:mt-0" {...p} />,
-          h4: (p) => <div className="text-[14px] font-semibold mt-3 mb-1 first:mt-0" {...p} />,
+          h1: (p) => <div className="text-[19px] sm:text-[21px] font-semibold tracking-tight mt-5 mb-2.5 first:mt-0" {...p} />,
+          h2: (p) => <div className="text-[16px] sm:text-[18px] font-semibold tracking-tight mt-5 mb-2 first:mt-0" {...p} />,
+          h3: (p) => <div className="text-[14.5px] sm:text-[16px] font-semibold mt-4 mb-1.5 first:mt-0" {...p} />,
+          h4: (p) => <div className="text-[13.5px] sm:text-[14.5px] font-semibold mt-3 mb-1 first:mt-0" {...p} />,
           p: (p) => <div className="my-2.5 first:mt-0 last:mb-0" {...p} />,
           strong: (p) => <strong className="font-semibold text-foreground" {...p} />,
           em: (p) => <em className="italic" {...p} />,
@@ -55,7 +55,7 @@ export default function ChatMarkdown({ content }: { content: string }) {
               href={safeUrl(href)}
               target="_blank"
               rel="noreferrer noopener"
-              className="text-primary underline underline-offset-2 hover:text-primary/80"
+              className="text-primary underline underline-offset-2 hover:text-primary/80 break-all"
             >
               {children}
             </a>
@@ -68,8 +68,8 @@ export default function ChatMarkdown({ content }: { content: string }) {
           ),
           hr: () => <hr className="my-4 border-glass" />,
           table: (p) => (
-            <div className="my-3 overflow-x-auto rounded-xl border border-glass">
-              <table className="w-full text-[13px] border-collapse" {...p} />
+            <div className="my-3 overflow-x-auto rounded-xl border border-glass max-w-full">
+              <table className="w-full text-[12.5px] sm:text-[13px] border-collapse" {...p} />
             </div>
           ),
           thead: (p) => <thead className="bg-foreground/[0.04]" {...p} />,
@@ -77,15 +77,11 @@ export default function ChatMarkdown({ content }: { content: string }) {
             <th className="text-left font-semibold px-3 py-2 border-b border-glass text-foreground/80" {...p} />
           ),
           td: (p) => <td className="px-3 py-2 border-b border-glass/60 align-top" {...p} />,
-          // react-markdown v10 removed the `inline` prop on `code`.
-          // Inline code = no language class and no newline; everything else
-          // is a fenced block. This fixes inline `code` rendering as a giant
-          // block (a live UI bug in the current codebase).
           code: ({ className, children }) => {
             const text = String(children ?? "").replace(/\n$/, "");
             if (!className && !text.includes("\n")) {
               return (
-                <code className="px-1.5 py-0.5 rounded-md bg-foreground/[0.06] border border-glass text-[12.5px] font-mono text-foreground/90">
+                <code className="px-1.5 py-0.5 rounded-md bg-foreground/[0.06] border border-glass text-[12px] sm:text-[12.5px] font-mono text-foreground/90 break-all">
                   {text}
                 </code>
               );
@@ -104,3 +100,6 @@ export default function ChatMarkdown({ content }: { content: string }) {
     </div>
   );
 }
+
+const ChatMarkdown = React.memo(ChatMarkdownComponent);
+export default ChatMarkdown;

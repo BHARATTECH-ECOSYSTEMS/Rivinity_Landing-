@@ -24,7 +24,7 @@ export default function NotFound() {
           <div className="text-white">
             <Link
             href="/"
-            className="inline-flex items-center justify-center rounded-full text-sm font-semibold min-h-[44px] px-6 py-2.5 bg-[#0f172a] text-white hover:bg-slate-800 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-full text-sm font-semibold min-h-[44px] px-6 py-2.5 bg-[#0f172a] text-white hover:bg-slate-800 active:scale-95 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2"
           >
             <HomeIcon className="size-4 mr-2" data-icon="inline-start" />
             Go Home
@@ -35,7 +35,7 @@ export default function NotFound() {
           {/* Explore Docs Button */}
           <Link
             href="/docs"
-            className="inline-flex items-center justify-center rounded-full text-sm font-semibold min-h-[44px] px-6 py-2.5 border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 hover:border-slate-300 active:scale-95 transition-all shadow-xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-full text-sm font-semibold min-h-[44px] px-6 py-2.5 border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 hover:border-slate-300 active:scale-95 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5A1F] focus-visible:ring-offset-2"
           >
             <CompassIcon className="size-4 mr-2" data-icon="inline-start" />
             Explore Docs

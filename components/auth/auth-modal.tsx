@@ -1,13 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Inter, Fraunces } from "next/font/google";
-
 import Image from "next/image";
 import Link from "next/link";
-
-const inter = Inter({ subsets: ["latin"], weight: ["400","500","600","700"], display: "swap", variable: "--font-inter" });
-const fraunces = Fraunces({ subsets: ["latin"], style: ["italic"], weight: ["500"], display: "swap", variable: "--font-fraunces" });
 
 export type Mode = "login" | "signup";
 
@@ -54,13 +49,13 @@ const Google = () => (
 );
 
 const GitHub = () => (
-  <svg className="h-5 w-5 fill-[#181717]" viewBox="0 0 24 24">
+  <svg className="h-5 w-5 fill-[#181717] dark:fill-white transition-colors" viewBox="0 0 24 24">
     <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.16c-3.2.7-3.88-1.54-3.88-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.67 1.25 3.32.96.1-.74.4-1.25.72-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.77 1.04.77 2.1v3.11c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
   </svg>
 );
 
 const Apple = () => (
-  <svg className="h-5 w-5 fill-[#000000]" viewBox="0 0 24 24">
+  <svg className="h-5 w-5 fill-[#000000] dark:fill-white transition-colors" viewBox="0 0 24 24">
     <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.64-.78 1.08-1.86.96-2.95-1 .04-2.16.66-2.83 1.44-.59.67-1.11 1.77-.97 2.83 1.11.09 2.2-.54 2.84-1.32Z" />
   </svg>
 );
@@ -75,7 +70,7 @@ const SSO = () => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="h-5 w-5 text-neutral-800"
+    className="h-5 w-5 text-neutral-800 dark:text-zinc-200 transition-colors"
   >
     <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
     <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
@@ -146,7 +141,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
   const cardContent = (
     <div
       ref={modalRef}
-      className="relative w-full max-w-[95vw] sm:max-w-[440px] md:max-w-[960px] md:h-[620px] rounded-[24px] sm:rounded-[26px] border border-[#E8E8EC] bg-white md:bg-[#FAFAFA] shadow-[0_12px_40px_rgba(10,10,12,0.06)] md:shadow-[0_20px_70px_rgba(10,10,12,0.08)] overflow-hidden"
+      className="relative w-full max-w-[95vw] sm:max-w-[440px] md:max-w-[960px] md:h-[620px] rounded-[24px] sm:rounded-[26px] border border-[#E8E8EC] dark:border-zinc-800 bg-white dark:bg-zinc-900 md:bg-[#FAFAFA] dark:md:bg-zinc-900/95 shadow-[0_12px_40px_rgba(10,10,12,0.06)] dark:shadow-[0_20px_70px_rgba(0,0,0,0.6)] overflow-hidden transition-colors"
       style={{ fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif" }}
     >
       {/* Top Header Bar for Mobile & Desktop */}
@@ -155,7 +150,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
         <div className="md:absolute md:left-8 md:top-7 md:z-30">
           <Link
             href="/"
-            className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] group hover:bg-white transition-all"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white/95 dark:bg-zinc-800/90 backdrop-blur-xl border border-slate-200/80 dark:border-zinc-700/80 shadow-[0_4px_20px_rgba(0,0,0,0.04)] group hover:bg-white dark:hover:bg-zinc-800 transition-all"
           >
             <Image
               src="/logo.png"
@@ -165,7 +160,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
               className="h-7 w-7 sm:h-8 sm:w-8 object-contain group-hover:scale-105 transition-transform"
               priority
             />
-            <span className="text-[18px] sm:text-[19px] font-bold tracking-tight text-[#0A0A0C]">Rivinity</span>
+            <span className="text-[18px] sm:text-[19px] font-bold tracking-tight text-[#0A0A0C] dark:text-white">Rivinity</span>
           </Link>
         </div>
 
@@ -174,7 +169,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
           <Link
             href="/"
             aria-label="Back to home"
-            className="md:absolute md:right-6 md:top-6 md:z-50 flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-full bg-white/95 hover:bg-white text-[#0A0A0C] backdrop-blur-xl border border-slate-200/80 transition shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer"
+            className="md:absolute md:right-6 md:top-6 md:z-50 flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-full bg-white/95 dark:bg-zinc-800/90 hover:bg-white dark:hover:bg-zinc-700 text-[#0A0A0C] dark:text-zinc-200 backdrop-blur-xl border border-slate-200/80 dark:border-zinc-700/80 transition shadow-[0_4px_20px_rgba(0,0,0,0.04)] cursor-pointer"
           >
             ← Back to Home
           </Link>
@@ -183,73 +178,69 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
             ref={closeRef}
             onClick={onClose}
             aria-label="Close"
-            className="md:absolute md:right-6 md:top-6 md:z-50 flex h-9 w-9 items-center justify-center rounded-full text-[#0A0A0C] hover:bg-white bg-white/95 backdrop-blur-xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-slate-400/40 cursor-pointer transition shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
+            className="md:absolute md:right-6 md:top-6 md:z-50 flex h-9 w-9 items-center justify-center rounded-full text-[#0A0A0C] dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-700 bg-white/95 dark:bg-zinc-800/90 backdrop-blur-xl border border-slate-200/80 dark:border-zinc-700/80 focus:outline-none focus:ring-2 focus:ring-slate-400/40 cursor-pointer transition shadow-[0_4px_20px_rgba(0,0,0,0.04)]"
           >
             <Close />
           </button>
         )}
       </div>
 
-      {/* Clean Ambient Background (Desktop Only - Old photo removed so ASCII flower is crisp & visible) */}
-      <div className="hidden md:block absolute inset-0 overflow-hidden bg-[#F6F7F9] pointer-events-none rounded-[20px] sm:rounded-[26px]">
+      {/* Clean Ambient Background (Desktop Only) */}
+      <div className="hidden md:block absolute inset-0 overflow-hidden bg-[#F6F7F9] dark:bg-zinc-950/80 pointer-events-none rounded-[20px] sm:rounded-[26px]">
         {/* Soft subtle warmth glow highlights */}
-        <div className="absolute -top-[15%] -left-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-br from-orange-100/35 via-amber-50/20 to-transparent blur-3xl" />
-        <div className="absolute -bottom-[15%] -right-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-tl from-slate-200/35 to-transparent blur-3xl" />
+        <div className="absolute -top-[15%] -left-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-br from-orange-100/35 dark:from-orange-950/20 via-amber-50/20 dark:via-orange-900/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-[15%] -right-[10%] w-[450px] h-[450px] rounded-full bg-gradient-to-tl from-slate-200/35 dark:from-zinc-800/30 to-transparent blur-3xl" />
       </div>
 
-      {/* Marketing — Login (White Card & Botanical ASCII Art on Clean Backdrop) */}
+      {/* Marketing — Login */}
       <div
         className={`hidden md:flex flex-col absolute inset-y-0 right-0 z-10 w-[48%] justify-between items-end px-8 lg:px-11 pt-12 pb-6 lg:pb-7 transition-all duration-300 ${
           isLogin ? "opacity-100 translate-x-0" : "pointer-events-none opacity-0 translate-x-4"
         }`}
       >
-        {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
         <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none my-auto">
           <div className="relative w-[300px] h-[275px] lg:w-[360px] lg:h-[330px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
-              className="relative w-full h-full object-contain select-none opacity-95 transition-transform duration-700 hover:scale-105"
+              className="relative w-full h-full object-contain select-none opacity-95 dark:opacity-85 dark:invert transition-transform duration-700 hover:scale-105"
               draggable={false}
             />
           </div>
         </div>
 
-        {/* Bottom Text Box with Glassmorphism Effect */}
-        <div className="w-full max-w-[325px] p-5 sm:p-5.5 rounded-[22px] bg-white/65 backdrop-blur-2xl backdrop-saturate-150 border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,1)] shrink-0 mt-auto">
-          <h2 className="!m-0 text-[26px] font-bold !leading-[1.15] tracking-[-0.03em] text-[#0A0A0C]">
+        <div className="w-full max-w-[325px] p-5 sm:p-5.5 rounded-[22px] bg-white/80 dark:bg-zinc-900/90 backdrop-blur-2xl border border-white/90 dark:border-zinc-700/80 shadow-[0_16px_40px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.5)] shrink-0 mt-auto">
+          <h2 className="!m-0 text-[26px] font-bold !leading-[1.15] tracking-[-0.03em] text-[#0A0A0C] dark:text-white">
             Welcome back.
           </h2>
-          <p className="!m-0 mt-2 text-[13px] font-medium leading-[1.5] text-neutral-600">
+          <p className="!m-0 mt-2 text-[13px] font-medium leading-[1.5] text-slate-600 dark:text-zinc-200">
             Your projects, your work and your people are exactly where you left them.
           </p>
         </div>
       </div>
 
-      {/* Marketing — Signup (White Card & Botanical ASCII Art on Clean Backdrop) */}
+      {/* Marketing — Signup */}
       <div
         className={`hidden md:flex flex-col absolute inset-y-0 left-0 z-10 w-[48%] justify-between items-start px-8 lg:px-11 pt-12 pb-6 lg:pb-7 transition-all duration-300 ${
           isLogin ? "pointer-events-none opacity-0 -translate-x-4" : "opacity-100 translate-x-0"
         }`}
       >
-        {/* Upper Area: Botanical ASCII Dot Art (matching Image 2) */}
         <div className="relative w-full flex-1 flex items-center justify-center min-h-0 pointer-events-none my-auto">
           <div className="relative w-[300px] h-[275px] lg:w-[360px] lg:h-[330px] flex items-center justify-center">
             <img
               src="/images/auth-flower.png"
               alt="Botanical ASCII art"
-              className="relative w-full h-full object-contain select-none opacity-95 transition-transform duration-700 hover:scale-105"
+              className="relative w-full h-full object-contain select-none opacity-95 dark:opacity-85 dark:invert transition-transform duration-700 hover:scale-105"
               draggable={false}
             />
           </div>
         </div>
 
-        {/* Bottom Text Box with Glassmorphism Effect */}
-        <div className="w-full max-w-[340px] p-5 sm:p-5.5 rounded-[22px] bg-white/65 backdrop-blur-2xl backdrop-saturate-150 border border-white/90 shadow-[0_16px_40px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04),inset_0_1px_2px_rgba(255,255,255,1)] shrink-0 mt-auto">
-          <h2 className="!m-0 text-[26px] font-bold !leading-[1.15] tracking-[-0.03em] text-[#0A0A0C]">
+        <div className="w-full max-w-[340px] p-5 sm:p-5.5 rounded-[22px] bg-white/80 dark:bg-zinc-900/90 backdrop-blur-2xl border border-white/90 dark:border-zinc-700/80 shadow-[0_16px_40px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.5)] shrink-0 mt-auto">
+          <h2 className="!m-0 text-[26px] font-bold !leading-[1.15] tracking-[-0.03em] text-[#0A0A0C] dark:text-white">
             Start your journey.
           </h2>
-          <p className="!m-0 mt-2 text-[13px] font-medium leading-[1.5] text-neutral-600">
+          <p className="!m-0 mt-2 text-[13px] font-medium leading-[1.5] text-slate-600 dark:text-zinc-200">
             One account for your projects, your ideas and everything you build with Rivinity.
           </p>
         </div>
@@ -257,7 +248,7 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
 
       {/* Form Panel */}
       <div
-        className={`relative w-full md:absolute md:inset-y-0 md:left-0 md:z-20 md:w-[58%] bg-white md:shadow-[0_0_50px_rgba(0,0,0,0.06)] md:transition-transform md:duration-[400ms] md:ease-[cubic-bezier(0.4,0,0.2,1)] ${
+        className={`relative w-full md:absolute md:inset-y-0 md:left-0 md:z-20 md:w-[58%] bg-white dark:bg-zinc-900 md:shadow-[0_0_50px_rgba(0,0,0,0.06)] dark:md:shadow-[0_0_50px_rgba(0,0,0,0.4)] md:transition-transform md:duration-[400ms] md:ease-[cubic-bezier(0.4,0,0.2,1)] ${
           isLogin ? "auth-panel-login" : "auth-panel-signup"
         }`}
       >
@@ -282,21 +273,23 @@ export default function AuthModal({ isOpen = true, onClose, onSuccess, defaultMo
 
   if (isPage) {
     return (
-      <div className={`${inter.variable} ${fraunces.variable} w-full flex items-center justify-center`}>
+      <div className="w-full flex items-center justify-center">
         {cardContent}
       </div>
     );
   }
 
   return (
-    <div className={`${inter.variable} ${fraunces.variable}`}>
+    <div>
       <div
         className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4"
-        role="dialog" aria-modal="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-modal-title"
         onClick={(e) => { if (e.target === e.currentTarget) onClose?.(); }}
       >
         {/* Backdrop */}
-        <div className="absolute inset-0 bg-[#0A0A0C]/40 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-[#0A0A0C]/50 dark:bg-black/75 backdrop-blur-sm transition-opacity" />
         {cardContent}
       </div>
     </div>
@@ -378,18 +371,26 @@ function FormContent({
 
   return (
     <div className="w-full">
-      <h1 className="mb-3 sm:mb-4 text-[24px] sm:text-[30px] font-semibold leading-[1.15] tracking-[-0.03em] text-[#0A0A0C]">
+      <h1
+        id="auth-modal-title"
+        className="mb-3 sm:mb-4 text-[24px] sm:text-[30px] font-bold leading-[1.15] tracking-[-0.03em] text-[#0A0A0C] dark:text-white"
+      >
         {isLogin ? "Log in" : "Sign up"}
       </h1>
 
-      {/* Socials */}
+      {/* Socials with simulated loading state */}
       <div className="grid grid-cols-4 gap-2 sm:gap-2.5">
         {SOCIALS.map(({ id, name, Icon }) => (
           <button
             key={id}
             type="button"
             disabled={busy || loading}
-            onClick={() => {
+            onClick={async () => {
+              setLoading(true);
+              setBusy(true);
+              await new Promise((r) => setTimeout(r, 600));
+              setLoading(false);
+              setBusy(false);
               onSuccess?.({ name: `${name} User`, email: `user@${id}.com` });
               if (isPage) {
                 window.location.href = "/dashboard";
@@ -398,7 +399,7 @@ function FormContent({
               }
             }}
             aria-label={`Continue with ${name}`}
-            className="inline-flex h-10 sm:h-11 w-full items-center justify-center rounded-xl border border-neutral-200/90 bg-[#FAFAFA] text-neutral-800 shadow-2xs transition-all hover:bg-white hover:border-neutral-300 hover:shadow-xs active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-slate-400/30 disabled:opacity-50 cursor-pointer"
+            className="inline-flex h-10 sm:h-11 w-full items-center justify-center rounded-xl border border-neutral-200/90 dark:border-zinc-700 bg-[#FAFAFA] dark:bg-zinc-800 text-neutral-800 dark:text-zinc-100 shadow-2xs transition-all hover:bg-white dark:hover:bg-zinc-700 hover:border-neutral-300 dark:hover:border-zinc-600 hover:shadow-xs active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-slate-400/30 disabled:opacity-50 cursor-pointer"
           >
             <Icon />
           </button>
@@ -406,10 +407,10 @@ function FormContent({
       </div>
 
       {/* Divider */}
-      <div className="my-2.5 sm:my-4 flex items-center gap-3">
-        <div className="h-px flex-1 bg-[#E8E8EC]" />
-        <span className="text-[10px] uppercase text-[#6B6B75]" style={{ fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }}>or</span>
-        <div className="h-px flex-1 bg-[#E8E8EC]" />
+      <div className="my-3 sm:my-4 flex items-center gap-3">
+        <div className="h-px flex-1 bg-[#E8E8EC] dark:bg-zinc-800" />
+        <span className="text-[11px] font-semibold uppercase text-slate-500 dark:text-zinc-400" style={{ fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace" }}>or</span>
+        <div className="h-px flex-1 bg-[#E8E8EC] dark:bg-zinc-800" />
       </div>
 
       <form onSubmit={submit} className="w-full" noValidate>
@@ -419,53 +420,57 @@ function FormContent({
         {/* Name (signup only) */}
         {!isLogin && (
           <label className="block">
-            <span className="mb-1 block text-[11px] font-medium text-[#6B6B75]">Name</span>
+            <span className="mb-1 block text-xs sm:text-[13px] font-semibold text-slate-700 dark:text-zinc-200">Name</span>
             <input type="text" placeholder="Your name" value={name} maxLength={64} autoComplete="name" disabled={busy || loading}
               onChange={(e) => { setName(sanitize(e.target.value, 64)); clearErr("name"); }}
-              className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-slate-500 ${err.name ? "border-red-400" : "border-[#E8E8EC]"}`} />
-            {err.name && <span className="mt-1 block text-[11px] text-red-500">{err.name}</span>}
+              className={`h-10 sm:h-11 w-full border-0 border-b bg-transparent px-0 text-sm sm:text-[15px] font-medium text-[#0A0A0C] dark:text-white outline-none placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:border-[#FF5A1F] dark:focus:border-[#FF5A1F] ${err.name ? "border-red-500" : "border-slate-300 dark:border-zinc-700"}`} />
+            {err.name && <span className="mt-1 block text-xs text-red-500 dark:text-red-400 font-medium">{err.name}</span>}
           </label>
         )}
 
         {/* Email */}
-        <label className={`block ${isLogin ? "" : "mt-2 sm:mt-3"}`}>
-          <span className="mb-1 block text-[11px] font-medium text-[#6B6B75]">Email</span>
+        <label className={`block ${isLogin ? "" : "mt-2.5 sm:mt-3.5"}`}>
+          <span className="mb-1 block text-xs sm:text-[13px] font-semibold text-slate-700 dark:text-zinc-200">Email</span>
           <input type="email" placeholder="you@example.com" value={email} maxLength={254} autoComplete="email" disabled={busy || loading}
             onChange={(e) => { setEmail(sanitize(e.target.value, 254)); clearErr("email"); }}
-            className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-slate-500 ${err.email ? "border-red-400" : "border-[#E8E8EC]"}`} />
-          {err.email && <span className="mt-1 block text-[11px] text-red-500">{err.email}</span>}
+            className={`h-10 sm:h-11 w-full border-0 border-b bg-transparent px-0 text-sm sm:text-[15px] font-medium text-[#0A0A0C] dark:text-white outline-none placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:border-[#FF5A1F] dark:focus:border-[#FF5A1F] ${err.email ? "border-red-500" : "border-slate-300 dark:border-zinc-700"}`} />
+          {err.email && <span className="mt-1 block text-xs text-red-500 dark:text-red-400 font-medium">{err.email}</span>}
         </label>
 
         {/* Password */}
-        <label className="mt-2 block sm:mt-3">
-          <span className="mb-1 block text-[11px] font-medium text-[#6B6B75]">Password</span>
+        <label className="mt-2.5 block sm:mt-3.5">
+          <span className="mb-1 block text-xs sm:text-[13px] font-semibold text-slate-700 dark:text-zinc-200">Password</span>
           <div className="relative">
             <input type={showPwd ? "text" : "password"} placeholder="••••••••" value={pwd} maxLength={128} autoComplete={isLogin ? "current-password" : "new-password"} disabled={busy || loading}
               onChange={(e) => { setPwd(sanitize(e.target.value, 128)); clearErr("password"); }}
-              className={`h-9 sm:h-10 w-full border-0 border-b bg-transparent px-0 pr-12 text-[13px] text-[#0A0A0C] outline-none placeholder:text-[#6B6B75]/40 focus:border-slate-500 ${err.password ? "border-red-400" : "border-[#E8E8EC]"}`} />
+              className={`h-10 sm:h-11 w-full border-0 border-b bg-transparent px-0 pr-14 text-sm sm:text-[15px] font-medium text-[#0A0A0C] dark:text-white outline-none placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:border-[#FF5A1F] dark:focus:border-[#FF5A1F] ${err.password ? "border-red-500" : "border-slate-300 dark:border-zinc-700"}`} />
             <button
               type="button"
               disabled={busy || loading}
               onClick={() => setShowPwd((v) => !v)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 text-[11px] font-medium text-[#6B6B75] hover:text-slate-900 transition outline-none border-none bg-transparent cursor-pointer"
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white transition outline-none border-none bg-transparent cursor-pointer py-1"
             >
               {showPwd ? "Hide" : "Show"}
             </button>
           </div>
-          {err.password && <span className="mt-1 block text-[11px] text-red-500">{err.password}</span>}
+          {err.password && <span className="mt-1 block text-xs text-red-500 dark:text-red-400 font-medium">{err.password}</span>}
         </label>
 
         {/* Login extras */}
         {isLogin && (
-          <div className="my-3 flex items-center justify-between gap-2 sm:my-4">
-            <label className="flex items-center gap-2 text-[11px] text-[#6B6B75] cursor-pointer select-none">
-              <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} disabled={busy || loading} className="h-3.5 w-3.5 accent-slate-600 rounded" />
+          <div className="my-3 sm:my-4 flex items-center justify-between gap-2">
+            <label className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-zinc-300 cursor-pointer select-none">
+              <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} disabled={busy || loading} className="h-4 w-4 accent-[#FF5A1F] rounded" />
               <span>Keep me signed in</span>
             </label>
+            {/* FIX-08 wired forgot password button */}
             <button
               type="button"
               disabled={busy || loading}
-              className="text-[11px] text-[#F97316] hover:underline transition outline-none border-none bg-transparent cursor-pointer"
+              onClick={() => {
+                alert("Demo mode — password reset is not connected yet.");
+              }}
+              className="text-xs font-semibold text-[#FF5A1F] hover:underline transition outline-none border-none bg-transparent cursor-pointer"
             >
               Forgot password?
             </button>
@@ -474,22 +479,22 @@ function FormContent({
 
         {/* General error */}
         {err.general && (
-          <div className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-[11px] font-medium text-red-600 border border-red-100">{err.general}</div>
+          <div className="mb-3 rounded-xl bg-red-50 dark:bg-red-950/40 px-3.5 py-2.5 text-xs font-medium text-red-600 dark:text-red-300 border border-red-200 dark:border-red-800/60">{err.general}</div>
         )}
 
         {/* Submit */}
-        <button type="submit" disabled={busy || loading} className="mt-4 h-10 sm:h-11 w-full rounded-[9px] bg-[#0A0A0C] text-[13px] font-semibold text-white transition hover:bg-[#12131A] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer">
+        <button type="submit" disabled={busy || loading} className="mt-4 sm:mt-5 h-10.5 sm:h-11.5 w-full rounded-xl bg-[#0A0A0C] dark:bg-[#FF5A1F] text-sm font-bold text-white transition hover:bg-[#1a1c23] dark:hover:bg-[#E54D15] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer shadow-md">
           {loading ? <><Spinner /> {isLogin ? "Signing in..." : "Creating..."}</> : isLogin ? "Log in" : "Create account"}
         </button>
 
         {/* Footer toggle */}
-        <p className="mt-3 text-center text-[12px] text-[#6B6B75] sm:mt-4">
+        <p className="mt-3.5 sm:mt-4.5 text-center text-xs sm:text-[13px] text-slate-600 dark:text-zinc-400">
           {isLogin ? "Don't have an account? " : "Already have an account? "}
           <button
             type="button"
             disabled={busy || loading}
             onClick={onSwitch}
-            className="font-semibold text-slate-600 underline underline-offset-2 hover:text-slate-900 transition outline-none border-none bg-transparent cursor-pointer"
+            className="font-bold text-[#0A0A0C] dark:text-white underline underline-offset-2 hover:text-[#FF5A1F] dark:hover:text-[#FF5A1F] transition outline-none border-none bg-transparent cursor-pointer ml-1"
           >
             {isLogin ? "Sign up" : "Log in"}
           </button>

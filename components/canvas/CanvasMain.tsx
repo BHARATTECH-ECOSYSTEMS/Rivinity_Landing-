@@ -60,6 +60,7 @@ import { MaterialPreviewModal } from "./MaterialPreviewModal";
 import { SKILLS } from "@/lib/skillsCatalog";
 import { cn } from "@/lib/utils";
 import { USER } from "@/lib/profile";
+import { useRouter } from "next/navigation";
 import { useAuthModal } from "@/components/auth/auth-context";
 import { LoaderGooeyBlobs } from "@/components/ui/LoaderGooeyBlobs";
 import {
@@ -159,7 +160,6 @@ const tabTemplates = [
   { icon: Wand2, label: "Write Anything", kind: "write" as TabKind },
 ];
 
-/** Rivinity feature shortcuts shown as a grid of cards (Image-3 style). */
 const rivinityFeatures = [
   { icon: Bot, label: "Rivinity Chat", kind: "chat" as TabKind },
   { icon: Code, label: "Fullstack Builder", kind: "chat" as TabKind },
@@ -380,7 +380,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           "p-2 sm:p-2.5 rounded-[26px] bg-slate-100/85 dark:bg-zinc-800/60 backdrop-blur-2xl border border-slate-300 dark:border-zinc-600 shadow-[0_12px_40px_rgba(0,0,0,0.08)]",
       )}
     >
-      {/* INCOGNITO MODE TOP GLASS HEADER */}
       {isIncognito && (
         <div className="px-3.5 sm:px-4 pt-1 pb-2 text-[12px] select-none text-slate-600 dark:text-zinc-300 font-medium tracking-tight animate-in fade-in duration-200">
           Incognito Mode Active &bull; Chats will not be saved to history
@@ -400,7 +399,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           className,
         )}
       >
-        {/* DRAG AND DROP HIGHLIGHT OVERLAY */}
         {isDraggingOver && (
           <div className="absolute inset-0 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xs z-30 flex flex-col items-center justify-center pointer-events-none border-2 border-dashed border-[#FF5500] rounded-2xl animate-in fade-in duration-150">
             <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center mb-2 animate-bounce">
@@ -415,7 +413,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           </div>
         )}
 
-        {/* UPPER TABS BAR */}
         <div
           className={cn(
             "flex items-center overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
@@ -483,22 +480,40 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                     >
                       {tab.label}
                     </span>
-                    <div className="flex items-center gap-1 sm:gap-1.5">
-                      <Pencil
-                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 hover:text-gray-700 dark:hover:text-zinc-200 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
-                        strokeWidth={2}
+                    <div className="flex items-center gap-1 sm:gap-1.5 ml-1">
+                      <button
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setEditingTabId(tab.id);
                           setEditingName(tab.label);
                         }}
-                      />
+                        className={cn(
+                          "p-0.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all cursor-pointer shrink-0 border-0 bg-transparent flex items-center justify-center",
+                          isActive
+                            ? "text-[#FF6B00] dark:text-[#FF6B00] opacity-80 hover:opacity-100"
+                            : "text-gray-400 hover:text-gray-700 dark:hover:text-zinc-200 opacity-60 sm:opacity-0 sm:group-hover:opacity-100",
+                        )}
+                        title="Rename tab"
+                        aria-label="Rename tab"
+                      >
+                        <Pencil className="w-3.5 h-3.5" strokeWidth={2} />
+                      </button>
                       {tabs.length > 1 && (
-                        <X
-                          className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 hover:text-gray-700 dark:hover:text-zinc-200 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shrink-0"
-                          strokeWidth={2}
+                        <button
+                          type="button"
                           onClick={(e) => onCloseTab(tab.id, e)}
-                        />
+                          className={cn(
+                            "p-0.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all cursor-pointer shrink-0 border-0 bg-transparent flex items-center justify-center",
+                            isActive
+                              ? "text-gray-500 hover:text-gray-800 dark:text-zinc-400 dark:hover:text-zinc-200 opacity-80 hover:opacity-100"
+                              : "text-gray-400 hover:text-gray-700 dark:hover:text-zinc-200 opacity-60 sm:opacity-0 sm:group-hover:opacity-100",
+                          )}
+                          title="Close tab"
+                          aria-label="Close tab"
+                        >
+                          <X className="w-3.5 h-3.5" strokeWidth={2.2} />
+                        </button>
                       )}
                     </div>
                   </>
@@ -507,7 +522,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
             );
           })}
 
-          {/* New Tab (+) Button */}
           <button
             type="button"
             onClick={(e) => {
@@ -530,20 +544,19 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               }
             }}
             className={cn(
-              "flex items-center justify-center rounded-full transition-colors cursor-pointer shrink-0 border",
-              isCompact ? "w-5 h-5" : "w-6 h-6",
+              "flex items-center justify-center rounded-full transition-all cursor-pointer shrink-0 border",
+              isCompact ? "w-6 h-6" : "w-7 h-7 sm:w-7.5 sm:h-7.5",
               isIncognito
-                ? "text-zinc-400 hover:text-white hover:bg-white/10 border-white/10 hover:border-zinc-500 bg-white/5"
-                : "text-gray-500 hover:text-gray-800 dark:text-zinc-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 border-gray-200/90 dark:border-zinc-700/70 hover:border-[#FF6B00]/40 bg-white/40 dark:bg-zinc-800/30",
+                ? "text-zinc-300 hover:text-white hover:bg-white/10 border-white/20 hover:border-zinc-400 bg-white/5"
+                : "text-gray-600 hover:text-[#FF6B00] dark:text-zinc-300 dark:hover:text-[#FF6B00] hover:bg-orange-50/50 dark:hover:bg-zinc-800 border-gray-300/90 dark:border-zinc-700 hover:border-[#FF6B00]/50 bg-white/70 dark:bg-zinc-800/50 shadow-2xs",
             )}
             title="New Chat"
             aria-label="New Chat"
           >
-            <Plus className={isCompact ? "w-3 h-3" : "w-3.5 h-3.5"} strokeWidth={2.2} />
+            <Plus className={isCompact ? "w-3.5 h-3.5" : "w-4 h-4 sm:w-4.5 sm:h-4.5"} strokeWidth={2.4} />
           </button>
         </div>
 
-        {/* QUICK AI MODES PANEL */}
         {isAddingTab && (
           <div
             className={cn(
@@ -642,7 +655,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           </div>
         )}
 
-        {/* SKILLS PANEL */}
         {skillPickerOpen && (
           <div
             className={cn(
@@ -733,7 +745,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
         )}
 
 
-        {/* ATTACHMENTS HORIZONTAL PREVIEW & SKELETON LOADER FRAME */}
         {attachments && attachments.length > 0 && (
           <div className="px-3 sm:px-4 pt-2.5 pb-1 flex items-center gap-2 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden border-t border-gray-100/80 dark:border-zinc-800/80">
             {attachments.map((file) => (
@@ -747,12 +758,10 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                   file.status === "ready" ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-[#202025]" : "cursor-default",
                 )}
               >
-                {/* Skeleton shimmer wave if uploading */}
                 {file.status === "uploading" && (
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent -translate-x-full animate-[pulse_1.2s_infinite] pointer-events-none" />
                 )}
 
-                {/* Left Icon or Spinner or Image Thumbnail */}
                 {file.status === "uploading" ? (
                   <div className="w-5 h-5 rounded-full border-2 border-zinc-300 dark:border-zinc-600 border-t-[#FF5500] dark:border-t-white animate-spin shrink-0" />
                 ) : file.type === "image" && file.url ? (
@@ -778,7 +787,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                   </div>
                 )}
 
-                {/* File Details (Name & Type Subtitle) */}
                 <div className="flex flex-col min-w-0 pr-0.5">
                   <span className="text-[13px] font-medium sm:font-semibold text-zinc-900 dark:text-zinc-100 truncate leading-tight group-hover/file:text-[#FF5500] transition-colors">
                     {file.name}
@@ -790,7 +798,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
                   </span>
                 </div>
 
-                {/* Remove Button */}
                 {onRemoveAttachment && (
                   <button
                     type="button"
@@ -809,7 +816,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           </div>
         )}
 
-        {/* PROMPT TEXTAREA */}
         <textarea
           ref={textareaRef}
           value={input}
@@ -826,7 +832,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
           style={{ minHeight: isCompact ? "38px" : "46px", outline: "none" }}
         />
 
-        {/* BOTTOM ACTION CONTROLS */}
         <div
           className={cn(
             "flex items-center justify-between w-full",
@@ -841,7 +846,6 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               isCompact ? "gap-0.5" : "gap-0.5 sm:gap-1",
             )}
           >
-            {/* Attach context file on the left */}
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -891,25 +895,23 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               <Plus className="w-4 h-4 shrink-0" strokeWidth={2.2} />
             </button>
 
-            {!isCompact && (
-              <button
-                type="button"
-                onClick={() => setIsWebSearchActive((prev) => !prev)}
-                className={cn(
-                  "hidden sm:flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
-                  isWebSearchActive
-                    ? isIncognito
-                      ? "!bg-sky-500/25 text-sky-400"
-                      : "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
-                    : isIncognito
-                      ? "text-zinc-400 hover:text-white hover:!bg-white/10"
-                      : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
-                )}
-                title={isWebSearchActive ? "Web search active (Click to disable)" : "Search web (Click to enable)"}
-              >
-                <Globe className="w-4 h-4" strokeWidth={2} />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setIsWebSearchActive((prev) => !prev)}
+              className={cn(
+                "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
+                isWebSearchActive
+                  ? isIncognito
+                    ? "!bg-sky-500/25 text-sky-400"
+                    : "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
+                  : isIncognito
+                    ? "text-zinc-400 hover:text-white hover:!bg-white/10"
+                    : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
+              )}
+              title={isWebSearchActive ? "Web search active (Click to disable)" : "Search web (Click to enable)"}
+            >
+              <Globe className="w-4 h-4" strokeWidth={2} />
+            </button>
 
             <button
               ref={skillButtonRef}
@@ -944,37 +946,35 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
               />
             </button>
 
-            {!isCompact && (
-              <button
-                type="button"
-                onClick={() => {
-                  setIsIncognito((prev) => {
-                    const next = !prev;
-                    if (next) {
-                      toast.info(
-                        "Incognito mode active: Chats will not be saved to history.",
-                      );
-                    } else {
-                      toast.info("Incognito mode disabled.");
-                    }
-                    return next;
-                  });
-                }}
-                className={cn(
-                  "hidden sm:flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 border-0",
-                  isIncognito
-                    ? "!bg-white/20 text-white shadow-xs ring-1 ring-white/30"
-                    : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
-                )}
-                title={
-                  isIncognito
-                    ? "Incognito mode active (Chats are not saved)"
-                    : "Incognito mode (Don't save chat history)"
-                }
-              >
-                <HatGlasses className="w-4 h-4 shrink-0" strokeWidth={2} />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => {
+                setIsIncognito((prev) => {
+                  const next = !prev;
+                  if (next) {
+                    toast.info(
+                      "Incognito mode active: Chats will not be saved to history.",
+                    );
+                  } else {
+                    toast.info("Incognito mode disabled.");
+                  }
+                  return next;
+                });
+              }}
+              className={cn(
+                "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 border-0",
+                isIncognito
+                  ? "!bg-white/20 text-white shadow-xs ring-1 ring-white/30"
+                  : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
+              )}
+              title={
+                isIncognito
+                  ? "Incognito mode active (Chats are not saved)"
+                  : "Incognito mode (Don't save chat history)"
+              }
+            >
+              <HatGlasses className="w-4 h-4 shrink-0" strokeWidth={2} />
+            </button>
           </div>
 
           <div className="flex items-center shrink-0 gap-1.5 sm:gap-2">
@@ -1021,25 +1021,27 @@ const ChatComposer: React.FC<ChatComposerProps> = ({
 };
 
 
-const ChatThinkingIndicator: React.FC = () => {
+const ChatThinkingIndicator: React.FC = React.memo(() => {
   return (
     <div className="w-full flex items-start gap-2 sm:gap-2.5 justify-start">
-      {/* Normal Logo (no animation) */}
       <div className="w-7 h-7 sm:w-8.5 sm:h-8.5 flex items-center justify-center shrink-0 mt-1.5 sm:mt-2.5 select-none">
         <img
           src="/watermark.png"
           alt="Rivinity"
+          width={32}
+          height={32}
+          style={{ width: "100%", height: "100%", maxWidth: "32px", maxHeight: "32px" }}
           className="w-6.5 h-6.5 sm:w-8 sm:h-8 object-contain"
         />
       </div>
 
-      {/* Bubble with only the Gooey Blobs Animation */}
       <div className="px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl rounded-bl-xs bg-white dark:bg-zinc-900 border border-gray-200/75 dark:border-zinc-800/80 flex items-center justify-center shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
         <LoaderGooeyBlobs size={9} color="#FF5500" duration={1.4} />
       </div>
     </div>
   );
-};
+});
+ChatThinkingIndicator.displayName = "ChatThinkingIndicator";
 
 export interface CanvasMainProps {
   onChatStateChange?: (isStarted: boolean) => void;
@@ -1051,6 +1053,7 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
   onChatStateChange,
   onToggleSidebar,
 }) => {
+  const router = useRouter();
   const [tabs, setTabs] = useState<TabState[]>([
     {
       id: 1,
@@ -1070,7 +1073,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
   const [previewFile, setPreviewFile] = useState<AttachedFile | null>(null);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
 
-  // Workspace in Chat State (Image 2 style)
   const [activeWorkspace, setActiveWorkspace] = useState<{
     id: string;
     name: string;
@@ -1128,7 +1130,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
   const [pendingGuestResponse, setPendingGuestResponse] = useState<PendingGuestResponse | null>(null);
   const prevAuthOpenRef = useRef(isAuthOpen);
 
-  // If user signs up / logs in successfully, deliver the full output of their message
   useEffect(() => {
     if (isAuthenticated && pendingGuestResponse) {
       const { tabId, responseContent, hasBigDataKeyword } = pendingGuestResponse;
@@ -1164,7 +1165,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     }
   }, [isAuthenticated, pendingGuestResponse]);
 
-  // If user cancels / closes ("crosses") the modal without signing up or logging in, cancel thinking and show no output
   useEffect(() => {
     if (prevAuthOpenRef.current && !isAuthOpen && !isAuthenticated && pendingGuestResponse) {
       setIsThinking(false);
@@ -1308,7 +1308,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
             localStorage.setItem("rivinity_active_workspace_obj", JSON.stringify(wsObj));
           } catch {}
 
-          // Associate active empty tabs with this workspace
           setTabs((prev) =>
             prev.map((t) =>
               t.messages.length === 0
@@ -1317,7 +1316,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
             ),
           );
 
-          // Retrieve chats for this workspace
           let histList: any[] = [];
           const rawHistory = localStorage.getItem(STORAGE_HISTORY_KEY);
           if (rawHistory) {
@@ -1390,7 +1388,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         ),
       );
 
-      // Transition from uploading skeleton to ready state after a realistic delay
       newAttachments.forEach((att) => {
         setTimeout(() => {
           setTabs((prev) =>
@@ -1460,13 +1457,11 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     }
   }, [activeWorkspace?.id]);
 
-  // Split layout: 50% AI Chat / 50% Big Data Dashboard
   const [splitPercent, setSplitPercent] = useState<number>(50);
   const [isDragging, setIsDragging] = useState(false);
   const splitContainerRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
 
-  // Chat dropdown menu & Files in Chat modal states
   const [chatMenuOpen, setChatMenuOpen] = useState(false);
   const [showChatFilesModal, setShowChatFilesModal] = useState(false);
   const chatMenuRef = useRef<HTMLDivElement>(null);
@@ -1498,7 +1493,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
           return prev;
         }
 
-        // If current active tab is empty, configure the existing tab instead of creating an extra one
         const activeIndex = prev.findIndex((t) => t.id === activeTabId);
         if (activeIndex !== -1 && prev[activeIndex].messages.length === 0) {
           return prev.map((t) =>
@@ -1611,7 +1605,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
   const isEmpty = messages.length === 0;
 
-  // Ensure workspace chats are always up-to-date when viewing the workspace hub
   useEffect(() => {
     if (isEmpty && activeWorkspace?.id) {
       try {
@@ -1629,7 +1622,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     }
   }, [isEmpty, activeTabId, activeWorkspace?.id]);
 
-  // STRICT RULE: The Big Data screen ONLY appears when the user's prompt explicitly uses "big data"
   const hasBigDataInPrompt = messages.some(
     (m) => m.role === "user" && /big\s*data/i.test(m.content),
   );
@@ -1699,9 +1691,78 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     const currentAttachments = currentTab.attachments || [];
     if ((!trimmed && currentAttachments.length === 0) || isThinking) return;
 
+    const isBuilderTab =
+      currentTab.label === "Fullstack Builder" ||
+      currentTab.label === "Frontend Builder" ||
+      currentTab.label.toLowerCase().includes("builder");
+    const isBuilderPrompt =
+      /\[Mode:\s*(Fullstack Builder|Frontend Builder)\]/i.test(trimmed);
+
+    if (isBuilderTab || isBuilderPrompt) {
+      const cleanPrompt = trimmed
+        .replace(/\[Mode:\s*(Fullstack Builder|Frontend Builder)\]/gi, "")
+        .trim();
+      const mode = currentTab.label.includes("Builder")
+        ? currentTab.label
+        : (trimmed.toLowerCase().includes("frontend")
+            ? "Frontend Builder"
+            : "Fullstack Builder");
+      try {
+        sessionStorage.setItem(
+          "rivinity_pending_builder_prompt",
+          cleanPrompt || trimmed,
+        );
+        sessionStorage.setItem("rivinity_pending_builder_mode", mode);
+      } catch {}
+      setInput("");
+      router.push("/app-builder");
+      return;
+    }
+
+    const isImageTab =
+      currentTab.label === "Image Enhancer" ||
+      currentTab.label.toLowerCase().includes("image");
+    const isImagePrompt =
+      /\[Mode:\s*(Image Enhancer)\]/i.test(trimmed);
+
+    if (isImageTab || isImagePrompt) {
+      const cleanPrompt = trimmed
+        .replace(/\[Mode:\s*(Image Enhancer)\]/gi, "")
+        .trim();
+      try {
+        sessionStorage.setItem(
+          "rivinity_pending_image_prompt",
+          cleanPrompt || trimmed,
+        );
+      } catch {}
+      setInput("");
+      router.push("/image-generation");
+      return;
+    }
+
+    const isAudioTab =
+      currentTab.label === "Audio Lab" ||
+      currentTab.label.toLowerCase().includes("audio");
+    const isAudioPrompt =
+      /\[Mode:\s*(Audio Lab)\]/i.test(trimmed);
+
+    if (isAudioTab || isAudioPrompt) {
+      const cleanPrompt = trimmed
+        .replace(/\[Mode:\s*(Audio Lab)\]/gi, "")
+        .trim();
+      try {
+        sessionStorage.setItem(
+          "rivinity_pending_audio_prompt",
+          cleanPrompt || trimmed,
+        );
+      } catch {}
+      setInput("");
+      router.push("/audio-lab");
+      return;
+    }
+
     setInput("");
 
-    // If user has already received an answer and still hasn't signed up, prompt to sign up
     if (!isAuthenticated && currentTab.messages.length >= 2) {
       toast.info("Please sign up to continue chatting.");
       openAuth("signup");
@@ -1710,7 +1771,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
     const targetWorkspaceId = activeWorkspace?.id || currentTab.workspaceId;
 
-    // Check strictly if the user wrote a prompt containing "big data"
     const hasBigDataKeyword = /big\s*data/i.test(trimmed);
 
     const isFirst = currentTab.messages.length === 0;
@@ -1759,7 +1819,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
     if (hasBigDataKeyword) {
       setIsDashboardDismissed(false);
-      // Allocate 50% to AI Chat and 50% to Big Data
       setSplitPercent(50);
       setMobileTab("dashboard");
       window.dispatchEvent(
@@ -1831,8 +1890,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     }
 
     if (!isAuthenticated) {
-      // Chatbot starts thinking animation, then opens login/signup modal.
-      // Full output is withheld until login/signup succeeds.
       setPendingGuestResponse({
         tabId: activeTabId,
         responseContent,
@@ -1926,7 +1983,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     }, 600);
   };
 
-  // Close chat menu on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -1944,7 +2000,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
     };
   }, [chatMenuOpen]);
 
-  // All files uploaded across all messages in current tab
   const currentChatFiles = currentTab.messages.flatMap(
     (m) => m.attachments || [],
   );
@@ -2385,16 +2440,13 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
   const isWriteMode = currentTab.kind === "write";
 
-  // Responsive compactness: also active on mobile when split to ensure tight spacing
   const isCompact = splitPercent < 45 || (!isDesktop && isDashboardActive);
   const isUltraCompact = splitPercent < 32;
 
-  // AI Chat View (Canvas Main Prompt Box)
   const chatView = (
-    <div className="flex-1 flex flex-col items-center justify-between min-w-0 min-h-0 h-full w-full relative overflow-hidden bg-white dark:bg-zinc-950">
-      {/* Workspace Indicator Badge when in chat conversation */}
+    <div className="flex-1 flex flex-col items-center justify-between min-w-0 min-h-0 h-full w-full relative overflow-hidden bg-[#f8fafc] dark:bg-zinc-950">
       {!isEmpty && activeWorkspace && (
-        <div className="absolute top-4 sm:top-6 left-4 sm:left-8 z-30 flex items-center gap-2">
+        <div className="absolute top-2.5 sm:top-3 left-14 sm:left-16 lg:left-6 z-30 flex items-center gap-2">
           <button
             type="button"
             onClick={() => {
@@ -2421,45 +2473,42 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                 }
               } catch {}
             }}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-xs font-semibold text-slate-700 dark:text-zinc-200 transition-colors cursor-pointer border border-slate-200/60 dark:border-zinc-700 shadow-2xs group"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-xs font-semibold text-slate-700 dark:text-zinc-200 transition-colors cursor-pointer border border-slate-200/60 dark:border-zinc-700 shadow-2xs group"
             title="Return to workspace view"
           >
             <ChevronLeft className="w-3.5 h-3.5 text-slate-600 dark:text-zinc-300 group-hover:-translate-x-0.5 transition-transform" />
             <Folder className="w-3.5 h-3.5 text-slate-600 dark:text-zinc-300" />
-            <span>{activeWorkspace.name}</span>
+            <span className="max-w-[120px] sm:max-w-[180px] truncate">{activeWorkspace.name}</span>
           </button>
         </div>
       )}
 
-      {/* Top-right Actions (Share, More Options) when conversation has started */}
       {!isEmpty && (
-        <div className="absolute top-1 sm:top-2 right-1 sm:right-3 z-30 flex items-center gap-5" ref={chatMenuRef}>
+        <div className="absolute top-2 sm:top-2.5 right-2 sm:right-4 z-30 flex items-center gap-1 sm:gap-2" ref={chatMenuRef}>
           <button
             type="button"
             onClick={handleShare}
-            className="flex items-center gap-2 rounded-xl border-0 bg-transparent px-3 py-2 text-sm font-medium text-slate-950 transition-colors hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800"
+            className="flex items-center gap-1.5 sm:gap-2 rounded-xl border-0 bg-transparent px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm font-medium text-slate-950 transition-colors hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800 cursor-pointer"
             title="Share"
           >
-            <Upload className="h-5 w-5" strokeWidth={2} />
-            <span>Share</span>
+            <Upload className="h-4 w-4 sm:h-4.5 sm:w-4.5" strokeWidth={2} />
+            <span className="hidden xs:inline">Share</span>
           </button>
 
           <button
             type="button"
             onClick={() => setChatMenuOpen((prev) => !prev)}
             className={cn(
-              "flex items-center justify-center rounded-xl border-0 bg-transparent p-2 text-slate-950 transition-colors hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800",
+              "flex items-center justify-center rounded-xl border-0 bg-transparent p-1.5 sm:p-2 text-slate-950 transition-colors hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800 cursor-pointer",
               chatMenuOpen && "bg-gray-100 dark:bg-zinc-800",
             )}
             aria-label="More options"
           >
-            <MoreHorizontal className="h-5 w-5" strokeWidth={2} />
+            <MoreHorizontal className="h-4.5 w-4.5 sm:h-5 sm:w-5" strokeWidth={2} />
           </button>
 
-          {/* Dropdown Menu Popup (Light Mode Style) */}
           {chatMenuOpen && (
             <div className="absolute right-0 top-full mt-2 w-52 sm:w-56 rounded-2xl bg-white dark:bg-[#1c1c1f] text-gray-800 dark:text-zinc-100 border border-gray-200/90 dark:border-zinc-800 shadow-xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-              {/* View files in chat */}
               <button
                 type="button"
                 onClick={handleViewFilesInChat}
@@ -2469,7 +2518,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                 <span className="flex-1 truncate">View files in chat</span>
               </button>
 
-              {/* Pin chat */}
               <button
                 type="button"
                 onClick={handleTogglePinChat}
@@ -2486,7 +2534,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                 </span>
               </button>
 
-              {/* Delete */}
               <button
                 type="button"
                 onClick={handleDeleteChat}
@@ -2507,19 +2554,25 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
           <img
             src="/watermark.png"
             alt=""
-            className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[460px] md:h-[460px] lg:w-[520px] lg:h-[520px] object-contain opacity-[0.055] dark:opacity-[0.05]"
+            width={520}
+            height={520}
+            style={{
+              maxWidth: "min(520px, 80vw)",
+              maxHeight: "min(520px, 80vh)",
+              width: "100%",
+              height: "auto",
+              opacity: 0.05,
+            }}
+            className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[460px] md:h-[460px] lg:w-[520px] lg:h-[520px] object-contain"
           />
         </div>
       )}
 
-      {/* Scrollable Message List or Empty State */}
       <div className="flex-1 min-h-0 flex flex-col items-center overflow-y-auto overflow-x-hidden relative z-10 w-full max-w-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {isEmpty ? (
           activeWorkspace ? (
-            /* Image 2 Light Theme Workspace View */
             <div className="relative flex-1 min-h-full flex flex-col items-center justify-start w-full px-4 sm:px-8 py-8 sm:py-12 my-auto animate-in fade-in duration-200">
               <div className="w-full max-w-[700px] mx-auto flex flex-col gap-5">
-                {/* Top Row: Workspace Name (smaller text, no left icon, no 3-dots) */}
                 <div className="flex items-center justify-between gap-4">
                   <div className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white tracking-tight truncate">
                     {activeWorkspace.name}
@@ -2546,7 +2599,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                   </div>
                 </div>
 
-                {/* User's Actual Chatbox */}
                 <div className="relative z-10 w-full flex justify-center">
                   <ChatComposer
                     input={input}
@@ -2572,14 +2624,12 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                   />
                 </div>
 
-                {/* Chats Filter Pill (Sources removed) */}
                 <div className="flex items-center gap-2 pt-1">
                   <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-xs">
                     Chats
                   </span>
                 </div>
 
-                {/* Chats List */}
                 <div className="space-y-1">
                   {workspaceChats.length === 0 ? (
                     <div className="py-12 text-center space-y-2 rounded-2xl border border-dashed border-slate-200 dark:border-zinc-800 p-6">
@@ -2674,14 +2724,12 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                           {chat.subtitle || chat.prompt || chat.response}
                         </div>
 
-                        {/* Three Dots Dropdown Menu Popup (Light theme according to project) */}
                         {workspaceMenuChatId === chat.id && (
                           <div
                             ref={workspaceMenuRef}
                             onClick={(e) => e.stopPropagation()}
                             className="absolute right-0 top-11 w-52 rounded-2xl bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-100 border border-slate-200/90 dark:border-zinc-800 shadow-xl shadow-slate-200/80 dark:shadow-black/70 p-1.5 z-50 select-none text-left animate-in fade-in zoom-in-95 duration-100"
                           >
-                            {/* 1. Share */}
                             <button
                               type="button"
                               onClick={() => handleShareWorkspaceChat(chat)}
@@ -2691,7 +2739,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                               <span>Share</span>
                             </button>
 
-                            {/* 2. Rename */}
                             <button
                               type="button"
                               onClick={() => {
@@ -2705,7 +2752,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                               <span>Rename</span>
                             </button>
 
-                            {/* 3. Pin chat */}
                             <button
                               type="button"
                               onClick={() => handlePinWorkspaceChat(chat)}
@@ -2720,7 +2766,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                               <span>{chat.isPinned ? "Unpin chat" : "Pin chat"}</span>
                             </button>
 
-                            {/* 4. Delete */}
                             <button
                               type="button"
                               onClick={() => handleDeleteWorkspaceChat(chat.id)}
@@ -2732,12 +2777,10 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
                             <div className="my-1 border-t border-slate-100 dark:border-zinc-800" />
 
-                            {/* Section header: Workspace / Project Name */}
                             <div className="px-3 pt-1.5 pb-1 text-[11px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider truncate">
                               {activeWorkspace.name}
                             </div>
 
-                            {/* 5. Move to workspace */}
                             <button
                               type="button"
                               onClick={() => setMoveSubmenuOpen((prev) => !prev)}
@@ -2779,7 +2822,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                               </div>
                             )}
 
-                            {/* 6. Remove from workspace */}
                             <button
                               type="button"
                               onClick={() => handleRemoveChatFromWorkspace(chat.id)}
@@ -2802,9 +2844,18 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                 <img
                   src="/watermark.png"
                   alt=""
+                  width={520}
+                  height={520}
                   draggable={false}
                   decoding="async"
-                  className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[460px] md:h-[460px] lg:w-[520px] lg:h-[520px] object-contain opacity-[0.055] dark:opacity-[0.05]"
+                  style={{
+                    maxWidth: "min(520px, 80vw)",
+                    maxHeight: "min(520px, 80vh)",
+                    width: "100%",
+                    height: "auto",
+                    opacity: 0.05,
+                  }}
+                  className="w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] md:w-[460px] md:h-[460px] lg:w-[520px] lg:h-[520px] object-contain"
                 />
               </div>
               <div className="relative z-10 w-full max-w-[700px] mx-auto flex flex-col items-center justify-center mb-4 sm:mb-6">
@@ -2853,6 +2904,9 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                     <img
                       src="/watermark.png"
                       alt="Rivinity"
+                      width={32}
+                      height={32}
+                      style={{ width: "100%", height: "100%", maxWidth: "32px", maxHeight: "32px" }}
                       className="w-6.5 h-6.5 sm:w-8 sm:h-8 object-contain"
                     />
                   </div>
@@ -2864,12 +2918,10 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                     msg.role === "user" ? "items-end" : "items-start",
                   )}
                 >
-                  {/* User Attached Files Frame (Clean Light/White Card Styling) */}
                   {msg.role === "user" && msg.attachments && msg.attachments.length > 0 && (
                     <div className="flex flex-col items-end gap-2 mb-2 w-full max-w-full">
                       {msg.attachments.map((file) =>
                         file.type === "image" && file.url ? (
-                          /* Large Visual Image Card Preview */
                           <div
                             key={file.id}
                             onClick={() => setPreviewFile(file)}
@@ -2890,7 +2942,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
                             </div>
                           </div>
                         ) : (
-                          /* Sleek Document / PDF Capsule Card */
                           <div
                             key={file.id}
                             onClick={() => setPreviewFile(file)}
@@ -3080,7 +3131,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         )}
       </div>
 
-      {/* Pinned Bottom Composer */}
       {!isEmpty && (
         <div className="px-4 sm:px-8 pb-3 sm:pb-4 pt-2 sm:pt-2.5 flex flex-col justify-center items-center bg-gradient-to-t from-white dark:from-zinc-950 via-white/95 dark:via-zinc-950/95 to-transparent shrink-0 relative z-10 w-full">
           <div className="w-full max-w-[860px] mx-auto flex justify-center">
@@ -3117,19 +3167,8 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
 
   return (
     <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full w-full relative overflow-hidden bg-white dark:bg-zinc-950">
-      {/* Mobile Toggle Button */}
-      {onToggleSidebar && (
-        <button
-          type="button"
-          onClick={onToggleSidebar}
-          className="md:hidden absolute top-2.5 left-2.5 z-30 flex items-center justify-center h-8 w-8 rounded-lg bg-white/90 dark:bg-zinc-800/90 backdrop-blur-xs border border-gray-200 dark:border-zinc-700 shadow-xs text-gray-700 dark:text-zinc-200 hover:bg-gray-100 dark:hover:bg-zinc-700 cursor-pointer"
-          aria-label="Toggle sidebar"
-        >
-          <PanelLeft className="h-4.5 w-4.5" strokeWidth={2} />
-        </button>
-      )}
       {isWriteMode ? (
-        <div className="flex-1 min-h-0 overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full w-full overflow-hidden">
           <WriteAnythingStudio />
         </div>
       ) : isDashboardActive ? (
@@ -3138,7 +3177,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
           data-split-view="true"
           className="flex-1 flex flex-col lg:flex-row min-w-0 min-h-0 h-full w-full overflow-hidden relative select-none lg:select-auto"
         >
-          {/* Mobile View Switcher (Only visible on mobile/tablet screens < 1024px) */}
           {!isDesktop && (
             <div className="flex items-center justify-between px-3.5 py-2 bg-white dark:bg-zinc-900 border-b border-gray-200 dark:border-zinc-800 shrink-0 z-30 w-full">
               <div className="flex items-center gap-1 p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl mx-auto text-xs font-semibold">
@@ -3171,7 +3209,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
             </div>
           )}
 
-          {/* Left Panel: AI Chat (50% width on desktop, 100% on mobile) */}
           <div
             className={cn(
               "h-full flex flex-col border-b lg:border-b-0 border-gray-200 dark:border-zinc-800 min-w-0 min-h-0 overflow-hidden shrink-0 transition-all duration-300",
@@ -3184,7 +3221,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
             {chatView}
           </div>
 
-          {/* Draggable Divider with Grab Handle (Desktop only) */}
           <div
             onMouseDown={handleDragStart}
             onTouchStart={handleTouchStart}
@@ -3218,7 +3254,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
             </div>
           </div>
 
-          {/* Right Panel: Big Data Page (50% width on desktop, 100% on mobile) */}
           <div
             data-dashboard="true"
             className={cn(
@@ -3238,7 +3273,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         chatView
       )}
 
-      {/* Delete Chat Confirmation Modal */}
       {showDeleteConfirmModal && (
         <div
           className="fixed inset-0 z-50 bg-black/45 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
@@ -3280,7 +3314,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         </div>
       )}
 
-      {/* Files in Chat Modal */}
       {showChatFilesModal && (
         <div
           className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
@@ -3290,7 +3323,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
             className="w-full max-w-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-zinc-800">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-orange-50 dark:bg-orange-950/40 text-[#FF5500] flex items-center justify-center">
@@ -3315,7 +3347,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
               </button>
             </div>
 
-            {/* File List */}
             <div className="p-4 overflow-y-auto space-y-2.5 flex-1">
               {currentChatFiles.length === 0 ? (
                 <div className="py-8 text-center text-sm text-gray-500 dark:text-zinc-400">
@@ -3377,7 +3408,6 @@ const CanvasMain: React.FC<CanvasMainProps> = ({
         </div>
       )}
 
-      {/* Material Interactive Lightbox / Document Preview Modal */}
       <MaterialPreviewModal
         file={previewFile}
         onClose={() => setPreviewFile(null)}

@@ -369,8 +369,15 @@ const BuilderWorkbench = ({
   const [publishing, setPublishing] = useState(false);
   const [publishedSuccess, setPublishedSuccess] = useState(false);
   const [publishTarget, setPublishTarget] = useState<"cloud" | "export">("cloud");
+  const [mobileView, setMobileView] = useState<"chat" | "workbench">("workbench");
   const [fileWidth, setFileWidth] = useState(210);
   const [terminalHeight, setTerminalHeight] = useState(170);
+  const [previewTasks, setPreviewTasks] = useState<string[]>([
+    "Initialize application repository",
+    "Configure UI theme & layouts",
+    "Deploy responsive components",
+  ]);
+  const [newPreviewTask, setNewPreviewTask] = useState("");
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -467,11 +474,34 @@ const BuilderWorkbench = ({
     if (!input.trim()) return;
     onSendMessage(input);
     setInput("");
+    setMobileView("workbench");
   };
 
   const currentCode =
-    fileContents[selectedFile] ||
-    `// Content for ${selectedFile}\nexport default function Module() {\n  return null;\n}`;
+    selectedFile === "App.tsx"
+      ? `import React, { useState } from "react";
+import { TodoList } from "./components/TodoList";
+import { AddTodo } from "./components/AddTodo";
+
+export default function App() {
+  // Built with Rivinity UI Builder
+  const [items, setItems] = useState([
+    { id: 1, title: "Initialize repository", done: true },
+    { id: 2, title: "Configure UI layouts", done: false },
+    { id: 3, title: "Deploy responsive components", done: false },
+  ]);
+
+  return (
+    <main className="min-h-screen bg-white p-8 font-sans">
+      <div className="text-3xl font-bold text-zinc-900 mb-6">${projectName || "Generated App"}</div>
+      <TodoList items={items} />
+    </main>
+  );
+}`
+      : selectedFile === "README.md"
+        ? `# ${projectName || "Generated App"}\n\nGenerated automatically with Rivinity UI Builder.`
+        : fileContents[selectedFile] ||
+          `// Content for ${selectedFile}\nexport default function Module() {\n  return null;\n}`;
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(currentCode);
@@ -515,7 +545,7 @@ const BuilderWorkbench = ({
     : allFileNames;
 
   return (
-    <div className="flex-1 flex h-full w-full min-h-0 min-w-0 bg-white text-zinc-800 antialiased font-sans overflow-hidden select-none relative">
+    <div className="flex-1 flex flex-col md:flex-row h-full w-full min-h-0 min-w-0 bg-white text-zinc-800 antialiased font-sans overflow-hidden select-none relative">
       {publishModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl border border-zinc-200 shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
@@ -649,7 +679,45 @@ const BuilderWorkbench = ({
         </div>
       )}
 
-      <div className="shrink-0 w-full md:w-[340px] lg:w-[370px] border-r border-zinc-200 bg-white flex flex-col z-10 overflow-hidden">
+      <div className="md:hidden flex items-center justify-between px-3 py-2 bg-white border-b border-zinc-200 shrink-0">
+        <div className="flex items-center gap-1.5 p-0.5 rounded-lg bg-zinc-100 border border-zinc-200/80 text-xs">
+          <button
+            type="button"
+            onClick={() => setMobileView("chat")}
+            className={`px-3 py-1 rounded-md font-medium transition-all ${
+              mobileView === "chat"
+                ? "bg-white text-[#FF6B00] shadow-2xs font-semibold"
+                : "text-zinc-600 hover:text-zinc-900"
+            }`}
+          >
+            Chat & Steps
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileView("workbench")}
+            className={`px-3 py-1 rounded-md font-medium transition-all ${
+              mobileView === "workbench"
+                ? "bg-white text-[#FF6B00] shadow-2xs font-semibold"
+                : "text-zinc-600 hover:text-zinc-900"
+            }`}
+          >
+            Workbench & Code
+          </button>
+        </div>
+
+        <button
+          type="button"
+          onClick={onExit}
+          className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
+          title="Exit editor"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className={`shrink-0 w-full md:w-[340px] lg:w-[370px] border-r border-zinc-200 bg-white flex-col z-10 overflow-hidden ${
+        mobileView === "chat" ? "flex flex-1 md:flex-initial" : "hidden md:flex"
+      }`}>
         <div className="h-full w-full flex flex-col min-h-0">
           <div className="px-4 py-3 border-b border-zinc-200 flex items-center justify-between bg-white shrink-0">
             <div className="flex items-center gap-2.5 min-w-0">
@@ -833,7 +901,9 @@ const BuilderWorkbench = ({
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full p-2.5 bg-zinc-50/70 overflow-hidden">
+      <div className={`flex-1 flex-col min-w-0 min-h-0 h-full p-1.5 sm:p-2.5 bg-zinc-50/70 overflow-hidden ${
+        mobileView === "workbench" ? "flex" : "hidden md:flex"
+      }`}>
         <div className="flex-1 rounded-xl border border-zinc-200 shadow-xs overflow-hidden flex flex-col bg-white min-h-0 h-full">
           <div className="flex items-center justify-between px-3 py-1.5 border-b border-zinc-200 bg-white shrink-0 gap-3 overflow-x-auto [scrollbar-width:none]">
             <div className="flex items-center p-0.5 rounded-lg bg-zinc-100/60 border border-zinc-200/60 shrink-0">
@@ -942,7 +1012,7 @@ const BuilderWorkbench = ({
             {tab !== "preview" && (
               <>
                 <div
-                  className="shrink-0 flex flex-col bg-white border-r border-zinc-200 min-h-0 h-full overflow-hidden select-none"
+                  className="shrink-0 flex flex-col bg-white border-r border-zinc-200 min-h-0 h-full overflow-hidden select-none max-w-[45%] sm:max-w-none"
                   style={{ width: fileWidth }}
                 >
                   <div className="flex items-center justify-around px-2 py-1.5 border-b border-zinc-100 text-[11px] font-medium shrink-0 bg-white">
@@ -1150,26 +1220,45 @@ const BuilderWorkbench = ({
                             : "w-full max-w-md"
                         }`}
                       >
-                        <div className="text-xl font-bold mb-4 text-zinc-900 tracking-tight">
-                          Todo App
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="text-xl font-bold text-zinc-900 tracking-tight">
+                            {projectName || "Generated App"}
+                          </div>
+                          <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-[#FF6B00] border border-orange-200">
+                            Live v1.0
+                          </span>
                         </div>
                         <div className="flex gap-2 mb-4">
                           <input
-                            placeholder="Add a task..."
+                            value={newPreviewTask}
+                            onChange={(e) => setNewPreviewTask(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && newPreviewTask.trim()) {
+                                setPreviewTasks((p) => [...p, newPreviewTask.trim()]);
+                                setNewPreviewTask("");
+                              }
+                            }}
+                            placeholder="Add new item..."
                             className="flex-1 px-3 py-2 rounded-xl bg-zinc-50 border border-zinc-200 text-xs focus:outline-none focus:border-[#FF6B00]"
                           />
                           <button
                             type="button"
+                            onClick={() => {
+                              if (newPreviewTask.trim()) {
+                                setPreviewTasks((p) => [...p, newPreviewTask.trim()]);
+                                setNewPreviewTask("");
+                              }
+                            }}
                             className="px-4 py-2 rounded-xl bg-[#FF6B00] text-white text-xs font-semibold shadow-xs hover:opacity-90 cursor-pointer border-0 outline-none"
                           >
                             Add
                           </button>
                         </div>
                         <div className="space-y-2">
-                          {["Design landing page", "Wire up auth", "Ship MVP"].map((t, i) => (
+                          {previewTasks.map((t, i) => (
                             <label
-                              key={t}
-                              className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-zinc-50 border border-zinc-100 text-[12.5px] text-zinc-700 cursor-pointer"
+                              key={`${t}-${i}`}
+                              className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-zinc-50 border border-zinc-100 text-[12.5px] text-zinc-700 cursor-pointer hover:bg-zinc-100/60 transition-colors"
                             >
                               <input
                                 type="checkbox"

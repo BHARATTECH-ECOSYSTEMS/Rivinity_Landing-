@@ -1,17 +1,14 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
-  MessageSquare,
   FileText,
   Layers,
   HelpCircle,
-  Radio,
   Mic,
   Calendar,
   GraduationCap,
   Swords,
-  Bot,
   BarChart3,
   Paperclip,
   Globe,
@@ -23,7 +20,6 @@ import {
   HatGlasses,
   Plus,
   FileSpreadsheet,
-  BookCheck,
   Shield,
   BookOpen,
 } from "lucide-react";
@@ -43,46 +39,214 @@ import DataAnalystView from "./views/DataAnalystView";
 
 const BUILT_IN_SKILLS = [
   {
+    id: "long-form-article-writer",
+    name: "Long-form article writer",
+    summary:
+      "Drafts publication-quality long-form articles with a defined outline and citations.",
+    category: "WRITING",
+  },
+  {
+    id: "email-polish",
+    name: "Email polish",
+    summary:
+      "Rewrites drafts into concise, professional emails in your voice.",
+    category: "WRITING",
+  },
+  {
+    id: "cold-outreach",
+    name: "Cold outreach",
+    summary:
+      "Generates short, personalized cold outreach with a clear single ask.",
+    category: "MARKETING",
+  },
+  {
     id: "study-notes-generator",
     name: "Study Notes Generator",
     summary:
-      "Generate structured Cornell-style study notes with key terms, cues, and summaries",
-    category: "Writing",
+      "Generate structured Cornell-style study notes with key terms, cues, and summaries.",
+    category: "EDUCATION",
   },
   {
     id: "quiz-creator",
     name: "Quiz & Exam Creator",
     summary:
-      "Create multiple-choice and short-answer quizzes with detailed answer keys",
-    category: "Education",
+      "Create multiple-choice and short-answer quizzes with detailed answer keys.",
+    category: "EDUCATION",
   },
   {
     id: "flashcard-deck-builder",
     name: "Flashcard Deck Builder",
     summary:
-      "Convert textbook chapters or notes into spaced-repetition flashcards",
-    category: "Education",
+      "Convert textbook chapters or notes into spaced-repetition flashcards.",
+    category: "EDUCATION",
   },
   {
     id: "podcast-script-writer",
     name: "AI Podcast Script Writer",
     summary:
-      "Draft two-host conversational podcast scripts to explain complex topics",
-    category: "Audio",
+      "Draft two-host conversational podcast scripts to explain complex topics.",
+    category: "AUDIO",
   },
   {
     id: "academic-debater",
     name: "Academic Debate Sparring",
     summary:
-      "Argue against an Oxford-style opponent with real-time logical fallacy detection",
-    category: "Analysis",
+      "Argue against an Oxford-style opponent with real-time logical fallacy detection.",
+    category: "ANALYSIS",
   },
   {
     id: "data-insights-analyst",
     name: "Data & Gradebook Analyst",
     summary:
-      "Analyze tabular research data, cohort test scores, and statistical trends",
-    category: "Data",
+      "Analyze tabular research data, cohort test scores, and statistical trends.",
+    category: "DATA",
+  },
+  {
+    id: "executive-summary",
+    name: "Executive Brief Synthesizer",
+    summary:
+      "Condenses dense research whitepapers and corporate reports into crisp 1-page briefs.",
+    category: "RESEARCH",
+  },
+  {
+    id: "code-refactor",
+    name: "Code Refactor & AST Reviewer",
+    summary:
+      "Refactors complex codebases for algorithmic efficiency, types, and security.",
+    category: "ENGINEERING",
+  },
+  {
+    id: "grant-proposal",
+    name: "Grant & Proposal Drafter",
+    summary:
+      "Drafts structured academic and research grant proposals with milestones.",
+    category: "WRITING",
+  },
+  {
+    id: "landing-page-copy",
+    name: "Landing Page Copywriter",
+    summary:
+      "Generates high-converting hero headlines, value props, and feature copy.",
+    category: "MARKETING",
+  },
+  {
+    id: "interview-prep",
+    name: "Technical Interview Prep",
+    summary:
+      "Generates role-specific behavioral and technical interview questions.",
+    category: "CAREERS",
+  },
+  {
+    id: "legal-summary",
+    name: "Legal Terms & Contract Review",
+    summary:
+      "Breaks down complex SLAs, terms of service, and NDAs into plain English.",
+    category: "COMPLIANCE",
+  },
+  {
+    id: "slide-deck-outline",
+    name: "Pitch Deck & Slide Outline",
+    summary:
+      "Creates a 10-slide narrative arc for investor or classroom presentations.",
+    category: "BUSINESS",
+  },
+  {
+    id: "literature-review",
+    name: "Academic Literature Review",
+    summary:
+      "Synthesizes key themes, methodologies, and findings across research papers.",
+    category: "RESEARCH",
+  },
+  {
+    id: "press-release",
+    name: "Press Release Drafter",
+    summary:
+      "Writes AP-style announcements for product launches and milestones.",
+    category: "MARKETING",
+  },
+  {
+    id: "customer-response",
+    name: "Support & Objection Handler",
+    summary:
+      "Drafts empathetic and decisive responses to complex customer inquiries.",
+    category: "SUPPORT",
+  },
+  {
+    id: "prompt-engineer",
+    name: "System Prompt Optimizer",
+    summary:
+      "Refines prompts with few-shot examples, guardrails, and structured schemas.",
+    category: "ENGINEERING",
+  },
+  {
+    id: "seo-content-plan",
+    name: "SEO Topic Cluster Planner",
+    summary:
+      "Builds keyword clusters and semantic content maps to drive organic rank.",
+    category: "MARKETING",
+  },
+  {
+    id: "case-study-creator",
+    name: "Customer Case Study Writer",
+    summary:
+      "Interviews notes into challenge-solution-impact customer success stories.",
+    category: "MARKETING",
+  },
+  {
+    id: "meeting-summarizer",
+    name: "Meeting Minutes & Action Items",
+    summary:
+      "Extracts key decisions, owners, and deliverables from transcript logs.",
+    category: "PRODUCTIVITY",
+  },
+  {
+    id: "sql-query-builder",
+    name: "Natural Language to SQL",
+    summary:
+      "Translates business questions into optimized, secure SQL queries.",
+    category: "DATA",
+  },
+  {
+    id: "math-proof-solver",
+    name: "Math & Proof Assistant",
+    summary:
+      "Breaks down step-by-step mathematical proofs with LaTeX annotations.",
+    category: "STEM",
+  },
+  {
+    id: "syllabus-architect",
+    name: "University Syllabus Designer",
+    summary:
+      "Creates 16-week semester course schedules aligned with ABET standards.",
+    category: "EDUCATION",
+  },
+  {
+    id: "changelog-generator",
+    name: "Release Notes & Changelog",
+    summary:
+      "Turns git commits and PR summaries into user-friendly release updates.",
+    category: "PRODUCTIVITY",
+  },
+  {
+    id: "competitive-intel",
+    name: "Competitor Matrix & Analysis",
+    summary:
+      "Builds side-by-side feature comparison matrices and positioning audits.",
+    category: "STRATEGY",
+  },
+  {
+    id: "crisis-comms",
+    name: "Crisis Communications Drafter",
+    summary:
+      "Prepares calibrated stakeholder holding statements for critical incidents.",
+    category: "STRATEGY",
+  },
+  {
+    id: "rubric-builder",
+    name: "Grading Rubric Architect",
+    summary:
+      "Designs 4-tier evaluation rubrics with explicit criteria and weightings.",
+    category: "EDUCATION",
   },
 ];
 
@@ -206,24 +370,27 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
       s.category.toLowerCase().includes(skillQuery.toLowerCase()),
   );
 
-  const handleRunSkill = (skillId: string) => {
-    const skill = BUILT_IN_SKILLS.find((s) => s.id === skillId);
-    if (!skill) return;
+  const handleRunSkill = useCallback(
+    (skillId: string) => {
+      const skill = BUILT_IN_SKILLS.find((s) => s.id === skillId);
+      if (!skill) return;
 
-    setSkillPickerOpen(false);
-    setSkillQuery("");
+      setSkillPickerOpen(false);
+      setSkillQuery("");
 
-    let matchedFeature = "contextual-chat";
-    if (skillId.includes("notes")) matchedFeature = "smart-notes";
-    else if (skillId.includes("quiz")) matchedFeature = "quizzes";
-    else if (skillId.includes("flashcard")) matchedFeature = "flashcards";
-    else if (skillId.includes("podcast")) matchedFeature = "ai-podcast";
-    else if (skillId.includes("debate")) matchedFeature = "debate";
-    else if (skillId.includes("data")) matchedFeature = "data-analyst";
+      let matchedFeature = "contextual-chat";
+      if (skillId.includes("notes")) matchedFeature = "smart-notes";
+      else if (skillId.includes("quiz")) matchedFeature = "quizzes";
+      else if (skillId.includes("flashcard")) matchedFeature = "flashcards";
+      else if (skillId.includes("podcast")) matchedFeature = "ai-podcast";
+      else if (skillId.includes("debate")) matchedFeature = "debate";
+      else if (skillId.includes("data")) matchedFeature = "data-analyst";
 
-    onFeatureChange(matchedFeature);
-    toast.success(`Skill launched: ${skill.name}`);
-  };
+      onFeatureChange(matchedFeature);
+      toast.success(`Skill launched: ${skill.name}`);
+    },
+    [onFeatureChange],
+  );
 
   useEffect(() => {
     return () => {
@@ -235,10 +402,9 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
     };
   }, []);
 
-  const toggleVoiceRecording = () => {
-    const SpeechRecognition =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
+  const toggleVoiceRecording = useCallback(() => {
+    const win = window as unknown as Record<string, any>;
+    const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       toast.error("Speech recognition is not supported in this browser.");
@@ -267,7 +433,7 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
       };
 
       recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
+        const transcript = event.results[0]?.[0]?.transcript;
         if (transcript) {
           setInput((prev) =>
             prev ? `${prev.trim()} ${transcript}` : transcript,
@@ -276,7 +442,6 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
       };
 
       recognition.onerror = (event: any) => {
-        console.error("Speech recognition error", event);
         setIsListening(false);
         if (event.error !== "no-speech") {
           toast.error(`Voice input error: ${event.error}`);
@@ -289,14 +454,13 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
 
       recognitionRef.current = recognition;
       recognition.start();
-    } catch (err) {
-      console.error(err);
+    } catch {
       setIsListening(false);
       toast.error("Could not access microphone.");
     }
-  };
+  }, [isListening]);
 
-  const handleSend = () => {
+  const handleSend = useCallback(() => {
     const trimmed = input.trim();
     if (!trimmed && !attachedFile) return;
 
@@ -322,7 +486,7 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
 
     setInput("");
     setAttachedFile(null);
-  };
+  }, [input, attachedFile, isIncognito, isWebSearchActive, selectedPromptTool, activeFeature, onFeatureChange]);
 
   const renderPromptBox = (isCompact = false) => {
     return (
@@ -333,7 +497,6 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
             "p-2 sm:p-2.5 rounded-[26px] bg-slate-100/90 dark:bg-zinc-800/60 backdrop-blur-2xl border border-slate-200/90 dark:border-zinc-700/60 shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-none",
         )}
       >
-        {}
         {isIncognito && (
           <div className="px-3.5 sm:px-4 pt-1 pb-2 text-[12.5px] select-none text-slate-700 dark:text-zinc-300 font-medium tracking-tight animate-in fade-in duration-200">
             Incognito Mode Active &bull; Chats will not be saved to history
@@ -348,13 +511,107 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
               : "bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200/80 dark:border-zinc-800/80 hover:border-slate-400 dark:hover:border-zinc-600 focus-within:border-slate-400 focus-within:ring-2 focus-within:ring-slate-400/20 dark:focus-within:border-zinc-500 dark:focus-within:ring-zinc-500/20 shadow-[0_2px_16px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.25)]",
           )}
         >
-          {}
-          <div
-            className={cn(
-              "flex items-center overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
-              "gap-1.5 sm:gap-2 px-3 sm:px-4 pt-2.5 sm:pt-3 pb-1",
-            )}
-          >
+          {/* Integrated SKILLS Panel (Matches User Screenshot) */}
+          {skillPickerOpen && (
+            <div
+              ref={popoverRef}
+              className={cn(
+                "w-full border-b transition-all",
+                isIncognito
+                  ? "bg-[#22242a] border-white/10 text-white"
+                  : "bg-white dark:bg-zinc-900 border-slate-100 dark:border-zinc-800",
+              )}
+            >
+              {/* Header: SKILLS | Search skills to run... | 30 available */}
+              <div
+                className={cn(
+                  "flex items-center justify-between px-4 sm:px-5 pt-3.5 pb-2.5 border-b",
+                  isIncognito
+                    ? "border-white/10"
+                    : "border-slate-100 dark:border-zinc-800/80",
+                )}
+              >
+                <div className="flex items-center gap-3.5 flex-1 min-w-0">
+                  <span className="text-[11px] font-extrabold text-slate-500 dark:text-zinc-400 tracking-wider uppercase select-none">
+                    SKILLS
+                  </span>
+                  <input
+                    autoFocus
+                    type="text"
+                    value={skillQuery}
+                    onChange={(e) => setSkillQuery(e.target.value)}
+                    placeholder="Search skills to run..."
+                    className={cn(
+                      "bg-transparent text-sm border-none outline-none focus:outline-none focus:ring-0 p-0 flex-1 min-w-0",
+                      isIncognito
+                        ? "text-white placeholder:text-zinc-500"
+                        : "text-[#0f172a] dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500",
+                    )}
+                  />
+                </div>
+                <span className="text-xs text-slate-400 dark:text-zinc-500 font-medium shrink-0 ml-3 select-none">
+                  {skillQuery ? `${filteredSkills.length} available` : "30 available"}
+                </span>
+              </div>
+
+              {/* Skills List */}
+              <div className="max-h-[250px] overflow-y-auto divide-y divide-slate-100 dark:divide-zinc-800/60 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {filteredSkills.length === 0 ? (
+                  <div className="py-6 text-center text-xs text-slate-400 dark:text-zinc-500">
+                    No skills found matching &ldquo;{skillQuery}&rdquo;
+                  </div>
+                ) : (
+                  filteredSkills.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => handleRunSkill(s.id)}
+                      className={cn(
+                        "w-full text-left px-4 sm:px-5 py-3.5 flex items-center justify-between gap-4 transition-colors group cursor-pointer",
+                        isIncognito
+                          ? "hover:bg-white/10 text-white"
+                          : "hover:bg-slate-50/80 dark:hover:bg-zinc-800/50",
+                      )}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <h4
+                          className={cn(
+                            "text-[14px] font-bold group-hover:text-[#FF6B00] transition-colors truncate",
+                            isIncognito
+                              ? "text-zinc-100"
+                              : "text-slate-900 dark:text-zinc-100",
+                          )}
+                        >
+                          {s.name}
+                        </h4>
+                        <p
+                          className={cn(
+                            "text-xs mt-0.5 leading-relaxed line-clamp-1",
+                            isIncognito
+                              ? "text-zinc-400"
+                              : "text-slate-500 dark:text-zinc-400",
+                          )}
+                        >
+                          {s.summary}
+                        </p>
+                      </div>
+                      <span className="text-[10px] font-bold text-[#FF6B00] border border-orange-400/90 dark:border-orange-500/80 px-2.5 py-0.5 rounded-full shrink-0 tracking-wider uppercase bg-transparent">
+                        {s.category}
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
+          {!skillPickerOpen && (
+            <div
+              className={cn(
+                "flex items-center overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+                "gap-1.5 sm:gap-2 px-3 sm:px-4 pt-2.5 sm:pt-3 pb-1",
+              )}
+            >
             {activeFeature !== "landing" && !isAddingTool ? (
               <div className="flex items-center gap-1.5">
                 <div
@@ -443,8 +700,8 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
               </div>
             )}
           </div>
+          )}
 
-          {}
           {attachedFile && (
             <div
               className={cn(
@@ -477,7 +734,6 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
             </div>
           )}
 
-          {}
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -502,11 +758,8 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
             style={{ minHeight: isCompact ? "40px" : "46px", outline: "none" }}
           />
 
-          {}
-          <div className="flex items-center justify-between w-full px-3 sm:px-4 pb-2 sm:pb-2.5 pt-0.5">
-            {}
+          <div className="flex items-center justify-between w-full px-2.5 sm:px-4 pb-2 sm:pb-2.5 pt-0.5">
             <div className="flex items-center min-w-0 gap-0.5 sm:gap-1">
-              {}
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -540,7 +793,6 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
                 }}
               />
 
-              {}
               <button
                 type="button"
                 onClick={() => setIsAddingTool((prev) => !prev)}
@@ -559,7 +811,6 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
                 <Plus className="w-4 h-4 shrink-0" strokeWidth={2.2} />
               </button>
 
-              {}
               <button
                 type="button"
                 onClick={() => {
@@ -571,7 +822,7 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
                   });
                 }}
                 className={cn(
-                  "hidden sm:flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
+                  "flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
                   isWebSearchActive
                     ? isIncognito
                       ? "!bg-sky-500/25 text-sky-400"
@@ -585,17 +836,14 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
                 <Globe className="w-4 h-4" strokeWidth={2} />
               </button>
 
-              {}
               <button
                 ref={skillButtonRef}
                 type="button"
                 onClick={() => setSkillPickerOpen((prev) => !prev)}
                 className={cn(
-                  "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0 bg-transparent",
+                  "w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center transition-colors cursor-pointer shrink-0",
                   skillPickerOpen
-                    ? isIncognito
-                      ? "!bg-[#FF6B00]/25 text-[#FF6B00]"
-                      : "!bg-orange-50 text-[#FF5500] dark:!bg-orange-950/40"
+                    ? "!bg-[#FEEADB] text-[#FF6B00] dark:!bg-orange-950/60"
                     : isIncognito
                       ? "text-zinc-400 hover:text-white hover:!bg-white/10"
                       : "text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
@@ -615,7 +863,6 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
                 />
               </button>
 
-              {}
               <button
                 type="button"
                 onClick={() => {
@@ -627,7 +874,7 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
                   });
                 }}
                 className={cn(
-                  "hidden sm:flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 border-0",
+                  "flex w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full items-center justify-center transition-colors cursor-pointer shrink-0 border-0",
                   isIncognito
                     ? "!bg-white/20 text-white shadow-xs ring-1 ring-white/30"
                     : "bg-transparent text-slate-500 hover:text-slate-900 hover:!bg-slate-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:!bg-zinc-800",
@@ -638,9 +885,7 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
               </button>
             </div>
 
-            {}
             <div className="flex items-center shrink-0 gap-1.5 sm:gap-2">
-              {}
               <button
                 type="button"
                 onClick={toggleVoiceRecording}
@@ -659,136 +904,28 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
                 <Mic className="w-4 h-4 shrink-0" strokeWidth={2} />
               </button>
 
-              {}
               <button
                 type="button"
                 onClick={handleSend}
                 disabled={!input.trim() && !attachedFile}
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center shrink-0 cursor-pointer transition-all",
+                  "w-8.5 h-8.5 rounded-full flex items-center justify-center shrink-0 cursor-pointer transition-all",
                   input.trim() || attachedFile
                     ? "!bg-[#FF6B00] hover:!bg-[#E66000] text-white shadow-[0_2px_8px_rgba(255,107,0,0.30)] active:scale-95"
                     : isIncognito
-                      ? "!bg-white/10 text-white/35 cursor-not-allowed border border-white/5"
-                      : "!bg-[#FFD5C2] dark:!bg-[#5a2e1d] text-white opacity-85 cursor-not-allowed",
+                      ? "!bg-white/10 text-white/40 cursor-not-allowed border border-white/5"
+                      : "!bg-[#FFD9C6] hover:!bg-[#ffc8ad] text-white cursor-pointer",
                 )}
                 title="Send prompt"
               >
                 <ArrowUpRight
-                  className={cn(
-                    "w-4.5 h-4.5 shrink-0",
-                    input.trim() || attachedFile
-                      ? "text-white"
-                      : isIncognito
-                        ? "text-white/40"
-                        : "text-white",
-                  )}
-                  strokeWidth={2.4}
+                  className="w-4.5 h-4.5 shrink-0 text-white"
+                  strokeWidth={2.5}
                 />
               </button>
             </div>
           </div>
         </div>
-
-        {}
-        {skillPickerOpen && (
-          <div
-            ref={popoverRef}
-            className="absolute left-0 right-0 bottom-full mb-2.5 z-50 animate-in fade-in zoom-in-95 duration-150"
-          >
-            <div
-              className={cn(
-                "rounded-2xl border shadow-2xl overflow-hidden",
-                isIncognito
-                  ? "bg-[#22242a] border-white/15 text-white"
-                  : "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800",
-              )}
-            >
-              <div
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 border-b",
-                  isIncognito
-                    ? "border-white/10"
-                    : "border-gray-100 dark:border-zinc-800",
-                )}
-              >
-                <Wand2
-                  className="w-5 h-5 text-[#FF5500] shrink-0"
-                  strokeWidth={2.2}
-                />
-                <input
-                  autoFocus
-                  value={skillQuery}
-                  onChange={(e) => setSkillQuery(e.target.value)}
-                  placeholder="Search skills to run…"
-                  className={cn(
-                    "bg-transparent border-none outline-none focus:outline-none focus:ring-0 shadow-none text-[14.5px] flex-1",
-                    isIncognito
-                      ? "text-white placeholder:text-zinc-500"
-                      : "text-[#1C1C1C] dark:text-zinc-100 placeholder:text-gray-400 dark:placeholder:text-zinc-500",
-                  )}
-                />
-                <span className="text-[12.5px] text-gray-400 shrink-0">
-                  {filteredSkills.length} available
-                </span>
-              </div>
-              <div className="max-h-[310px] overflow-y-auto py-1.5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                {filteredSkills.length === 0 ? (
-                  <div className="py-6 text-center text-[13.5px] text-gray-400 dark:text-zinc-500">
-                    No skills found matching &ldquo;{skillQuery}&rdquo;
-                  </div>
-                ) : (
-                  filteredSkills.map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => handleRunSkill(s.id)}
-                      className={cn(
-                        "bg-transparent w-full text-left px-5 py-3 transition-colors flex items-center justify-between gap-4 group cursor-pointer border-b last:border-0",
-                        isIncognito
-                          ? "hover:bg-white/10 border-white/10"
-                          : "hover:bg-slate-50/80 dark:hover:bg-zinc-800/60 border-gray-100 dark:border-zinc-800/40",
-                      )}
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div
-                          className={cn(
-                            "text-[13.5px] sm:text-[14px] font-bold group-hover:text-[#FF6B00] transition-colors truncate",
-                            isIncognito
-                              ? "text-zinc-100"
-                              : "text-slate-900 dark:text-zinc-100",
-                          )}
-                        >
-                          {s.name}
-                        </div>
-                        <div
-                          className={cn(
-                            "text-[12px] sm:text-[12.5px] font-normal leading-relaxed mt-0.5 truncate",
-                            isIncognito
-                              ? "text-zinc-400"
-                              : "text-slate-500 dark:text-zinc-400",
-                          )}
-                        >
-                          {s.summary}
-                        </div>
-                      </div>
-                      <span
-                        className={cn(
-                          "text-[10px] sm:text-[10.5px] uppercase tracking-[0.1em] font-extrabold text-[#FF6B00] border border-[#FF6B00]/70 px-3 py-0.5 rounded-full shrink-0 shadow-2xs",
-                          isIncognito
-                            ? "bg-white/10"
-                            : "bg-white dark:bg-zinc-900",
-                        )}
-                      >
-                        {s.category}
-                      </span>
-                    </button>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="text-[11.5px] sm:text-[12px] text-gray-400 dark:text-zinc-500 text-center mt-2.5 sm:mt-3 select-none">
           Rivinity can make mistakes. Check important info.
@@ -832,21 +969,15 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
     const FeatureIcon = currentFeatureObj?.icon || Sparkles;
 
     return (
-      <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full overflow-hidden bg-white dark:bg-zinc-950">
-        {}
-        <div className="px-4 sm:px-6 pt-3 pb-2 flex items-center justify-between shrink-0 border-b border-slate-100 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md z-20">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0 h-full overflow-hidden bg-[#f8fafc] dark:bg-zinc-950">
+        <div className="px-4 sm:px-6 pt-3 pb-2 flex items-center justify-between shrink-0 border-b border-slate-200/80 dark:border-zinc-800/80 bg-[#f8fafc]/90 dark:bg-zinc-950/90 backdrop-blur-md z-20">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => onFeatureChange("landing")}
               aria-label="Back to prompt"
               title="Back to prompt"
-              className="
-                flex h-8 w-8 items-center justify-center rounded-lg
-                text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white
-                hover:bg-slate-100 dark:hover:bg-zinc-800
-                transition-all cursor-pointer
-              "
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-zinc-800 transition-all cursor-pointer"
             >
               <ArrowLeft size={17} strokeWidth={1.8} />
             </button>
@@ -857,13 +988,11 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
           </div>
         </div>
 
-        {}
-        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 [scrollbar-width:thin]">
+        <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 [scrollbar-width:thin]">
           <div className="animate-float-in pb-4">{renderView()}</div>
         </div>
 
-        {}
-        <div className="w-full shrink-0 z-20 px-3 sm:px-6 pb-2.5 pt-1.5 bg-gradient-to-t from-white dark:from-zinc-950 via-white/90 dark:via-zinc-950/90 to-transparent">
+        <div className="w-full shrink-0 z-20 px-3 sm:px-6 pb-2.5 pt-1.5 bg-gradient-to-t from-[#f8fafc] dark:from-zinc-950 via-[#f8fafc]/90 dark:via-zinc-950/90 to-transparent">
           <div className="w-full max-w-[760px] mx-auto">
             {renderPromptBox(false)}
           </div>
@@ -873,29 +1002,32 @@ export const RivinityLMMain: React.FC<RivinityLMMainProps> = ({
   }
 
   return (
-    <div className="flex flex-1 flex-col min-w-0 min-h-0 h-full w-full overflow-hidden relative bg-white dark:bg-zinc-950">
-      {}
+    <div className="flex flex-1 flex-col min-w-0 min-h-0 h-full w-full overflow-hidden relative bg-[#f8fafc] dark:bg-zinc-950">
       <div className="absolute inset-0 pointer-events-none select-none z-0 flex items-center justify-center overflow-hidden">
         <img
           src="/watermark.png"
           alt=""
-          className="w-[360px] h-[360px] sm:w-[480px] sm:h-[480px] md:w-[560px] md:h-[560px] object-contain opacity-[0.04] dark:opacity-[0.03]"
+          width={560}
+          height={560}
+          style={{
+            maxWidth: "min(560px, 80vw)",
+            maxHeight: "min(560px, 80vh)",
+            width: "100%",
+            height: "auto",
+            opacity: 0.035,
+          }}
+          className="w-[320px] h-[320px] sm:w-[480px] sm:h-[480px] md:w-[560px] md:h-[560px] object-contain"
         />
       </div>
 
-      {}
-      <main className="relative flex-1 min-h-0 w-full flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 z-10 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        <div className="w-full max-w-[760px] mx-auto flex flex-col items-center my-auto animate-in fade-in duration-300">
-          {}
-          <div className="text-center mb-6 sm:mb-8 select-none">
-            <div className="text-3xl sm:text-4xl md:text-[46px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.18]">
-              What&apos;d you like to
-              <br />
-              learn today?
-            </div>
+      <main className="relative flex-1 min-h-full flex flex-col items-center justify-center w-full px-4 sm:px-8 py-6 sm:py-8 my-auto z-10 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="relative z-10 w-full max-w-[700px] mx-auto flex flex-col items-center justify-center mb-4 sm:mb-6 select-none">
+          <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight text-center w-full">
+            What&apos;d you like to learn today?
           </div>
+        </div>
 
-          {}
+        <div className="relative z-10 w-full max-w-[700px] mx-auto flex justify-center">
           {renderPromptBox(false)}
         </div>
       </main>

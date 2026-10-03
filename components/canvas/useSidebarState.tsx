@@ -19,17 +19,15 @@ export interface SidebarContextType {
 
 const SidebarContext = createContext<SidebarContextType | null>(null);
 
-// Module-level persistent cache across client-side page transitions
 let globalSidebarState: boolean | null = null;
 
 export function SidebarProvider({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpenState] = useState<boolean>(true);
 
-  // Sync from localStorage / screen width on client mount (post-hydration)
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
+    const isMobileOrTablet = window.innerWidth < 1024;
 
-    if (isMobile) {
+    if (isMobileOrTablet) {
       globalSidebarState = false;
       setSidebarOpenState(false);
       return;
@@ -47,7 +45,6 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, []);
 
-  // Sync to localStorage and global cache whenever state changes
   useEffect(() => {
     globalSidebarState = sidebarOpen;
     try {
@@ -55,12 +52,11 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
     } catch {}
   }, [sidebarOpen]);
 
-  // Handle window resize and cross-tab storage changes
   useEffect(() => {
-    let wasDesktop = window.innerWidth >= 768;
+    let wasDesktop = window.innerWidth >= 1024;
 
     const handleResize = () => {
-      const isDesktop = window.innerWidth >= 768;
+      const isDesktop = window.innerWidth >= 1024;
       if (wasDesktop && !isDesktop) {
         setSidebarOpenState(false);
       }
@@ -69,7 +65,7 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === SIDEBAR_STORAGE_KEY && e.newValue !== null) {
-        const val = window.innerWidth >= 768 && e.newValue === "true";
+        const val = window.innerWidth >= 1024 && e.newValue === "true";
         globalSidebarState = val;
         setSidebarOpenState(val);
       }
